@@ -22,3 +22,4 @@
 #include <random>
 #include <ctime>
 #include <cmath>
+#include <exception>

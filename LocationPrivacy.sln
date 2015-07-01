@@ -7,6 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LocationPrivacy", "Location
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utils", "Utils\Utils.vcxproj", "{38AC6421-8D7F-44FE-8E47-6EBE726E015E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UtilsTest", "UtilsTest\UtilsTest.vcxproj", "{117EE97E-D8EC-4427-8EF6-E4FA897B826F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{38AC6421-8D7F-44FE-8E47-6EBE726E015E} = {38AC6421-8D7F-44FE-8E47-6EBE726E015E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +26,10 @@ Global
 		{38AC6421-8D7F-44FE-8E47-6EBE726E015E}.Debug|Win32.Build.0 = Debug|Win32
 		{38AC6421-8D7F-44FE-8E47-6EBE726E015E}.Release|Win32.ActiveCfg = Release|Win32
 		{38AC6421-8D7F-44FE-8E47-6EBE726E015E}.Release|Win32.Build.0 = Release|Win32
+		{117EE97E-D8EC-4427-8EF6-E4FA897B826F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{117EE97E-D8EC-4427-8EF6-E4FA897B826F}.Debug|Win32.Build.0 = Debug|Win32
+		{117EE97E-D8EC-4427-8EF6-E4FA897B826F}.Release|Win32.ActiveCfg = Release|Win32
+		{117EE97E-D8EC-4427-8EF6-E4FA897B826F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

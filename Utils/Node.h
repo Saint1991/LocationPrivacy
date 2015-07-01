@@ -14,10 +14,12 @@ namespace Graph {
 	{
 	protected:
 		node_id id;
-		std::unique_ptr<std::list<std::shared_ptr<Edge<EDGE_DATA>>>> list;
+		std::unique_ptr<std::list<std::shared_ptr<Edge<EDGE_DATA>>>> edge_list;
 	public:
 		std::shared_ptr<NODE_DATA> data;
+		
 		NODE_API Node(node_id id, NODE_DATA data);
+		NODE_API Node(const Node& node);
 		NODE_API virtual ~Node();
 
 		NODE_API void connect_to(Graph::Edge<EDGE_DATA> link_to);

@@ -19,6 +19,12 @@
     <Filter Include="ヘッダー ファイル\Graph">
       <UniqueIdentifier>{b2f2a21d-1af8-49ab-b083-a6861c0bdddf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Math">
+      <UniqueIdentifier>{1d3e2564-8bae-4127-9bff-7d31b8ae58ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Math">
+      <UniqueIdentifier>{f154acbe-73df-42b1-b767-85b2a1f05300}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -36,6 +42,15 @@
     <ClInclude Include="Edge.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
+    <ClInclude Include="Probability.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeManager.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="AngleUtility.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -52,6 +67,15 @@
     </ClCompile>
     <ClCompile Include="Edge.cpp">
       <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Probability.cpp">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeManager.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="AngleUtility.cpp">
+      <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
