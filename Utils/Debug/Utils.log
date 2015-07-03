@@ -1,4 +1,4 @@
-﻿2015/07/01 23:52:14 にビルドを開始しました。
+﻿2015/07/04 0:36:04 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" (Build ターゲット)。
      1>ツール バージョン "12.0" でビルドしています。
      1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "_CheckForInvalidConfigurationAndPlatform" (エントリ ポイント):
@@ -21,7 +21,7 @@
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "_PrepareForReferenceResolution" (ターゲット "ResolveReferences" は依存):
        false 条件のため、タスク "Message" を省略しました。('$(_REFERENCE_DEBUG)'=='true') は (''=='true') として評価されました。
      1>プロジェクト "Utils.vcxproj" 内のターゲット "_PrepareForReferenceResolution" のビルドが終了しました。
-       false 条件により、ターゲット "ComputeCrtSDKReference" を省略しました。('@(ClCompile)'!='' and '$(WindowsAppContainer)'=='true' and '$(UseCrtSDKReference)' != 'false') は ('AngleUtility.cpp;dllmain.cpp;Edge.cpp;Node.cpp;NodeManager.cpp;Probability.cpp;stdafx.cpp;Utils.cpp'!='' and 'false'=='true' and '' != 'false') として評価されました。
+       false 条件により、ターゲット "ComputeCrtSDKReference" を省略しました。('@(ClCompile)'!='' and '$(WindowsAppContainer)'=='true' and '$(UseCrtSDKReference)' != 'false') は ('AngleUtility.cpp;dllmain.cpp;Edge.cpp;IdentifiableCollection.cpp;Node.cpp;NodeManager.cpp;Probability.cpp;stdafx.cpp;Utils.cpp;Vector2d.cpp'!='' and 'false'=='true' and '' != 'false') として評価されました。
      1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "BeforeResolveReferences" (ターゲット "ResolveReferences" は依存):
      1>プロジェクト "Utils.vcxproj" 内のターゲット "BeforeResolveReferences" のビルドが終了しました。
      1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "AssignProjectConfiguration" (ターゲット "ResolveReferences" は依存):
@@ -102,7 +102,7 @@
        タスク "MakeDir" の実行が終了しました。
      1>プロジェクト "Utils.vcxproj" 内のターゲット "PrepareForBuild" のビルドが終了しました。
        ターゲット "_PrepareForReferenceResolution" を省略しました。以前に正しくビルドされていました。
-       false 条件により、ターゲット "ComputeCrtSDKReference" を省略しました。('@(ClCompile)'!='' and '$(WindowsAppContainer)'=='true' and '$(UseCrtSDKReference)' != 'false') は ('AngleUtility.cpp;dllmain.cpp;Edge.cpp;Node.cpp;NodeManager.cpp;Probability.cpp;stdafx.cpp;Utils.cpp'!='' and 'false'=='true' and '' != 'false') として評価されました。
+       false 条件により、ターゲット "ComputeCrtSDKReference" を省略しました。('@(ClCompile)'!='' and '$(WindowsAppContainer)'=='true' and '$(UseCrtSDKReference)' != 'false') は ('AngleUtility.cpp;dllmain.cpp;Edge.cpp;IdentifiableCollection.cpp;Node.cpp;NodeManager.cpp;Probability.cpp;stdafx.cpp;Utils.cpp;Vector2d.cpp'!='' and 'false'=='true' and '' != 'false') として評価されました。
      1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "GetInstalledSDKLocations" (ターゲット "ResolveSDKReferences" は依存):
        false 条件のため、タスク "GetInstalledSDKLocations" を省略しました。('@(SDKReference)' != '') は ('' != '') として評価されました。
      1>プロジェクト "Utils.vcxproj" 内のターゲット "GetInstalledSDKLocations" のビルドが終了しました。
@@ -137,7 +137,7 @@
        タスク "WriteLinesToFile" の実行が終了しました。
        "Touch" タスクをアセンブリ "Microsoft.Build.Tasks.v12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" から使用しています。
        タスク "Touch"
-         "Debug\Utils.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+         "AlwaysCreate" が指定されたため "Debug\Utils.tlog\unsuccessfulbuild" を作成しています。
        タスク "Touch" の実行が終了しました。
      1>プロジェクト "Utils.vcxproj" 内のターゲット "InitializeBuildStatus" のビルドが終了しました。
        ターゲット "AssignProjectConfiguration" を省略しました。以前に正しくビルドされていました。
@@ -200,11 +200,13 @@
        false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'AngleUtility.cpp' != 'AngleUtility.cpp' and 'Debug\' == 'Debug\') として評価されました。
        false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'dllmain.cpp' != 'dllmain.cpp' and 'Debug\' == 'Debug\') として評価されました。
        false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'Edge.cpp' != 'Edge.cpp' and 'Debug\' == 'Debug\') として評価されました。
+       false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'IdentifiableCollection.cpp' != 'IdentifiableCollection.cpp' and 'Debug\' == 'Debug\') として評価されました。
        false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'Node.cpp' != 'Node.cpp' and 'Debug\' == 'Debug\') として評価されました。
        false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'NodeManager.cpp' != 'NodeManager.cpp' and 'Debug\' == 'Debug\') として評価されました。
        false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'Probability.cpp' != 'Probability.cpp' and 'Debug\' == 'Debug\') として評価されました。
        false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'stdafx.cpp' != 'stdafx.cpp' and 'Debug\' == 'Debug\') として評価されました。
        false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'Utils.cpp' != 'Utils.cpp' and 'Debug\' == 'Debug\') として評価されました。
+       false 条件のため、タスク "VCMessage" を省略しました。('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') は ('' != 'true' and 'Vector2d.cpp' != 'Vector2d.cpp' and 'Debug\' == 'Debug\') として評価されました。
      1>プロジェクト "Utils.vcxproj" 内のターゲット "WarnCompileDuplicatedFilename" のビルドが終了しました。
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "MakeDirsForCl" (ターゲット "_ClCompile" は依存):
        タスク "MakeDir"
@@ -225,7 +227,7 @@
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "SelectClCompile" (ターゲット "ClCompile" は依存):
      1>プロジェクト "Utils.vcxproj" 内のターゲット "SelectClCompile" のビルドが終了しました。
        false 条件により、ターゲット "GenerateTargetFrameworkMonikerAttribute" を省略しました。('$(GenerateTargetFrameworkAttribute)' == 'true') は ('false' == 'true') として評価されました。
-       false 条件により、ターゲット "ManagedIncrementalBuildPreProcessDependencyGraph" を省略しました。('@(ClCompile)' != '' and '$(EnableManagedIncrementalBuild)' == 'True') は ('AngleUtility.cpp;dllmain.cpp;Edge.cpp;Node.cpp;NodeManager.cpp;Probability.cpp;stdafx.cpp;Utils.cpp' != '' and 'false' == 'True') として評価されました。
+       false 条件により、ターゲット "ManagedIncrementalBuildPreProcessDependencyGraph" を省略しました。('@(ClCompile)' != '' and '$(EnableManagedIncrementalBuild)' == 'True') は ('AngleUtility.cpp;dllmain.cpp;Edge.cpp;IdentifiableCollection.cpp;Node.cpp;NodeManager.cpp;Probability.cpp;stdafx.cpp;Utils.cpp;Vector2d.cpp' != '' and 'false' == 'True') として評価されました。
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppCommon.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "ClCompile" (ターゲット "_ClCompile" は依存):
        false 条件のため、タスク "Delete" を省略しました。('%(ClCompile.DebugInformationFormat)' != '' and '%(ClCompile.DebugInformationFormat)' != 'OldStyle' and '%(ClCompile.ProgramDataBaseFileName)' != '' and !Exists(%(ClCompile.ProgramDataBaseFileName))) は ('EditAndContinue' != '' and 'EditAndContinue' != 'OldStyle' and 'Debug\vc120.pdb' != '' and !Exists(Debug\vc120.pdb)) として評価されました。
        false 条件のため、タスク "Delete" を省略しました。('%(ClCompile.DebugInformationFormat)' != '' and '%(ClCompile.DebugInformationFormat)' != 'OldStyle' and '%(ClCompile.ProgramDataBaseFileName)' != '' and !Exists(%(ClCompile.ProgramDataBaseFileName))) は ('EditAndContinue' != '' and 'EditAndContinue' != 'OldStyle' and 'Debug\vc120.pdb' != '' and !Exists(Debug\vc120.pdb)) として評価されました。
@@ -243,37 +245,33 @@
        タスク "CL"
          以下から作成されたキャッシュ内の入力依存関係テーブルを使用しています:
          	C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug\Utils.tlog\cl.read.1.tlog
-         C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\ANGLEUTILITY.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\EDGE.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\NODE.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\NODEMANAGER.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\PROBABILITY.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\UTILS.CPP に対する出力:
+         C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\ANGLEUTILITY.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\EDGE.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\IDENTIFIABLECOLLECTION.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\NODE.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\NODEMANAGER.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\PROBABILITY.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\UTILS.CPP|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\VECTOR2D.CPP に対する出力:
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\ANGLEUTILITY.OBJ
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\EDGE.OBJ
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\IDENTIFIABLECOLLECTION.OBJ
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODE.OBJ
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODEMANAGER.OBJ
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\PROBABILITY.OBJ
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\UTILS.OBJ
-         出力 C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\ANGLEUTILITY.OBJ が存在しないため、AngleUtility.cpp がコンパイルされます。
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\VECTOR2D.OBJ
+         Vector2d.cpp は追跡ログに見つからないためコンパイルされます。
          ツールに渡された環境変数:
-           VS_UNICODE_OUTPUT=1948
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D UTILS_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\Utils.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AngleUtility.cpp
+           VS_UNICODE_OUTPUT=756
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D UTILS_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\Utils.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Vector2d.cpp
          Tracking command:
-         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug\Utils.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\ANGLEUTILITY.CPP" /b MSBuildConsole_CancelEventa1093560e81f4ceeabd83f2df0febf71  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe"  /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D UTILS_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\Utils.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AngleUtility.cpp
-         AngleUtility.cpp
+         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug\Utils.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\VECTOR2D.CPP" /b MSBuildConsole_CancelEventcabbe53b70304190a13fcdd729abc51f  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe"  /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D UTILS_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\Utils.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Vector2d.cpp
+         Vector2d.cpp
        タスク "CL" の実行が終了しました。
        タスク "CL"
          読み取り追跡ログ:
          	Debug\Utils.tlog\cl.read.1.tlog
          C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DLLMAIN.CPP に対する出力:
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\DLLMAIN.OBJ
-         dllmain.cpp は追跡ログに見つからないためコンパイルされます。
-         ツールに渡された環境変数:
-           VS_UNICODE_OUTPUT=1796
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D UTILS_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt dllmain.cpp
-         Tracking command:
-         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug\Utils.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DLLMAIN.CPP" /b MSBuildConsole_CancelEventf943e4ea06874df796acfc935bbcbb03  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe"  /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D UTILS_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt dllmain.cpp
-         dllmain.cpp
+         すべての出力が最新のものです。
        タスク "CL" の実行が終了しました。
        false 条件のため、タスク "CL" を省略しました。('%(ClCompile.PrecompiledHeader)' != 'Create' and '%(ClCompile.ExcludedFromBuild)'!='true' and '%(ClCompile.CompilerIteration)' == '' and @(ClCompile) != '') は ('Create' != 'Create' and ''!='true' and '' == '' and stdafx.cpp != '') として評価されました。
      1>プロジェクト "Utils.vcxproj" 内のターゲット "ClCompile" のビルドが終了しました。
-       false 条件により、ターゲット "ManagedIncrementalBuildPostProcessDependencyGraph" を省略しました。('@(ClCompile)' != '' and '$(EnableManagedIncrementalBuild)' == 'True') は ('AngleUtility.cpp;dllmain.cpp;Edge.cpp;Node.cpp;NodeManager.cpp;Probability.cpp;stdafx.cpp;Utils.cpp' != '' and 'false' == 'True') として評価されました。
+       false 条件により、ターゲット "ManagedIncrementalBuildPostProcessDependencyGraph" を省略しました。('@(ClCompile)' != '' and '$(EnableManagedIncrementalBuild)' == 'True') は ('AngleUtility.cpp;dllmain.cpp;Edge.cpp;IdentifiableCollection.cpp;Node.cpp;NodeManager.cpp;Probability.cpp;stdafx.cpp;Utils.cpp;Vector2d.cpp' != '' and 'false' == 'True') として評価されました。
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "AfterClCompile" (ターゲット "_ClCompile" は依存):
      1>プロジェクト "Utils.vcxproj" 内のターゲット "AfterClCompile" のビルドが終了しました。
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "_ClCompile" (ターゲット "_BuildCompileAction" は依存):
@@ -383,25 +381,35 @@
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppCommon.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Utils.vcxproj" からのターゲット "Link" (ターゲット "_Link" は依存):
        "Link" タスクをアセンブリ "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.Build.CppTasks.Common.dll" から使用しています。
        タスク "Link"
+         書き込み追跡ログ:
+         	Debug\Utils.tlog\link.write.1.tlog
+         読み取り追跡ログ:
+         	Debug\Utils.tlog\link.read.1.tlog
+         C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\ANGLEUTILITY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\DLLMAIN.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\EDGE.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\IDENTIFIABLECOLLECTION.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODE.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODEMANAGER.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\PROBABILITY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\STDAFX.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\UTILS.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\VECTOR2D.OBJ の出力が、追跡ログに見つかりませんでした。ソースのコンパイルが必要です。
+         出力 C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\ANGLEUTILITY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\DLLMAIN.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\EDGE.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\IDENTIFIABLECOLLECTION.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODE.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODEMANAGER.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\PROBABILITY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\STDAFX.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\UTILS.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\VECTOR2D.OBJ に対する依存関係が、追跡ログに見つかりませんでした。ソースのコンパイルが必要です。
          ツールに渡された環境変数:
-           VS_UNICODE_OUTPUT=1524
+           VS_UNICODE_OUTPUT=920
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.lib" /MACHINE:X86 /DLL Debug\AngleUtility.obj
          Debug\dllmain.obj
          Debug\Edge.obj
+         Debug\IdentifiableCollection.obj
          Debug\Node.obj
          Debug\NodeManager.obj
          Debug\Probability.obj
          Debug\stdafx.obj
          Debug\Utils.obj
+         Debug\Vector2d.obj
          Tracking command:
-         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /a /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug\Utils.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\ANGLEUTILITY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\DLLMAIN.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\EDGE.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODE.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODEMANAGER.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\PROBABILITY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\STDAFX.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\UTILS.OBJ" /b MSBuildConsole_CancelEventee1e2348eabe4734a9e9d5e6734cf919  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe"  /ERRORREPORT:PROMPT /OUT:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.lib" /MACHINE:X86 /DLL Debug\AngleUtility.obj
+         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /a /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug\Utils.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\ANGLEUTILITY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\DLLMAIN.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\EDGE.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\IDENTIFIABLECOLLECTION.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODE.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\NODEMANAGER.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\PROBABILITY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\STDAFX.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\UTILS.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\DEBUG\VECTOR2D.OBJ" /b MSBuildConsole_CancelEventc699f040f0c249f694043d2e5097378f  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe"  /ERRORREPORT:PROMPT /OUT:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.lib" /MACHINE:X86 /DLL Debug\AngleUtility.obj
          Debug\dllmain.obj
          Debug\Edge.obj
+         Debug\IdentifiableCollection.obj
          Debug\Node.obj
          Debug\NodeManager.obj
          Debug\Probability.obj
          Debug\stdafx.obj
          Debug\Utils.obj
+         Debug\Vector2d.obj
             ライブラリ C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.lib とオブジェクト C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.exp を作成中
        タスク "Link" の実行が終了しました。
        タスク "Message"
@@ -533,4 +541,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:00.85
+経過時間 00:00:00.92

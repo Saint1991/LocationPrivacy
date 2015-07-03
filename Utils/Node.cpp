@@ -117,3 +117,15 @@ std::list<Graph::node_id> Graph::Node<NODE_DATA, EDGE_DATA>::get_connecting_node
 		return connect_node_list;
 	}
 }
+
+template <typename NODE_DATA, typename EDGE_DATA>
+bool operator==(Graph:: Node<NODE_DATA, EDGE_DATA> node1, Graph::Node<NODE_DATA, EDGE_DATA> node2)
+{
+	return node1.id == node2.id;
+}
+
+template <typename NODE_DATA, typename EDGE_DATA>
+bool operator!=(Graph::Node<NODE_DATA, EDGE_DATA> node1, Graph::Node<NODE_DATA, EDGE_DATA> node2)
+{
+	return !(node1.id == node2.id);
+}

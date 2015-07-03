@@ -6,14 +6,14 @@
 
 #pragma once
 #include "Edge.h"
+#include "Identifiable.h"
 
 namespace Graph {
 
 	template <typename NODE_DATA, typename EDGE_DATA>
-	class Node
+	class Node : protected Identifiable
 	{
 	protected:
-		node_id id;
 		std::unique_ptr<std::list<std::shared_ptr<Edge<EDGE_DATA>>>> edge_list;
 	public:
 		std::shared_ptr<NODE_DATA> data;
@@ -28,5 +28,8 @@ namespace Graph {
 		NODE_API std::shared_ptr<Graph::Edge<EDGE_DATA>> get_edge_to(node_id id);
 		NODE_API bool is_connecting_to(node_id id);
 		NODE_API std::list<node_id> get_connecting_node_list();
+
+		NODE_API friend bool operator==(Node<NODE_DATA, EDGE_DATA> node1, Node<NODE_DATA, EDGE_DATA> node2);
+		NODE_API friend bool operator!=(Node<NODE_DATA, EDGE_DATA> node1, Node<NODE_DATA, EDGE_DATA> node2);
 	};
 }

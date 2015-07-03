@@ -82,11 +82,14 @@
   <ItemGroup>
     <ClInclude Include="AngleUtility.h" />
     <ClInclude Include="Edge.h" />
+    <ClInclude Include="Identifiable.h" />
+    <ClInclude Include="IdentifiableCollection.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeManager.h" />
     <ClInclude Include="Probability.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Vector2d.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AngleUtility.cpp" />
@@ -99,6 +102,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Edge.cpp" />
+    <ClCompile Include="IdentifiableCollection.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NodeManager.cpp" />
     <ClCompile Include="Probability.cpp" />
@@ -107,6 +111,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="Vector2d.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
