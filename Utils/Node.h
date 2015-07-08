@@ -33,3 +33,4 @@ namespace Graph {
 		NODE_API friend bool operator!=(Node<NODE_DATA, EDGE_DATA> node1, Node<NODE_DATA, EDGE_DATA> node2);
 	};
 }
+

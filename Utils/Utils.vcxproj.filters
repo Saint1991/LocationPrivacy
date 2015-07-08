@@ -34,6 +34,12 @@
     <Filter Include="ヘッダー ファイル\Collection">
       <UniqueIdentifier>{09e8d4d1-9026-4a9c-a651-b9e5153748d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Geography">
+      <UniqueIdentifier>{0a143221-23de-49ab-a2b6-9be0773d5ec6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Geography">
+      <UniqueIdentifier>{804a9d46-bd42-4c8e-9763-8e7d2952aee6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -80,26 +86,26 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Node.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="Edge.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
     <ClCompile Include="Probability.cpp">
       <Filter>ソース ファイル\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="NodeManager.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
     <ClCompile Include="AngleUtility.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="IdentifiableCollection.cpp">
-      <Filter>ソース ファイル\Collection</Filter>
-    </ClCompile>
     <ClCompile Include="Vector2d.cpp">
       <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Edge.hpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.hpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeManager.hpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="IdentifiableCollection.hpp">
+      <Filter>ソース ファイル\Collection</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

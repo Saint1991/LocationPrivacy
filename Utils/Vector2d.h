@@ -22,11 +22,11 @@ namespace Graph {
 		double length();
 		void rotate(double radian);
 		void operator=(Vector2d v);
-		friend Vector2d operator+(Vector2d v1, Vector2d v2);
-		friend Vector2d operator-(Vector2d v1, Vector2d v2);
-		friend bool operator==(Vector2d v1, Vector2d v2);
-		friend bool operator!=(Vector2d v1, Vector2d v2);
-		friend double inner_product(Vector2d v1, Vector2d v2);
+		VECTOR2D_API friend Vector2d operator+(Vector2d v1, Vector2d v2);
+		VECTOR2D_API friend Vector2d operator-(Vector2d v1, Vector2d v2);
+		VECTOR2D_API friend bool operator==(Vector2d v1, Vector2d v2);
+		VECTOR2D_API friend bool operator!=(Vector2d v1, Vector2d v2);
+		VECTOR2D_API friend double inner_product(Vector2d v1, Vector2d v2);
 	};
 }
 

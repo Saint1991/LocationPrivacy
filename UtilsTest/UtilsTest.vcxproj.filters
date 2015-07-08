@@ -16,6 +16,15 @@
     <Filter Include="ソース ファイル\Math">
       <UniqueIdentifier>{8cb5d9a4-6f40-44cc-aebc-4a7e3dddea9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Graph">
+      <UniqueIdentifier>{63b88272-78dc-4eef-aabf-ac4d7250bce5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Collection">
+      <UniqueIdentifier>{07d1197f-1252-4d0d-919a-e5cafee91946}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Interfaces">
+      <UniqueIdentifier>{fdaeff90-df19-407d-8438-0928ac28bfdb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -31,6 +40,18 @@
     </ClCompile>
     <ClCompile Include="ProbabilityTest.cpp">
       <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="AngleUtilityTest.cpp">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2dTest.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="IdentifiableCollectionTest.cpp">
+      <Filter>ソース ファイル\Collection</Filter>
+    </ClCompile>
+    <ClCompile Include="IdentifiableTest.cpp">
+      <Filter>ソース ファイル\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

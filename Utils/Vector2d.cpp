@@ -54,22 +54,22 @@ void Graph::Vector2d::operator=(Graph::Vector2d v)
 	y = v.y;
 }
 
-Graph::Vector2d operator+(Graph::Vector2d v1, Graph::Vector2d v2)
+Graph::Vector2d Graph::operator+(Graph::Vector2d v1, Graph::Vector2d v2)
 {
 	return Graph::Vector2d(v1.x + v2.x, v1.y + v2.y);
 }
 
-Graph::Vector2d operator-(Graph::Vector2d v1, Graph::Vector2d v2)
+Graph::Vector2d Graph::operator-(Graph::Vector2d v1, Graph::Vector2d v2)
 {
 	return Graph::Vector2d(v1.x - v2.x, v1.y - v2.y);
 }
 
-bool operator==(Graph::Vector2d v1, Graph::Vector2d v2)
+bool Graph::operator==(Graph::Vector2d v1, Graph::Vector2d v2)
 {
 	return v1.x == v2.x && v1.y == v2.y;
 }
 
-bool operator!=(Graph::Vector2d v1, Graph::Vector2d v2)
+bool Graph::operator!=(Graph::Vector2d v1, Graph::Vector2d v2)
 {
 	return !(v1.x == v2.x && v1.y == v2.y);
 }

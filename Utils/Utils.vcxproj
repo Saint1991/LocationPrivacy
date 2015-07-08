@@ -101,10 +101,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Edge.cpp" />
-    <ClCompile Include="IdentifiableCollection.cpp" />
-    <ClCompile Include="Node.cpp" />
-    <ClCompile Include="NodeManager.cpp" />
+    <ClCompile Include="Edge.hpp" />
+    <ClCompile Include="IdentifiableCollection.hpp" />
+    <ClCompile Include="Node.hpp" />
+    <ClCompile Include="NodeManager.hpp" />
     <ClCompile Include="Probability.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -3,7 +3,9 @@
 #else
 #define IDENTIFIABLE_API __declspec(dllimport)
 #endif
+
 #pragma once
+#include "stdafx.h"
 
 ///<summary>
 /// IDをもつクラス用のインタフェース

@@ -14,6 +14,7 @@
 #include <windows.h>
 
 // TODO: プログラムに必要な追加ヘッダーをここで参照してください。
+#include <iostream>
 #include <string>
 #include <vector>
 #include <list>
@@ -23,3 +24,5 @@
 #include <ctime>
 #include <cmath>
 #include <exception>
+#include <type_traits>
+#include <typeinfo>

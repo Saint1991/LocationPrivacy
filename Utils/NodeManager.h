@@ -9,6 +9,7 @@
 #include "Node.h"
 #include "IdentifiableCollection.h"
 
+
 namespace Graph {
 
 	///<summary>
@@ -18,7 +19,7 @@ namespace Graph {
 	class NodeManager
 	{
 	private:
-		std::unique_ptr<Collection::IdentifiableCollection> node_collection;
+		std::unique_ptr<Collection::IdentifiableCollection<Node<NODE_DATA, EDGE_DATA>>> node_collection;
 
 	public:
 		NODEMANAGER_API NodeManager();
@@ -32,5 +33,3 @@ namespace Graph {
 		NODEMANAGER_API void sort_node_collection();
 	};
 }
-
-
