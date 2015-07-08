@@ -102,7 +102,6 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Edge.hpp" />
-    <ClCompile Include="IdentifiableCollection.hpp" />
     <ClCompile Include="Node.hpp" />
     <ClCompile Include="NodeManager.hpp" />
     <ClCompile Include="Probability.cpp" />

@@ -104,8 +104,5 @@
     <ClCompile Include="NodeManager.hpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
-    <ClCompile Include="IdentifiableCollection.hpp">
-      <Filter>ソース ファイル\Collection</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
