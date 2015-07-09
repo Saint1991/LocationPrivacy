@@ -28,15 +28,15 @@ namespace Graph {
 		///</summary>
 		///<param name='to'>接続先のノードID</param>
 		///<param name='data'>エッジの持つ属性値</param>
-		EDGE_API Edge(node_id to, EDGE_DATA data) : to(to), data(std::make_shared<EDGE_DATA>(data) {	}
+		Edge(node_id to, EDGE_DATA data) : to(to), data(std::make_shared<EDGE_DATA>(data)) {}
 		
 		///<summary>
 		/// デストラクタ
 		///</summary>
-		EDGE_API virtual ~Edge() {}
+		virtual ~Edge() {}
 
-		EDGE_API friend bool operator==(Edge<EDGE_DATA> e1, Edge<EDGE_DATA> e2) { return e1.to == e2.to; }
-		EDGE_API friend bool operator!=(Edge<EDGE_DATA> e1, Edge<EDGE_DATA> e2) { return !(e1 == e2); }
+		friend bool operator==(Edge<EDGE_DATA> e1, Edge<EDGE_DATA> e2) { return e1.to == e2.to; }
+		friend bool operator!=(Edge<EDGE_DATA> e1, Edge<EDGE_DATA> e2) { return !(e1 == e2); }
 	};
 }
 

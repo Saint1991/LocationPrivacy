@@ -18,11 +18,10 @@ namespace Collection {
 	{
 		
 	//TがIdentifiableを継承しているか判定
-		static_assert(std::is_base_of<Identifiable, T>::value, "Template Type T is not Derived from Identifiable at IdentifiableCollection.h");
+	static_assert(std::is_base_of<Identifiable, T>::value, "Template Type T is not Derived from Identifiable at IdentifiableCollection.h");
 
 	private:
 		bool is_sorted;
-		std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<T>>>> find_iter_by_id(const unsigned int &id);
 		std::unique_ptr<std::vector<std::shared_ptr<T>>> collection;		
 
 	public:
@@ -31,10 +30,12 @@ namespace Collection {
 
 		std::shared_ptr<T> find_by_id(const unsigned int& id);
 		bool remove_by_id(const unsigned int& id);
-
-		std::size_t size();
+		
+		bool contains(Identifiable id);
+		bool contains(unsigned int id);
+		bool add(std::shared_ptr<T> val);
 		void sort();
-		void add(const std::shared_ptr<T> &val);
+		std::size_t size();
 		void clear();
 	};
 }
@@ -48,8 +49,9 @@ namespace Collection {
 /// コンストラクタ
 ///</summary>
 template <typename T>
-Collection::IdentifiableCollection<T>::IdentifiableCollection()
+Collection::IdentifiableCollection<T>::IdentifiableCollection() : collection(std::make_unique < std::vector<std::shared_ptr<T>>>())
 {
+	*collection = std::vector<std::shared_ptr<T>>();
 }
 
 
@@ -61,19 +63,6 @@ Collection::IdentifiableCollection<T>::~IdentifiableCollection()
 {
 }
 
-///<summary>
-/// 指定したIDを持つ要素のイテレータ参照を返す．
-/// ソート済みのコレクションに対しては2分探索
-/// ソートされていないコレクションに対しては前から全探索する．
-///</summary>
-template <typename T>
-std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<T>>>> Collection::IdentifiableCollection<T>::find_iter_by_id(const unsigned int &id)
-{
-	std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<T>>>> found_iter = is_sorted ?
-		std::lower_bound(collection->begin(), collection->end(), id) :
-		std::find(collection->begin(), collection->end(), id);
-	return found_iter;
-}
 
 ///<summary>
 /// 指定したIDを持つ要素を返す．
@@ -84,8 +73,8 @@ std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<T>>>> 
 template <typename T>
 std::shared_ptr<T> Collection::IdentifiableCollection<T>::find_by_id(const unsigned int &id)
 {
-	std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<T>>>> target_iter = find_iter_by_id(id);
-	if (target_iter->get()->get_id() != id) {
+	auto target_iter = is_sorted ? std::lower_bound(collection->begin(), collection->end(), id) : 	std::find(collection->begin(), collection->end(), id);
+	if (target_iter == collection->end() || target_iter->get()->get_id() != id) {
 		return nullptr;
 	}
 	return *target_iter;
@@ -98,7 +87,7 @@ std::shared_ptr<T> Collection::IdentifiableCollection<T>::find_by_id(const unsig
 template <typename T>
 bool Collection::IdentifiableCollection<T>::remove_by_id(const unsigned int &id)
 {
-	std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<Identifiable>>>> target_iter = find_iter_by_id(id);
+	auto target_iter = is_sorted ? std::lower_bound(collection->begin(), collection->end(), id) : std::find(collection->begin(), collection->end(), id);
 
 	// 要素が見つからない場合はfalseを返して終了
 	if (target_iter->get()->get_id() != id) {
@@ -108,6 +97,25 @@ bool Collection::IdentifiableCollection<T>::remove_by_id(const unsigned int &id)
 	//要素が見つかった場合は削除してtureを返す
 	collection->erase(target_iter);
 	return true;
+}
+
+///<summary>
+/// 指定したIDを持つ要素を含んでいるかを判定する
+///</summary>
+template <typename T>
+bool Collection::IdentifiableCollection<T>::contains(unsigned int id)
+{
+	bool is_contained = find_by_id(id) != nullptr;
+	return is_contained;
+}
+
+///<summary>
+/// 指定したIDを持つ要素を含んでいるかを判定する
+///</summary>
+template <typename T>
+bool Collection::IdentifiableCollection<T>::contains(Identifiable id)
+{
+	return contains(id.get_id());
 }
 
 ///<summary>
@@ -124,10 +132,18 @@ void Collection::IdentifiableCollection<T>::sort()
 /// コレクションの末尾に指定した要素を格納する
 ///</summary>
 template <typename T>
-void Collection::IdentifiableCollection<T>::add(const::std::shared_ptr<T> &val)
+bool Collection::IdentifiableCollection<T>::add(std::shared_ptr<T> val)
 {
+	
+	//既存IDの場合は追加しない
+	unsigned int id = val->get_id();
+	if (contains(id)) {
+		return false;
+	}
+	
 	collection->push_back(val);
 	is_sorted = false;
+	return true;
 }
 
 ///<summary>
@@ -148,5 +164,3 @@ std::size_t Collection::IdentifiableCollection<T>::size()
 {
 	return collection->size();
 }
-
-
