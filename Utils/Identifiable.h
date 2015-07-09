@@ -10,7 +10,7 @@
 ///<summary>
 /// IDをもつクラス用のインタフェース
 ///</summary>
-class IDENTIFIABLE_API Identifiable
+class Identifiable
 {
 protected:
 	unsigned int id;

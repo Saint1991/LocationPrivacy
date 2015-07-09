@@ -1,4 +1,4 @@
-﻿2015/07/09 2:27:15 にビルドを開始しました。
+﻿2015/07/09 14:20:26 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\UtilsTest\UtilsTest.vcxproj" (Build ターゲット)。
      1>ツール バージョン "12.0" でビルドしています。
      1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\UtilsTest\UtilsTest.vcxproj" からのターゲット "_CheckForInvalidConfigurationAndPlatform" (エントリ ポイント):
@@ -160,7 +160,7 @@
        タスク "WriteLinesToFile"
        タスク "WriteLinesToFile" の実行が終了しました。
        タスク "Touch"
-         "Debug\UtilsTest.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+         "AlwaysCreate" が指定されたため "Debug\UtilsTest.tlog\unsuccessfulbuild" を作成しています。
        タスク "Touch" の実行が終了しました。
      1>プロジェクト "UtilsTest.vcxproj" 内のターゲット "InitializeBuildStatus" のビルドが終了しました。
        ターゲット "AssignProjectConfiguration" を省略しました。以前に正しくビルドされていました。
@@ -268,12 +268,12 @@
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLETEST.OBJ
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\PROBABILITYTEST.OBJ
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\VECTOR2DTEST.OBJ
-         出力 C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLECOLLECTIONTEST.OBJ が存在しないため、IdentifiableCollectionTest.cpp がコンパイルされます。
+         C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILS\IDENTIFIABLECOLLECTION.H が 2015/07/09 14:20:23 で変更されたため、IdentifiableCollectionTest.cpp がコンパイルされます。
          ツールに渡された環境変数:
-           VS_UNICODE_OUTPUT=672
+           VS_UNICODE_OUTPUT=2372
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils" /I"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\UnitTest\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\UtilsTest.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /FC /errorReport:prompt IdentifiableCollectionTest.cpp
          Tracking command:
-         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\UtilsTest\Debug\UtilsTest.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\IDENTIFIABLECOLLECTIONTEST.CPP" /b MSBuildConsole_CancelEvent8d6419cde2d04eada3e0468081fa96f9  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe"  /c /I"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils" /I"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\UnitTest\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\UtilsTest.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /FC /errorReport:prompt IdentifiableCollectionTest.cpp
+         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\UtilsTest\Debug\UtilsTest.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\IDENTIFIABLECOLLECTIONTEST.CPP" /b MSBuildConsole_CancelEvent1345b5c650d8455096c83595b02eb73d  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe"  /c /I"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils" /I"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\UnitTest\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\UtilsTest.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /FC /errorReport:prompt IdentifiableCollectionTest.cpp
          IdentifiableCollectionTest.cpp
        タスク "CL" の実行が終了しました。
        false 条件のため、タスク "CL" を省略しました。('%(ClCompile.PrecompiledHeader)' != 'Create' and '%(ClCompile.ExcludedFromBuild)'!='true' and '%(ClCompile.CompilerIteration)' == '' and @(ClCompile) != '') は ('Create' != 'Create' and ''!='true' and '' == '' and stdafx.cpp != '') として評価されました。
@@ -407,8 +407,47 @@
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppCommon.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\UtilsTest\UtilsTest.vcxproj" からのターゲット "Link" (ターゲット "_Link" は依存):
        "Link" タスクをアセンブリ "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.Build.CppTasks.Common.dll" から使用しています。
        タスク "Link"
+         書き込み追跡ログ:
+         	Debug\UtilsTest.tlog\link.write.1.tlog
+         読み取り追跡ログ:
+         	Debug\UtilsTest.tlog\link.read.1.tlog
+         C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILS.LIB|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\ANGLEUTILITYTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLECOLLECTIONTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLETEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\PROBABILITYTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\STDAFX.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\VECTOR2DTEST.OBJ に対する出力:
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILSTEST.ILK
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILSTEST.DLL
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILSTEST.PDB
+         C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILS.LIB|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\ANGLEUTILITYTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLECOLLECTIONTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLETEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\PROBABILITYTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\STDAFX.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\VECTOR2DTEST.OBJ に対する入力:
+         	C:\PROGRA~2\SEARCHPROTECT\SEARCHPROTECT\BIN\VC32LOADER.DLL
+         	C:\WINDOWS\GLOBALIZATION\SORTING\SORTDEFAULT.NLS
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\KERNEL32.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\USER32.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\GDI32.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\WINSPOOL.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\COMDLG32.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\ADVAPI32.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\SHELL32.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\OLE32.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\OLEAUT32.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\UUID.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\ODBC32.LIB
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\LIB\WINV6.3\UM\X86\ODBCCP32.LIB
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\ANGLEUTILITYTEST.OBJ
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLECOLLECTIONTEST.OBJ
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLETEST.OBJ
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\STDAFX.OBJ
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\PROBABILITYTEST.OBJ
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\VECTOR2DTEST.OBJ
+         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILS.LIB
+         	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 12.0\VC\LIB\MSVCPRTD.LIB
+         	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 12.0\VC\UNITTEST\LIB\MICROSOFT.VISUALSTUDIO.TESTTOOLS.CPPUNITTESTFRAMEWORK.LIB
+         	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 12.0\VC\LIB\MSVCRTD.LIB
+         	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 12.0\VC\LIB\OLDNAMES.LIB
+         	C:\WINDOWS\SYSTEM32\TZRES.DLL
+         	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 12.0\VC\BIN\1041\LINKUI.DLL
+         	C:\PROGRAM FILES (X86)\WINDOWS KITS\8.1\BIN\X86\RC.EXE
+         	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 12.0\VC\BIN\CVTRES.EXE
+         ソースのコンパイルが必要です。入力 C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLECOLLECTIONTEST.OBJ は出力 C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILSTEST.DLL よりも新しいです。
          ツールに渡された環境変数:
-           VS_UNICODE_OUTPUT=1616
+           VS_UNICODE_OUTPUT=24
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.dll" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\UnitTest\lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.lib" /MACHINE:X86 /DLL Debug\AngleUtilityTest.obj
          Debug\IdentifiableCollectionTest.obj
          Debug\IdentifiableTest.obj
@@ -417,14 +456,13 @@
          Debug\Vector2dTest.obj
          "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.lib"
          Tracking command:
-         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /a /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\UtilsTest\Debug\UtilsTest.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILS.LIB|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\ANGLEUTILITYTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLECOLLECTIONTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLETEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\PROBABILITYTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\STDAFX.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\VECTOR2DTEST.OBJ" /b MSBuildConsole_CancelEvent63a3fd6114b74f28ace6646a676f782c  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe"  /ERRORREPORT:PROMPT /OUT:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.dll" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\UnitTest\lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.lib" /MACHINE:X86 /DLL Debug\AngleUtilityTest.obj
+         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /a /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\UtilsTest\Debug\UtilsTest.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILS.LIB|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\ANGLEUTILITYTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLECOLLECTIONTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\IDENTIFIABLETEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\PROBABILITYTEST.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\STDAFX.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\UTILSTEST\DEBUG\VECTOR2DTEST.OBJ" /b MSBuildConsole_CancelEvent345bd58ab9fa4d5eba031cc7b29ab231  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe"  /ERRORREPORT:PROMPT /OUT:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.dll" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\UnitTest\lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.lib" /MACHINE:X86 /DLL Debug\AngleUtilityTest.obj
          Debug\IdentifiableCollectionTest.obj
          Debug\IdentifiableTest.obj
          Debug\stdafx.obj
          Debug\ProbabilityTest.obj
          Debug\Vector2dTest.obj
          "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.lib"
-            ライブラリ C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.lib とオブジェクト C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.exp を作成中
        タスク "Link" の実行が終了しました。
        タスク "Message"
          UtilsTest.vcxproj -> C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\UtilsTest.dll
@@ -563,4 +601,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:00.39
+経過時間 00:00:00.51

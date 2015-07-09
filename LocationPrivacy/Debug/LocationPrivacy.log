@@ -1,5 +1,5 @@
-﻿2015/07/09 2:25:34 にビルドを開始しました。
-     1>ノード 2 上のプロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" (Build ターゲット)。
+﻿2015/07/09 14:17:30 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" (Rebuild ターゲット)。
      1>ツール バージョン "12.0" でビルドしています。
      1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "_CheckForInvalidConfigurationAndPlatform" (エントリ ポイント):
        false 条件のため、タスク "Error" を省略しました。( '$(_InvalidConfigurationError)' == 'true' ) は ( '' == 'true' ) として評価されました。
@@ -14,6 +14,86 @@
        false 条件のため、タスク "Error" を省略しました。('$(BaseIntermediateOutputPath)' != '' and !HasTrailingSlash('$(BaseIntermediateOutputPath)')) は ('obj\' != '' and !HasTrailingSlash('obj\')) として評価されました。
        false 条件のため、タスク "Error" を省略しました。('$(IntermediateOutputPath)' != '' and !HasTrailingSlash('$(IntermediateOutputPath)')) は ('Debug\' != '' and !HasTrailingSlash('Debug\')) として評価されました。
      1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "_CheckForInvalidConfigurationAndPlatform" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.BuildSteps.Targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "_PrepareForRebuild" (ターゲット "Rebuild" は依存):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "_PrepareForRebuild" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "BeforeRebuild" (ターゲット "Rebuild" は依存):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "BeforeRebuild" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.BuildSteps.Targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "_PrepareForClean" (ターゲット "Clean" は依存):
+       タスク "Delete"
+         ファイル "Debug\LocationPrivacy.tlog\LocationPrivacy.lastbuildstate" を削除しています。
+       タスク "Delete" の実行が終了しました。
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "_PrepareForClean" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "BeforeClean" (ターゲット "Clean" は依存):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "BeforeClean" のビルドが終了しました。
+       false 条件により、ターゲット "UnmanagedUnregistration" を省略しました。((('$(_AssemblyTimestampBeforeCompile)' != '$(_AssemblyTimestampAfterCompile)' or '$(RegisterForComInterop)' != 'true' or '$(OutputType)' != 'library') or
+                           ('$(_AssemblyTimestampBeforeCompile)' == '')) and
+                          Exists('@(_UnmanagedRegistrationCache)')) は ((('' != '' or '' != 'true' or 'exe' != 'library') or
+                           ('' == '')) and
+                          Exists('obj\LocationPrivacy.vcxproj.UnmanagedRegistration.cache')) として評価されました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "CoreClean" (ターゲット "Clean" は依存):
+       タスク "Delete"
+         ファイル "Debug\\TempCA\LocationPrivacy.pdb" は存在しません。省略しています。
+         ファイル "Debug\\TempCA\LocationPrivacy.exe" は存在しません。省略しています。
+       タスク "Delete" の実行が終了しました。
+       タスク "ReadLinesFromFile"
+       タスク "ReadLinesFromFile" の実行が終了しました。
+       タスク "FindUnderPath"
+         比較パスは "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\" です。
+       タスク "FindUnderPath" の実行が終了しました。
+       タスク "FindUnderPath"
+         比較パスは "Debug\" です。
+       タスク "FindUnderPath" の実行が終了しました。
+       タスク "Delete"
+       タスク "Delete" の実行が終了しました。
+       タスク "RemoveDuplicates"
+       タスク "RemoveDuplicates" の実行が終了しました。
+       タスク "MakeDir"
+       タスク "MakeDir" の実行が終了しました。
+       タスク "WriteLinesToFile"
+       タスク "WriteLinesToFile" の実行が終了しました。
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "CoreClean" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "AssignProjectConfiguration" (ターゲット "CleanReferencedProjects" は依存):
+       タスク "AssignProjectConfiguration"
+         プロジェクト参照 "..\Utils\Utils.vcxproj" に "Debug|Win32" 構成を割り当てました。
+       タスク "AssignProjectConfiguration" の実行が終了しました。
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "AssignProjectConfiguration" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "_SplitProjectReferencesByFileExistence" (ターゲット "CleanReferencedProjects" は依存):
+       "ResolveNonMSBuildProjectOutput" タスクをアセンブリ "Microsoft.Build.Tasks.v12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" から使用しています。
+       タスク "ResolveNonMSBuildProjectOutput"
+         プロジェクト参照 "..\Utils\Utils.vcxproj" を解決しています。
+         プロジェクト参照 "..\Utils\Utils.vcxproj" は解決されませんでした。
+       タスク "ResolveNonMSBuildProjectOutput" の実行が終了しました。
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "_SplitProjectReferencesByFileExistence" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "CleanReferencedProjects" (ターゲット "Clean" は依存):
+       false 条件のため、タスク "MSBuild" を省略しました。('$(BuildingInsideVisualStudio)' != 'true' and '$(BuildProjectReferences)' == 'true' and '@(_MSBuildProjectReferenceExistent)' != '') は ('true' != 'true' and 'true' == 'true' and '..\Utils\Utils.vcxproj' != '') として評価されました。
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "CleanReferencedProjects" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "CleanPublishFolder" (ターゲット "Clean" は依存):
+       false 条件のため、タスク "RemoveDir" を省略しました。('$(PublishDir)'=='$(OutputPath)app.publish\' and Exists('$(PublishDir)')) は ('C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\app.publish\'=='C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\app.publish\' and Exists('C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\app.publish\')) として評価されました。
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "CleanPublishFolder" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "AfterClean" (ターゲット "Clean" は依存):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "AfterClean" のビルドが終了しました。
+       false 条件により、ターゲット "EntityClean" を省略しました。('@(EntityDeploy)' != '') は ('' != '') として評価されました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppClean.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "BeforeCppClean" (ターゲット "CppClean" は依存):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "BeforeCppClean" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppClean.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "CoreCppClean" (ターゲット "CppClean" は依存):
+       タスク "MakeDir"
+       タスク "MakeDir" の実行が終了しました。
+       "CppClean" タスクをアセンブリ "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.Build.CppTasks.Common.dll" から使用しています。
+       タスク "CppClean"
+       タスク "CppClean" の実行が終了しました。
+       タスク "WriteLinesToFile"
+       タスク "WriteLinesToFile" の実行が終了しました。
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "CoreCppClean" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppClean.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "AfterCppClean" (ターゲット "CppClean" は依存):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "AfterCppClean" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppClean.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "PGInstrumentedClean" (ターゲット "CppClean" は依存):
+       タスク "Delete"
+       タスク "Delete" の実行が終了しました。
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "PGInstrumentedClean" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppClean.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "CppClean" (ターゲット "Clean" は依存):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "CppClean" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "Clean" (ターゲット "Rebuild" は依存):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "Clean" のビルドが終了しました。
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.BuildSteps.Targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "_PrepareForBuild" (ターゲット "Build" は依存):
        false 条件のため、タスク "CreateItem" を省略しました。('%(CustomBuild.IncludeFileToTool)'!='') は (''!='') として評価されました。
      1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "_PrepareForBuild" のビルドが終了しました。
@@ -23,19 +103,9 @@
        false 条件により、ターゲット "ComputeCrtSDKReference" を省略しました。('@(ClCompile)'!='' and '$(WindowsAppContainer)'=='true' and '$(UseCrtSDKReference)' != 'false') は ('LocationPrivacy.cpp;stdafx.cpp'!='' and 'false'=='true' and '' != 'false') として評価されました。
      1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "BeforeResolveReferences" (ターゲット "ResolveReferences" は依存):
      1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "BeforeResolveReferences" のビルドが終了しました。
-     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "AssignProjectConfiguration" (ターゲット "ResolveReferences" は依存):
-       タスク "AssignProjectConfiguration"
-         プロジェクト参照 "..\Utils\Utils.vcxproj" に "Debug|Win32" 構成を割り当てました。
-       タスク "AssignProjectConfiguration" の実行が終了しました。
-     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "AssignProjectConfiguration" のビルドが終了しました。
        ターゲット "AssignProjectConfiguration" を省略しました。以前に正しくビルドされていました。
-     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "_SplitProjectReferencesByFileExistence" (ターゲット "ResolveProjectReferences" は依存):
-       "ResolveNonMSBuildProjectOutput" タスクをアセンブリ "Microsoft.Build.Tasks.v12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" から使用しています。
-       タスク "ResolveNonMSBuildProjectOutput"
-         プロジェクト参照 "..\Utils\Utils.vcxproj" を解決しています。
-         プロジェクト参照 "..\Utils\Utils.vcxproj" は解決されませんでした。
-       タスク "ResolveNonMSBuildProjectOutput" の実行が終了しました。
-     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "_SplitProjectReferencesByFileExistence" のビルドが終了しました。
+       ターゲット "AssignProjectConfiguration" を省略しました。以前に正しくビルドされていました。
+       ターゲット "_SplitProjectReferencesByFileExistence" を省略しました。以前に正しくビルドされていました。
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "_RemoveNameMetadataFromProjectReferenceItems" (ターゲット "ResolveProjectReferences" は依存):
      1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "_RemoveNameMetadataFromProjectReferenceItems" のビルドが終了しました。
      1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "ResolveProjectReferences" (ターゲット "ResolveReferences" は依存):
@@ -160,7 +230,7 @@
        タスク "WriteLinesToFile"
        タスク "WriteLinesToFile" の実行が終了しました。
        タスク "Touch"
-         "Debug\LocationPrivacy.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+         "AlwaysCreate" が指定されたため "Debug\LocationPrivacy.tlog\unsuccessfulbuild" を作成しています。
        タスク "Touch" の実行が終了しました。
      1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "InitializeBuildStatus" のビルドが終了しました。
        ターゲット "AssignProjectConfiguration" を省略しました。以前に正しくビルドされていました。
@@ -244,23 +314,32 @@
        false 条件により、ターゲット "GenerateTargetFrameworkMonikerAttribute" を省略しました。('$(GenerateTargetFrameworkAttribute)' == 'true') は ('false' == 'true') として評価されました。
        false 条件により、ターゲット "ManagedIncrementalBuildPreProcessDependencyGraph" を省略しました。('@(ClCompile)' != '' and '$(EnableManagedIncrementalBuild)' == 'True') は ('LocationPrivacy.cpp;stdafx.cpp' != '' and 'false' == 'True') として評価されました。
      1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppCommon.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "ClCompile" (ターゲット "_ClCompile" は依存):
-       false 条件のため、タスク "Delete" を省略しました。('%(ClCompile.DebugInformationFormat)' != '' and '%(ClCompile.DebugInformationFormat)' != 'OldStyle' and '%(ClCompile.ProgramDataBaseFileName)' != '' and !Exists(%(ClCompile.ProgramDataBaseFileName))) は ('EditAndContinue' != '' and 'EditAndContinue' != 'OldStyle' and 'Debug\vc120.pdb' != '' and !Exists(Debug\vc120.pdb)) として評価されました。
+       タスク "Delete"
+         ファイル "Debug\LocationPrivacy.pch" は存在しません。省略しています。
+       タスク "Delete" の実行が終了しました。
        false 条件のため、タスク "CL" を省略しました。('%(ClCompile.PrecompiledHeader)' == 'Create' and '%(ClCompile.ExcludedFromBuild)'!='true' and '%(ClCompile.CompilerIteration)' == '') は ('Use' == 'Create' and ''!='true' and '' == '') として評価されました。
        "CL" タスクをアセンブリ "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.Build.CppTasks.Common.dll" から使用しています。
        タスク "CL"
-         以下から作成されたキャッシュ内の入力依存関係テーブルを使用しています:
-         	C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\Debug\LocationPrivacy.tlog\cl.read.1.tlog
-         C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\STDAFX.CPP に対する出力:
-         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\DEBUG\STDAFX.OBJ
-         	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\DEBUG\LOCATIONPRIVACY.PCH
-         すべての出力が最新のものです。
+         Forcing recompile of all source files due to missing PDB "Debug\vc120.pdb".
+         ツールに渡された環境変数:
+           VS_UNICODE_OUTPUT=1900
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Debug\LocationPrivacy.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         Tracking command:
+         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\Debug\LocationPrivacy.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\STDAFX.CPP" /b MSBuildConsole_CancelEventa1032116bc4445e5ab2316974d7db35a  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe"  /c /I"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Debug\LocationPrivacy.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
        タスク "CL" の実行が終了しました。
        タスク "CL"
-         以下から作成されたキャッシュ内の入力依存関係テーブルを使用しています:
-         	C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\Debug\LocationPrivacy.tlog\cl.read.1.tlog
+         読み取り追跡ログ:
+         	Debug\LocationPrivacy.tlog\cl.read.1.tlog
          C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\LOCATIONPRIVACY.CPP に対する出力:
          	C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\DEBUG\LOCATIONPRIVACY.OBJ
-         すべての出力が最新のものです。
+         LocationPrivacy.cpp は追跡ログに見つからないためコンパイルされます。
+         ツールに渡された環境変数:
+           VS_UNICODE_OUTPUT=1148
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\LocationPrivacy.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt LocationPrivacy.cpp
+         Tracking command:
+         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\Debug\LocationPrivacy.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\LOCATIONPRIVACY.CPP" /b MSBuildConsole_CancelEventa6982b4006244cf092ac38575c5ae6e5  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe"  /c /I"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils\Debug" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\LocationPrivacy.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt LocationPrivacy.cpp
+         LocationPrivacy.cpp
        タスク "CL" の実行が終了しました。
        false 条件のため、タスク "CL" を省略しました。('%(ClCompile.PrecompiledHeader)' != 'Create' and '%(ClCompile.ExcludedFromBuild)'!='true' and '%(ClCompile.CompilerIteration)' == '' and @(ClCompile) != '') は ('Create' != 'Create' and ''!='true' and '' == '' and stdafx.cpp != '') として評価されました。
      1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "ClCompile" のビルドが終了しました。
@@ -394,12 +473,12 @@
        "Link" タスクをアセンブリ "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.Build.CppTasks.Common.dll" から使用しています。
        タスク "Link"
          ツールに渡された環境変数:
-           VS_UNICODE_OUTPUT=1896
+           VS_UNICODE_OUTPUT=1244
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\LocationPrivacy.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\LocationPrivacy.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\LocationPrivacy.lib" /MACHINE:X86 Debug\LocationPrivacy.obj
          Debug\stdafx.obj
          "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.lib"
          Tracking command:
-         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /a /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\Debug\LocationPrivacy.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILS.LIB|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\DEBUG\LOCATIONPRIVACY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\DEBUG\STDAFX.OBJ" /b MSBuildConsole_CancelEventa6bdf5a83140447b984fefec41cdd841  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe"  /ERRORREPORT:PROMPT /OUT:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\LocationPrivacy.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\LocationPrivacy.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\LocationPrivacy.lib" /MACHINE:X86 Debug\LocationPrivacy.obj
+         C:\Program Files (x86)\MSBuild\12.0\bin\Tracker.exe /a /d "C:\Program Files (x86)\MSBuild\12.0\bin\FileTracker.dll" /i "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\Debug\LocationPrivacy.tlog" /r "C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\DEBUG\UTILS.LIB|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\DEBUG\LOCATIONPRIVACY.OBJ|C:\USERS\MIZUNO\DOCUMENTS\VISUAL STUDIO 2013\PROJECTS\LOCATIONPRIVACY\LOCATIONPRIVACY\DEBUG\STDAFX.OBJ" /b MSBuildConsole_CancelEvent8acfe0e336934c4a91c2d6d3caeef9ac  /c "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe"  /ERRORREPORT:PROMPT /OUT:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\LocationPrivacy.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\LocationPrivacy.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\LocationPrivacy.lib" /MACHINE:X86 Debug\LocationPrivacy.obj
          Debug\stdafx.obj
          "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Debug\Utils.lib"
        タスク "Link" の実行が終了しました。
@@ -533,10 +612,14 @@
          "Debug\LocationPrivacy.tlog\LocationPrivacy.lastbuildstate" のタッチ タスクを実行しています。
        タスク "Touch" の実行が終了しました。
      1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "FinalizeBuildStatus" のビルドが終了しました。
-     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.BuildSteps.Targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "Build" (エントリ ポイント):
+     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.BuildSteps.Targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "Build" (ターゲット "Rebuild" は依存):
      1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "Build" のビルドが終了しました。
-     1>プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" (Build ターゲット) のビルドが完了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\12.0\bin\Microsoft.Common.CurrentVersion.targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "AfterRebuild" (ターゲット "Rebuild" は依存):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "AfterRebuild" のビルドが終了しました。
+     1>ファイル "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.BuildSteps.Targets" 内にある、プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" からのターゲット "Rebuild" (エントリ ポイント):
+     1>プロジェクト "LocationPrivacy.vcxproj" 内のターゲット "Rebuild" のビルドが終了しました。
+     1>プロジェクト "C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\LocationPrivacy\LocationPrivacy.vcxproj" (Rebuild ターゲット) のビルドが完了しました。
 
 ビルドに成功しました。
 
-経過時間 00:00:00.24
+経過時間 00:00:00.42

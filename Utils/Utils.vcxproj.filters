@@ -28,9 +28,6 @@
     <Filter Include="ヘッダー ファイル\Interfaces">
       <UniqueIdentifier>{c24c93e8-a611-40cc-bd53-5c46f01723a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Collection">
-      <UniqueIdentifier>{00c42be9-7ed8-40ec-ba59-b54c7c8200af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Collection">
       <UniqueIdentifier>{09e8d4d1-9026-4a9c-a651-b9e5153748d9}</UniqueIdentifier>
     </Filter>
@@ -93,15 +90,6 @@
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
     <ClCompile Include="Vector2d.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="Edge.hpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="Node.hpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="NodeManager.hpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
   </ItemGroup>
