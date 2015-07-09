@@ -28,7 +28,7 @@ namespace Graph {
 		///</summary>
 		///<param name='to'>接続先のノードID</param>
 		///<param name='data'>エッジの持つ属性値</param>
-		Edge(node_id to, EDGE_DATA data) : to(to), data(std::make_shared<EDGE_DATA>(data) {}
+		Edge(node_id to, EDGE_DATA data) : to(to), data(std::make_shared<EDGE_DATA>(data)) {}
 		
 		///<summary>
 		/// デストラクタ
