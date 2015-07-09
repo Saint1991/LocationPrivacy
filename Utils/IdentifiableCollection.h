@@ -4,11 +4,6 @@
 #define IDENTIFIABLE_COLLECTION_API __declspec(dllimport)
 #endif
 
-#ifndef IDENTIFIABLE_COLLECTION_H
-#define IDENTIFIABLE_COLLECTION_H
-#endif
-
-
 #pragma once
 #include "Identifiable.h"
 
@@ -44,11 +39,23 @@ namespace Collection {
 	};
 }
 
+
+
+
+
+
+///<summary>
+/// コンストラクタ
+///</summary>
 template <typename T>
 Collection::IdentifiableCollection<T>::IdentifiableCollection()
 {
 }
 
+
+///<summary>
+/// デストラクタ
+///</summary>
 template <typename T>
 Collection::IdentifiableCollection<T>::~IdentifiableCollection()
 {
