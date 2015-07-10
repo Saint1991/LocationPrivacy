@@ -17,11 +17,9 @@ namespace Graph {
 	template <typename EDGE_DATA>
 	class Edge
 	{
-	protected:
-		std::shared_ptr<EDGE_DATA> data;
-	
 	public:
 		node_id to;
+		std::shared_ptr<EDGE_DATA> data;
 
 		///<summary>
 		/// コンストラクタ
@@ -33,7 +31,7 @@ namespace Graph {
 		///<summary>
 		/// デストラクタ
 		///</summary>
-		virtual ~Edge() {}
+		virtual ~Edge() { }
 
 		friend bool operator==(Edge<EDGE_DATA> e1, Edge<EDGE_DATA> e2) { return e1.to == e2.to; }
 		friend bool operator!=(Edge<EDGE_DATA> e1, Edge<EDGE_DATA> e2) { return !(e1 == e2); }

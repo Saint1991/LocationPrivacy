@@ -53,5 +53,11 @@
     <ClCompile Include="IdentifiableTest.cpp">
       <Filter>ソース ファイル\Interfaces</Filter>
     </ClCompile>
+    <ClCompile Include="EdgeTest.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTest.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

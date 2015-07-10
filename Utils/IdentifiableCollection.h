@@ -51,7 +51,6 @@ namespace Collection {
 template <typename T>
 Collection::IdentifiableCollection<T>::IdentifiableCollection() : collection(std::make_unique < std::vector<std::shared_ptr<T>>>())
 {
-	*collection = std::vector<std::shared_ptr<T>>();
 }
 
 
