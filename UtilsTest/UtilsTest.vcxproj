@@ -92,6 +92,8 @@
     <ClCompile Include="EdgeTest.cpp" />
     <ClCompile Include="IdentifiableCollectionTest.cpp" />
     <ClCompile Include="IdentifiableTest.cpp" />
+    <ClCompile Include="LatLngTest.cpp" />
+    <ClCompile Include="NodeCollectionFactory.cpp" />
     <ClCompile Include="NodeTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

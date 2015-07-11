@@ -18,6 +18,21 @@ namespace UtilsTest
 			Collection::IdentifiableCollection<Graph::Node<double, double>> collection2;
 		}
 
+		TEST_METHOD(add)
+		{
+			Collection::IdentifiableCollection<Identifiable> collection;
+			Assert::IsTrue(collection.add(Identifiable(1L)));
+			try {
+				Assert::IsFalse(collection.add(Identifiable(1L)));
+				Assert::Fail();
+			} 
+			catch (DuplicatedIdException e) {
+				std::string message = e.what();
+				Logger::WriteMessage(e.what());
+				Assert::IsTrue(message == "Duplicated ID - 1");
+			}
+		}
+
 		TEST_METHOD(find1) 
 		{
 			Collection::IdentifiableCollection<Identifiable> collection;

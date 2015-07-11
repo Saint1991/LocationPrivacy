@@ -20,132 +20,185 @@ namespace UtilsTest
 			Assert::AreEqual(0.8, *node.data);
 		}
 
-		TEST_METHOD(connect_to1_and_get_edge_to)
+		TEST_METHOD(connect_to_is_connecting_to)
 		{
 			Graph::Node<double, double> node(1, 0.8);
-			node.connect_to(Graph::Edge<double>((Graph::node_id)3, 1.0));
-			node.connect_to(Graph::Edge<double>((Graph::node_id)2, 0.3));
+			Assert::IsTrue(node.connect_to((Graph::node_id)2, 0.3));
+			Assert::IsTrue(node.connect_to((Graph::node_id)3, 1.0));
+			Assert::IsFalse(node.connect_to(2, 0.5));
+
+			Assert::IsFalse(node.is_connecting_to(1));
+			Assert::IsTrue(node.is_connecting_to(2));
+			Assert::IsTrue(node.is_connecting_to(3));
+			Assert::IsFalse(node.is_connecting_to(4));
+		}
+
+		TEST_METHOD(disconnect_from)
+		{
+			Graph::Node<double, double> node(1, 0.8);
+			node.connect_to((Graph::node_id)2, 0.3);
+			node.connect_to((Graph::node_id)3, 1.0);
 			
-			std::shared_ptr<Graph::Edge<double>> ret1 = node.get_edge_to(3);
-			auto ret2 = node.get_edge_to(4);
+			Assert::IsTrue(node.disconnect_from((Graph::node_id)2));
+			Assert::IsFalse(node.disconnect_from((Graph::node_id)2));
+			Assert::IsFalse(node.disconnect_from((Graph::node_id)1));
 
-			Assert::AreEqual((Graph::node_id)3, ret1->to);
-			Assert::AreEqual(1.0, *(ret1->data));
-			Assert::IsTrue(ret2 == nullptr);
+			Assert::IsFalse(node.is_connecting_to(1));
+			Assert::IsFalse(node.is_connecting_to(2));
+			Assert::IsTrue(node.is_connecting_to(3));
+			Assert::IsFalse(node.is_connecting_to(4));
 		}
 
-		TEST_METHOD(connect_to2_and_get_edge_to)
+		TEST_METHOD(get_edge_data)
 		{
 			Graph::Node<double, double> node(1, 0.8);
-			node.connect_to((Graph::node_id)3, 1.0);
 			node.connect_to((Graph::node_id)2, 0.3);
-
-			std::shared_ptr<Graph::Edge<double>> ret1 = node.get_edge_to(3);
-			auto ret2 = node.get_edge_to(4);
-
-			Assert::AreEqual((Graph::node_id)3, ret1->to);
-			Assert::AreEqual(1.0, *(ret1->data));
-			Assert::IsTrue(ret2 == nullptr);
+			node.connect_to((Graph::node_id)3, 1.0);
+			
+			Assert::AreEqual(0.3, *node.get_edge_data((Graph::node_id)2), precision);
+			Assert::AreEqual(1.0, *node.get_edge_data((Graph::node_id)3), precision);
+			Assert::IsTrue(node.get_edge_data((Graph::node_id)4) == nullptr);
 		}
 
-		TEST_METHOD(disconnect_from) 
+		TEST_METHOD(connect_to2)
 		{
 			Graph::Node<double, double> node(1, 0.8);
-			node.connect_to((Graph::node_id)3, 1.0);
 			node.connect_to((Graph::node_id)2, 0.3);
+			node.connect_to((Graph::node_id)3, 1.0);
 
-			Assert::IsTrue(node.disconnect_from(2));
-			Assert::IsFalse(node.disconnect_from(1));
+			Assert::AreEqual(0.3, *node.get_edge_data((Graph::node_id)2), precision);
+			Assert::AreEqual(1.0, *node.get_edge_data((Graph::node_id)3), precision);
 
-			auto ret1 = node.get_edge_to(2);
-			auto ret2 = node.get_edge_to(3);
-
-			Assert::IsTrue(ret1 == nullptr);
-			Assert::AreEqual((Graph::node_id)3, ret2->to);
-			Assert::AreEqual(1.0, *(ret2->data));
+			Assert::IsFalse(node.connect_to(2, 0.5));
+			Assert::AreEqual(0.3, *node.get_edge_data((Graph::node_id)2), precision);
 		}
-
-		TEST_METHOD(cp_constructor)
-		{
-			Graph::Node<double, double> node(1, 0.8);
-			node.connect_to((Graph::node_id)3, 1.0);
-			node.connect_to((Graph::node_id)2, 0.3);
-
-			Graph::Node<double, double> node2 = node;
-
-			auto ret1 = node2.get_edge_to(2);
-			auto ret2 = node2.get_edge_to(3);
-
-			Assert::AreEqual((Graph::node_id)2, ret1->to);
-			Assert::AreEqual(0.3, *(ret1->data), precision);
-			Assert::AreEqual((Graph::node_id)3, ret2->to);
-			Assert::AreEqual(1.0, *(ret2->data), precision);
-		}
-
-		TEST_METHOD(is_connecting_to)
-		{
-			Graph::Node<double, double> node(1, 0.8);
-			node.connect_to((Graph::node_id)3, 1.0);
-			node.connect_to((Graph::node_id)2, 0.3);
-
-			node.disconnect_from(2);
-			node.disconnect_from(1);
 		
-			Assert::IsFalse(node.is_connecting_to((Graph::node_id)2));
-			Assert::IsFalse(node.is_connecting_to((Graph::node_id)1));
-			Assert::IsTrue(node.is_connecting_to((Graph::node_id)3));
+		TEST_METHOD(update_edge_data)
+		{
+			Graph::Node<double, double> node(1, 0.8);
+			node.connect_to((Graph::node_id)2, 0.3);
+			node.connect_to((Graph::node_id)3, 1.0);
+
+			Assert::IsTrue(node.update_edge_data((Graph::node_id)2, 0.8));
+			Assert::IsFalse(node.update_edge_data((Graph::node_id)1, 0.4));
+						
+			Assert::AreEqual(0.8, *node.get_edge_data((Graph::node_id)2), precision);
+			Assert::AreEqual(1.0, *node.get_edge_data((Graph::node_id)3), precision);
+			Assert::IsFalse(node.is_connecting_to(1));
+		}
+
+		TEST_METHOD(connect_or_update)
+		{
+			Graph::Node<double, double> node(1, 0.8);
+			Assert::IsTrue(node.connect_or_update(2UL, 0.3));
+			Assert::IsTrue(node.connect_or_update(3UL, 1.0));
+			
+			Assert::AreEqual(0.3, *node.get_edge_data(2UL), precision);
+			Assert::AreEqual(1.0, *node.get_edge_data(3UL), precision);
+
+			Assert::IsFalse(node.connect_or_update(2UL, 0.8));
+			Assert::AreEqual(0.8, *node.get_edge_data(2UL), precision);
 		}
 
 		TEST_METHOD(get_connecting_node_list)
 		{
 			Graph::Node<double, double> node(1, 0.8);
-			node.connect_to((Graph::node_id)3, 1.0);
-			node.connect_to((Graph::node_id)2, 0.3);
-			node.connect_to((Graph::node_id)5, 1.4);
-			node.connect_to((Graph::node_id)4, 0.8);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(3UL, 1.0);
+			node.connect_to(4UL, 0.2);
 
-			node.disconnect_from((Graph::node_id)3);
-			std::list<Graph::node_id> connecting_list = node.get_connecting_node_list();
-
-			std::list<Graph::node_id>::iterator iter = connecting_list.begin();
-			Assert::AreEqual((Graph::node_id)2, *iter);
+			Graph::Node<double, double> node2 = node;
+			std::list<Graph::node_id> connecting_list =node2.get_connecting_node_list();
 			
-			iter++;
-			Assert::AreEqual((Graph::node_id)4, *iter);
-			
-			iter++;
-			Assert::AreEqual((Graph::node_id)5, *iter);
+			auto iter = connecting_list.begin();
+			Assert::AreEqual(2UL, *iter);
+			Assert::AreEqual(3UL, *++iter);
+			Assert::AreEqual(4UL, *++iter);
+		}
 
-			Assert::IsTrue(++iter == connecting_list.end());
+		TEST_METHOD(cp_constructor1)
+		{
+			Graph::Node<double, double> node(1, 0.8);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+			node.connect_to(3UL, 1.0);
+			
+			Graph::Node<double, double> node2 = node;
+			Assert::AreEqual(0.8, *node.data, precision);
+			Assert::IsFalse(node2.is_connecting_to(1UL));
+			Assert::IsTrue(node2.is_connecting_to(2UL));
+			Assert::IsTrue(node2.is_connecting_to(3UL));
+			Assert::IsTrue(node2.is_connecting_to(4UL));
+			Assert::AreEqual(0.3, *node2.get_edge_data(2UL), precision);
+			Assert::AreEqual(1.0, *node2.get_edge_data(3UL), precision);
+			Assert::AreEqual(0.2, *node2.get_edge_data(4UL), precision);
+		}
+
+		TEST_METHOD(cp_constructor2)
+		{
+			Graph::Node<double, double> node(1, 0.8);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+			node.connect_to(3UL, 1.0);
+
+			Graph::Node<double, double> node2 = node;
+			node2.update_edge_data(2UL, 0.8);
+			Assert::AreEqual(0.8, *node2.get_edge_data(2UL));
+			Assert::AreEqual(0.3, *node.get_edge_data(2UL));
 		}
 
 		TEST_METHOD(operator_bl_eq1)
 		{
-			Graph::Node<double, double> node1(1, 0.7);
+			Graph::Node<double, double> node(1, 0.8);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+			node.connect_to(3UL, 1.0);
+
 			Graph::Node<double, double> node2(1, 0.4);
-			Assert::IsTrue(node1 == node2);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+			
+			Assert::IsTrue(node == node2);
 		}
 
-		TEST_METHOD(operator_bl_eq2)
+		TEST_METHOD(operator_bl_eq2) 
 		{
-			Graph::Node<double, double> node1(1, 0.7);
-			Graph::Node<double, double> node2(3, 0.7);
-			Assert::IsFalse(node1 == node2);
+			Graph::Node<double, double> node(1, 0.8);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+
+			Graph::Node<double, double> node2(3, 0.8);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+
+			Assert::IsFalse(node == node2);
 		}
 
 		TEST_METHOD(operator_bl_neq1)
 		{
-			Graph::Node<double, double> node1(1, 0.7);
-			Graph::Node<double, double> node2(3, 0.4);
-			Assert::IsTrue(node1 != node2);
+			Graph::Node<double, double> node(1, 0.8);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+
+			Graph::Node<double, double> node2(3, 0.8);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+
+			Assert::IsTrue(node != node2);
 		}
 
 		TEST_METHOD(operator_bl_neq2)
 		{
-			Graph::Node<double, double> node1(1, 0.7);
-			Graph::Node<double, double> node2(1, 0.7);
-			Assert::IsFalse(node1 != node2);
+			Graph::Node<double, double> node(1, 0.8);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+			node.connect_to(3UL, 1.0);
+
+			Graph::Node<double, double> node2(1, 0.4);
+			node.connect_to(2UL, 0.3);
+			node.connect_to(4UL, 0.2);
+
+			Assert::IsFalse(node != node2);
 		}
-		
 	};
 }

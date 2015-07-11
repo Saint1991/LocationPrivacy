@@ -57,9 +57,6 @@
     <ClInclude Include="Probability.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="NodeManager.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
-    </ClInclude>
     <ClInclude Include="AngleUtility.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
@@ -70,6 +67,12 @@
       <Filter>ヘッダー ファイル\Collection</Filter>
     </ClInclude>
     <ClInclude Include="Vector2d.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="LatLng.h">
+      <Filter>ヘッダー ファイル\Geography</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeCollectionFactory.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
   </ItemGroup>
@@ -91,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="Vector2d.cpp">
       <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="LatLng.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

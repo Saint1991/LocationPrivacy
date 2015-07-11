@@ -25,6 +25,9 @@
     <Filter Include="ソース ファイル\Interfaces">
       <UniqueIdentifier>{fdaeff90-df19-407d-8438-0928ac28bfdb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Geography">
+      <UniqueIdentifier>{2fa70d52-4c05-44ba-894f-56134e68f753}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -57,6 +60,12 @@
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
     <ClCompile Include="NodeTest.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="LatLngTest.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeCollectionFactory.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
   </ItemGroup>

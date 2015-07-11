@@ -28,14 +28,15 @@ namespace Collection {
 		IdentifiableCollection();
 		virtual ~IdentifiableCollection();
 
-		std::shared_ptr<T> find_by_id(const unsigned int& id);
-		bool remove_by_id(const unsigned int& id);
+		std::shared_ptr<T> find_by_id(const unsigned long& id);
+		bool remove_by_id(const unsigned long& id);
 		
 		bool contains(Identifiable id);
-		bool contains(unsigned int id);
+		bool contains(unsigned long id);
 		bool add(std::shared_ptr<T> val);
+		bool add(T val);
 		void sort();
-		std::size_t size();
+		std::size_t size() const;
 		void clear();
 	};
 }
@@ -70,7 +71,7 @@ Collection::IdentifiableCollection<T>::~IdentifiableCollection()
 /// ソートされていないコレクションに対しては前から全探索する．
 ///</summary>
 template <typename T>
-std::shared_ptr<T> Collection::IdentifiableCollection<T>::find_by_id(const unsigned int &id)
+std::shared_ptr<T> Collection::IdentifiableCollection<T>::find_by_id(const unsigned long &id)
 {
 	auto target_iter = is_sorted ? std::lower_bound(collection->begin(), collection->end(), id) : 	std::find(collection->begin(), collection->end(), id);
 	if (target_iter == collection->end() || target_iter->get()->get_id() != id) {
@@ -84,7 +85,7 @@ std::shared_ptr<T> Collection::IdentifiableCollection<T>::find_by_id(const unsig
 /// 要素が存在し，削除できた場合はtrueを，それ以外の場合はfalseを返す．
 ///</summary>
 template <typename T>
-bool Collection::IdentifiableCollection<T>::remove_by_id(const unsigned int &id)
+bool Collection::IdentifiableCollection<T>::remove_by_id(const unsigned long &id)
 {
 	auto target_iter = is_sorted ? std::lower_bound(collection->begin(), collection->end(), id) : std::find(collection->begin(), collection->end(), id);
 
@@ -102,7 +103,7 @@ bool Collection::IdentifiableCollection<T>::remove_by_id(const unsigned int &id)
 /// 指定したIDを持つ要素を含んでいるかを判定する
 ///</summary>
 template <typename T>
-bool Collection::IdentifiableCollection<T>::contains(unsigned int id)
+bool Collection::IdentifiableCollection<T>::contains(unsigned long id)
 {
 	bool is_contained = find_by_id(id) != nullptr;
 	return is_contained;
@@ -117,6 +118,7 @@ bool Collection::IdentifiableCollection<T>::contains(Identifiable id)
 	return contains(id.get_id());
 }
 
+
 ///<summary>
 /// 要素をIDで昇順にソートする．
 ///</summary>
@@ -129,20 +131,32 @@ void Collection::IdentifiableCollection<T>::sort()
 
 ///<summary>
 /// コレクションの末尾に指定した要素を格納する
+/// IDが重複する場合はDuplicatedIdExceptionをスローする．
 ///</summary>
 template <typename T>
 bool Collection::IdentifiableCollection<T>::add(std::shared_ptr<T> val)
 {
 	
 	//既存IDの場合は追加しない
-	unsigned int id = val->get_id();
+	unsigned long id = val->get_id();
 	if (contains(id)) {
+		throw DuplicatedIdException(id);
 		return false;
 	}
 	
 	collection->push_back(val);
 	is_sorted = false;
 	return true;
+}
+
+///<summary>
+/// コレクションの末尾に指定した要素を格納する
+/// IDが重複する場合はDuplicatedIdExceptionをスローする．
+///</summary>
+template <typename T>
+bool Collection::IdentifiableCollection<T>::add(T val)
+{
+	return add(std::make_shared<T>(val));
 }
 
 ///<summary>
@@ -159,7 +173,7 @@ void Collection::IdentifiableCollection<T>::clear()
 /// コレクション内の要素数を取得する
 ///</summary>
 template <typename T>
-std::size_t Collection::IdentifiableCollection<T>::size()
+std::size_t Collection::IdentifiableCollection<T>::size() const
 {
 	return collection->size();
 }

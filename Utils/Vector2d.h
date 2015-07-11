@@ -6,6 +6,7 @@
 
 #pragma once
 namespace Graph {
+	
 	///<summary>
 	/// 2次元ベクタを表すクラス
 	///</summary>

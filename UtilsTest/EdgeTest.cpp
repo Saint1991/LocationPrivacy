@@ -14,7 +14,7 @@ namespace UtilsTest
 		{
 			Graph::node_id expected = 1;
 			Graph::Edge<double> edge(1, 0.8);
-			Assert::AreEqual(expected, edge.to);
+			Assert::AreEqual(expected, edge.get_to());
 			Assert::AreEqual(0.8, *edge.data);
 		}
 
