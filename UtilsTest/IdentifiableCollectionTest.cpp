@@ -33,17 +33,17 @@ namespace UtilsTest
 			}
 		}
 
-		TEST_METHOD(find1) 
+		TEST_METHOD(get1) 
 		{
 			Collection::IdentifiableCollection<Identifiable> collection;
 
 			std::shared_ptr<Identifiable> id1 = std::make_shared<Identifiable>(2);
 			collection.add(id1);
-			std::shared_ptr<Identifiable> actual = collection.find_by_id(2);
+			std::shared_ptr<Identifiable> actual = collection.get_by_id(2);
 			Assert::IsTrue(id1 == actual);
 		}
 
-		TEST_METHOD(find2)
+		TEST_METHOD(get2)
 		{
 			Collection::IdentifiableCollection<Identifiable> collection;
 
@@ -51,11 +51,11 @@ namespace UtilsTest
 			std::shared_ptr<Identifiable> id1 = std::make_shared<Identifiable>(1);
 			
 			collection.add(id2);
-			std::shared_ptr<Identifiable> actual = collection.find_by_id(1);
+			std::shared_ptr<Identifiable> actual = collection.get_by_id(1);
 			Assert::IsTrue(actual == nullptr);
 		}
 
-		TEST_METHOD(find3)
+		TEST_METHOD(read1)
 		{
 			Collection::IdentifiableCollection<Identifiable> collection;
 
@@ -68,11 +68,11 @@ namespace UtilsTest
 			collection.add(id1);
 			
 			collection.sort();
-			std::shared_ptr<Identifiable> actual = collection.find_by_id(1);
+			std::shared_ptr<Identifiable const> actual = collection.read_by_id(1);
 			Assert::IsTrue(actual == 1);
 		}
 
-		TEST_METHOD(find4)
+		TEST_METHOD(read4)
 		{
 			Collection::IdentifiableCollection<Identifiable> collection;
 
@@ -85,7 +85,7 @@ namespace UtilsTest
 			collection.add(id1);
 
 			collection.sort();
-			std::shared_ptr<Identifiable> actual = collection.find_by_id(5);
+			std::shared_ptr<Identifiable const> actual = collection.read_by_id(5);
 			Assert::IsTrue(actual == nullptr);
 		}
 

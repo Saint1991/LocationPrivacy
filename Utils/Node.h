@@ -1,9 +1,3 @@
-#ifdef UTILS_EXPORTS
-#define NODE_API __declspec(dllexport)
-#else
-#define NODE_API __declspec(dllimport)
-#endif
-
 #pragma once
 #include "Edge.h"
 #include "Identifiable.h"
@@ -32,7 +26,7 @@ namespace Graph {
 		bool connect_to(node_id to, EDGE_DATA data);
 		bool disconnect_from(node_id from);
 
-		std::shared_ptr<EDGE_DATA const> get_edge_data(node_id id) const;
+		std::shared_ptr<EDGE_DATA const> get_edge_data(node_id to) const;
 		bool update_edge_data(node_id id, EDGE_DATA data);
 		bool connect_or_update(node_id id, EDGE_DATA data);
 		
@@ -141,9 +135,9 @@ bool Graph::Node<NODE_DATA, EDGE_DATA>::disconnect_from(Graph::node_id from)
 /// 対応するIDへのエッジがない場合はnullptrを返します．
 ///</summary>
 template <typename NODE_DATA, typename EDGE_DATA>
-std::shared_ptr<EDGE_DATA const> Graph::Node<NODE_DATA, EDGE_DATA>::get_edge_data(Graph::node_id id) const
+std::shared_ptr<EDGE_DATA const> Graph::Node<NODE_DATA, EDGE_DATA>::get_edge_data(Graph::node_id to) const
 {
-	std::shared_ptr<Graph::Edge<EDGE_DATA>> target = get_edge_to(id);
+	std::shared_ptr<Graph::Edge<EDGE_DATA>> target = get_edge_to(to);
 	if (target == nullptr) {
 		return nullptr;
 	}

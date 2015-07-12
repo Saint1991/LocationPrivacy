@@ -1,9 +1,3 @@
-#ifdef UTILS_EXPORTS
-#define EDGE_API __declspec(dllexport)
-#else
-#define EDGE_API __declspec(dllimport)
-#endif
-
 #pragma once
 
 namespace Graph {

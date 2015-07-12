@@ -1,9 +1,3 @@
-#ifdef UTILS_EXPORTS
-#define IDENTIFIABLE_COLLECTION_API __declspec(dllexport)
-#else
-#define IDENTIFIABLE_COLLECTION_API __declspec(dllimport)
-#endif
-
 #pragma once
 #include "Identifiable.h"
 
@@ -28,11 +22,12 @@ namespace Collection {
 		IdentifiableCollection();
 		virtual ~IdentifiableCollection();
 
-		std::shared_ptr<T> find_by_id(const unsigned long& id);
+		std::shared_ptr<T const> read_by_id(const unsigned long& id) const;
+		std::shared_ptr<T> get_by_id(const unsigned long& id);
 		bool remove_by_id(const unsigned long& id);
 		
-		bool contains(Identifiable id);
-		bool contains(unsigned long id);
+		bool contains(Identifiable id) const;
+		bool contains(unsigned long id) const;
 		bool add(std::shared_ptr<T> val);
 		bool add(T val);
 		void sort();
@@ -65,15 +60,31 @@ Collection::IdentifiableCollection<T>::~IdentifiableCollection()
 
 
 ///<summary>
-/// 指定したIDを持つ要素を返す．
+/// 指定したIDを持つ要素を読出し専用で取得する．
 /// 見つからない場合はnullptrを返す．
 /// ソート済みのコレクションに対しては2分探索
 /// ソートされていないコレクションに対しては前から全探索する．
 ///</summary>
 template <typename T>
-std::shared_ptr<T> Collection::IdentifiableCollection<T>::find_by_id(const unsigned long &id)
+std::shared_ptr<T const> Collection::IdentifiableCollection<T>::read_by_id(const unsigned long &id) const
 {
 	auto target_iter = is_sorted ? std::lower_bound(collection->begin(), collection->end(), id) : 	std::find(collection->begin(), collection->end(), id);
+	if (target_iter == collection->end() || target_iter->get()->get_id() != id) {
+		return nullptr;
+	}
+	return *target_iter;
+}
+
+///<summary>
+/// 指定したIDを持つ要素を変更可能な状態で取得する．
+/// 見つからない場合はnullptrを返す．
+/// ソート済みのコレクションに対しては2分探索
+/// ソートされていないコレクションに対しては前から全探索する．
+///</summary>
+template <typename T>
+std::shared_ptr<T> Collection::IdentifiableCollection<T>::get_by_id(const unsigned long &id)
+{
+	auto target_iter = is_sorted ? std::lower_bound(collection->begin(), collection->end(), id) : std::find(collection->begin(), collection->end(), id);
 	if (target_iter == collection->end() || target_iter->get()->get_id() != id) {
 		return nullptr;
 	}
@@ -103,9 +114,9 @@ bool Collection::IdentifiableCollection<T>::remove_by_id(const unsigned long &id
 /// 指定したIDを持つ要素を含んでいるかを判定する
 ///</summary>
 template <typename T>
-bool Collection::IdentifiableCollection<T>::contains(unsigned long id)
+bool Collection::IdentifiableCollection<T>::contains(unsigned long id) const
 {
-	bool is_contained = find_by_id(id) != nullptr;
+	bool is_contained = read_by_id(id) != nullptr;
 	return is_contained;
 }
 
@@ -113,7 +124,7 @@ bool Collection::IdentifiableCollection<T>::contains(unsigned long id)
 /// 指定したIDを持つ要素を含んでいるかを判定する
 ///</summary>
 template <typename T>
-bool Collection::IdentifiableCollection<T>::contains(Identifiable id)
+bool Collection::IdentifiableCollection<T>::contains(Identifiable id) const
 {
 	return contains(id.get_id());
 }

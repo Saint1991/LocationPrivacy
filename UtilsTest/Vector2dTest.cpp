@@ -16,8 +16,8 @@ namespace UtilsTest
 			double x = 3.2;
 			double y = -1.2;
 			Graph::Vector2d vec(x, y);
-			Assert::AreEqual(x, vec.x);
-			Assert::AreEqual(y, vec.y);
+			Assert::AreEqual(x, vec.x());
+			Assert::AreEqual(y, vec.y());
 		}
 
 		TEST_METHOD(length)
@@ -40,8 +40,8 @@ namespace UtilsTest
 			double radian = M_PI / 2.0;
 			vec.rotate(radian);
 
-			Assert::AreEqual(0.0, vec.x, precision);
-			Assert::AreEqual(1.0, vec.y, precision);
+			Assert::AreEqual(0.0, vec.x(), precision);
+			Assert::AreEqual(1.0, vec.y(), precision);
 		}
 
 		TEST_METHOD(rotate2)
@@ -53,8 +53,8 @@ namespace UtilsTest
 			double radian = -M_PI / 2.0;
 			vec.rotate(radian);
 
-			Assert::AreEqual(0.0, vec.x, precision);
-			Assert::AreEqual(-1.0, vec.y, precision);
+			Assert::AreEqual(0.0, vec.x(), precision);
+			Assert::AreEqual(-1.0, vec.y(), precision);
 		}
 
 		TEST_METHOD(operator_eq)
@@ -66,8 +66,8 @@ namespace UtilsTest
 			Graph::Vector2d vec2(0.0, 0.0);
 
 			vec2 = vec1;
-			Assert::AreEqual(x, vec2.x);
-			Assert::AreEqual(y, vec2.y);
+			Assert::AreEqual(x, vec2.x());
+			Assert::AreEqual(y, vec2.y());
 		}
 
 		TEST_METHOD(operator_pl)
@@ -82,8 +82,8 @@ namespace UtilsTest
 			Graph::Vector2d vec2(x2, y2);
 
 			Graph::Vector2d actual = vec1 + vec2;
-			Assert::AreEqual(5.0, actual.x, precision);
-			Assert::AreEqual(-1.0, actual.y, precision);
+			Assert::AreEqual(5.0, actual.x(), precision);
+			Assert::AreEqual(-1.0, actual.y(), precision);
 		}
 
 		TEST_METHOD(operator_mi)
@@ -99,8 +99,8 @@ namespace UtilsTest
 			Graph::Vector2d vec2(x2, y2);
 
 			Graph::Vector2d actual = vec1 - vec2;
-			Assert::AreEqual(1.4, actual.x, precision);
-			Assert::AreEqual(2.6, actual.y, precision);
+			Assert::AreEqual(1.4, actual.x(), precision);
+			Assert::AreEqual(2.6, actual.y(), precision);
 		}
 
 		TEST_METHOD(operator_bl_eq1)

@@ -12,22 +12,25 @@ namespace Graph {
 	///</summary>
 	class VECTOR2D_API Vector2d
 	{
-	public:
-		
-		double x;
-		double y;
+	private:
+		double _x;
+		double _y;
+	
+	public:	
+		double x() const;
+		double y() const;
 
 		Vector2d(double x, double y);
 		virtual ~Vector2d();
 
-		double length();
+		double length() const;
 		void rotate(double radian);
 		void operator=(Vector2d v);
 		VECTOR2D_API friend Vector2d operator+(Vector2d v1, Vector2d v2);
 		VECTOR2D_API friend Vector2d operator-(Vector2d v1, Vector2d v2);
-		VECTOR2D_API friend bool operator==(Vector2d v1, Vector2d v2);
-		VECTOR2D_API friend bool operator!=(Vector2d v1, Vector2d v2);
-		VECTOR2D_API friend double inner_product(Vector2d v1, Vector2d v2);
+		VECTOR2D_API friend bool operator==(const Vector2d v1, const Vector2d v2);
+		VECTOR2D_API friend bool operator!=(const Vector2d v1, const Vector2d v2);
+		VECTOR2D_API friend double inner_product(const Vector2d v1, const Vector2d v2);
 	};
 }
 
