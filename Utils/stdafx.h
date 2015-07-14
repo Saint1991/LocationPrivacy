@@ -18,11 +18,16 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <hash_map>
 #include <algorithm>
 #include <memory>
 #include <random>
 #include <ctime>
 #include <cmath>
 #include <exception>
+#include <stdexcept>
 #include <type_traits>
 #include <typeinfo>
+#include <fstream>
+#include <functional>
+#include <sstream>

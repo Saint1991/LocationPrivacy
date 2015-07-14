@@ -37,6 +37,12 @@
     <Filter Include="ヘッダー ファイル\Geography">
       <UniqueIdentifier>{804a9d46-bd42-4c8e-9763-8e7d2952aee6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Export">
+      <UniqueIdentifier>{fa0dfe67-6750-4057-b783-91f17b0e8bda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Export">
+      <UniqueIdentifier>{2826709c-60ca-4c22-b03f-9f72811ba005}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -75,6 +81,12 @@
     <ClInclude Include="NodeCollectionFactory.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
+    <ClInclude Include="FileExportable.h">
+      <Filter>ヘッダー ファイル\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="FileExporter.h">
+      <Filter>ヘッダー ファイル\Export</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -97,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="LatLng.cpp">
       <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+    <ClCompile Include="FileExporter.cpp">
+      <Filter>ソース ファイル\Export</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
