@@ -43,6 +43,12 @@
     <Filter Include="ソース ファイル\Export">
       <UniqueIdentifier>{2826709c-60ca-4c22-b03f-9f72811ba005}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Entity">
+      <UniqueIdentifier>{9f5c24e7-70b8-4675-bf75-c6c2b4d27bf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Entity">
+      <UniqueIdentifier>{df737c7f-e574-4b81-8e86-270a4c6f0d95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -87,6 +93,27 @@
     <ClInclude Include="FileExporter.h">
       <Filter>ヘッダー ファイル\Export</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MobileEntity.h">
+      <Filter>ヘッダー ファイル\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="MobileEntityState.h">
+      <Filter>ヘッダー ファイル\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2dFactory.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="GeographicalCalculation.h">
+      <Filter>ヘッダー ファイル\Geography</Filter>
+    </ClInclude>
+    <ClInclude Include="Coordinate.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphUtility.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -113,5 +140,28 @@
     <ClCompile Include="FileExporter.cpp">
       <Filter>ソース ファイル\Export</Filter>
     </ClCompile>
+    <ClCompile Include="MobileEntity.cpp">
+      <Filter>ソース ファイル\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="MobileEntityState.cpp">
+      <Filter>ソース ファイル\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2dFactory.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+    <ClCompile Include="GeographicalCalculation.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+    <ClCompile Include="Coordinate.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphUtility.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Utils.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

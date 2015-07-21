@@ -82,21 +82,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AngleUtility.h" />
+    <ClInclude Include="Coordinate.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="FileExportable.h" />
     <ClInclude Include="FileExporter.h" />
+    <ClInclude Include="GeographicalCalculation.h" />
+    <ClInclude Include="GraphUtility.h" />
     <ClInclude Include="Identifiable.h" />
     <ClInclude Include="IdentifiableCollection.h" />
     <ClInclude Include="LatLng.h" />
+    <ClInclude Include="MobileEntity.h" />
+    <ClInclude Include="MobileEntityState.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeCollectionFactory.h" />
     <ClInclude Include="Probability.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Vector2d.h" />
+    <ClInclude Include="Vector2dFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AngleUtility.cpp" />
+    <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -106,7 +114,11 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="FileExporter.cpp" />
+    <ClCompile Include="GeographicalCalculation.cpp" />
+    <ClCompile Include="GraphUtility.cpp" />
     <ClCompile Include="LatLng.cpp" />
+    <ClCompile Include="MobileEntity.cpp" />
+    <ClCompile Include="MobileEntityState.cpp" />
     <ClCompile Include="Probability.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -114,6 +126,10 @@
     </ClCompile>
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Vector2d.cpp" />
+    <ClCompile Include="Vector2dFactory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Utils.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

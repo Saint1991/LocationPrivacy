@@ -28,6 +28,9 @@
     <Filter Include="ソース ファイル\Geography">
       <UniqueIdentifier>{2fa70d52-4c05-44ba-894f-56134e68f753}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Export">
+      <UniqueIdentifier>{cadfce83-1c26-487a-a3db-823b72818dcc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -67,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="NodeCollectionFactory.cpp">
       <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="FileExporterTest.cpp">
+      <Filter>ソース ファイル\Export</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

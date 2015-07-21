@@ -13,6 +13,16 @@ Graph::Vector2d::Vector2d(double x, double y) : _x(x), _y(y)
 
 
 ///<summary>
+/// コンストラクタ
+/// 位置ベクトル作成用
+///</summary>
+///<param name='c'>Coordinate</param>
+Graph::Vector2d::Vector2d(Graph::Coordinate c) : _x(c.x()), _y(c.y())
+{
+}
+
+
+///<summary>
 /// デストラクタ
 ///</summary>
 Graph::Vector2d::~Vector2d()
@@ -60,9 +70,18 @@ void Graph::Vector2d::rotate(double radian)
 ///<summary>
 /// 指定した2つのベクトルの内積を返します．
 ///</summary>
-double Graph::inner_product(Graph::Vector2d v1, Graph::Vector2d v2)
+double Graph::inner_product(const Graph::Vector2d& v1, const Graph::Vector2d& v2)
 {
 	return v1._x * v2._x + v1._y * v2._y;
+}
+
+
+///<summary>
+/// 2つのベクトルの外積のz成分のスカラ値を返します．
+///</summary>
+double Graph::cross_product(const Graph::Vector2d& v1, const Graph::Vector2d& v2)
+{
+	return v1.x() * v2.y() - v1.y() * v2.x();
 }
 
 void Graph::Vector2d::operator=(Graph::Vector2d v)
@@ -90,6 +109,3 @@ bool Graph::operator!=(Graph::Vector2d v1, Graph::Vector2d v2)
 {
 	return !(v1._x == v2._x && v1._y == v2._y);
 }
-
-
-

@@ -1,3 +1,9 @@
+#ifdef UTILS_EXPORTS
+#define FILE_EXPORTER_API __declspec(dllexport)
+#else
+#define FILE_EXPORTER_API __declspec(dllimport)
+#endif
+
 #pragma once
 #include "FileExportable.h"
 
@@ -18,7 +24,7 @@ namespace Export {
 	/// またこのときの対応のキーに記載されていないフィールドはエクスポートされない．
 	/// (若干不便だけどC++にはリフレクションがないようなのでしゃーない...)
 	///</summary>
-	class FileExporter
+	class FILE_EXPORTER_API FileExporter
 	{
 	private:
 		std::ofstream out_file;
@@ -26,11 +32,12 @@ namespace Export {
 		const std::string DELIMITER;
 
 	public:
-		FileExporter(std::string outfile_path, std::list<std::pair<std::string, std::string>> export_name_map, ExportType type = ExportType::TSV);
+		FileExporter(std::string outfile_path, std::list<std::pair<std::string, std::string>> export_name_map, ExportType type = ExportType::CSV);
 		virtual ~FileExporter();
 
 		void export_line(std::hash_map<std::string, std::string> name_value_pairs);
 		void export_line(std::shared_ptr<FileExportable const> data);	
+		void export_lines(std::list<std::shared_ptr<FileExportable const>> data_list);
 	};
 }
 

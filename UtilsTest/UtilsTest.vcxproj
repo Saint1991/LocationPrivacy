@@ -90,6 +90,7 @@
   <ItemGroup>
     <ClCompile Include="AngleUtilityTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />
+    <ClCompile Include="FileExporterTest.cpp" />
     <ClCompile Include="IdentifiableCollectionTest.cpp" />
     <ClCompile Include="IdentifiableTest.cpp" />
     <ClCompile Include="LatLngTest.cpp" />

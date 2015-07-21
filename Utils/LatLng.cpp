@@ -61,3 +61,34 @@ double Geography::LatLng::lng() const
 {
 	return longitude;
 }
+
+
+///<summary>
+/// ファイル出力向けのハッシュデータを作成します．
+///</summary>
+std::hash_map<std::string, std::string> Geography::LatLng::get_export_data() const
+{
+	std::hash_map<std::string, std::string> ret_data;
+	ret_data.insert(std::make_pair("latitude", std::to_string(latitude)));
+	ret_data.insert(std::make_pair("longitude", std::to_string(longitude)));
+	return ret_data;
+}
+
+
+///<summary>
+/// Lambert-Andoyerの公式に基づく2点間の距離計算 [m]
+///</summary>
+double Geography::distance(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
+{
+	return Geography::GeographicalCalculation::lambert_distance(ll1, ll2);
+}
+
+
+///<summary>
+/// Lambert-Andoyerの公式に基づくfromからtoへ向かうベクトルの方位角 [rad]
+/// 東を0として時計周りの座標系
+///</summary>
+double Geography::azimuth_angle(const Geography::LatLng& from, const Geography::LatLng& to)
+{
+	return Geography::GeographicalCalculation::lambert_azimuth_angle(from, to);
+}

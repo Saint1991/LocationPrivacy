@@ -5,12 +5,16 @@
 ///<summary>
 /// コンストラクタ
 ///</summary>
-///<param name='outfile_path'>出力ファイルのパス</param>
+///<param name='outfile_path'>出力ファイルのパス(ただし拡張子は不要)</param>
 ///<param name='export_name_map'></param>
 ///<param name='type'>出力形式(TSV or CSV)</param>
 Export::FileExporter::FileExporter(std::string outfile_path, std::list<std::pair<std::string, std::string>> export_name_map, ExportType type)
-	: out_file(outfile_path), key_position_map(std::make_unique<std::hash_map<std::string, int>>()), DELIMITER(type == ExportType::TSV ? "\t" : ",")
+	: key_position_map(std::make_unique<std::hash_map<std::string, int>>()), DELIMITER(type == ExportType::TSV ? "\t" : ",")
 {
+
+	outfile_path += type == ExportType::TSV ? ".tsv" : ".csv";
+	out_file = std::ofstream(outfile_path);
+	
 	int index = 0;
 	std::string header("");
 	for (auto iter = export_name_map.begin(); iter != export_name_map.end(); iter++) {
@@ -63,4 +67,16 @@ void Export::FileExporter::export_line(std::hash_map<std::string, std::string> n
 void Export::FileExporter::export_line(std::shared_ptr<Export::FileExportable const> data)
 {
 	export_line(data->get_export_data());
+}
+
+
+///<summary>
+/// 指定したデータリストをまとめてエクスポートします．
+///</summary>
+///<param name=''data_list'>exportableなクラスのリスト</param>
+void Export::FileExporter::export_lines(std::list<std::shared_ptr<Export::FileExportable const>> data_list)
+{
+	for (auto iter = data_list.begin(); iter != data_list.end(); iter++) {
+		export_line(*iter);
+	}
 }
