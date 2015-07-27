@@ -66,9 +66,9 @@ double Geography::LatLng::lng() const
 ///<summary>
 /// ファイル出力向けのハッシュデータを作成します．
 ///</summary>
-std::hash_map<std::string, std::string> Geography::LatLng::get_export_data() const
+std::unordered_map<std::string, std::string> Geography::LatLng::get_export_data() const
 {
-	std::hash_map<std::string, std::string> ret_data;
+	std::unordered_map<std::string, std::string> ret_data;
 	ret_data.insert(std::make_pair("latitude", std::to_string(latitude)));
 	ret_data.insert(std::make_pair("longitude", std::to_string(longitude)));
 	return ret_data;

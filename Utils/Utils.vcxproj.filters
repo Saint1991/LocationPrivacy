@@ -49,6 +49,9 @@
     <Filter Include="ソース ファイル\Entity">
       <UniqueIdentifier>{df737c7f-e574-4b81-8e86-270a4c6f0d95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Collection">
+      <UniqueIdentifier>{740639f8-50e2-4593-bf85-8b767f25a687}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -113,6 +116,18 @@
     </ClInclude>
     <ClInclude Include="GraphUtility.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.hpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.hpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="IdentifiableCollection.hpp">
+      <Filter>ソース ファイル\Collection</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeCollectionFactory.hpp">
+      <Filter>ソース ファイル\Graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

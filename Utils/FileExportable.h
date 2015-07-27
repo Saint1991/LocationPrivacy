@@ -6,6 +6,6 @@ namespace Export {
 	
 	class FileExportable {
 	public:
-		virtual std::hash_map<std::string, std::string> get_export_data()  const = 0;
+		virtual std::unordered_map<std::string, std::string> get_export_data()  const = 0;
 	};
 }

@@ -9,7 +9,7 @@
 ///<param name='export_name_map'></param>
 ///<param name='type'>出力形式(TSV or CSV)</param>
 Export::FileExporter::FileExporter(std::string outfile_path, std::list<std::pair<std::string, std::string>> export_name_map, ExportType type)
-	: key_position_map(std::make_unique<std::hash_map<std::string, int>>()), DELIMITER(type == ExportType::TSV ? "\t" : ",")
+	: key_position_map(std::make_unique<std::unordered_map<std::string, int>>()), DELIMITER(type == ExportType::TSV ? "\t" : ",")
 {
 
 	outfile_path += type == ExportType::TSV ? ".tsv" : ".csv";
@@ -40,7 +40,7 @@ Export::FileExporter::~FileExporter()
 /// ハッシュマップに対応するデータをエクスポートする
 ///</summary>
 ///<param name='name_value_pairs'>コンストラクタで対応するキー=>値のマップ</param>
-void Export::FileExporter::export_line(std::hash_map<std::string, std::string> name_value_pairs)
+void Export::FileExporter::export_line(std::unordered_map<std::string, std::string> name_value_pairs)
 {
 	int value_num = key_position_map->size();
 	std::unique_ptr<std::vector<std::string>> values = std::make_unique<std::vector<std::string>>(value_num);

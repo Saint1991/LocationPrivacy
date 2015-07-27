@@ -19,7 +19,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Mizuno\Documents\Visual Studio 2013\Projects\LocationPrivacy\Utils;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Mizuno\Documents\Visual Studio 2015\Projects\LocationPrivacy\Utils;$(IncludePath)</IncludePath>
     <IntDir>$(Configuration)\($ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -84,17 +84,21 @@
     <ClInclude Include="AngleUtility.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="Edge.h" />
+    <ClInclude Include="Edge.hpp" />
     <ClInclude Include="FileExportable.h" />
     <ClInclude Include="FileExporter.h" />
     <ClInclude Include="GeographicalCalculation.h" />
     <ClInclude Include="GraphUtility.h" />
     <ClInclude Include="Identifiable.h" />
     <ClInclude Include="IdentifiableCollection.h" />
+    <ClInclude Include="IdentifiableCollection.hpp" />
     <ClInclude Include="LatLng.h" />
     <ClInclude Include="MobileEntity.h" />
     <ClInclude Include="MobileEntityState.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Node.hpp" />
     <ClInclude Include="NodeCollectionFactory.h" />
+    <ClInclude Include="NodeCollectionFactory.hpp" />
     <ClInclude Include="Probability.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />

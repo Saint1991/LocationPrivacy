@@ -66,8 +66,7 @@ namespace UtilsTest
 			collection.add(id2);
 			collection.add(id4);
 			collection.add(id1);
-			
-			collection.sort();
+		
 			std::shared_ptr<Identifiable const> actual = collection.read_by_id(1);
 			Assert::IsTrue(actual == 1);
 		}
@@ -84,7 +83,6 @@ namespace UtilsTest
 			collection.add(id4);
 			collection.add(id1);
 
-			collection.sort();
 			std::shared_ptr<Identifiable const> actual = collection.read_by_id(5);
 			Assert::IsTrue(actual == nullptr);
 		}
@@ -208,5 +206,6 @@ namespace UtilsTest
 			Assert::IsFalse(collection.contains(2));
 			Assert::IsFalse(collection.contains(4));
 		}
+		
 	};
 }

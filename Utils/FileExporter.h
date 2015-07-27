@@ -28,14 +28,14 @@ namespace Export {
 	{
 	private:
 		std::ofstream out_file;
-		std::unique_ptr<std::hash_map<std::string, int>> key_position_map;
+		std::unique_ptr<std::unordered_map<std::string, int>> key_position_map;
 		const std::string DELIMITER;
 
 	public:
 		FileExporter(std::string outfile_path, std::list<std::pair<std::string, std::string>> export_name_map, ExportType type = ExportType::CSV);
 		virtual ~FileExporter();
 
-		void export_line(std::hash_map<std::string, std::string> name_value_pairs);
+		void export_line(std::unordered_map<std::string, std::string> name_value_pairs);
 		void export_line(std::shared_ptr<FileExportable const> data);	
 		void export_lines(std::list<std::shared_ptr<FileExportable const>> data_list);
 	};
