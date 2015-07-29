@@ -74,5 +74,12 @@
     <ClCompile Include="FileExporterTest.cpp">
       <Filter>ソース ファイル\Export</Filter>
     </ClCompile>
+    <ClCompile Include="GeographycalCalculationTest.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="app.config" />
   </ItemGroup>
 </Project>

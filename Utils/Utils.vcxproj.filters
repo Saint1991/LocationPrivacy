@@ -52,6 +52,12 @@
     <Filter Include="ソース ファイル\Collection">
       <UniqueIdentifier>{740639f8-50e2-4593-bf85-8b767f25a687}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Db">
+      <UniqueIdentifier>{103e4bff-963e-45e3-8882-0b6760d528aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Db">
+      <UniqueIdentifier>{fe9f1872-31b0-4b34-80a7-40dcecfba429}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -129,6 +135,9 @@
     <ClInclude Include="NodeCollectionFactory.hpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClInclude>
+    <ClInclude Include="MysqlDb.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -173,10 +182,18 @@
     <ClCompile Include="GraphUtility.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
+    <ClCompile Include="MysqlDb.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Utils.rc">
       <Filter>リソース ファイル</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="packages.config" />
+    <None Include="app.config" />
   </ItemGroup>
 </Project>
