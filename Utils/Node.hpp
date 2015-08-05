@@ -9,6 +9,17 @@ Graph::Node<NODE_DATA, EDGE_DATA>::Node(Graph::node_id id, NODE_DATA data) : Ide
 {
 }
 
+
+///<summary>
+/// コンストラクタ
+///</summary>
+///<param name='id'>ノードID</param>
+///<param name='data'>ノードに持たせたいデータ</param>
+template <typename NODE_DATA, typename EDGE_DATA>
+Graph::Node<NODE_DATA, EDGE_DATA>::Node(Graph::node_id id, std::shared_ptr<NODE_DATA> data) : Identifiable(id), data(data), edge_list(std::make_unique<std::list<std::shared_ptr<Graph::Edge<EDGE_DATA>>>>())
+{
+}
+
 ///<summary>
 /// コピーコンストラクタ
 ///</summary>

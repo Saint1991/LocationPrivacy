@@ -2,12 +2,12 @@
 #include "Edge.h"
 #include "Identifiable.h"
 
-namespace Graph {
+namespace Graph 
+{
 
 
 	///<summary>
 	/// グラフにおけるノードを表すテンプレートクラス
-	/// コンパイラの仕様上ここに実装も書くしかない...
 	///</summary>
 	template <typename NODE_DATA, typename EDGE_DATA>
 	class Node : public Identifiable
@@ -20,6 +20,7 @@ namespace Graph {
 		std::shared_ptr<NODE_DATA> data;
 		
 		Node(node_id id, NODE_DATA data);
+		Node(node_id id, std::shared_ptr<NODE_DATA> data);
 		Node(const Node& node);
 		virtual ~Node();
 

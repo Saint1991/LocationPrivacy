@@ -6,7 +6,7 @@
 
 #pragma once
 #include "FileExportable.h"
-#include "GeographicalCalculation.h"
+#include "GeoCalculation.h"
 
 namespace Geography 
 {

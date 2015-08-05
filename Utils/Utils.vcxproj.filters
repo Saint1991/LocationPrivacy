@@ -58,6 +58,12 @@
     <Filter Include="ヘッダー ファイル\Db">
       <UniqueIdentifier>{fe9f1872-31b0-4b34-80a7-40dcecfba429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Geography\Data">
+      <UniqueIdentifier>{0d8334fe-2a1f-4bf7-9657-0fba75d5f00f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Geography\Data">
+      <UniqueIdentifier>{9533f174-f29d-43ad-be34-4b358da1d62c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -114,9 +120,6 @@
     <ClInclude Include="Vector2dFactory.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="GeographicalCalculation.h">
-      <Filter>ヘッダー ファイル\Geography</Filter>
-    </ClInclude>
     <ClInclude Include="Coordinate.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
@@ -135,8 +138,23 @@
     <ClInclude Include="NodeCollectionFactory.hpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="MysqlDb.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="BasicPathData.h">
+      <Filter>ヘッダー ファイル\Geography\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>ヘッダー ファイル\Geography</Filter>
+    </ClInclude>
+    <ClInclude Include="GeoCalculation.h">
+      <Filter>ヘッダー ファイル\Geography</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicGeoNodeData.h">
+      <Filter>ヘッダー ファイル\Geography\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="GeoNode.h">
+      <Filter>ヘッダー ファイル\Geography</Filter>
+    </ClInclude>
+    <ClInclude Include="GeoNode.hpp">
+      <Filter>ソース ファイル\Geography</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,17 +191,23 @@
     <ClCompile Include="Vector2dFactory.cpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
-    <ClCompile Include="GeographicalCalculation.cpp">
-      <Filter>ソース ファイル\Geography</Filter>
-    </ClCompile>
     <ClCompile Include="Coordinate.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
     <ClCompile Include="GraphUtility.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
-    <ClCompile Include="MysqlDb.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="GeoCalculation.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPathData.cpp">
+      <Filter>ソース ファイル\Geography\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicGeoNodeData.cpp">
+      <Filter>ソース ファイル\Geography\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

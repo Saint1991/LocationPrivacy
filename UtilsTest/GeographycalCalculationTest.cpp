@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "GeographicalCalculation.h"
+#include "GeoCalculation.h"
 #include "AngleUtility.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -25,7 +25,7 @@ namespace UtilsTest
 			Geography::LatLng to(34.819, 135.5244);
 
 			double expected = 193.0;
-			double actual = Geography::GeographicalCalculation::lambert_distance(from, to);			
+			double actual = Geography::GeoCalculation::lambert_distance(from, to);			
 
 			Assert::AreEqual(expected, actual, 10);
 		}

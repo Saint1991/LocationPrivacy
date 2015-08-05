@@ -80,7 +80,7 @@ std::unordered_map<std::string, std::string> Geography::LatLng::get_export_data(
 ///</summary>
 double Geography::distance(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
 {
-	return Geography::GeographicalCalculation::lambert_distance(ll1, ll2);
+	return Geography::GeoCalculation::lambert_distance(ll1, ll2);
 }
 
 
@@ -90,5 +90,5 @@ double Geography::distance(const Geography::LatLng& ll1, const Geography::LatLng
 ///</summary>
 double Geography::azimuth_angle(const Geography::LatLng& from, const Geography::LatLng& to)
 {
-	return Geography::GeographicalCalculation::lambert_azimuth_angle(from, to);
+	return Geography::GeoCalculation::lambert_azimuth_angle(from, to);
 }

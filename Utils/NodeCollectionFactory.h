@@ -3,7 +3,8 @@
 #include "Node.h"
 #include "IdentifiableCollection.h"
 
-namespace Graph {
+namespace Graph 
+{
 
 	///<summary>
 	/// ノードの生成，接続関係の構成を行った後IdentifiableCollectionを返すファクトリ抽象クラステンプレート
