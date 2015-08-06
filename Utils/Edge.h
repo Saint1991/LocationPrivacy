@@ -3,6 +3,7 @@
 namespace Graph {
 
 	typedef unsigned long node_id;
+	const node_id NOWHERE = ULONG_MAX;
 
 	///<summary>
 	/// グラフの接続を管理するエッジのテンプレートクラス

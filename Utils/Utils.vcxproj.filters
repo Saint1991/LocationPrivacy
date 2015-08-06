@@ -64,6 +64,9 @@
     <Filter Include="ソース ファイル\Geography\Data">
       <UniqueIdentifier>{9533f174-f29d-43ad-be34-4b358da1d62c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Graph\Routing">
+      <UniqueIdentifier>{8750e902-2369-4308-ab73-7f78181c216a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -156,6 +159,12 @@
     <ClInclude Include="GeoNode.hpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClInclude>
+    <ClInclude Include="RoutingMethod.h">
+      <Filter>ヘッダー ファイル\Graph\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.hpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -205,9 +214,6 @@
     </ClCompile>
     <ClCompile Include="BasicGeoNodeData.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

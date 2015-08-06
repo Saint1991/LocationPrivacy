@@ -78,7 +78,7 @@ std::unordered_map<std::string, std::string> Geography::LatLng::get_export_data(
 ///<summary>
 /// Lambert-Andoyerの公式に基づく2点間の距離計算 [m]
 ///</summary>
-double Geography::distance(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
+double Geography::dist(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
 {
 	return Geography::GeoCalculation::lambert_distance(ll1, ll2);
 }
@@ -88,7 +88,7 @@ double Geography::distance(const Geography::LatLng& ll1, const Geography::LatLng
 /// Lambert-Andoyerの公式に基づくfromからtoへ向かうベクトルの方位角 [rad]
 /// 東を0として時計周りの座標系
 ///</summary>
-double Geography::azimuth_angle(const Geography::LatLng& from, const Geography::LatLng& to)
+double Geography::angle(const Geography::LatLng& from, const Geography::LatLng& to)
 {
 	return Geography::GeoCalculation::lambert_azimuth_angle(from, to);
 }

@@ -5,7 +5,6 @@
 namespace Graph 
 {
 
-
 	///<summary>
 	/// グラフにおけるノードを表すテンプレートクラス
 	///</summary>

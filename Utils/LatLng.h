@@ -30,7 +30,7 @@ namespace Geography
 		double lng() const;
 		std::unordered_map<std::string, std::string> get_export_data() const;
 
-		friend double distance(const Geography::LatLng& ll1, const Geography::LatLng& ll2);
-		friend double azimuth_angle(const Geography::LatLng& from, const Geography::LatLng& to);
+		friend double dist(const Geography::LatLng& ll1, const Geography::LatLng& ll2);
+		friend double angle(const Geography::LatLng& from, const Geography::LatLng& to);
 	};
 }

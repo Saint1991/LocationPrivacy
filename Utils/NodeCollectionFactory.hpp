@@ -4,17 +4,11 @@
 /// 変更不可の状態にロックしたコレクションを取得する．
 ///</summary>
 template <typename NODE_DATA, typename EDGE_DATA>
-std::unique_ptr<const Collection::IdentifiableCollection<std::shared_ptr<Graph::Node<NODE_DATA, EDGE_DATA>>>> Graph::NodeCollectionFactory<NODE_DATA, EDGE_DATA>::create_static_node_collection() const
+std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const Graph::Node<NODE_DATA, EDGE_DATA>>>> Graph::NodeCollectionFactory<NODE_DATA, EDGE_DATA>::create_static_node_collection() const
 {
-	std::cout << "Start Creating Node Collection." << std::endl;
-
 	create_nodes();
 	set_connectivities();
-	std::unique_ptr<const Collection::IdentifiableCollection<std::shared_ptr<Graph::Node<NODE_DATA, EDGE_DATA>>>> temp = std::move(node_collection);
-	node_collection = std::make_unique<Collection::IdentifiableCollection<std::shared_ptr<Graph::Node<NODE_DATA, EDGE_DATA>>>();
-
-	std::cout << "Finish Creating Node Collection." << std::endl;
-	return std::move(temp);
+	return std::move(node_collection);
 }
 
 ///<summary>
@@ -22,17 +16,11 @@ std::unique_ptr<const Collection::IdentifiableCollection<std::shared_ptr<Graph::
 /// 更新可能な状態でコレクションを取得する．
 ///</summary>
 template <typename NODE_DATA, typename EDGE_DATA>
-std::unique_ptr<Collection::IdentifiableCollection<std::shared_ptr<Graph::Node<NODE_DATA, EDGE_DATA>>>> Graph::NodeCollectionFactory<NODE_DATA, EDGE_DATA>::create_updateable_node_collection()
+std::shared_ptr<Collection::IdentifiableCollection<std::shared_ptr<Graph::Node<NODE_DATA, EDGE_DATA>>>> Graph::NodeCollectionFactory<NODE_DATA, EDGE_DATA>::create_updateable_node_collection()
 {
-	std::cout << "Start Creating Node Collection." << std::endl;
-
 	create_nodes();
 	set_connectivities();
-	std::unique_ptr<Collection::IdentifiableCollection<std::shared_ptr<Graph::Node<NODE_DATA, EDGE_DATA>>>> temp = std::move(node_collection);
-	node_collection = std::make_unique<Collection::IdentifiableCollection<std::shared_ptr<Graph::Node<NODE_DATA, EDGE_DATA>>>();
-
-	std::cout << "Finish Creating Node Collection." << std::endl;
-	return std::move(temp);
+	return std::move(node_collection);
 }
 
 
@@ -46,6 +34,16 @@ bool Graph::NodeCollectionFactory<NODE_DATA, EDGE_DATA>::create_node(Graph::node
 	return node_collection->add(Graph::Node<NODE_DATA, EDGE_DATA>(id, data));
 }
 
+
+///<summary>
+/// Nodeを継承しているクラスのshared_ptrを追加する
+/// 既存IDのノードを作成しようとした場合はDuplicatedIdExceptionがスローされ，falseが返される．
+///</summary>
+template <typename NODE_DATA, typename EDGE_DATA>
+bool Graph::NodeCollectionFactory<NODE_DATA, EDGE_DATA>::add_node(std::shared_ptr<Graph::Node<NODE_DATA, EDGE_DATA>> node)
+{
+	return node_collection->add(node);
+}
 
 ///<summary>
 /// 指定したIDを持つノードを削除する
