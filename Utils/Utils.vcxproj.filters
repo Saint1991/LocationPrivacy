@@ -165,6 +165,9 @@
     <ClInclude Include="Map.hpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClInclude>
+    <ClInclude Include="MysqlDb.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -215,6 +218,9 @@
     <ClCompile Include="BasicGeoNodeData.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
+    <ClCompile Include="MysqlDb.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Utils.rc">
@@ -223,7 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="packages.config" />
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
