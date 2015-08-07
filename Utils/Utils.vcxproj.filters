@@ -165,8 +165,11 @@
     <ClInclude Include="Map.hpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClInclude>
+    <ClInclude Include="DbSettings.h">
+      <Filter>ヘッダー ファイル\Db</Filter>
+    </ClInclude>
     <ClInclude Include="MysqlDb.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Db</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,8 +221,11 @@
     <ClCompile Include="BasicGeoNodeData.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
+    <ClCompile Include="DbSettings.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
     <ClCompile Include="MysqlDb.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Db</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
