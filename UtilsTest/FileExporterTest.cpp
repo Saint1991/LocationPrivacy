@@ -16,7 +16,7 @@ namespace UtilsTest
 			std::list <std::pair<std::string, std::string>> export_name_map;
 			export_name_map.push_back(std::make_pair("latitude", "緯度"));
 			export_name_map.push_back(std::make_pair("longitude", "経度"));
-			Export::FileExporter out_file(file_path, export_name_map);
+			IO::FileExporter out_file(file_path, export_name_map);
 
 			std::shared_ptr<Geography::LatLng const> ll1 = std::make_shared<Geography::LatLng const>(39.9, 28.8);
 			std::shared_ptr<Geography::LatLng const> ll2 = std::make_shared<Geography::LatLng const>(79.9, 128.8);
@@ -30,7 +30,7 @@ namespace UtilsTest
 			std::list <std::pair<std::string, std::string>> export_name_map;
 			export_name_map.push_back(std::make_pair("latitude", "緯度"));
 			export_name_map.push_back(std::make_pair("longitude", "経度"));
-			Export::FileExporter out_file(file_path, export_name_map, Export::ExportType::TSV);
+			IO::FileExporter out_file(file_path, export_name_map, IO::ExportType::TSV);
 
 			std::shared_ptr<Geography::LatLng const> ll1 = std::make_shared<Geography::LatLng const>(39.9, 28.8);
 			std::shared_ptr<Geography::LatLng const> ll2 = std::make_shared<Geography::LatLng const>(79.9, 128.8);
@@ -44,11 +44,11 @@ namespace UtilsTest
 			std::list <std::pair<std::string, std::string>> export_name_map;
 			export_name_map.push_back(std::make_pair("latitude", "緯度"));
 			export_name_map.push_back(std::make_pair("longitude", "経度"));
-			Export::FileExporter out_file(file_path, export_name_map);
+			IO::FileExporter out_file(file_path, export_name_map);
 
 			std::shared_ptr<Geography::LatLng const> ll1 = std::make_shared<Geography::LatLng const>(39.9, 28.8);
 			std::shared_ptr<Geography::LatLng const> ll2 = std::make_shared<Geography::LatLng const>(79.9, 128.8);
-			std::list < std::shared_ptr < Export::FileExportable const >> data_list = { ll1, ll2 };
+			std::list < std::shared_ptr < IO::FileExportable const >> data_list = { ll1, ll2 };
 			out_file.export_lines(data_list);
 		}
 

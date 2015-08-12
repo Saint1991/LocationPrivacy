@@ -7,7 +7,8 @@
 #pragma once
 #include "FileExportable.h"
 
-namespace Export {
+namespace IO 
+{
 
 	enum ExportType {TSV, CSV};
 

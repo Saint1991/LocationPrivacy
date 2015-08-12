@@ -37,12 +37,6 @@
     <Filter Include="ヘッダー ファイル\Geography">
       <UniqueIdentifier>{804a9d46-bd42-4c8e-9763-8e7d2952aee6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Export">
-      <UniqueIdentifier>{fa0dfe67-6750-4057-b783-91f17b0e8bda}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Export">
-      <UniqueIdentifier>{2826709c-60ca-4c22-b03f-9f72811ba005}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Entity">
       <UniqueIdentifier>{9f5c24e7-70b8-4675-bf75-c6c2b4d27bf5}</UniqueIdentifier>
     </Filter>
@@ -66,6 +60,18 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\Graph\Routing">
       <UniqueIdentifier>{8750e902-2369-4308-ab73-7f78181c216a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\IO">
+      <UniqueIdentifier>{fa0dfe67-6750-4057-b783-91f17b0e8bda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\IO">
+      <UniqueIdentifier>{2826709c-60ca-4c22-b03f-9f72811ba005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Libs">
+      <UniqueIdentifier>{2c2b91b2-a68a-41e0-b6ee-218b36e446fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Libs">
+      <UniqueIdentifier>{ccd5aa72-899f-4a55-a570-90a3ea3115b3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +115,7 @@
       <Filter>ヘッダー ファイル\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="FileExporter.h">
-      <Filter>ヘッダー ファイル\Export</Filter>
+      <Filter>ヘッダー ファイル\IO</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -171,6 +177,18 @@
     <ClInclude Include="MysqlDb.h">
       <Filter>ヘッダー ファイル\Db</Filter>
     </ClInclude>
+    <ClInclude Include="IDbSettingsLoader.h">
+      <Filter>ヘッダー ファイル\Db</Filter>
+    </ClInclude>
+    <ClInclude Include="DbSettingsFileLoader.h">
+      <Filter>ヘッダー ファイル\Db</Filter>
+    </ClInclude>
+    <ClInclude Include="IOException.h">
+      <Filter>ヘッダー ファイル\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>ヘッダー ファイル\Libs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -195,7 +213,7 @@
       <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
     <ClCompile Include="FileExporter.cpp">
-      <Filter>ソース ファイル\Export</Filter>
+      <Filter>ソース ファイル\IO</Filter>
     </ClCompile>
     <ClCompile Include="MobileEntity.cpp">
       <Filter>ソース ファイル\Entity</Filter>
@@ -226,6 +244,12 @@
     </ClCompile>
     <ClCompile Include="MysqlDb.cpp">
       <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="DbSettingsFileLoader.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>ソース ファイル\Libs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

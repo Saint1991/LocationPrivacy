@@ -31,6 +31,9 @@
     <Filter Include="ソース ファイル\Export">
       <UniqueIdentifier>{cadfce83-1c26-487a-a3db-823b72818dcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Db">
+      <UniqueIdentifier>{3cb42e47-988a-4fa0-9be1-78f3dd29841e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -77,9 +80,12 @@
     <ClCompile Include="GeographycalCalculationTest.cpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
+    <ClCompile Include="DbSettingsLoaderTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

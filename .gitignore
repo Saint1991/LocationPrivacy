@@ -229,3 +229,5 @@ FakesAssemblies/
 *.out
 *.app
 
+#DB Setting File
+settings/mydbsettings.json

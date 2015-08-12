@@ -2,7 +2,7 @@
 #include "stdafx.h"
 
 
-namespace Export {
+namespace IO {
 	
 	class FileExportable {
 	public:

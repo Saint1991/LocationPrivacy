@@ -14,7 +14,7 @@ namespace Geography
 	///<summary>
 	/// 緯度・経度を表すクラス
 	///</summary>
-	class LATLNG_API LatLng : public Export::FileExportable
+	class LATLNG_API LatLng : public IO::FileExportable
 	{
 	protected:
 		double latitude;

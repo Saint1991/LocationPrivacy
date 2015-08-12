@@ -8,7 +8,7 @@
 ///<param name='outfile_path'>出力ファイルのパス(ただし拡張子は不要)</param>
 ///<param name='export_name_map'></param>
 ///<param name='type'>出力形式(TSV or CSV)</param>
-Export::FileExporter::FileExporter(std::string outfile_path, std::list<std::pair<std::string, std::string>> export_name_map, ExportType type)
+IO::FileExporter::FileExporter(std::string outfile_path, std::list<std::pair<std::string, std::string>> export_name_map, ExportType type)
 	: key_position_map(std::make_unique<std::unordered_map<std::string, int>>()), DELIMITER(type == ExportType::TSV ? "\t" : ",")
 {
 
@@ -30,7 +30,7 @@ Export::FileExporter::FileExporter(std::string outfile_path, std::list<std::pair
 ///<summary>
 /// デストラクタ
 ///</summary>
-Export::FileExporter::~FileExporter()
+IO::FileExporter::~FileExporter()
 {
 	out_file.close();
 }
@@ -40,7 +40,7 @@ Export::FileExporter::~FileExporter()
 /// ハッシュマップに対応するデータをエクスポートする
 ///</summary>
 ///<param name='name_value_pairs'>コンストラクタで対応するキー=>値のマップ</param>
-void Export::FileExporter::export_line(std::unordered_map<std::string, std::string> name_value_pairs)
+void IO::FileExporter::export_line(std::unordered_map<std::string, std::string> name_value_pairs)
 {
 	int value_num = key_position_map->size();
 	std::unique_ptr<std::vector<std::string>> values = std::make_unique<std::vector<std::string>>(value_num);
@@ -64,7 +64,7 @@ void Export::FileExporter::export_line(std::unordered_map<std::string, std::stri
 /// ハッシュマップに対応するデータをエクスポートする
 ///</summary>
 ///<param name='name_value_pairs'>コンストラクタで対応するキー=>値のマップ</param>
-void Export::FileExporter::export_line(std::shared_ptr<Export::FileExportable const> data)
+void IO::FileExporter::export_line(std::shared_ptr<IO::FileExportable const> data)
 {
 	export_line(data->get_export_data());
 }
@@ -74,7 +74,7 @@ void Export::FileExporter::export_line(std::shared_ptr<Export::FileExportable co
 /// 指定したデータリストをまとめてエクスポートします．
 ///</summary>
 ///<param name=''data_list'>exportableなクラスのリスト</param>
-void Export::FileExporter::export_lines(std::list<std::shared_ptr<Export::FileExportable const>> data_list)
+void IO::FileExporter::export_lines(std::list<std::shared_ptr<IO::FileExportable const>> data_list)
 {
 	for (auto iter = data_list.begin(); iter != data_list.end(); iter++) {
 		export_line(*iter);
