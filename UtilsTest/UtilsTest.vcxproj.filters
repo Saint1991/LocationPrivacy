@@ -83,6 +83,9 @@
     <ClCompile Include="DbSettingsLoaderTest.cpp">
       <Filter>ソース ファイル\Db</Filter>
     </ClCompile>
+    <ClCompile Include="MysqlDbTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

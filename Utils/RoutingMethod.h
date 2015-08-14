@@ -2,7 +2,8 @@
 #include "stdafx.h"
 #include "Edge.h"
 
-namespace Graph {
+namespace Graph 
+{
 
 	///<summary>
 	/// ルーティングテーブル作成のアルゴリズム用インターフェース
@@ -10,6 +11,7 @@ namespace Graph {
 	template <typename NODE_DATA, typename EDGE_DATA>
 	class RoutingMethod
 	{
-		virtual std::unique_ptr<std::vector<std::vector<Graph::node_id>>> create_routing_table(std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const Node<NODE_DATA, EDGE_DATA>>>> node_collection) = 0;
+	public:
+		virtual std::unique_ptr<const std::vector<std::vector<Graph::node_id>>> create_routing_table(std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const Node<NODE_DATA, EDGE_DATA>>>> node_collection) const = 0;
 	};
 }

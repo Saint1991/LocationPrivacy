@@ -230,4 +230,4 @@ FakesAssemblies/
 *.app
 
 #DB Setting File
-settings/mydbsettings.json
+settings/mydbsettings.xml

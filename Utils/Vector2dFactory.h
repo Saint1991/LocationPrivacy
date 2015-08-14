@@ -7,7 +7,8 @@
 #pragma once
 #include "Vector2d.h"
 
-namespace Graph {
+namespace Graph 
+{
 	class  VECTOR2DFACTORY_API Vector2dFactory
 	{
 	private:

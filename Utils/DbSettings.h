@@ -12,12 +12,12 @@ namespace Db
 	///<summary>
 	/// DBê›íËÇäiî[Ç∑ÇÈç\ë¢ëÃ
 	///</summary>
-	struct DB_SETTINGS_API DbSettings
+	struct DbSettings
 	{
 
-		DbSettings();
-		DbSettings(std::string hostname, unsigned int port, std::string username, std::string password);
-		virtual ~DbSettings();
+		DB_SETTINGS_API DbSettings();
+		DB_SETTINGS_API DbSettings(std::string hostname, unsigned int port, std::string username, std::string password);
+		DB_SETTINGS_API virtual ~DbSettings();
 
 		std::string hostname;
 		unsigned int port;

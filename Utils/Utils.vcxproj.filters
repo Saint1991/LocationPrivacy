@@ -73,6 +73,9 @@
     <Filter Include="ヘッダー ファイル\Libs">
       <UniqueIdentifier>{ccd5aa72-899f-4a55-a570-90a3ea3115b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Graph\Routing">
+      <UniqueIdentifier>{e9566f0d-0b9d-43ad-bb46-80e74843cf2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -188,6 +191,12 @@
     </ClInclude>
     <ClInclude Include="tinyxml2.h">
       <Filter>ヘッダー ファイル\Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="WarshallFloyd.h">
+      <Filter>ヘッダー ファイル\Graph\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="WarshallFloyd.hpp">
+      <Filter>ソース ファイル\Graph\Routing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

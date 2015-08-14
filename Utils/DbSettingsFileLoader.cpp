@@ -2,14 +2,12 @@
 #include "DbSettingsFileLoader.h"
 
 
-
 ///<summary>
 /// コンストラクタ
 ///</summary>
-Db::DbSettingsFileLoader::DbSettingsFileLoader(std::string path) : settings_file_path(path)
+Db::DbSettingsFileLoader::DbSettingsFileLoader(const char* path) : settings_file_path(path) 
 {
 }
-
 
 Db::DbSettingsFileLoader::~DbSettingsFileLoader()
 {
@@ -19,10 +17,12 @@ Db::DbSettingsFileLoader::~DbSettingsFileLoader()
 ///<summary>
 /// 指定したパスのファイルからDB設定を読み込む
 /// ファイルが見つからない場合IOExceptionをスローする
+/// 空文字列が入っているとなぜかクラッシュするので注意!!
 ///(XMLElementは明示的にデストラクタを呼ぶ必要がない仕様になっているらしい)
 ///</summary>
 const Db::DbSettings Db::DbSettingsFileLoader::load_db_settings() const
 {
+
 	tinyxml2::XMLDocument document;
 	tinyxml2::XMLError error = document.LoadFile(settings_file_path.c_str());
 	if (error != 0) throw IO::IOException("Can't Open DB Setting File");
