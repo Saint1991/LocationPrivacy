@@ -198,6 +198,9 @@
     <ClInclude Include="WarshallFloyd.hpp">
       <Filter>ソース ファイル\Graph\Routing</Filter>
     </ClInclude>
+    <ClInclude Include="QueryGenerator.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -259,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="tinyxml2.cpp">
       <Filter>ソース ファイル\Libs</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryGenerator.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

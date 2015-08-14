@@ -218,6 +218,7 @@
     <ClInclude Include="NodeCollectionFactory.h" />
     <ClInclude Include="NodeCollectionFactory.hpp" />
     <ClInclude Include="Probability.h" />
+    <ClInclude Include="QueryGenerator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoutingMethod.h" />
     <ClInclude Include="stdafx.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="MobileEntityState.cpp" />
     <ClCompile Include="MysqlDb.cpp" />
     <ClCompile Include="Probability.cpp" />
+    <ClCompile Include="QueryGenerator.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
