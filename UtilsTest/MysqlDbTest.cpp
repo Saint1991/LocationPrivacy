@@ -16,9 +16,7 @@ namespace UtilsTest
 			Db::MysqlDb db(std::make_unique<Db::DbSettingsFileLoader>(
 				Db::DbSettingsFileLoader("C:/Users/Mizuno/Documents/Visual Studio 2015/Projects/LocationPrivacy/settings/dbsettings-sample.xml"))
 			);
-			TCHAR path[MAX_PATH + 1];
-			GetModuleFileName(NULL, path, MAX_PATH);
-			Logger::WriteMessage(path);
+			
 		}
 	};
 }

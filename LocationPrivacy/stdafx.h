@@ -4,12 +4,33 @@
 //
 
 #pragma once
+#define _USE_MATH_DEFINES
 
 #include "targetver.h"
-
-#include <stdio.h>
 #include <tchar.h>
 
-
+// Windows ヘッダー ファイル:
+// Windows ヘッダーから使用されていない部分を除外します。
+#define WIN32_LEAN_AND_MEAN             
+#include <windows.h>
 
 // TODO: プログラムに必要な追加ヘッダーをここで参照してください。
+#include <iostream>
+#include <string>
+#include <vector>
+#include <list>
+#include <set>
+#include <unordered_map>
+#include <algorithm>
+#include <memory>
+#include <random>
+#include <ctime>
+#include <cmath>
+#include <exception>
+#include <stdexcept>
+#include <type_traits>
+#include <typeinfo>
+#include <fstream>
+#include <functional>
+#include <sstream>
+#include <iterator>
