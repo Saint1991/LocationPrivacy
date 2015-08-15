@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "MysqlDb.h"
+#include "MySQLDb.h"
 
 
 ///<summary>
 /// コンストラクタ
 ///</summary>
-Db::MysqlDb::MysqlDb(std::unique_ptr<Db::IDbSettingsLoader> loader) : settings(std::make_unique<Db::DbSettings>(loader->load_db_settings()))
+Db::MySQLDb::MySQLDb(std::unique_ptr<Db::IDbSettingsLoader> loader) : settings(std::make_unique<Db::DbSettings>(loader->load_db_settings()))
 {
 	sql::Driver* driver = get_driver_instance();
 	std::string host = "tcp://" + settings->hostname + ":" + std::to_string(settings->port);
@@ -16,7 +16,7 @@ Db::MysqlDb::MysqlDb(std::unique_ptr<Db::IDbSettingsLoader> loader) : settings(s
 ///<summary>
 /// コンストラクタ
 ///</summary>
-Db::MysqlDb::MysqlDb(Db::DbSettings db_config) : settings(std::make_unique<Db::DbSettings>(db_config))
+Db::MySQLDb::MySQLDb(Db::DbSettings db_config) : settings(std::make_unique<Db::DbSettings>(db_config))
 {
 	sql::Driver* driver = get_driver_instance();
 	std::string host = "tcp://" + settings->hostname + ":" + std::to_string(settings->port);
@@ -26,7 +26,7 @@ Db::MysqlDb::MysqlDb(Db::DbSettings db_config) : settings(std::make_unique<Db::D
 ///<summary>
 /// デストラクタ
 ///</summary>
-Db::MysqlDb::~MysqlDb()
+Db::MySQLDb::~MySQLDb()
 {
 	if (connection != nullptr) {
 		if (!connection->isClosed()) connection->close();
@@ -40,7 +40,7 @@ Db::MysqlDb::~MysqlDb()
 /// コネクションの接続が確立できない場合はnullptrを返す
 ///</summary>
 template <typename RESULT_TYPE>
-RESULT_TYPE* Db::MysqlDb::execute_if_connection_is_alive(const std::function<RESULT_TYPE(void)>& execute_function)
+RESULT_TYPE* Db::MySQLDb::execute_if_connection_is_alive(const std::function<RESULT_TYPE(void)>& execute_function)
 {
 	if (connection != nullptr) {
 		try {
@@ -73,7 +73,7 @@ RESULT_TYPE* Db::MysqlDb::execute_if_connection_is_alive(const std::function<RES
 /// 使用するDBの選択，切り替えを行う
 /// 成功時はtrueを失敗時はfalseを返す
 ///</summary>
-bool Db::MysqlDb::use(const char* dbname)
+bool Db::MySQLDb::use(const std::string& dbname)
 {
 	bool* result = execute_if_connection_is_alive<bool>([&] { 
 		connection->setSchema(dbname);
@@ -89,7 +89,7 @@ bool Db::MysqlDb::use(const char* dbname)
 /// CREATE TABLE等の結果を返さないクエリを実行します．
 /// 成功時はtrueを失敗時はfalseを返す
 ///</summary>
-bool Db::MysqlDb::execute(const char* query)
+bool Db::MySQLDb::execute(const std::string& query)
 {
 	bool* result =  execute_if_connection_is_alive<bool>([&] {
 		sql::Statement* statement =  connection->createStatement();
@@ -108,7 +108,7 @@ bool Db::MysqlDb::execute(const char* query)
 /// コネクションが無効な場合などは，nullptrを返します
 /// 生のポインタを使っているので必ずdeleteすること
 ///</summary>
-sql::ResultSet* Db::MysqlDb::row_query(const char* query)
+sql::ResultSet* Db::MySQLDb::row_query(const std::string& query)
 {
 	return *(execute_if_connection_is_alive<sql::ResultSet*>([&] {
 		sql::Statement* statement = connection->createStatement();
@@ -122,7 +122,7 @@ sql::ResultSet* Db::MysqlDb::row_query(const char* query)
 ///<summary>
 /// データベース一覧を取得する
 ///</summary>
-const std::list<std::string> Db::MysqlDb::get_databases()
+const std::list<std::string> Db::MySQLDb::get_databases()
 {
 	return *(execute_if_connection_is_alive<const std::list<std::string>>([&] {
 		
@@ -146,7 +146,7 @@ const std::list<std::string> Db::MysqlDb::get_databases()
 ///<summary>
 /// 現在接続しているDB内のテーブル一覧を取得する
 ///</summary>
-const std::list<std::string> Db::MysqlDb::get_tables()
+const std::list<std::string> Db::MySQLDb::get_tables()
 {
 	return *(execute_if_connection_is_alive<const std::list<std::string>>([&] {
 
@@ -164,4 +164,25 @@ const std::list<std::string> Db::MysqlDb::get_tables()
 
 		return tables;
 	}));
+}
+
+
+///<summary>
+/// CREATE TABLEを実行するユーティリティ
+///</summary>
+bool Db::MySQLDb::create_table(std::unique_ptr<Db::BaseQueryGenerator> generator)
+{
+	const std::string query = generator->make_create_table_query();
+	return row_query(query);
+}
+
+
+///<summary>
+/// INSERTを実行するユーティリティ
+///</summary>
+bool Db::MySQLDb::insert(std::unique_ptr<Db::BaseQueryGenerator> generator, std::unordered_map<std::string, std::string> values)
+{
+	const std::string query = generator->make_insert_query();
+	sql::PreparedStatement* statement = connection->prepareStatement(query);
+	return true;
 }

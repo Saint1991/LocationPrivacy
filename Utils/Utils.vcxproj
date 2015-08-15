@@ -207,21 +207,25 @@
     <ClInclude Include="IdentifiableCollection.h" />
     <ClInclude Include="IdentifiableCollection.hpp" />
     <ClInclude Include="IOException.h" />
+    <ClInclude Include="BaseQueryGenerator.h" />
     <ClInclude Include="LatLng.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="MobileEntity.h" />
     <ClInclude Include="MobileEntityState.h" />
-    <ClInclude Include="MysqlDb.h" />
+    <ClInclude Include="Column.h" />
+    <ClInclude Include="MySQLDb.h" />
+    <ClInclude Include="QueryGenerator.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="NodeCollectionFactory.h" />
     <ClInclude Include="NodeCollectionFactory.hpp" />
     <ClInclude Include="Probability.h" />
-    <ClInclude Include="QueryGenerator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoutingMethod.h" />
+    <ClInclude Include="Serializable.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TableStructure.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="Vector2d.h" />
@@ -231,6 +235,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AngleUtility.cpp" />
+    <ClCompile Include="BaseQueryGenerator.cpp" />
     <ClCompile Include="BasicGeoNodeData.cpp" />
     <ClCompile Include="BasicPathData.cpp" />
     <ClCompile Include="Coordinate.cpp" />
@@ -256,15 +261,17 @@
     <ClCompile Include="LatLng.cpp" />
     <ClCompile Include="MobileEntity.cpp" />
     <ClCompile Include="MobileEntityState.cpp" />
-    <ClCompile Include="MysqlDb.cpp" />
-    <ClCompile Include="Probability.cpp" />
+    <ClCompile Include="Column.cpp" />
+    <ClCompile Include="MySQLDb.cpp" />
     <ClCompile Include="QueryGenerator.cpp" />
+    <ClCompile Include="Probability.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TableStructure.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Vector2d.cpp" />
@@ -276,16 +283,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\boost.1.58.0.0\build\native\boost.targets" Condition="Exists('..\packages\boost.1.58.0.0\build\native\boost.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\boost.1.58.0.0\build\native\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.58.0.0\build\native\boost.targets'))" />
-  </Target>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

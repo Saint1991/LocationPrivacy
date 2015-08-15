@@ -11,10 +11,12 @@
 #include "cppconn\statement.h"
 #include "cppconn\prepared_statement.h"
 #include "cppconn\resultset.h"
+#include "Column.h"
+#include "BaseQueryGenerator.h"
 
 namespace Db 
 {
-	class MYSQL_DB_API MysqlDb
+	class MYSQL_DB_API MySQLDb
 	{
 	private:
 		std::unique_ptr<Db::DbSettings const> settings;
@@ -25,15 +27,22 @@ namespace Db
 		
 	public:
 		
-		MysqlDb(std::unique_ptr<Db::IDbSettingsLoader> loader);
-		MysqlDb(Db::DbSettings settings);
-		~MysqlDb();
+		MySQLDb(std::unique_ptr<Db::IDbSettingsLoader> loader);
+		MySQLDb(Db::DbSettings settings);
+		~MySQLDb();
 
-		bool use(const char* dbname);
-		bool execute(const char* query);
-		sql::ResultSet* row_query(const char* query);
+		bool use(const std::string& dbname);
+		bool execute(const std::string& query);
+		sql::ResultSet* row_query(const std::string& query);
 		const std::list<std::string> get_databases();
 		const std::list<std::string> get_tables();
+
+		///Ç±Ç±ÇÁÇ÷ÇÒÇÕóvçƒåüì¢
+		bool create_table(std::unique_ptr<Db::BaseQueryGenerator> generator);
+		bool insert(std::unique_ptr<Db::BaseQueryGenerator> generator, std::unordered_map<std::string, std::string> values);
+		bool insert(std::unique_ptr<Db::BaseQueryGenerator> generator, std::list<std::unordered_map<std::string, std::string>> value_list);
+		bool update(std::unique_ptr<Db::BaseQueryGenerator> generator, std::unordered_map<std::string, std::string> values, std::string where_clause = "");
+		sql::ResultSet* select(std::unique_ptr<Db::BaseQueryGenerator> generator, std::string where_clause = "");
 	};
 }
 

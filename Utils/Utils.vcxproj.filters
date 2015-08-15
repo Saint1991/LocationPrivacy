@@ -177,9 +177,6 @@
     <ClInclude Include="DbSettings.h">
       <Filter>ヘッダー ファイル\Db</Filter>
     </ClInclude>
-    <ClInclude Include="MysqlDb.h">
-      <Filter>ヘッダー ファイル\Db</Filter>
-    </ClInclude>
     <ClInclude Include="IDbSettingsLoader.h">
       <Filter>ヘッダー ファイル\Db</Filter>
     </ClInclude>
@@ -198,8 +195,23 @@
     <ClInclude Include="WarshallFloyd.hpp">
       <Filter>ソース ファイル\Graph\Routing</Filter>
     </ClInclude>
+    <ClInclude Include="MySQLDb.h">
+      <Filter>ヘッダー ファイル\Db</Filter>
+    </ClInclude>
+    <ClInclude Include="Column.h">
+      <Filter>ヘッダー ファイル\Db</Filter>
+    </ClInclude>
     <ClInclude Include="QueryGenerator.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Db</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializable.h">
+      <Filter>ヘッダー ファイル\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="TableStructure.h">
+      <Filter>ヘッダー ファイル\Db</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseQueryGenerator.h">
+      <Filter>ヘッダー ファイル\Db</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -254,17 +266,26 @@
     <ClCompile Include="DbSettings.cpp">
       <Filter>ソース ファイル\Db</Filter>
     </ClCompile>
-    <ClCompile Include="MysqlDb.cpp">
-      <Filter>ソース ファイル\Db</Filter>
-    </ClCompile>
     <ClCompile Include="DbSettingsFileLoader.cpp">
       <Filter>ソース ファイル\Db</Filter>
     </ClCompile>
     <ClCompile Include="tinyxml2.cpp">
       <Filter>ソース ファイル\Libs</Filter>
     </ClCompile>
+    <ClCompile Include="MySQLDb.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="Column.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
     <ClCompile Include="QueryGenerator.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="TableStructure.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseQueryGenerator.cpp">
+      <Filter>ソース ファイル\Db</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +296,5 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>
