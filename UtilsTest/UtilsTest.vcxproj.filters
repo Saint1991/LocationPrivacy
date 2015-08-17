@@ -116,6 +116,9 @@
     <ClCompile Include="GraphUtilityTest.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
+    <ClCompile Include="BindableTest.cpp">
+      <Filter>ソース ファイル\Interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

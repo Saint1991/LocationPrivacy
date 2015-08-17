@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AngleUtilityTest.cpp" />
+    <ClCompile Include="BindableTest.cpp" />
     <ClCompile Include="ColumnTest.cpp" />
     <ClCompile Include="DbSettingsLoaderTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />
