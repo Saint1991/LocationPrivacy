@@ -34,6 +34,9 @@
     <Filter Include="ソース ファイル\Db">
       <UniqueIdentifier>{3cb42e47-988a-4fa0-9be1-78f3dd29841e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Others">
+      <UniqueIdentifier>{3c483e35-127f-4393-96eb-b58638f976e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -85,6 +88,12 @@
     </ClCompile>
     <ClCompile Include="MySQLDbTest.cpp">
       <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="StringTest.cpp">
+      <Filter>ソース ファイル\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="PointerTest.cpp">
+      <Filter>ソース ファイル\Others</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

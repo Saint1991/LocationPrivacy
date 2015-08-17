@@ -19,7 +19,7 @@ namespace Db
 		virtual ~TableStructure();
 
 		bool is_column_exists(const std::string& column_name) const;
-		const int get_column_index(const std::string& column_name) const;
+		const unsigned int get_column_index(const std::string& column_name) const;
 		const std::list<std::string> get_column_name_list() const;
 		bool add_primary_key(std::string primary_key);
 	};

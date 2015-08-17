@@ -191,6 +191,7 @@
     <ClInclude Include="AngleUtility.h" />
     <ClInclude Include="BasicGeoNodeData.h" />
     <ClInclude Include="BasicPathData.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="DbSettings.h" />
     <ClInclude Include="DbSettingsFileLoader.h" />
@@ -202,12 +203,13 @@
     <ClInclude Include="GeoNode.h" />
     <ClInclude Include="GeoNode.hpp" />
     <ClInclude Include="GraphUtility.h" />
+    <ClInclude Include="IBindable.h" />
+    <ClInclude Include="IBindable.hpp" />
     <ClInclude Include="IDbSettingsLoader.h" />
     <ClInclude Include="Identifiable.h" />
     <ClInclude Include="IdentifiableCollection.h" />
     <ClInclude Include="IdentifiableCollection.hpp" />
     <ClInclude Include="IOException.h" />
-    <ClInclude Include="BaseQueryGenerator.h" />
     <ClInclude Include="LatLng.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Map.hpp" />
@@ -215,7 +217,7 @@
     <ClInclude Include="MobileEntityState.h" />
     <ClInclude Include="Column.h" />
     <ClInclude Include="MySQLDb.h" />
-    <ClInclude Include="QueryGenerator.h" />
+    <ClInclude Include="QueryGenerateUtility.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="NodeCollectionFactory.h" />
@@ -228,6 +230,9 @@
     <ClInclude Include="TableStructure.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tinyxml2.h" />
+    <ClInclude Include="TypeChecker.h" />
+    <ClInclude Include="TypeChecker.hpp" />
+    <ClInclude Include="Types.hpp" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="Vector2dFactory.h" />
     <ClInclude Include="WarshallFloyd.h" />
@@ -235,7 +240,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AngleUtility.cpp" />
-    <ClCompile Include="BaseQueryGenerator.cpp" />
     <ClCompile Include="BasicGeoNodeData.cpp" />
     <ClCompile Include="BasicPathData.cpp" />
     <ClCompile Include="Coordinate.cpp" />
@@ -263,7 +267,7 @@
     <ClCompile Include="MobileEntityState.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
-    <ClCompile Include="QueryGenerator.cpp" />
+    <ClCompile Include="QueryGenerateUtility.cpp" />
     <ClCompile Include="Probability.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

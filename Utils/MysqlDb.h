@@ -12,7 +12,9 @@
 #include "cppconn\prepared_statement.h"
 #include "cppconn\resultset.h"
 #include "Column.h"
-#include "BaseQueryGenerator.h"
+#include "TableStructure.h"
+#include "QueryGenerateUtility.h"
+#include "IBindable.h"
 
 namespace Db 
 {
@@ -23,7 +25,7 @@ namespace Db
 		sql::Connection* connection = nullptr;
 
 		template <typename RESULT_TYPE>
-		RESULT_TYPE* execute_if_connection_is_alive(const std::function<RESULT_TYPE(void)>& execute_function);
+		RESULT_TYPE* execute_if_connection_is_alive(const std::function<RESULT_TYPE*(void)>& execute_function);
 		
 	public:
 		
@@ -31,18 +33,22 @@ namespace Db
 		MySQLDb(Db::DbSettings settings);
 		~MySQLDb();
 
-		bool use(const std::string& dbname);
-		bool execute(const std::string& query);
-		sql::ResultSet* row_query(const std::string& query);
+		const bool use(const std::string& dbname);
+		const bool execute(const std::string& query);
+		sql::ResultSet* raw_query(const std::string& query);
 		const std::list<std::string> get_databases();
 		const std::list<std::string> get_tables();
 
 		///Ç±Ç±ÇÁÇ÷ÇÒÇÕóvçƒåüì¢
-		bool create_table(std::unique_ptr<Db::BaseQueryGenerator> generator);
-		bool insert(std::unique_ptr<Db::BaseQueryGenerator> generator, std::unordered_map<std::string, std::string> values);
-		bool insert(std::unique_ptr<Db::BaseQueryGenerator> generator, std::list<std::unordered_map<std::string, std::string>> value_list);
-		bool update(std::unique_ptr<Db::BaseQueryGenerator> generator, std::unordered_map<std::string, std::string> values, std::string where_clause = "");
-		sql::ResultSet* select(std::unique_ptr<Db::BaseQueryGenerator> generator, std::string where_clause = "");
+		const bool create_table(const Db::TableStructure& table_info);
+		const bool insert(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<IBindable const> data);
+		const bool insert(const Db::TableStructure& insert_columns, std::shared_ptr<IBindable const> data);
+		const bool insert(const std::string& table_name, const std::list<std::string>& columns, const std::list<std::shared_ptr<IBindable const>>& data_list);
+		const bool insert(const Db::TableStructure& insert_columns, const std::list<std::shared_ptr<IBindable const>>& data_list);
+		const int update(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<IBindable const> data, const std::string& where_clause);
+		const int update(const Db::TableStructure& update_columns, std::shared_ptr<IBindable const> data, std::string where_clause);
+		sql::ResultSet* select(const std::string& table_name, const std::list<std::string>& columns, const std::string& where_clause = "");
+		sql::ResultSet* select(const Db::TableStructure& select_columns, const std::string where_clause = "");
 	};
 }
 

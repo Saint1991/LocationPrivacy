@@ -172,6 +172,7 @@
     <ClCompile Include="MySQLDbTest.cpp" />
     <ClCompile Include="NodeCollectionFactory.cpp" />
     <ClCompile Include="NodeTest.cpp" />
+    <ClCompile Include="PointerTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -179,6 +180,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ProbabilityTest.cpp" />
+    <ClCompile Include="StringTest.cpp" />
     <ClCompile Include="Vector2dTest.cpp" />
   </ItemGroup>
   <ItemGroup>

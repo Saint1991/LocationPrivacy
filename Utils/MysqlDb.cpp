@@ -40,18 +40,18 @@ Db::MySQLDb::~MySQLDb()
 /// コネクションの接続が確立できない場合はnullptrを返す
 ///</summary>
 template <typename RESULT_TYPE>
-RESULT_TYPE* Db::MySQLDb::execute_if_connection_is_alive(const std::function<RESULT_TYPE(void)>& execute_function)
+RESULT_TYPE* Db::MySQLDb::execute_if_connection_is_alive(const std::function<RESULT_TYPE*(void)>& execute_function)
 {
 	if (connection != nullptr) {
 		try {
 			if (connection->isValid()) {
-				RESULT_TYPE result = execute_function();
-				return &result;
+				RESULT_TYPE* result = execute_function();
+				return std::move(result);
 			}
 			else {
 				if (connection->reconnect()) {
-					RESULT_TYPE result = execute_function();
-					return &result;
+					RESULT_TYPE* result = execute_function();
+					return std::move(result);
 				}
 				return nullptr;
 			}
@@ -68,20 +68,27 @@ RESULT_TYPE* Db::MySQLDb::execute_if_connection_is_alive(const std::function<RES
 	return nullptr;
 }
 
+/// 上記の明示的特殊化
+/// 意味的には上のメソッドのRESULT_TYPEにbool, ResultSet, intをそれぞれあてはめた3つのメソッドを定義したのと同義
+template bool* Db::MySQLDb::execute_if_connection_is_alive(const std::function<bool*(void)>& execute_function);
+template sql::ResultSet* Db::MySQLDb::execute_if_connection_is_alive(const std::function<sql::ResultSet*(void)>& execute_function);
+template int* Db::MySQLDb::execute_if_connection_is_alive(const std::function<int*(void)>& execute_function);
+
 
 ///<summary>
 /// 使用するDBの選択，切り替えを行う
 /// 成功時はtrueを失敗時はfalseを返す
 ///</summary>
-bool Db::MySQLDb::use(const std::string& dbname)
+const bool Db::MySQLDb::use(const std::string& dbname)
 {
 	bool* result = execute_if_connection_is_alive<bool>([&] { 
 		connection->setSchema(dbname);
-		return true;
+		bool ret = true;
+		return std::move(&ret);
 	});
 
-	if (result != nullptr) return *result;
-	return false;
+	if (result == nullptr) return false;
+	return *result;
 }
 
 
@@ -89,17 +96,17 @@ bool Db::MySQLDb::use(const std::string& dbname)
 /// CREATE TABLE等の結果を返さないクエリを実行します．
 /// 成功時はtrueを失敗時はfalseを返す
 ///</summary>
-bool Db::MySQLDb::execute(const std::string& query)
+const bool Db::MySQLDb::execute(const std::string& query)
 {
-	bool* result =  execute_if_connection_is_alive<bool>([&] {
-		sql::Statement* statement =  connection->createStatement();
+	bool* result = execute_if_connection_is_alive<bool>([&] {
+		sql::Statement* statement = connection->createStatement();
 		bool is_succeed = statement->execute(query);
 		delete statement;
-		return is_succeed;
+		return std::move(&is_succeed);
 	});
-	
-	if (result != nullptr) return *result;
-	return false;
+
+	if (result == nullptr) return false;
+	return *result;
 }
 
 
@@ -108,81 +115,183 @@ bool Db::MySQLDb::execute(const std::string& query)
 /// コネクションが無効な場合などは，nullptrを返します
 /// 生のポインタを使っているので必ずdeleteすること
 ///</summary>
-sql::ResultSet* Db::MySQLDb::row_query(const std::string& query)
+sql::ResultSet* Db::MySQLDb::raw_query(const std::string& query)
 {
-	return *(execute_if_connection_is_alive<sql::ResultSet*>([&] {
+	sql::ResultSet* ret = execute_if_connection_is_alive<sql::ResultSet>([&] {
 		sql::Statement* statement = connection->createStatement();
 		sql::ResultSet* result = statement->executeQuery(query);
 		delete statement;
-		return result;
-	}));
+		return std::move(result);
+	});
+
+	return std::move(ret);
 }
 
 
 ///<summary>
 /// データベース一覧を取得する
+/// 失敗した場合も空のリストが返るので注意
 ///</summary>
 const std::list<std::string> Db::MySQLDb::get_databases()
 {
-	return *(execute_if_connection_is_alive<const std::list<std::string>>([&] {
-		
-		std::list<std::string> databases;
-		sql::Statement* statement = connection->createStatement();
-		sql::ResultSet* result = statement->executeQuery("SHOW DATABASES;");
-		delete statement;
-
-		result->beforeFirst();
-		while (result->next()) {
-			std::string dbname = result->getString(0);
-			databases.push_back(dbname);
-		}
-		delete result;
-
-		return databases;
-	}));
+	sql::ResultSet* result_set = raw_query("SHOW DATABASES");
+	if (result_set == nullptr) return std::list<std::string>();
+	
+	std::list<std::string> ret;
+	result_set->beforeFirst();
+	while (result_set->next()) {
+		std::string dbname = result_set->getString(0);
+		ret.push_back(dbname);
+	}
+	delete result_set;
+	return ret;
 }
 
 
 ///<summary>
 /// 現在接続しているDB内のテーブル一覧を取得する
+/// 失敗した場合も空のリストが返るので注意
 ///</summary>
 const std::list<std::string> Db::MySQLDb::get_tables()
 {
-	return *(execute_if_connection_is_alive<const std::list<std::string>>([&] {
+	sql::ResultSet* result_set = raw_query("SHOW TABLES");
+	if (result_set == nullptr) return std::list<std::string>();
 
-		std::list<std::string> tables;
-		sql::Statement* statement = connection->createStatement();
-		sql::ResultSet* result = statement->executeQuery("SHOW TABLES;");
-		delete statement;
-
-		result->beforeFirst();
-		while (result->next()) {
-			std::string tablename = result->getString(0);
-			tables.push_back(tablename);
-		}
-		delete result;
-
-		return tables;
-	}));
+	std::list<std::string> ret;
+	result_set->beforeFirst();
+	while (result_set->next()) {
+		std::string table_name = result_set->getString(0);
+		ret.push_back(table_name);
+	}
+	delete result_set;
+	return ret;
 }
 
 
 ///<summary>
 /// CREATE TABLEを実行するユーティリティ
+/// 失敗した場合はfalseを返す
 ///</summary>
-bool Db::MySQLDb::create_table(std::unique_ptr<Db::BaseQueryGenerator> generator)
+const bool Db::MySQLDb::create_table(const Db::TableStructure& table_info)
 {
-	const std::string query = generator->make_create_table_query();
-	return row_query(query);
+	const std::string query = Db::QueryGenerateUtility::make_create_table_query(table_info);
+	return execute(query);
 }
 
 
 ///<summary>
 /// INSERTを実行するユーティリティ
+/// 失敗した場合はfalseを返す
 ///</summary>
-bool Db::MySQLDb::insert(std::unique_ptr<Db::BaseQueryGenerator> generator, std::unordered_map<std::string, std::string> values)
+const bool Db::MySQLDb::insert(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<IBindable const> data)
 {
-	const std::string query = generator->make_insert_query();
-	sql::PreparedStatement* statement = connection->prepareStatement(query);
-	return true;
+	bool* ret = execute_if_connection_is_alive<bool>([&]() {
+		const std::string query = Db::QueryGenerateUtility::make_insert_query(table_name, columns);
+		sql::PreparedStatement* statement = connection->prepareStatement(query);
+		data->bind(statement, columns);
+		bool result = statement->execute();
+		delete statement;
+		return std::move(&result);
+	});
+	if (ret == nullptr) return false;
+	return *ret;
+}
+
+
+///<summary>
+/// INSERTを実行するユーティリティ
+/// 失敗した場合はfalseを返す
+///</summary>
+const bool Db::MySQLDb::insert(const Db::TableStructure& insert_columns, std::shared_ptr<IBindable const> data)
+{
+	return insert(insert_columns.table_name, insert_columns.get_column_name_list(), data);
+}
+
+
+///<summary>
+/// INSERTを実行するユーティリティ
+/// 複数データをインサートする場合はこちらを使うと効率がよい
+/// 失敗した場合はfalseを返す
+///</summary>
+const bool Db::MySQLDb::insert(const std::string& table_name, const std::list<std::string>& columns, const std::list<std::shared_ptr<IBindable const>>& data_list)
+{
+	bool* result = execute_if_connection_is_alive<bool>([&]() {
+		const std::string query = Db::QueryGenerateUtility::make_insert_query(table_name, columns);
+		sql::PreparedStatement* statement = connection->prepareStatement(query);
+		
+		bool are_all_succeed = true;
+		for (std::list<std::shared_ptr<IBindable const>>::const_iterator iter = data_list.begin(); iter != data_list.end(); iter++) {
+			(*iter)->bind(statement, columns);
+			are_all_succeed && statement->execute();
+		}
+		delete statement;
+		return std::move(&are_all_succeed);
+	});
+
+	if (result == nullptr) return false;
+	return *result;
+}
+
+
+///<summary>
+/// INSERTを実行するユーティリティ
+/// 複数データをインサートする場合はこちらを使うと効率がよい
+/// 失敗した場合はfalseを返す
+///</summary>
+const bool Db::MySQLDb::insert(const Db::TableStructure& insert_columns, const std::list<std::shared_ptr<IBindable const>>& data_list)
+{
+	return insert(insert_columns.table_name, insert_columns.get_column_name_list(), data_list);
+}
+
+
+///<summary>
+/// UPDATEを実行するユーティリティ
+/// 変更されたカラム数を返す
+/// 失敗した場合は-1を返す
+///</summary>
+const int Db::MySQLDb::update(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<IBindable const> data, const std::string& where_clause)
+{
+	int* ret =  execute_if_connection_is_alive<int>([&]() {
+		const std::string query = Db::QueryGenerateUtility::make_update_query(table_name, columns, where_clause);
+		sql::PreparedStatement* statement = connection->prepareStatement(query);
+		data->bind(statement, columns);
+		int result = statement->executeUpdate();
+		delete statement;
+		return std::move(&result);
+	});
+
+	if (ret == nullptr) return -1;
+	return *ret;
+}
+
+
+///<summary>
+/// UPDATEを実行するユーティリティ
+/// 変更されたカラム数を返す
+/// 失敗した場合は-1を返す
+///</summary>
+const int Db::MySQLDb::update(const Db::TableStructure& update_columns, std::shared_ptr<IBindable const> data, std::string where_clause)
+{
+	return update(update_columns.table_name, update_columns.get_column_name_list(), data, where_clause);
+}
+
+
+
+///<summary>
+/// 簡単なSELECTクエリを実行するユーティリティ
+/// 生のポインタを用いているのでdeleteを忘れず行うこと!
+///</summary>
+sql::ResultSet* Db::MySQLDb::select(const std::string& table_name, const std::list<std::string>& columns, const std::string& where_clause)
+{
+	const std::string query = Db::QueryGenerateUtility::make_select_query(table_name, columns, where_clause);
+	return std::move(raw_query(query));
+}
+
+///<summary>
+/// 簡単なSELECTクエリを実行するユーティリティ
+/// 生のポインタを用いているのでdeleteを忘れず行うこと!
+///</summary>
+sql::ResultSet* Db::MySQLDb::select(const Db::TableStructure& select_columns, const std::string where_clause)
+{
+	return std::move(select(select_columns.table_name, select_columns.get_column_name_list(), where_clause));
 }

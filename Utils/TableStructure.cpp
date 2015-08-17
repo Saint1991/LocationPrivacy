@@ -51,7 +51,7 @@ bool Db::TableStructure::is_column_exists(const std::string& column_name) const
 /// 見つからない場合は0を返す．
 /// INSERT等でのバインド時に使用できる
 ///</summary>
-const int Db::TableStructure::get_column_index(const std::string& column_name) const
+const unsigned int Db::TableStructure::get_column_index(const std::string& column_name) const
 {
 	int index = 1;
 	for (std::list<Db::Column>::const_iterator iter = columns->begin(); iter != columns->end(); iter++) {
