@@ -28,14 +28,14 @@
     <Filter Include="ソース ファイル\Geography">
       <UniqueIdentifier>{2fa70d52-4c05-44ba-894f-56134e68f753}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Export">
-      <UniqueIdentifier>{cadfce83-1c26-487a-a3db-823b72818dcc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Db">
       <UniqueIdentifier>{3cb42e47-988a-4fa0-9be1-78f3dd29841e}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Others">
       <UniqueIdentifier>{3c483e35-127f-4393-96eb-b58638f976e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\IO">
+      <UniqueIdentifier>{cadfce83-1c26-487a-a3db-823b72818dcc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,7 +78,7 @@
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
     <ClCompile Include="FileExporterTest.cpp">
-      <Filter>ソース ファイル\Export</Filter>
+      <Filter>ソース ファイル\IO</Filter>
     </ClCompile>
     <ClCompile Include="GeographycalCalculationTest.cpp">
       <Filter>ソース ファイル\Geography</Filter>
@@ -94,6 +94,27 @@
     </ClCompile>
     <ClCompile Include="PointerTest.cpp">
       <Filter>ソース ファイル\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="ColumnTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryGenerateUtilityTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="TableStructureTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="GeoNodeTest.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTest.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+    <ClCompile Include="RoutingMethodTest.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphUtilityTest.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -162,17 +162,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AngleUtilityTest.cpp" />
+    <ClCompile Include="ColumnTest.cpp" />
     <ClCompile Include="DbSettingsLoaderTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />
     <ClCompile Include="FileExporterTest.cpp" />
     <ClCompile Include="GeographycalCalculationTest.cpp" />
+    <ClCompile Include="GeoNodeTest.cpp" />
+    <ClCompile Include="GraphUtilityTest.cpp" />
     <ClCompile Include="IdentifiableCollectionTest.cpp" />
     <ClCompile Include="IdentifiableTest.cpp" />
     <ClCompile Include="LatLngTest.cpp" />
+    <ClCompile Include="MapTest.cpp" />
     <ClCompile Include="MySQLDbTest.cpp" />
     <ClCompile Include="NodeCollectionFactory.cpp" />
     <ClCompile Include="NodeTest.cpp" />
     <ClCompile Include="PointerTest.cpp" />
+    <ClCompile Include="QueryGenerateUtilityTest.cpp" />
+    <ClCompile Include="RoutingMethodTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -181,6 +187,7 @@
     </ClCompile>
     <ClCompile Include="ProbabilityTest.cpp" />
     <ClCompile Include="StringTest.cpp" />
+    <ClCompile Include="TableStructureTest.cpp" />
     <ClCompile Include="Vector2dTest.cpp" />
   </ItemGroup>
   <ItemGroup>

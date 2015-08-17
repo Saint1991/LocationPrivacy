@@ -6,6 +6,7 @@
 
 #pragma once
 #include "Serializable.h"
+#include "cppconn\datatype.h"
 
 namespace Db 
 {

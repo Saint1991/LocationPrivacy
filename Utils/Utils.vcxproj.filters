@@ -79,12 +79,6 @@
     <Filter Include="ソース ファイル\Interfaces">
       <UniqueIdentifier>{d1dadb9d-114f-43db-8dd6-7e297d81ddc9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Types">
-      <UniqueIdentifier>{53c494b0-1537-49cc-88c6-1bc82f9400d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Types">
-      <UniqueIdentifier>{ed9e5ca4-d1bb-4ceb-b3e4-7800c83c7337}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -216,26 +210,14 @@
     <ClInclude Include="Serializable.h">
       <Filter>ヘッダー ファイル\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IBindable.h">
-      <Filter>ヘッダー ファイル\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="QueryGenerateUtility.h">
       <Filter>ヘッダー ファイル\Db</Filter>
     </ClInclude>
-    <ClInclude Include="IBindable.hpp">
+    <ClInclude Include="Bindable.h">
+      <Filter>ヘッダー ファイル\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Bindable.hpp">
       <Filter>ソース ファイル\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Types.h">
-      <Filter>ヘッダー ファイル\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Types.hpp">
-      <Filter>ソース ファイル\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeChecker.h">
-      <Filter>ヘッダー ファイル\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeChecker.hpp">
-      <Filter>ソース ファイル\Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

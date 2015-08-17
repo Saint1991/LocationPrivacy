@@ -14,7 +14,7 @@
 #include "Column.h"
 #include "TableStructure.h"
 #include "QueryGenerateUtility.h"
-#include "IBindable.h"
+#include "Bindable.h"
 
 namespace Db 
 {
@@ -41,12 +41,12 @@ namespace Db
 
 		///‚±‚±‚ç‚Ö‚ñ‚Í—vÄŒŸ“¢
 		const bool create_table(const Db::TableStructure& table_info);
-		const bool insert(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<IBindable const> data);
-		const bool insert(const Db::TableStructure& insert_columns, std::shared_ptr<IBindable const> data);
-		const bool insert(const std::string& table_name, const std::list<std::string>& columns, const std::list<std::shared_ptr<IBindable const>>& data_list);
-		const bool insert(const Db::TableStructure& insert_columns, const std::list<std::shared_ptr<IBindable const>>& data_list);
-		const int update(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<IBindable const> data, const std::string& where_clause);
-		const int update(const Db::TableStructure& update_columns, std::shared_ptr<IBindable const> data, std::string where_clause);
+		const bool insert(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<Bindable const> data);
+		const bool insert(const Db::TableStructure& insert_columns, std::shared_ptr<Bindable const> data);
+		const bool insert(const std::string& table_name, const std::list<std::string>& columns, const std::list<std::shared_ptr<Bindable const>>& data_list);
+		const bool insert(const Db::TableStructure& insert_columns, const std::list<std::shared_ptr<Bindable const>>& data_list);
+		const int update(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<Bindable const> data, const std::string& where_clause);
+		const int update(const Db::TableStructure& update_columns, std::shared_ptr<Bindable const> data, std::string where_clause);
 		sql::ResultSet* select(const std::string& table_name, const std::list<std::string>& columns, const std::string& where_clause = "");
 		sql::ResultSet* select(const Db::TableStructure& select_columns, const std::string where_clause = "");
 	};

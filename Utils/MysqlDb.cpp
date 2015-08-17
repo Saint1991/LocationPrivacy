@@ -183,7 +183,7 @@ const bool Db::MySQLDb::create_table(const Db::TableStructure& table_info)
 /// INSERTを実行するユーティリティ
 /// 失敗した場合はfalseを返す
 ///</summary>
-const bool Db::MySQLDb::insert(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<IBindable const> data)
+const bool Db::MySQLDb::insert(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<Bindable const> data)
 {
 	bool* ret = execute_if_connection_is_alive<bool>([&]() {
 		const std::string query = Db::QueryGenerateUtility::make_insert_query(table_name, columns);
@@ -202,7 +202,7 @@ const bool Db::MySQLDb::insert(const std::string& table_name, const std::list<st
 /// INSERTを実行するユーティリティ
 /// 失敗した場合はfalseを返す
 ///</summary>
-const bool Db::MySQLDb::insert(const Db::TableStructure& insert_columns, std::shared_ptr<IBindable const> data)
+const bool Db::MySQLDb::insert(const Db::TableStructure& insert_columns, std::shared_ptr<Bindable const> data)
 {
 	return insert(insert_columns.table_name, insert_columns.get_column_name_list(), data);
 }
@@ -213,14 +213,14 @@ const bool Db::MySQLDb::insert(const Db::TableStructure& insert_columns, std::sh
 /// 複数データをインサートする場合はこちらを使うと効率がよい
 /// 失敗した場合はfalseを返す
 ///</summary>
-const bool Db::MySQLDb::insert(const std::string& table_name, const std::list<std::string>& columns, const std::list<std::shared_ptr<IBindable const>>& data_list)
+const bool Db::MySQLDb::insert(const std::string& table_name, const std::list<std::string>& columns, const std::list<std::shared_ptr<Bindable const>>& data_list)
 {
 	bool* result = execute_if_connection_is_alive<bool>([&]() {
 		const std::string query = Db::QueryGenerateUtility::make_insert_query(table_name, columns);
 		sql::PreparedStatement* statement = connection->prepareStatement(query);
 		
 		bool are_all_succeed = true;
-		for (std::list<std::shared_ptr<IBindable const>>::const_iterator iter = data_list.begin(); iter != data_list.end(); iter++) {
+		for (std::list<std::shared_ptr<Bindable const>>::const_iterator iter = data_list.begin(); iter != data_list.end(); iter++) {
 			(*iter)->bind(statement, columns);
 			are_all_succeed && statement->execute();
 		}
@@ -238,7 +238,7 @@ const bool Db::MySQLDb::insert(const std::string& table_name, const std::list<st
 /// 複数データをインサートする場合はこちらを使うと効率がよい
 /// 失敗した場合はfalseを返す
 ///</summary>
-const bool Db::MySQLDb::insert(const Db::TableStructure& insert_columns, const std::list<std::shared_ptr<IBindable const>>& data_list)
+const bool Db::MySQLDb::insert(const Db::TableStructure& insert_columns, const std::list<std::shared_ptr<Bindable const>>& data_list)
 {
 	return insert(insert_columns.table_name, insert_columns.get_column_name_list(), data_list);
 }
@@ -249,7 +249,7 @@ const bool Db::MySQLDb::insert(const Db::TableStructure& insert_columns, const s
 /// 変更されたカラム数を返す
 /// 失敗した場合は-1を返す
 ///</summary>
-const int Db::MySQLDb::update(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<IBindable const> data, const std::string& where_clause)
+const int Db::MySQLDb::update(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<Bindable const> data, const std::string& where_clause)
 {
 	int* ret =  execute_if_connection_is_alive<int>([&]() {
 		const std::string query = Db::QueryGenerateUtility::make_update_query(table_name, columns, where_clause);
@@ -270,7 +270,7 @@ const int Db::MySQLDb::update(const std::string& table_name, const std::list<std
 /// 変更されたカラム数を返す
 /// 失敗した場合は-1を返す
 ///</summary>
-const int Db::MySQLDb::update(const Db::TableStructure& update_columns, std::shared_ptr<IBindable const> data, std::string where_clause)
+const int Db::MySQLDb::update(const Db::TableStructure& update_columns, std::shared_ptr<Bindable const> data, std::string where_clause)
 {
 	return update(update_columns.table_name, update_columns.get_column_name_list(), data, where_clause);
 }

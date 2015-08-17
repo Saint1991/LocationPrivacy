@@ -191,7 +191,6 @@
     <ClInclude Include="AngleUtility.h" />
     <ClInclude Include="BasicGeoNodeData.h" />
     <ClInclude Include="BasicPathData.h" />
-    <ClInclude Include="Types.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="DbSettings.h" />
     <ClInclude Include="DbSettingsFileLoader.h" />
@@ -203,8 +202,8 @@
     <ClInclude Include="GeoNode.h" />
     <ClInclude Include="GeoNode.hpp" />
     <ClInclude Include="GraphUtility.h" />
-    <ClInclude Include="IBindable.h" />
-    <ClInclude Include="IBindable.hpp" />
+    <ClInclude Include="Bindable.h" />
+    <ClInclude Include="Bindable.hpp" />
     <ClInclude Include="IDbSettingsLoader.h" />
     <ClInclude Include="Identifiable.h" />
     <ClInclude Include="IdentifiableCollection.h" />
@@ -230,9 +229,6 @@
     <ClInclude Include="TableStructure.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tinyxml2.h" />
-    <ClInclude Include="TypeChecker.h" />
-    <ClInclude Include="TypeChecker.hpp" />
-    <ClInclude Include="Types.hpp" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="Vector2dFactory.h" />
     <ClInclude Include="WarshallFloyd.h" />

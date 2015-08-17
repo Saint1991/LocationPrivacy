@@ -1,15 +1,15 @@
 #pragma once
-#include "Types.h"
 #include "TableStructure.h"
 #include "cppconn\prepared_statement.h"
 
 ///<summary>
 /// PreparedStatementにバインドできるデータクラスを示すインタフェース
 ///</summary>
-class IBindable
+class Bindable
 {
 
-typedef Types::BasicType TYPE;
+private:
+	enum AvailableValueType { BOOL, STRING, INT, INT64, UINT, UINT64, DOUBLE, LDOUBLE, SQL_NULL, INVALID };
 
 protected:
 	template <typename VALUE_TYPE>
@@ -20,4 +20,4 @@ public:
 	virtual void bind(sql::PreparedStatement* statement, const std::list<std::string>& columns) const = 0;
 };
 
-#include "IBindable.hpp"
+#include "Bindable.hpp"
