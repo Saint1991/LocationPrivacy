@@ -3,7 +3,8 @@
 /// コンストラクタ
 ///</summary>
 template <typename GEONODEDATA, typename PATHDATA>
-Geography::Map<GEONODEDATA, PATHDATA>::Map(std::unique_ptr<Graph::RoutingMethod<GEONODEDATA, PATHDATA>> routing_method)
+Geography::Map<GEONODEDATA, PATHDATA>::Map(std::unique_ptr<Graph::RoutingMethod<GEONODEDATA, PATHDATA>> routing_method) 
+	: node_collection(std::make_shared<const Collection::IdentifiableCollection<std::shared_ptr<const Geography::GeoNode<GEONODEDATA, PATHDATA>>>>())
 {
 	build_map();
 	routing_table = create_routing_table(routing_method);
@@ -24,7 +25,7 @@ Geography::Map<GEONODEDATA, PATHDATA>::~Map()
 template <typename GEONODEDATA, typename PATHDATA>
 void Geography::Map<GEONODEDATA, PATHDATA>::create_routing_table(std::unique_ptr<Graph::RoutingMethod<GEONODEDATA, PATHDATA>> routing_method)
 {
-	routing_method->create_routing_table();
+	routing_table = std::move(routing_method->create_routing_table(node_collection));
 }
 
 

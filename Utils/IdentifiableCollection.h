@@ -13,7 +13,7 @@ namespace Collection
 	{
 		
 	//T‚ªIdentifiable‚ğŒp³‚µ‚Ä‚¢‚é‚©”»’è
-	static_assert(std::is_base_of<Identifiable, T>::value, "Template Type T is not Derived from Identifiable at IdentifiableCollection.h");
+	static_assert(std::is_base_of<Identifiable, T>::value, "Template type T is not Derived from Identifiable");
 
 	private:
 		std::unique_ptr < std::set < std::shared_ptr<T>, std::function<bool (const std::shared_ptr<T>, const std::shared_ptr<T>)> > > collection;

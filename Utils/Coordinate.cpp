@@ -2,52 +2,56 @@
 #include "Coordinate.h"
 
 
-///<summary>
-/// コンストラクタ
-///</summary>
-Graph::Coordinate::Coordinate(unsigned int id, double x, double y) : _id(id),  _x(x), _y(y)
+namespace Graph
 {
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	Coordinate::Coordinate(double x, double y, unsigned int id) : Identifiable(id), _x(x), _y(y)
+	{
+	}
+
+
+	///<summary>
+	/// デストラクタ
+	///</summary>
+	Coordinate::~Coordinate()
+	{
+	}
+
+	///<summary>
+	/// x座標の取得
+	///</summary>
+	double Coordinate::x() const
+	{
+		return _x;
+	}
+
+
+	///<summary>
+	/// y座標の取得
+	///</summary>
+	double Coordinate::y() const
+	{
+		return _y;
+	}
+
+
+	Vector2d operator+(const Coordinate& c1, const Coordinate& c2)
+	{
+		return Graph::Vector2d(c1._x + c2._x, c1._y + c2._y);
+	}
+
+	Vector2d operator-(const Coordinate& c1, const Coordinate& c2)
+	{
+		return Graph::Vector2d(c1._x - c2._x, c1._y - c2._y);
+	}
+
+	///<summary>
+	/// 2点間の距離を計算する
+	///</summary>
+	double dist(const Coordinate& c1, const Coordinate& c2)
+	{
+		return (c2 - c1).length();
+	}
 }
-
-
-///<summary>
-/// デストラクタ
-///</summary>
-Graph::Coordinate::~Coordinate()
-{
-}
-
-
-unsigned int Graph::Coordinate::id() const 
-{
-	return _id;
-}
-
-///<summary>
-/// x座標の取得
-///</summary>
-double Graph::Coordinate::x() const
-{
-	return _x;
-}
-
-
-///<summary>
-/// y座標の取得
-///</summary>
-double Graph::Coordinate::y() const
-{
-	return _y;
-}
-
-
-Graph::Vector2d Graph::operator+(Graph::Coordinate c1, Graph::Coordinate c2)
-{
-	return Graph::Vector2d(c1._x + c2._x, c1._y + c2._y);
-}
-
-Graph::Vector2d Graph::operator-(Graph::Coordinate c1, Graph::Coordinate c2)
-{
-	return Graph::Vector2d(c1._x - c2._x, c1._y - c2._y);
-}
-

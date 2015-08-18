@@ -1,18 +1,17 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "NodeCollectionFactory.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UtilsTest
 {
-	TEST_CLASS(NodeManagerTest)
+	TEST_CLASS(CoordinateTest)
 	{
 	public:
-		
-		TEST_METHOD(constructor)
+
+		TEST_METHOD(Coordinate_Constructor)
 		{
-			
+
 		}
 	};
 }

@@ -79,6 +79,24 @@
     <Filter Include="ソース ファイル\Interfaces">
       <UniqueIdentifier>{d1dadb9d-114f-43db-8dd6-7e297d81ddc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Graph\Data">
+      <UniqueIdentifier>{e62dac1c-c81f-46fa-9c15-ba172d8e51be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Graph\Data">
+      <UniqueIdentifier>{33b0d6b6-a319-4ec1-99b0-4b92fddb2c93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Graph\Edge">
+      <UniqueIdentifier>{13672163-9a07-4dfc-93a6-ba79d174d363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Graph\Node">
+      <UniqueIdentifier>{43ef9d79-c606-46d8-8be0-6376c337f5d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Graph\Edge">
+      <UniqueIdentifier>{e2872ca9-4c36-42a0-9ed0-a1b9e624d9fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Graph\Node">
+      <UniqueIdentifier>{31a89a91-9bc9-45ea-82d9-e89ed684c466}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -89,12 +107,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="Edge.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
     <ClInclude Include="Probability.h">
       <Filter>ヘッダー ファイル\Math</Filter>
@@ -113,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="LatLng.h">
       <Filter>ヘッダー ファイル\Geography</Filter>
-    </ClInclude>
-    <ClInclude Include="NodeCollectionFactory.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
     <ClInclude Include="FileExportable.h">
       <Filter>ヘッダー ファイル\Interfaces</Filter>
@@ -141,20 +150,8 @@
     <ClInclude Include="GraphUtility.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="Edge.hpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="Node.hpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClInclude>
     <ClInclude Include="IdentifiableCollection.hpp">
       <Filter>ソース ファイル\Collection</Filter>
-    </ClInclude>
-    <ClInclude Include="NodeCollectionFactory.hpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicPathData.h">
-      <Filter>ヘッダー ファイル\Geography\Data</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
       <Filter>ヘッダー ファイル\Geography</Filter>
@@ -164,12 +161,6 @@
     </ClInclude>
     <ClInclude Include="BasicGeoNodeData.h">
       <Filter>ヘッダー ファイル\Geography\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="GeoNode.h">
-      <Filter>ヘッダー ファイル\Geography</Filter>
-    </ClInclude>
-    <ClInclude Include="GeoNode.hpp">
-      <Filter>ソース ファイル\Geography</Filter>
     </ClInclude>
     <ClInclude Include="RoutingMethod.h">
       <Filter>ヘッダー ファイル\Graph\Routing</Filter>
@@ -219,6 +210,42 @@
     <ClInclude Include="Bindable.hpp">
       <Filter>ソース ファイル\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="BasicPathData.h">
+      <Filter>ヘッダー ファイル\Graph\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicEdge.h">
+      <Filter>ヘッダー ファイル\Graph\Edge</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.h">
+      <Filter>ヘッダー ファイル\Graph\Edge</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicPath.h">
+      <Filter>ヘッダー ファイル\Graph\Edge</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>ヘッダー ファイル\Graph\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeCollectionFactory.h">
+      <Filter>ヘッダー ファイル\Graph\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicNode.h">
+      <Filter>ヘッダー ファイル\Graph\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.hpp">
+      <Filter>ソース ファイル\Graph\Edge</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicNode.hpp">
+      <Filter>ソース ファイル\Graph\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.hpp">
+      <Filter>ソース ファイル\Graph\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeCollectionFactory.hpp">
+      <Filter>ソース ファイル\Graph\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="MapNode.h">
+      <Filter>ヘッダー ファイル\Geography</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -263,9 +290,6 @@
     <ClCompile Include="GeoCalculation.cpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
-    <ClCompile Include="BasicPathData.cpp">
-      <Filter>ソース ファイル\Geography\Data</Filter>
-    </ClCompile>
     <ClCompile Include="BasicGeoNodeData.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
@@ -289,6 +313,18 @@
     </ClCompile>
     <ClCompile Include="QueryGenerateUtility.cpp">
       <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPathData.cpp">
+      <Filter>ソース ファイル\Graph\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicEdge.cpp">
+      <Filter>ソース ファイル\Graph\Edge</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPath.cpp">
+      <Filter>ソース ファイル\Graph\Edge</Filter>
+    </ClCompile>
+    <ClCompile Include="MapNode.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

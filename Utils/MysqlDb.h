@@ -20,7 +20,7 @@ namespace Db
 {
 	class MYSQL_DB_API MySQLDb
 	{
-	private:
+	private:		
 		std::unique_ptr<Db::DbSettings const> settings;
 		sql::Connection* connection = nullptr;
 

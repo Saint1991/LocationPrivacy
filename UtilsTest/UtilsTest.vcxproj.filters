@@ -37,6 +37,9 @@
     <Filter Include="ソース ファイル\IO">
       <UniqueIdentifier>{cadfce83-1c26-487a-a3db-823b72818dcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Graph\Edge">
+      <UniqueIdentifier>{e3286958-6f39-4af4-8898-58d5029e3891}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -56,67 +59,16 @@
     <ClCompile Include="AngleUtilityTest.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Vector2dTest.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="IdentifiableCollectionTest.cpp">
-      <Filter>ソース ファイル\Collection</Filter>
-    </ClCompile>
-    <ClCompile Include="IdentifiableTest.cpp">
-      <Filter>ソース ファイル\Interfaces</Filter>
+    <ClCompile Include="BasicEdgeTest.cpp">
+      <Filter>ソース ファイル\Graph\Edge</Filter>
     </ClCompile>
     <ClCompile Include="EdgeTest.cpp">
+      <Filter>ソース ファイル\Graph\Edge</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPathDataTest.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
-    <ClCompile Include="NodeTest.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="LatLngTest.cpp">
-      <Filter>ソース ファイル\Geography</Filter>
-    </ClCompile>
-    <ClCompile Include="NodeCollectionFactory.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="FileExporterTest.cpp">
-      <Filter>ソース ファイル\IO</Filter>
-    </ClCompile>
-    <ClCompile Include="GeographycalCalculationTest.cpp">
-      <Filter>ソース ファイル\Geography</Filter>
-    </ClCompile>
-    <ClCompile Include="DbSettingsLoaderTest.cpp">
-      <Filter>ソース ファイル\Db</Filter>
-    </ClCompile>
-    <ClCompile Include="MySQLDbTest.cpp">
-      <Filter>ソース ファイル\Db</Filter>
-    </ClCompile>
-    <ClCompile Include="StringTest.cpp">
-      <Filter>ソース ファイル\Others</Filter>
-    </ClCompile>
-    <ClCompile Include="PointerTest.cpp">
-      <Filter>ソース ファイル\Others</Filter>
-    </ClCompile>
-    <ClCompile Include="ColumnTest.cpp">
-      <Filter>ソース ファイル\Db</Filter>
-    </ClCompile>
-    <ClCompile Include="QueryGenerateUtilityTest.cpp">
-      <Filter>ソース ファイル\Db</Filter>
-    </ClCompile>
-    <ClCompile Include="TableStructureTest.cpp">
-      <Filter>ソース ファイル\Db</Filter>
-    </ClCompile>
-    <ClCompile Include="GeoNodeTest.cpp">
-      <Filter>ソース ファイル\Geography</Filter>
-    </ClCompile>
-    <ClCompile Include="MapTest.cpp">
-      <Filter>ソース ファイル\Geography</Filter>
-    </ClCompile>
-    <ClCompile Include="RoutingMethodTest.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphUtilityTest.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="BindableTest.cpp">
+    <ClCompile Include="IdentifiableTest.cpp">
       <Filter>ソース ファイル\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>

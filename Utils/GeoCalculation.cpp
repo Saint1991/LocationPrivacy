@@ -165,7 +165,7 @@ const std::vector<std::shared_ptr<Geography::LatLng const>> Geography::GeoCalcul
 	if (cartesian_points.size() != 0) {
 		const std::vector<std::shared_ptr<Graph::Coordinate const>> convex_points = Graph::GraphUtility::convex_hull(cartesian_points);
 		for (std::vector<std::shared_ptr<Graph::Coordinate const>>::const_iterator iter = convex_points.begin(); iter != convex_points.end(); iter++) {
-			ret.push_back(point_list.at((*iter)->id()));
+			ret.push_back(point_list.at((*iter)->get_id()));
 		}
 	}
 	return ret;

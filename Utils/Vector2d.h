@@ -7,7 +7,8 @@
 #pragma once
 #include "Coordinate.h"
 
-namespace Graph {
+namespace Graph 
+{
 	
 	class Coordinate;
 
@@ -31,10 +32,10 @@ namespace Graph {
 		double length() const;
 		void rotate(double radian);
 		void operator=(Vector2d v);
-		VECTOR2D_API friend Vector2d operator+(Vector2d v1, Vector2d v2);
-		VECTOR2D_API friend Vector2d operator-(Vector2d v1, Vector2d v2);
-		VECTOR2D_API friend bool operator==(const Vector2d v1, const Vector2d v2);
-		VECTOR2D_API friend bool operator!=(const Vector2d v1, const Vector2d v2);
+		VECTOR2D_API friend Vector2d operator+(const Vector2d& v1, const Vector2d& v2);
+		VECTOR2D_API friend Vector2d operator-(const Vector2d& v1, const Vector2d& v2);
+		VECTOR2D_API friend bool operator==(const Vector2d& v1, const Vector2d& v2);
+		VECTOR2D_API friend bool operator!=(const Vector2d& v1, const Vector2d& v2);
 		VECTOR2D_API friend double inner_product(const Vector2d& v1, const Vector2d& v2);
 		VECTOR2D_API friend double cross_product(const Vector2d& v1, const Vector2d& v2);
 	};

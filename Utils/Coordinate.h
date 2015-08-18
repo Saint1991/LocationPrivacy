@@ -6,27 +6,33 @@
 
 #pragma once
 #include "Vector2d.h"
+#include "Identifiable.h"
 
-namespace Graph {
+namespace Graph 
+{
 	
 	class Vector2d;
 
-	class  COORDINATE_API Coordinate
+
+	///<summary>
+	/// ユークリッド空間の点を表すクラス
+	///</summary>
+	class  COORDINATE_API Coordinate : public Identifiable
 	{
 	private:
-		unsigned int _id;
 		double _x;
 		double _y;
 	
 	public:
-		Coordinate(unsigned int id,  double x, double y);
+		Coordinate(double x, double y, unsigned int id = 0);
 		~Coordinate(); 
+
 		double x() const;
 		double y() const;
-		unsigned int id() const;
 
-		friend Vector2d operator+(Graph::Coordinate c1, Graph::Coordinate c2);
-		friend Vector2d operator-(Graph::Coordinate c1, Graph::Coordinate c2);
+		friend Vector2d operator+(const Coordinate& c1, const Coordinate& c2);
+		friend Vector2d operator-(const Coordinate& c1, const Coordinate& c2);
+		friend double dist(const Coordinate& c1, const Coordinate& c2);
 	};
 }
 

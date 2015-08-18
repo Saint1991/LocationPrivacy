@@ -14,7 +14,7 @@ public:
 	Identifiable(unsigned long id) : id(id) {}
 	virtual ~Identifiable() {}
 
-	unsigned long get_id() const { return id; }
+	const unsigned long get_id() const { return id; }
 
 	bool operator==(const Identifiable& i) const { return i.id == this->id; }
 	bool operator==(const unsigned long &i) const { return this->id == i; }

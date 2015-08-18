@@ -11,7 +11,7 @@ namespace UtilsTest
 	{
 	public:
 		
-		TEST_METHOD(uniform_distribution)
+		TEST_METHOD(Probability_uniform_distribution)
 		{
 
 			double lower_limit = 3.0;
@@ -27,7 +27,7 @@ namespace UtilsTest
 			}
 		}
 
-		TEST_METHOD(uniform_distribution2)
+		TEST_METHOD(Probability_uniform_distribution2)
 		{
 			int lower_limit = 3;
 			int upper_limit = 10;
@@ -42,7 +42,7 @@ namespace UtilsTest
 			}
 		}
 
-		TEST_METHOD(gaussian_distribution)
+		TEST_METHOD(Probability_gaussian_distribution)
 		{
 			double mean = 0.0;
 			double sigma = 1.0;
@@ -55,7 +55,7 @@ namespace UtilsTest
 			}
 		}
 
-		TEST_METHOD(exponential_distribution)
+		TEST_METHOD(Probability_exponential_distribution)
 		{
 			double lambda = 0.5;
 

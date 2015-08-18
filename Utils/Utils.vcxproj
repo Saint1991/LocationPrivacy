@@ -189,7 +189,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AngleUtility.h" />
+    <ClInclude Include="BasicEdge.h" />
     <ClInclude Include="BasicGeoNodeData.h" />
+    <ClInclude Include="BasicNode.h" />
+    <ClInclude Include="BasicNode.hpp" />
+    <ClInclude Include="BasicPath.h" />
     <ClInclude Include="BasicPathData.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="DbSettings.h" />
@@ -199,8 +203,7 @@
     <ClInclude Include="FileExportable.h" />
     <ClInclude Include="FileExporter.h" />
     <ClInclude Include="GeoCalculation.h" />
-    <ClInclude Include="GeoNode.h" />
-    <ClInclude Include="GeoNode.hpp" />
+    <ClInclude Include="MapNode.h" />
     <ClInclude Include="GraphUtility.h" />
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="Bindable.hpp" />
@@ -236,7 +239,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AngleUtility.cpp" />
+    <ClCompile Include="BasicEdge.cpp" />
     <ClCompile Include="BasicGeoNodeData.cpp" />
+    <ClCompile Include="BasicPath.cpp" />
     <ClCompile Include="BasicPathData.cpp" />
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="DbSettings.cpp" />
@@ -257,6 +262,7 @@
     </ClCompile>
     <ClCompile Include="FileExporter.cpp" />
     <ClCompile Include="GeoCalculation.cpp" />
+    <ClCompile Include="MapNode.cpp" />
     <ClCompile Include="GraphUtility.cpp" />
     <ClCompile Include="LatLng.cpp" />
     <ClCompile Include="MobileEntity.cpp" />

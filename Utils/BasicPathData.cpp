@@ -2,16 +2,48 @@
 #include "BasicPathData.h"
 
 
-Geography::BasicPathData::BasicPathData()
+namespace Graph 
 {
-}
+	
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	BasicPathData::BasicPathData(const double distance) : distance(distance)
+	{
+	}
+
+	
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	BasicPathData::BasicPathData(const Coordinate& c1, const Coordinate& c2)
+	{
+		distance = dist(c1, c2);
+	}
 
 
-Geography::BasicPathData::~BasicPathData()
-{
-}
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	BasicPathData::BasicPathData(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
+	{
+		distance = Geography::dist(ll1, ll2);
+	}
 
-const double Geography::BasicPathData::get_distance() const
-{
-	return distance;
+	///<summary>
+	/// デストラクタ
+	///</summary>
+	BasicPathData::~BasicPathData()
+	{
+	}
+
+	const double Graph::BasicPathData::get_distance() const
+	{
+		return distance;
+	}
+
+	void Graph::BasicPathData::update_distance(double distance)
+	{
+		this->distance = distance;
+	}
 }

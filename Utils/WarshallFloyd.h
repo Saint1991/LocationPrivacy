@@ -3,16 +3,13 @@
 
 namespace Graph
 {
-	template <typename NODE_DATA, typename EDGE_DATA>
-	class WarshallFloyd : public RoutingMethod<NODE_DATA, EDGE_DATA> 
+	template <typename NODE_DATA, typename EDGE>
+	class WarshallFloyd : public RoutingMethod<NODE_DATA, EDGE> 
 	{
-	private:
-		std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const Node<NODE_DATA, EDGE_DATA>>>> node_collection;
-
 	public:
-		WarshallFloyd(std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const Node<NODE_DATA, EDGE_DATA>>>> node_collection);
+		WarshallFloyd();
 		virtual ~WarshallFloyd();
-		std::unique_ptr<const std::vector<std::vector<Graph::node_id>>> create_routing_table() const;
+		std::unique_ptr<const std::vector<std::vector<Graph::node_id>>> create_routing_table(std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const Node<NODE_DATA, EDGE>>>> node_collection) const;
 	};
 }
 
