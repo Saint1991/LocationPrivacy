@@ -24,9 +24,9 @@ namespace UtilisTest
 			Coordinate c3(2.0, 4.0);
 			Coordinate c4(3.0, 6.0);
 			Coordinate c5(-1.0, -2.0);
-			Vector2d   c6 = c2 + c3;
 
-			//Assert::IsTrue(c5 == c2-c3);
+			//operatorの前後はスペース入れてね
+			//Assert::IsTrue(c5 == c2 - c3);
 
 		}
 	};

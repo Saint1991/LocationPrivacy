@@ -37,14 +37,14 @@ namespace Graph
 	}
 
 
-	Vector2d operator+(const Coordinate& c1, const Coordinate& c2)
+	Coordinate operator+(const Coordinate& c1, const Coordinate& c2)
 	{
-		return Graph::Vector2d(c1._x + c2._x, c1._y + c2._y);
+		return Coordinate(c1._x + c2._x, c1._y + c2._y);
 	}
 
-	Vector2d operator-(const Coordinate& c1, const Coordinate& c2)
+	Coordinate operator-(const Coordinate& c1, const Coordinate& c2)
 	{
-		return Graph::Vector2d(c1._x - c2._x, c1._y - c2._y);
+		return Coordinate(c1._x - c2._x, c1._y - c2._y);
 	}
 
 	///<summary>
@@ -52,6 +52,8 @@ namespace Graph
 	///</summary>
 	double dist(const Coordinate& c1, const Coordinate& c2)
 	{
-		return (c2 - c1).length();
+		double x_diff = c2._x - c1._x;
+		double y_diff = c2._y - c1._y;
+		return std::sqrt(x_diff * x_diff + y_diff * y_diff);
 	}
 }

@@ -5,15 +5,11 @@
 #endif
 
 #pragma once
-#include "Vector2d.h"
 #include "Identifiable.h"
 
 namespace Graph 
 {
 	
-	class Vector2d;
-
-
 	///<summary>
 	/// ユークリッド空間の点を表すクラス
 	///</summary>
@@ -30,8 +26,8 @@ namespace Graph
 		double x() const;
 		double y() const;
 
-		COORDINATE_API friend Vector2d operator+(const Coordinate& c1, const Coordinate& c2);
-		COORDINATE_API friend Vector2d operator-(const Coordinate& c1, const Coordinate& c2);
+		COORDINATE_API friend Coordinate operator+(const Coordinate& c1, const Coordinate& c2);
+		COORDINATE_API friend Coordinate operator-(const Coordinate& c1, const Coordinate& c2);
 		COORDINATE_API friend double dist(const Coordinate& c1, const Coordinate& c2);
 	};
 }
