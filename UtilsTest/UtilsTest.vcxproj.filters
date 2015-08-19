@@ -40,6 +40,12 @@
     <Filter Include="ソース ファイル\Graph\Edge">
       <UniqueIdentifier>{e3286958-6f39-4af4-8898-58d5029e3891}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Graph\Node">
+      <UniqueIdentifier>{49a83673-ef22-417b-b7aa-8fc2735f993a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Graph\Data">
+      <UniqueIdentifier>{868d1045-d590-42ed-83bd-d0c4221a97e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -65,11 +71,17 @@
     <ClCompile Include="EdgeTest.cpp">
       <Filter>ソース ファイル\Graph\Edge</Filter>
     </ClCompile>
-    <ClCompile Include="BasicPathDataTest.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
     <ClCompile Include="IdentifiableTest.cpp">
       <Filter>ソース ファイル\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CoordinateTest.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPathDataTest.cpp">
+      <Filter>ソース ファイル\Graph\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeCollectionFactoryTest.cpp">
+      <Filter>ソース ファイル\Graph\Node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

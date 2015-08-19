@@ -164,8 +164,10 @@
     <ClCompile Include="AngleUtilityTest.cpp" />
     <ClCompile Include="BasicEdgeTest.cpp" />
     <ClCompile Include="BasicPathDataTest.cpp" />
+    <ClCompile Include="CoordinateTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />
     <ClCompile Include="IdentifiableTest.cpp" />
+    <ClCompile Include="NodeCollectionFactoryTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
