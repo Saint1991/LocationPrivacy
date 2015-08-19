@@ -12,16 +12,6 @@ namespace Graph
 	{
 	}
 
-
-	///<summary>
-	/// コピー禁止のため
-	///</summary>
-	template <typename NODE, typename EDGE_DATA>
-	NodeCollectionFactory<NODE, EDGE_DATA>::NodeCollectionFactory(const NodeCollectionFactory& factory)
-	{
-	}
-
-
 	///<summary>
 	/// デストラクタ
 	///</summary>
@@ -35,7 +25,7 @@ namespace Graph
 	/// 変更不可の状態にロックしたコレクションを取得する．
 	///</summary>
 	template <typename NODE, typename EDGE_DATA>
-	std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const NODE>>> Graph::NodeCollectionFactory<NODE, EDGE_DATA>::create_static_node_collection() const
+	std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const NODE>>> NodeCollectionFactory<NODE, EDGE_DATA>::create_static_node_collection() const
 	{
 		create_nodes();
 		set_connectivities();
@@ -47,7 +37,7 @@ namespace Graph
 	/// 更新可能な状態でコレクションを取得する．
 	///</summary>
 	template <typename NODE, typename EDGE_DATA>
-	std::shared_ptr<Collection::IdentifiableCollection<std::shared_ptr<NODE>>> Graph::NodeCollectionFactory<NODE, EDGE_DATA>::create_updateable_node_collection()
+	std::shared_ptr<Collection::IdentifiableCollection<std::shared_ptr<NODE>>> NodeCollectionFactory<NODE, EDGE_DATA>::create_updateable_node_collection()
 	{
 		create_nodes();
 		set_connectivities();
@@ -60,7 +50,7 @@ namespace Graph
 	/// 既存IDのノードを作成しようとした場合はDuplicatedIdExceptionがスローされ，falseが返される．
 	///</summary>
 	template <typename NODE, typename EDGE_DATA>
-	bool Graph::NodeCollectionFactory<NODE, EDGE_DATA>::add_node(std::shared_ptr<NODE> node)
+	bool NodeCollectionFactory<NODE, EDGE_DATA>::add_node(std::shared_ptr<NODE> node)
 	{
 		return node_collection->add(node);
 	}
@@ -70,7 +60,7 @@ namespace Graph
 	/// 削除が発生した場合はtrueを返す
 	///</summary>
 	template <typename NODE, typename EDGE_DATA>
-	bool Graph::NodeCollectionFactory<NODE, EDGE_DATA>::remove_node(Graph::node_id id)
+	bool NodeCollectionFactory<NODE, EDGE_DATA>::remove_node(const node_id& id)
 	{
 		return node_collection->remove_by_id(id);
 	}
@@ -81,7 +71,7 @@ namespace Graph
 	/// from, toいずれかのノードが存在しなかった場合や，既存のリンクを追加しようとした場合はfalseを返します．
 	///</summary>
 	template <typename NODE, typename EDGE_DATA>
-	bool Graph::NodeCollectionFactory<NODE, EDGE_DATA>::connect(Graph::node_id from, Graph::node_id to, EDGE_DATA data)
+	bool NodeCollectionFactory<NODE, EDGE_DATA>::connect(const node_id& from, const node_id& to, EDGE_DATA data)
 	{
 		std::shared_ptr<NODE> node = node_collection->get_by_id(from);
 		bool is_to_exists = node_collection->contains(to);
@@ -98,7 +88,7 @@ namespace Graph
 	/// 双方向ともに成功した場合trueを，失敗した場合falseを返します．
 	///</summary>
 	template <typename NODE, typename EDGE_DATA>
-	bool Graph::NodeCollectionFactory<NODE, EDGE_DATA>::connect_each_other(Graph::node_id id1, Graph::node_id id2, EDGE_DATA data)
+	bool NodeCollectionFactory<NODE, EDGE_DATA>::connect_each_other(const node_id& id1, const node_id& id2, EDGE_DATA data)
 	{
 		std::shared_ptr<NODE> node1 = node_collection->get_by_id(from);
 		std::shared_ptr<NODE> node2 = node_collection->get_by_id(to);
@@ -124,9 +114,9 @@ namespace Graph
 	/// 切断に成功した場合はtrueを，リンクやノードが見つからなかった場合はfalseを返します．
 	///</summary>
 	template <typename NODE, typename EDGE_DATA>
-	bool Graph::NodeCollectionFactory<NODE, EDGE_DATA>::disconnect(Graph::node_id target, Graph::node_id from)
+	bool NodeCollectionFactory<NODE, EDGE_DATA>::disconnect(const node_id& target, const node_id& from)
 	{
-		std::shared_ptr<Graph::Node<NODE, EDGE_DATA>> node = node_collection->get_by_id(target);
+		std::shared_ptr<NODE> node = node_collection->get_by_id(target);
 		if (target == nullptr) {
 			return false;
 		}
@@ -138,10 +128,10 @@ namespace Graph
 	/// 2つのノード間のリンクを双方向切断します．
 	///</summary>
 	template <typename NODE, typename EDGE_DATA>
-	void Graph::NodeCollectionFactory<NODE, EDGE_DATA>::disconnect_each_other(Graph::node_id id1, Graph::node_id id2)
+	void NodeCollectionFactory<NODE, EDGE_DATA>::disconnect_each_other(const node_id& id1, const node_id& id2)
 	{
-		std::shared_ptr<Graph::Node<NODE, EDGE_DATA>> node1 = node_collection->get_by_id(id1);
-		std::shared_ptr<Graph::Node<NODE, EDGE_DATA>> node2 = node_collection->get_by_id(id2);
+		std::shared_ptr<NODE> node1 = node_collection->get_by_id(id1);
+		std::shared_ptr<NODE> node2 = node_collection->get_by_id(id2);
 
 		if (node1 != nullptr) {
 			node1->disconnect_from(id2);

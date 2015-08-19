@@ -10,6 +10,7 @@ namespace UtilisTest
 	TEST_CLASS(CoordinateTest)
 	{
 	public:
+		const double PRECISION = 1.0E-10;
 
 		TEST_METHOD(Coordinate_Constructor)
 		{
@@ -25,19 +26,28 @@ namespace UtilisTest
 			Coordinate c3 = c1 + c2;
 			Coordinate c4 = c1 - c2;
 			
-			Assert::AreEqual(3.0, c3.x(), 1.0E-10);
-			Assert::AreEqual(6.0, c3.y(), 1.0E-10);
-			Assert::AreEqual(-1.0, c4.x(), 1.0E-10);
-			Assert::AreEqual(-2.0, c4.y(), 1.0E-10);
+			Assert::AreEqual(3.0, c3.x(), PRECISION);
+			Assert::AreEqual(6.0, c3.y(), PRECISION);
+			Assert::AreEqual(-1.0, c4.x(), PRECISION);
+			Assert::AreEqual(-2.0, c4.y(), PRECISION);
 		}
 
 		TEST_METHOD(Coordinate_dist)
 		{
 			Coordinate c1(1.0, 2.0);
 			Coordinate c2(2.0, 4.0);
-			double c3 = dist(c1, c2);
+			double actual = dist(c1, c2);
 
-			Assert::AreEqual(sqrt(5), c3);
+			Assert::AreEqual(sqrt(5), actual);
+		}
+
+		TEST_METHOD(Coordinate_dist2)
+		{
+			Coordinate c1(1.0, 0.0);
+			Coordinate c2(-1.0, 0.0);
+			double actual = dist(c1, c2);
+
+			Assert::AreEqual(2.0, actual);
 		}
 	};
 }

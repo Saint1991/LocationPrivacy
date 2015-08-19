@@ -29,11 +29,11 @@ namespace Graph
 		//接続関係構成用のメソッド
 		//これらを用いてcreate_nodesとset_connectivitiesを実装する．
 		bool add_node(std::shared_ptr<NODE> node);
-		bool remove_node(node_id id);
-		bool connect(node_id from, node_id to, EDGE_DATA data);
-		bool connect_each_other(node_id node1, node_id node2, EDGE_DATA data);
-		bool disconnect(node_id target, node_id from);
-		void disconnect_each_other(node_id node1, node_id node2);
+		bool remove_node(const node_id& id);
+		bool connect(const node_id& from, const node_id& to, EDGE_DATA data);
+		bool connect_each_other(const node_id& node1, const node_id& node2, EDGE_DATA data);
+		bool disconnect(const node_id& target, const node_id& from);
+		void disconnect_each_other(const node_id& node1, const node_id& node2);
 		
 	public:
 		NodeCollectionFactory();
