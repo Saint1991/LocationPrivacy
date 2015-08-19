@@ -4,7 +4,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace Test
+namespace UtilsTest
 {
 	TEST_CLASS(IdentifiableTest)
 	{
