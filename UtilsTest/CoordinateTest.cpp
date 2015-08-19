@@ -20,14 +20,24 @@ namespace UtilisTest
 
 		TEST_METHOD(Coordinate_operators)
 		{
-			Coordinate c2(1.0, 2.0);
-			Coordinate c3(2.0, 4.0);
-			Coordinate c4(3.0, 6.0);
-			Coordinate c5(-1.0, -2.0);
+			Coordinate c1(1.0, 2.0);
+			Coordinate c2(2.0, 4.0);
+			Coordinate c3 = c1 + c2;
+			Coordinate c4 = c1 - c2;
+			
+			Assert::AreEqual(3.0, c3.x(), 1.0E-10);
+			Assert::AreEqual(6.0, c3.y(), 1.0E-10);
+			Assert::AreEqual(-1.0, c4.x(), 1.0E-10);
+			Assert::AreEqual(-2.0, c4.y(), 1.0E-10);
+		}
 
-			//operatorの前後はスペース入れてね
-			//Assert::IsTrue(c5 == c2 - c3);
+		TEST_METHOD(Coordinate_dist)
+		{
+			Coordinate c1(1.0, 2.0);
+			Coordinate c2(2.0, 4.0);
+			double c3 = dist(c1, c2);
 
+			Assert::AreEqual(sqrt(5), c3);
 		}
 	};
 }
