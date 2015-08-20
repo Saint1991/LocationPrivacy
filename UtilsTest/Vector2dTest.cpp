@@ -13,7 +13,7 @@ namespace UtilsTest
 	public:
 		const double PRECISION = 1.0E-10;
 		
-		TEST_METHOD(Vector2dTest_Constructor1)
+		TEST_METHOD(Vector2d_Constructor1)
 		{
 			Vector2d v1(1.0, 2.0);
 
@@ -21,7 +21,7 @@ namespace UtilsTest
 			Assert::AreEqual(2.0, v1.y());
 		}
 
-		TEST_METHOD(Vector2dTest_Constructor2)
+		TEST_METHOD(Vector2d_Constructor2)
 		{
 			Coordinate c1(1.0, 2.0);
 			Vector2d v1(c1);
@@ -30,14 +30,14 @@ namespace UtilsTest
 			Assert::AreEqual(2.0, v1.y());
 		}
 		
-		TEST_METHOD(Vector2dTest_length)
+		TEST_METHOD(Vector2d_length)
 		{
 			Vector2d v1(1.0, 2.0);
 			
 			Assert::AreEqual(std::sqrt(5), v1.length());
 		}
 		
-		TEST_METHOD(Vector2dTest_rotate)
+		TEST_METHOD(Vector2d_rotate)
 		{
 			Vector2d v1(1.0, 1.0);
 			v1.rotate(M_PI_4);
@@ -46,7 +46,7 @@ namespace UtilsTest
 			Assert::AreEqual(std::sqrt(2), v1.y(), PRECISION);
 		}
 		
-		TEST_METHOD(Vector2dTest_operators1)
+		TEST_METHOD(Vector2d_operators1)
 		{
 			Vector2d v1(1.0, 2.0);
 			Vector2d v2(2.0, 3.0);
@@ -60,7 +60,7 @@ namespace UtilsTest
 			Assert::AreEqual(-1.0, v4.y(), PRECISION);
 		}
 		
-		TEST_METHOD(Vector2dTest_operators2)
+		TEST_METHOD(Vector2d_operators2)
 		{
 			Vector2d v1(1.0, 2.0);
 			Vector2d v2(2.0, 3.0);
@@ -72,7 +72,7 @@ namespace UtilsTest
 			Assert::IsFalse(v2 != v3);
 		}
 
-		TEST_METHOD(Vector2dTest_inner_product)
+		TEST_METHOD(Vector2d_inner_product)
 		{
 			Vector2d v1(1.0, 2.0);
 			Vector2d v2(2.0, 3.0);
@@ -81,7 +81,7 @@ namespace UtilsTest
 			Assert::AreEqual(8.0, inner_p, PRECISION);
 		}
 
-		TEST_METHOD(Vector2dTest_cross_product)
+		TEST_METHOD(Vector2d_cross_product)
 		{
 			Vector2d v1(1.0, 2.0);
 			Vector2d v2(2.0, 3.0);

@@ -45,7 +45,7 @@ namespace UtilisTest
 			Coordinate c2(2.0, 4.0);
 			double actual = dist(c1, c2);
 
-			Assert::AreEqual(sqrt(5), actual);
+			Assert::AreEqual(std::sqrt(5), actual);
 		}
 
 		TEST_METHOD(Coordinate_dist2)
