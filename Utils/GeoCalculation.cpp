@@ -41,7 +41,7 @@ double Geography::GeoCalculation::harversine_distance(const Geography::LatLng& l
 
 
 ///<summary>
-/// Lambert-Andoyer法に基づく距離計算，精度はhaversineより高いが速度がやや劣る
+/// Lambert-Andoyer法に基づく距離計算(m)，精度はhaversineより高いが速度がやや劣る
 /// 参照(http://www2.nc-toyama.ac.jp/~mkawai/lecture/sailing/geodetic/geosail.html)
 ///</summary>
 double Geography::GeoCalculation::lambert_distance(const Geography::LatLng& ll1, const Geography::LatLng& ll2)

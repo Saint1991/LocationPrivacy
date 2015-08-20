@@ -6,6 +6,7 @@
 
 #pragma once
 #include "LatLng.h"
+#include "GeoCalculation.h"
 #include "BasicNode.h"
 
 namespace  Geography
@@ -16,6 +17,9 @@ namespace  Geography
 		MapNode(const Graph::node_id& id, std::shared_ptr<LatLng> position);
 		MapNode(const MapNode& node);
 		virtual ~MapNode();
+
+		MAP_NODE_API friend double distance(const MapNode& node1, const MapNode& node2);
+		MAP_NODE_API friend double azimuth_angle(const MapNode& from, const MapNode& node2);
 	};
 
 }

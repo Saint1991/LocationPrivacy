@@ -2,9 +2,9 @@
 ///<summary>
 /// コンストラクタ
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-Geography::Map<GEONODEDATA, PATHDATA>::Map(std::unique_ptr<Graph::RoutingMethod<GEONODEDATA, PATHDATA>> routing_method) 
-	: node_collection(std::make_shared<const Collection::IdentifiableCollection<std::shared_ptr<const Geography::GeoNode<GEONODEDATA, PATHDATA>>>>())
+template <typename NODE, typename PATH>
+Geography::Map<NODE, PATH>::Map(std::unique_ptr<Graph::RoutingMethod<NODE, PATH>> routing_method) 
+	: node_collection(std::make_shared<const Collection::IdentifiableCollection<std::shared_ptr<NODE>>>())
 {
 	build_map();
 	routing_table = create_routing_table(routing_method);
@@ -13,8 +13,8 @@ Geography::Map<GEONODEDATA, PATHDATA>::Map(std::unique_ptr<Graph::RoutingMethod<
 ///<summary>
 /// デストラクタ
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-Geography::Map<GEONODEDATA, PATHDATA>::~Map()
+template <typename NODE, typename PATH>
+Geography::Map<NODE, PATH>::~Map()
 {
 }
 
@@ -22,8 +22,8 @@ Geography::Map<GEONODEDATA, PATHDATA>::~Map()
 ///<summary>
 /// 最短路のルーティングテーブルを構築します．
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-void Geography::Map<GEONODEDATA, PATHDATA>::create_routing_table(std::unique_ptr<Graph::RoutingMethod<GEONODEDATA, PATHDATA>> routing_method)
+template <typename NODE, typename PATH>
+void Geography::Map<NODE, PATH>::create_routing_table()
 {
 	routing_table = std::move(routing_method->create_routing_table(node_collection));
 }
@@ -33,8 +33,8 @@ void Geography::Map<GEONODEDATA, PATHDATA>::create_routing_table(std::unique_ptr
 /// fromからtoまで平均速度avg_speedで移動した際の所要時間を計算します
 /// 到達不可能な場合はNOWHEREを返します．
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-const unsigned long Geography::Map<GEONODEDATA, PATHDATA>::calc_necessary_time(const Graph::node_id& source, const Graph::node_id& destination, const double& avg_speed) const
+template <typename NODE, typename PATH>
+const unsigned long Geography::Map<NODE, PATH>::calc_necessary_time(const Graph::node_id& source, const Graph::node_id& destination, const double& avg_speed) const
 {
 
 	std::list<Graph::node_id> shortest_path = get_shortest_path();
@@ -49,14 +49,14 @@ const unsigned long Geography::Map<GEONODEDATA, PATHDATA>::calc_necessary_time(c
 		to = *iter;
 
 		//nodeコレクションからfromに該当するノードを取得
-		std::shared_ptr<const Geography::GeoNode<GEONODEDATA, PATHDATA>> target = node_collection->read_by_id(from);
+		std::shared_ptr<const Geography::GeoNode<NODE, PATH>> target = node_collection->read_by_id(from);
 		if (target == nullptr) return NOWHERE;
 
 		//nodeが持つtoへのエッジを取得
-		std::shared_ptr<Graph::Edge<PATHDATA>> path = target->get_edge_to(to);
+		std::shared_ptr<Graph::Edge<PATH>> path = target->get_edge_to(to);
 		if (path == nullptr) return NOWHERE;
 
-		//edgeの距離を調べる (GeoNodeはPATHDATAをBasicPathDataの派生クラスに絞っているので，このキャストは安全なはず)
+		//edgeの距離を調べる (GeoNodeはPATHをBasicPathDataの派生クラスに絞っているので，このキャストは安全なはず)
 		std::shared_ptr<const Geography::BasicPathData> path_data = std::static_pointer_cast<Geography::BasicPathData>(path);
 		double distance = path_data->get_distance();
 
@@ -73,8 +73,8 @@ const unsigned long Geography::Map<GEONODEDATA, PATHDATA>::calc_necessary_time(c
 ///<summary>
 /// fromからtoへ平均速度speedで移動したときの制限時間time_limit[分]の到達可能性を調べる
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-const bool Geography::Map<GEONODEDATA, PATHDATA>::is_reachable(const Graph::node_id& from, const Graph::node_id& to, const double& speed, const unsigned int& time_limit) const
+template <typename NODE, typename PATH>
+const bool Geography::Map<NODE, PATH>::is_reachable(const Graph::node_id& from, const Graph::node_id& to, const double& speed, const unsigned int& time_limit) const
 {
 	return calc_necessary_time(from, to, speed) <= time_limit;
 }
@@ -83,8 +83,8 @@ const bool Geography::Map<GEONODEDATA, PATHDATA>::is_reachable(const Graph::node
 ///<summary>
 /// from から toへ最短路で行くときに次に進むべきノードのIDを取得
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-const Graph::node_id Geography::Map<GEONODEDATA, PATHDATA>::get_next_node_of_shortest_path(const Graph::node_id& from, const Graph::node_id& to) const
+template <typename NODE, typename PATH>
+const Graph::node_id Geography::Map<NODE, PATH>::get_next_node_of_shortest_path(const Graph::node_id& from, const Graph::node_id& to) const
 {
 	return routing_table->at(from)->at(to);
 }
@@ -95,8 +95,8 @@ const Graph::node_id Geography::Map<GEONODEDATA, PATHDATA>::get_next_node_of_sho
 /// NOWHEREで探索が終了した場合はnullptrを返す
 /// source == destinationの場合は空のリストが返されます．
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-const std::list<Graph::node_id> Geography::Map<GEONODEDATA, PATHDATA>::get_shortest_path(const Graph::node_id& source, const Graph::node_id& destination) const
+template <typename NODE, typename PATH>
+const std::list<Graph::node_id> Geography::Map<NODE, PATH>::get_shortest_path(const Graph::node_id& source, const Graph::node_id& destination) const
 {
 	std::list<Graph::node_id> path;
 	if (source == destination) return path;
@@ -117,10 +117,10 @@ const std::list<Graph::node_id> Geography::Map<GEONODEDATA, PATHDATA>::get_short
 ///<summary>
 /// 指定したIDのノードに接続しているすべてのノードを返す
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-const std::list<Graph::node_id> Geography::Map<GEONODEDATA, PATHDATA>::get_connecting_nodes(const Graph::node_id& id) const
+template <typename NODE, typename PATH>
+const std::list<Graph::node_id> Geography::Map<NODE, PATH>::get_connecting_nodes(const Graph::node_id& id) const
 {
-	std::shared_ptr<Geography::GeoNode<GEONODEDATA, PATHDATA> const> node = node_collection->read_by_id(id);
+	std::shared_ptr<Geography::GeoNode<NODE, PATH> const> node = node_collection->read_by_id(id);
 	return node->get_connecting_node_list();
 }
 
@@ -128,8 +128,8 @@ const std::list<Graph::node_id> Geography::Map<GEONODEDATA, PATHDATA>::get_conne
 ///<summary>
 /// 指定したIDのノードを変更不可の状態で取得する
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-std::shared_ptr<const Geography::GeoNode<GEONODEDATA, PATHDATA>> Geography::Map<GEONODEDATA, PATHDATA>::get_static_node(const Graph::node_id& id) const
+template <typename NODE, typename PATH>
+std::shared_ptr<const Geography::GeoNode<NODE, PATH>> Geography::Map<NODE, PATH>::get_static_node(const Graph::node_id& id) const
 {
 	return node_collection->read_by_id(id);
 }
@@ -138,8 +138,8 @@ std::shared_ptr<const Geography::GeoNode<GEONODEDATA, PATHDATA>> Geography::Map<
 ///<summary>
 /// 指定したIDのノードを取得する
 ///</summary>
-template <typename GEONODEDATA, typename PATHDATA>
-std::shared_ptr<Geography::GeoNode<GEONODEDATA, PATHDATA>> Geography::Map<GEONODEDATA, PATHDATA>::get_node(const Graph::node_id& id)
+template <typename NODE, typename PATH>
+std::shared_ptr<Geography::GeoNode<NODE, PATH>> Geography::Map<NODE, PATH>::get_node(const Graph::node_id& id)
 {
 	return node_collection->get_by_id(id);
 }

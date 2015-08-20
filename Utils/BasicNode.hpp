@@ -28,6 +28,7 @@ namespace Graph
 
 	 ///<summary>
 	 /// toまでの距離を更新する
+	 /// toへのエッジを保持していない場合はfalseを返す
 	 ///</summary>
 	template <typename NODE_DATA>
 	bool  BasicNode<NODE_DATA>::update_distance_to(const node_id& to, const double& distance)

@@ -20,15 +20,13 @@ namespace Geography
 	/// 具体的なマップはこれを継承して作る
 	/// ID ULONG_MAXは予約済みで使えないので注意
 	///</summary>
-	/*template <typename GEONODEDATA, typename PATHDATA>
+	template <typename NODE, typename PATH>
 	class Map
 	{
-		
 	protected:
-		std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const Geography::GeoNode<GEONODEDATA, PATHDATA>>>> node_collection;
+		std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<NODE const>>> node_collection;
 		virtual void build_map() = 0;
-		virtual void create_routing_table(std::unique_ptr<Graph::RoutingMethod<GEONODEDATA, PATHDATA>> routing_method);
-
+		virtual void create_routing_table();
 
 		///<summary>
 		/// 最短路を格納するルーティングテーブル
@@ -37,7 +35,7 @@ namespace Geography
 		std::unique_ptr<const std::vector<const std::vector<Graph::node_id>>> routing_table;
 
 	public:
-		Map(std::unique_ptr<Graph::RoutingMethod<GEONODEDATA, PATHDATA>> routing_method);
+		Map(std::unique_ptr<Graph::RoutingMethod<NODE, PATH>> routing_method);
 		virtual ~Map();
 
 		const unsigned long calc_necessary_time(const Graph::node_id& from, const Graph::node_id& to, const double& avg_speed) const;
@@ -45,12 +43,9 @@ namespace Geography
 		const Graph::node_id get_next_node_of_shortest_path(const Graph::node_id& from, const Graph::node_id& to) const;
 		const std::list<Graph::node_id> get_shortest_path(const Graph::node_id& from, const Graph::node_id& to) const;
 		const std::list<Graph::node_id> get_connecting_nodes(const Graph::node_id& id) const;
-		std::shared_ptr<const Geography::GeoNode<GEONODEDATA, PATHDATA>> get_static_node(const Graph::node_id& id) const;
-		std::shared_ptr<Geography::GeoNode<GEONODEDATA, PATHDATA>> get_node(const Graph::node_id& id);
+		std::shared_ptr<const Geography::GeoNode<NODE, PATH>> get_static_node(const Graph::node_id& id) const;
+		std::shared_ptr<Geography::GeoNode<NODE, PATH>> get_node(const Graph::node_id& id);
 	};
-	
-	#include "Map.hpp"
-	*/
 }
 
-
+#include "Map.hpp"
