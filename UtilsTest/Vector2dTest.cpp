@@ -34,7 +34,7 @@ namespace UtilsTest
 		{
 			Vector2d v1(1.0, 2.0);
 			
-			Assert::AreEqual(sqrt(5), v1.length());
+			Assert::AreEqual(std::sqrt(5), v1.length());
 		}
 		
 		TEST_METHOD(Vector2dTest_rotate)
@@ -43,7 +43,7 @@ namespace UtilsTest
 			v1.rotate(M_PI_4);
 
 			Assert::AreEqual(0.0, v1.x(), PRECISION);
-			Assert::AreEqual(sqrt(2), v1.y(), PRECISION);
+			Assert::AreEqual(std::sqrt(2), v1.y(), PRECISION);
 		}
 		
 		TEST_METHOD(Vector2dTest_operators1)

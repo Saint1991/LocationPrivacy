@@ -37,7 +37,7 @@ namespace UtilisTest
 			Coordinate c2(2.0, 4.0);
 			double c3 = dist(c1, c2);
 
-			Assert::AreEqual(sqrt(5), c3);
+			Assert::AreEqual(std::sqrt(5), c3);
 		}
 	};
 }
