@@ -1,6 +1,5 @@
 #pragma once
-#include "Edge.h"
-#include "Node.h"
+#include "BasicEdge.h"
 #include "IdentifiableCollection.h"
 
 namespace Graph 
@@ -12,8 +11,11 @@ namespace Graph
 	/// create_nodes, set_connectivityの順序で実行され，IdentifiableCollectionの内容を作成する．
 	/// 作成後は，今後も更新を加えるかによってcreate_static_node_collectionとcreate_updateable_node_collectionを使い分けて取得する．
 	/// 取得後はファクトリ内のコレクションは使用できなくなるので注意
+	/// また，NODE, EDGE, EDGE_DATAの型の整合性がとれていないとコンパイルできないので注意
+	/// Connect系のメソッドがBasicEdgeで別動作，かつBasicEdge以外で別動作できないようになっているか確認が必要
+	/// BasicEdgeを使う時はEDGE_DATAをnullptr_tにしてください
 	///</summary>
-	template <typename NODE, typename EDGE_DATA>
+	template <typename NODE, typename EDGE, typename EDGE_DATA>
 	class NodeCollectionFactory
 	{
 	
@@ -30,11 +32,15 @@ namespace Graph
 		//これらを用いてcreate_nodesとset_connectivitiesを実装する．
 		bool add_node(std::shared_ptr<NODE> node);
 		bool remove_node(const node_id& id);
-		bool connect(const node_id& from, const node_id& to, EDGE_DATA data);
-		bool connect_each_other(const node_id& node1, const node_id& node2, EDGE_DATA data);
+		bool connect(const node_id& from, const node_id& to, std::shared_ptr<EDGE_DATA> data);
+		bool connect_each_other(const node_id& node1, const node_id& node2, std::shared_ptr<EDGE_DATA> data);
 		bool disconnect(const node_id& target, const node_id& from);
 		void disconnect_each_other(const node_id& node1, const node_id& node2);
-		
+
+		//BasicEdge用
+		bool connect(const node_id& from, const node_id& to);
+		bool connect_each_other(const node_id& id1, const node_id& id2);
+
 	public:
 		NodeCollectionFactory();
 		virtual ~NodeCollectionFactory();

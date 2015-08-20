@@ -1,10 +1,15 @@
+#ifdef UTILS_EXPORTS
+#define IDENTIFIABLE_API __declspec(dllexport)
+#else
+#define IDENTIFIABLE_API __declspec(dllimport)
+#endif
 #pragma once
 #include "stdafx.h"
 
 ///<summary>
 /// IDをもつクラス用のインタフェース
 ///</summary>
-class Identifiable
+class IDENTIFIABLE_API Identifiable
 {
 protected:
 	unsigned long id;
