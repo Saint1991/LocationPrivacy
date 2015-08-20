@@ -37,10 +37,6 @@ namespace Graph
 		bool disconnect(const node_id& target, const node_id& from);
 		void disconnect_each_other(const node_id& node1, const node_id& node2);
 
-		//BasicEdge—p
-		bool connect(const node_id& from, const node_id& to);
-		bool connect_each_other(const node_id& id1, const node_id& id2);
-
 	public:
 		NodeCollectionFactory();
 		virtual ~NodeCollectionFactory();
@@ -50,6 +46,15 @@ namespace Graph
 		std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const NODE>>> create_static_node_collection() const;
 		std::shared_ptr<Collection::IdentifiableCollection<std::shared_ptr<NODE>>> create_updateable_node_collection();
 	};
+
+	#pragma region BasicEdge
+	template <typename NODE>
+	class NodeCollectionFactory<NODE, BasicEdge, nullptr_t>
+	{
+		bool connect(const node_id& from, const node_id& to);
+		bool connect_each_other(const node_id& id1, const node_id& id2);
+	};
+	#pragma endregion EDGE‚ªBasicEdge‚ÌŽž‚Ì‚½‚ß‚Ì•”•ª“ÁŽê‰»
 }
 
 #include "NodeCollectionFactory.hpp"

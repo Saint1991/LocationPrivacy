@@ -2,7 +2,6 @@
 namespace Graph 
 {
 
-
 	///<summary>
 	/// コンストラクタ
 	///</summary>
@@ -82,7 +81,6 @@ namespace Graph
 	}
 
 
-
 	///<summary>
 	/// 指定したID間に相互にリンクを作成します．
 	/// 双方向にリンクを作成できなければ，両方向切断されている状態に戻します．
@@ -143,7 +141,7 @@ namespace Graph
 
 
 	#pragma region BasicEdge
-	template <typename NODE, BasicEdge, nullptr_t>
+	template <typename NODE>
 	bool NodeCollectionFactory<NODE, BasicEdge, nullptr_t>::connect(const node_id& from, const node_id& to) 
 	{
 		std::shared_ptr<NODE> node = node_collection->get_by_id(from);
@@ -154,7 +152,7 @@ namespace Graph
 		return node->connect_to(std::make_shared<BasicEdge>(to));
 	}
 
-	template <typename NODE, BasicEdge, nullptr_t>
+	template <typename NODE>
 	bool NodeCollectionFactory<NODE, BasicEdge, nullptr_t>::connect_each_other(const node_id& id1, const node_id& id2)
 	{
 		std::shared_ptr<NODE> node1 = node_collection->get_by_id(id1);
@@ -162,7 +160,6 @@ namespace Graph
 		if (node1 == nullptr || node2 == nullptr) {
 			return false;
 		}
-
 		if (!node1->connect_to(std::make_shared<BasicEdge>(id2))) {
 			return false;
 		}
@@ -173,8 +170,7 @@ namespace Graph
 		}
 		return true;
 	}
-	
-#pragma endregion EDGEがBasicEdgeの時のための部分特殊化
+	#pragma endregion EDGEがBasicEdgeの時のための部分特殊化
 
 }
 
