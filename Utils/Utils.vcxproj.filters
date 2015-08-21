@@ -246,6 +246,9 @@
     <ClInclude Include="Map.hpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClInclude>
+    <ClInclude Include="RoutingMethod.hpp">
+      <Filter>ソース ファイル\Graph\Routing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

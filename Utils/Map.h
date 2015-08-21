@@ -17,8 +17,6 @@ namespace Graph
 	/// 具体的なマップはこれを継承して作る
 	/// NODE, PATHにはそれぞれNode, Edgeを継承したクラスが使える
 	/// PATHにはBasicPathDataを継承しているデータを保持しているEdgeしか使えないので注意
-	/// ID ULONG_MAXのノードが入らないように注意!!
-
 	///</summary>
 	template <typename NODE, typename PATH>
 	class MAP_API Map
@@ -45,8 +43,8 @@ namespace Graph
 		
 		
 		const std::list<node_id> get_connecting_nodes(const node_id& id) const;
-		std::shared_ptr<const Geography::GeoNode<NODE, PATH>> get_static_node(const node_id& id) const;
-		std::shared_ptr<Geography::GeoNode<NODE, PATH>> get_node(const node_id& id);
+		std::shared_ptr<NODE const> get_static_node(const node_id& id) const;
+		std::shared_ptr<NODE> get_node(const node_id& id);
 	};
 }
 

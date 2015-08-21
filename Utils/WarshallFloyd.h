@@ -4,7 +4,7 @@
 namespace Graph
 {
 	template <typename NODE>
-	class WarshallFloyd : public RoutingMethod<NODE_DATA, EDGE> 
+	class WarshallFloyd : public RoutingMethod<NODE> 
 	{
 	public:
 		WarshallFloyd();

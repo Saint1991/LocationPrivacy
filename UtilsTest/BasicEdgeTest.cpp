@@ -17,8 +17,8 @@ namespace UtilsTest
 			BasicEdge edge2(2);
 
 			node_id to = edge1.get_to();
-			Assert::AreEqual(3UL, edge1.get_to());
-			Assert::AreEqual(2UL, edge2.get_to());
+			Assert::AreEqual(3L, edge1.get_to());
+			Assert::AreEqual(2L, edge2.get_to());
 		}
 
 		TEST_METHOD(BasicEdge_operators1) 

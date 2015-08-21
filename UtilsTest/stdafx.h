@@ -4,8 +4,8 @@
 //
 
 #define _USE_MATH_DEFINES
-
 #pragma once
+
 #include "targetver.h"
 
 // Windows ヘッダー ファイル:

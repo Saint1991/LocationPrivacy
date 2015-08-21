@@ -166,6 +166,7 @@
     <ClCompile Include="BasicPathDataTest.cpp" />
     <ClCompile Include="CoordinateTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />
+    <ClCompile Include="IdentifiableCollectionTest.cpp" />
     <ClCompile Include="IdentifiableTest.cpp" />
     <ClCompile Include="NodeCollectionFactoryTest.cpp" />
     <ClCompile Include="stdafx.cpp">

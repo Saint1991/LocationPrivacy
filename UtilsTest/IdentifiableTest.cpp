@@ -13,7 +13,7 @@ namespace UtilsTest
 		TEST_METHOD(Identifiable_Constructor)
 		{
 			Identifiable id1(2UL);
-			Assert::AreEqual(2UL, id1.get_id());
+			Assert::AreEqual(2L, id1.get_id());
 		}
 
 		TEST_METHOD(Identifiable_operators1) 

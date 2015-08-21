@@ -17,13 +17,13 @@ namespace UtilisTest
 			Coordinate c1(1.0, 2.0);
 			Assert::AreEqual(1.0, c1.x());
 			Assert::AreEqual(2.0, c1.y());
-			Assert::AreEqual(0UL, c1.get_id());
+			Assert::AreEqual(0L, c1.get_id());
 		}
 
 		TEST_METHOD(Coordinate_Constructor2)
 		{
 			Coordinate c1(1.0, 2.0, 3);
-			Assert::AreEqual(3UL, c1.get_id());
+			Assert::AreEqual(3L, c1.get_id());
 		}
 
 		TEST_METHOD(Coordinate_operators)

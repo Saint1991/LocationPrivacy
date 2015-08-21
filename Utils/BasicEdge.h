@@ -8,8 +8,8 @@
 namespace Graph
 {
 
-	typedef unsigned long node_id;
-	const node_id NOWHERE = ULONG_MAX;
+	typedef long node_id;
+	constexpr node_id NOWHERE = -1L;
 
 	///<summary>
 	/// 接続先を示すエッジの基本データ
