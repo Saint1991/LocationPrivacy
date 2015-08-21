@@ -18,7 +18,7 @@ namespace Db
 		std::unique_ptr<std::list<std::string>> options;
 		std::string default_value;
 
-		Column(std::string column_name, std::string type, std::list<std::string> options = {}, std::string default_value = "");
+		Column(const std::string& column_name, const std::string& type, std::list<std::string> options = {}, const std::string& default_value = "");
 		Column(const Db::Column& column);
 		virtual ~Column();
 		const std::string to_string() const;

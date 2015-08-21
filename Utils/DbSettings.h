@@ -20,7 +20,7 @@ namespace Db
 		std::string password;
 
 		DB_SETTINGS_API DbSettings();
-		DB_SETTINGS_API DbSettings(std::string hostname, unsigned int port, std::string username, std::string password);
+		DB_SETTINGS_API DbSettings(const std::string& hostname, const unsigned int port, const std::string& username, const std::string& password);
 		DB_SETTINGS_API virtual ~DbSettings();
 	};
 }

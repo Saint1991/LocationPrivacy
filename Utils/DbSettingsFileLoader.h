@@ -17,9 +17,9 @@ namespace Db
 	protected:
 		std::string settings_file_path;
 	public:
-		DbSettingsFileLoader(const char* path = "../settings/dbsettings-sample.xml");
+		DbSettingsFileLoader(const std::string& path = "../settings/dbsettings-sample.xml");
 		virtual ~DbSettingsFileLoader();
-		const Db::DbSettings load_db_settings() const;
+		Db::DbSettings load_db_settings() const;
 	};
 }
 

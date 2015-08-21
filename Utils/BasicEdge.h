@@ -23,7 +23,7 @@ namespace Graph
 		BasicEdge(const node_id& to);
 		virtual ~BasicEdge();
 		
-		const node_id get_to() const;
+		node_id get_to() const;
 		bool operator==(const BasicEdge& e) const;
 		bool operator!=(const BasicEdge& e) const;
 	};

@@ -153,9 +153,6 @@
     <ClInclude Include="IdentifiableCollection.hpp">
       <Filter>ソース ファイル\Collection</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>ヘッダー ファイル\Geography</Filter>
-    </ClInclude>
     <ClInclude Include="GeoCalculation.h">
       <Filter>ヘッダー ファイル\Geography</Filter>
     </ClInclude>
@@ -164,9 +161,6 @@
     </ClInclude>
     <ClInclude Include="RoutingMethod.h">
       <Filter>ヘッダー ファイル\Graph\Routing</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.hpp">
-      <Filter>ソース ファイル\Geography</Filter>
     </ClInclude>
     <ClInclude Include="DbSettings.h">
       <Filter>ヘッダー ファイル\Db</Filter>
@@ -245,6 +239,12 @@
     </ClInclude>
     <ClInclude Include="MapNode.h">
       <Filter>ヘッダー ファイル\Geography</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.hpp">
+      <Filter>ソース ファイル\Graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

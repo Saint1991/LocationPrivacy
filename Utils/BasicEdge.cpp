@@ -23,7 +23,7 @@ namespace Graph
 	///<summary>
 	/// Ú‘±æ‚ğæ“¾‚·‚é
  	///</summary>
-	const node_id BasicEdge::get_to() const
+	node_id BasicEdge::get_to() const
 	{
 		return _to;
 	}

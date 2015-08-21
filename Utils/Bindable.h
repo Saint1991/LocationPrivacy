@@ -13,7 +13,7 @@ private:
 
 protected:
 	template <typename VALUE_TYPE>
-	void bind_as(sql::PreparedStatement* statement, const Db::TableStructure& table_info, const std::string& column_name, const VALUE_TYPE& value);
+	void bind_as(sql::PreparedStatement* statement, const Db::TableStructure& table_info, const std::string& column_name, const VALUE_TYPE& value) const;
 
 public:
 	virtual void bind(sql::PreparedStatement* statement, const Db::TableStructure& table_info) const = 0;

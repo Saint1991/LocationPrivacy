@@ -10,7 +10,7 @@ namespace Db
 	class IDbSettingsLoader
 	{
 	public:
-		virtual const Db::DbSettings load_db_settings() const = 0;
+		virtual Db::DbSettings load_db_settings() const = 0;
 	};
 }
 

@@ -2,45 +2,48 @@
 #include "Column.h"
 
 
-
-///<summary>
-/// コンストラクタ
-///</summary>
-Db::Column::Column(std::string column_name, std::string type, std::list<std::string> options, std::string default_value) :
-	column_name(column_name), data_type(type), options(std::make_unique<std::list<std::string>>(options)), default_value(default_value)
+namespace Db
 {
-}
 
-
-///<summary>
-/// コピーコンストラクタ
-///</summary>
-Db::Column::Column(const Db::Column& column) : column_name(column.column_name), data_type(column.data_type), default_value(column.default_value), options(std::make_unique<std::list<std::string>>())
-{
-	for (std::list<std::string>::const_iterator iter = column.options->begin(); iter != column.options->end(); iter++) {
-		options->push_back(*iter);
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	 Column::Column(const std::string& column_name, const std::string& type, std::list<std::string> options, const std::string& default_value) :
+		column_name(column_name), data_type(type), options(std::make_unique<std::list<std::string>>(options)), default_value(default_value)
+	{
 	}
-}
 
 
-///<summary>
-/// デストラクタ
-///</summary>
-Db::Column::~Column() 
-{
-}
-
-
-///<summary>
-/// 設定された項目を基にクエリ文字列を生成する
-///</summary>
-const std::string Db::Column::to_string() const
-{
-	std::stringstream column;
-	column << column_name << " " << data_type << " ";
-	if (default_value != "") column << "DEFAULT " << default_value << " ";
-	for (std::list<std::string>::iterator iter = options->begin(); iter != options->end(); iter++) {
-		column << *iter << " ";
+	///<summary>
+	/// コピーコンストラクタ
+	///</summary>
+	 Column::Column(const  Column& column) : column_name(column.column_name), data_type(column.data_type), default_value(column.default_value), options(std::make_unique<std::list<std::string>>())
+	{
+		for (std::list<std::string>::const_iterator iter = column.options->begin(); iter != column.options->end(); iter++) {
+			options->push_back(*iter);
+		}
 	}
-	return column.str();
+
+
+	///<summary>
+	/// デストラクタ
+	///</summary>
+	 Column::~Column()
+	{
+	}
+
+
+	///<summary>
+	/// 設定された項目を基にクエリ文字列を生成する
+	///</summary>
+	const std::string  Column::to_string() const
+	{
+		std::stringstream column;
+		column << column_name << " " << data_type << " ";
+		if (default_value != "") column << "DEFAULT " << default_value << " ";
+		for (std::list<std::string>::iterator iter = options->begin(); iter != options->end(); iter++) {
+			column << *iter << " ";
+		}
+		return column.str();
+	}
 }

@@ -40,7 +40,7 @@ constexpr const Bindable::AvailableValueType get_mysql_type_with_validate()
 /// static_ifが言語仕様に組み込まれたら下のswitch文をstatic_if等静的なチェックにに直して使うとよりよい
 ///</summary>
 template <typename VALUE_TYPE>
-void Bindable::bind_as(sql::PreparedStatement* statement, const Db::TableStructure& table_info, const std::string& column_name, const VALUE_TYPE& value)
+void Bindable::bind_as(sql::PreparedStatement* statement, const Db::TableStructure& table_info, const std::string& column_name, const VALUE_TYPE& value) const
 {
 	
 	//型チェックとMySQLの型へのマッピング (コンパイル時のハズ)
