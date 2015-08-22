@@ -228,6 +228,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoutingMethod.h" />
     <ClInclude Include="RoutingMethod.hpp" />
+    <ClInclude Include="RoutingTable.h" />
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TableStructure.h" />
@@ -272,6 +273,7 @@
     <ClCompile Include="MySQLDb.cpp" />
     <ClCompile Include="QueryGenerateUtility.cpp" />
     <ClCompile Include="Probability.cpp" />
+    <ClCompile Include="RoutingTable.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

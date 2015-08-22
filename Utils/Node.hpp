@@ -9,7 +9,7 @@ namespace Graph
 	///<param name='data'>ノードに持たせたいデータ</param>
 	template <typename NODE_DATA, typename EDGE>
 	Node<NODE_DATA, EDGE>::Node(node_id id, std::shared_ptr<NODE_DATA> data)
-		: Identifiable(id), data(data), edge_list(std::make_unique<std::list<std::shared_ptr<EDGE>>>())
+		: Identifiable(id), data(data), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
 	{
 	}
 
@@ -19,7 +19,7 @@ namespace Graph
 	///</summary>
 	template <typename NODE_DATA, typename EDGE>
 	Node<NODE_DATA, EDGE>::Node(const Node<NODE_DATA, EDGE> &node) 
-		: Identifiable(node), data(node.data), edge_list(std::make_unique<std::list<std::shared_ptr<EDGE>>>())
+		: Identifiable(node), data(node.data), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
 	{
 		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = node.edge_list->begin(); iter != node.edge_list->end(); iter++) {
 			EDGE copy = *(*iter);
@@ -127,6 +127,30 @@ namespace Graph
 		}
 		connect_node_list.sort();
 		return connect_node_list;
+	}
+
+	///<summary>
+	/// 各エッジについてexecute_functionを実行する
+	/// 変更が中身に反映されるので注意
+	///</summary>
+	template <typename NODE_DATA, typename EDGE>
+	void Node<NODE_DATA, EDGE>::for_each_edge(const std::function<void(std::shared_ptr<EDGE>)>& execute_function)
+	{
+		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
+			execute_function(*iter);
+		}
+	}
+
+	///<summary>
+	/// 各エッジについてexecute_functionを実行する
+	///</summary>
+	template <typename NODE_DATA, typename EDGE>
+	void Node<NODE_DATA, EDGE>::for_each_edge(const std::function<void(std::shared_ptr<EDGE const>)>& execute_function) const
+	{
+ 		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
+			std::shared_ptr<EDGE const> const_edge_pointer = *iter;
+			execute_function(const_edge_pointer);
+		}
 	}
 
 	template <typename NODE_DATA, typename EDGE>

@@ -249,6 +249,9 @@
     <ClInclude Include="RoutingMethod.hpp">
       <Filter>ソース ファイル\Graph\Routing</Filter>
     </ClInclude>
+    <ClInclude Include="RoutingTable.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -328,6 +331,9 @@
     </ClCompile>
     <ClCompile Include="MapNode.cpp">
       <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+    <ClCompile Include="RoutingTable.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

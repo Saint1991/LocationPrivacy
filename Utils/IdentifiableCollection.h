@@ -33,6 +33,7 @@ namespace Collection
 		bool add(std::shared_ptr<T> val);
 		bool add(T val);
 		void foreach(const std::function<void(std::shared_ptr<T>)>& execute_function);		
+		void foreach(const std::function<void(std::shared_ptr<T const>)>& execute_function) const;
 	};
 }
 

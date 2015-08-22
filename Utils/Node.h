@@ -18,7 +18,7 @@ namespace Graph
 	static_assert(std::is_base_of<BasicEdge, EDGE>::value, "Template type EDGE is not derived from BasicEdge");
 	
 	protected:
-		std::unique_ptr<std::list<std::shared_ptr<EDGE>>> edge_list;
+		std::shared_ptr<std::list<std::shared_ptr<EDGE>>> edge_list;
 
 	public:
 		std::shared_ptr<NODE_DATA> data;
@@ -36,6 +36,9 @@ namespace Graph
 		bool is_connecting_to(node_id id) const;
 		std::list<node_id> get_connecting_node_list() const;
 
+		void for_each_edge(const std::function<void(std::shared_ptr<EDGE>)>& execute_function);
+		void for_each_edge(const std::function<void(std::shared_ptr<EDGE const>)>& execute_function) const;
+		
 		bool operator==(Graph::Node<NODE_DATA, EDGE> node) const;
 		bool operator!=(Graph::Node<NODE_DATA, EDGE> node) const;
 	};

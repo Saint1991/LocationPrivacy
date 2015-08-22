@@ -147,10 +147,20 @@ namespace Collection
 	/// 中身の変更も影響するので注意
 	///</summary>
 	template <typename T>
-	void IdentifiableCollection<T>::foreach(const std::function<void(std::shared_ptr<T >)>& execute_function)
+	void IdentifiableCollection<T>::foreach(const std::function<void(std::shared_ptr<T>)>& execute_function)
 	{
-		for (std::set<std::shared_ptr<T>>::const_iterator iter =  begin(); iter != end(); iter++)
-		{
+		for (std::set<std::shared_ptr<T>>::const_iterator iter =  begin(); iter != end(); iter++) {
+			execute_function(*iter);
+		}
+	}
+
+	///<summary>
+	/// 各要素についてexecute_functionを実行する
+	///</summary>
+	template <typename T>
+	void IdentifiableCollection<T>::foreach(const std::function<void(std::shared_ptr<T const>)>& execute_function) const
+	{
+		for (std::set<std::shared_ptr<T const>>::const_iterator iter = begin(); iter != end(); iter++) {
 			execute_function(*iter);
 		}
 	}
