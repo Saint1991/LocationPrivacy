@@ -7,11 +7,9 @@ namespace Graph
 	///</summary>
 	template <typename NODE, typename PATH>
 	Map<NODE, PATH>::Map(std::unique_ptr<RoutingMethod<NODE>> routing_method)
-		: node_collection(std::make_shared<const Collection::IdentifiableCollection<std::shared_ptr<NODE>>>())
+		: node_collection(std::make_shared<const Collection::IdentifiableCollection<NODE>>())
 	{		
 		build_map();
-
-		routing_method->set_node_collection(node_collection);
 		routing_table = routing_method->create_routing_table(node_collection);
 	}
 
@@ -28,9 +26,9 @@ namespace Graph
 	/// 接続していない場合はNOWHEREが返る
 	///</summary>
 	template <typename NODE, typename PATH>
-	const node_id Map<NODE, PATH>::get_next_node_of_shortest_path(const node_id& from, const node_id& to) const
+	node_id Map<NODE, PATH>::get_next_node_of_shortest_path(const node_id& from, const node_id& to) const
 	{
-		return routing_table->at(from)->at(to);
+		return routing_table->get_next_node_of_shortest_path(from, to);
 	}
 
 
@@ -42,18 +40,7 @@ namespace Graph
 	template <typename NODE, typename PATH>
 	const std::list<node_id> Map<NODE, PATH>::get_shortest_path(const node_id& source, const node_id& destination) const
 	{
-		std::list<node_id> path;
-		if (source == destination) return path;
-
-		node_id iter = source;
-		while (iter != destination && iter != NOWHERE) {
-			iter = get_next_node_of_shortest_path(iter, destination);
-			path.push_back(iter);
-		} 
-
-		//pathの最後尾がdestinationになっていない場合は経路が見つかっていないのでnullptrを返す
-		if (path.back() != destination) return nullptr;
-		return path;
+		return routing_table->get_shortest_path(source, destination);
 	}
 
 
@@ -63,48 +50,17 @@ namespace Graph
 	/// 到達不可能な場合はNO_CONNECTIONを返します．
 	///</summary>
 	template <typename NODE, typename PATH>
-	const unsigned long Map<NODE, PATH>::calc_necessary_time(const node_id& source, const node_id& destination, const double& avg_speed) const
+	double Map<NODE, PATH>::calc_necessary_time(const node_id& source, const node_id& destination, const double& avg_speed) const
 	{
-
-		const std::list<node_id> shortest_path = get_shortest_path();
-		if (shortest_path == nullptr) return NO_CONNECTION;
-
-		node_id from = source;
-		node_id to;
-		unsigned long necessary_time = 0UL;
-		for (std::list<node_id>::const_iterator iter = shortest_path.begin(); iter != shortest_path.end(); iter++) {
-
-			//ルーティングリストから次のノードのIDを取得
-			to = *iter;
-
-			//nodeコレクションからfromに該当するノードを取得
-			std::shared_ptr<NODE const> target = node_collection->read_by_id(from);
-			if (target == nullptr) return NO_CONNECTION;
-
-			//nodeが持つtoへのエッジを取得
-			std::shared_ptr<PATH> path = target->get_edge_to(to);
-			if (path == nullptr) return NO_CONNECTION;
-
-			//edgeの距離を調べる
-			auto path_data = path->get_static_data();
-			if (path_data == nullptr) return NO_CONNECTION;
-			double distance = path_data->get_distance();
-
-			//所用時間に加算
-			necessary_time += distance / avg_speed;
-
-			//探索を進める
-			from = to;
-		}
-
-		return necessary_time;
+		double shortest_distance = routing_table->shortest_distance(source, destination);
+		return shortest_distance / avg_speed;
 	}
 
 	///<summary>
 	/// fromからtoへ平均速度speed[m/s]で移動したときの制限時間time_limit[s]の到達可能性を調べる
 	///</summary>
 	template <typename NODE, typename PATH>
-	const bool Map<NODE, PATH>::is_reachable(const node_id& from, const node_id& to, const double& speed, const unsigned int& time_limit) const
+	const bool Map<NODE, PATH>::is_reachable(const node_id& from, const node_id& to, const double& speed, const double& time_limit) const
 	{
 		return calc_necessary_time(from, to, speed) <= time_limit;
 	}

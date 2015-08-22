@@ -89,9 +89,6 @@
     <ClCompile Include="IdentifiableCollectionTest.cpp">
       <Filter>ソース ファイル\Collection</Filter>
     </ClCompile>
-    <ClCompile Include="SmartPointerTest.cpp">
-      <Filter>ソース ファイル\Others</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

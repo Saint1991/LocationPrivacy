@@ -148,21 +148,8 @@ namespace Graph
 	void Node<NODE_DATA, EDGE>::for_each_edge(const std::function<void(std::shared_ptr<EDGE const>)>& execute_function) const
 	{
  		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
-			std::shared_ptr<EDGE const> const_edge_pointer = *iter;
-			execute_function(const_edge_pointer);
+			execute_function(*iter);
 		}
-	}
-
-	template <typename NODE_DATA, typename EDGE>
-	bool Node<NODE_DATA, EDGE>::operator==(Node<NODE_DATA, EDGE> node) const
-	{
-		return id == node.id;
-	}
-
-	template <typename NODE_DATA, typename EDGE>
-	bool Node<NODE_DATA, EDGE>::operator!=(Node<NODE_DATA, EDGE> node) const
-	{
-		return id != node.id;
 	}
 }
 

@@ -24,7 +24,7 @@ namespace Graph
 	/// 変更不可の状態にロックしたコレクションを取得する．
 	///</summary>
 	template <typename NODE, typename EDGE, typename EDGE_DATA>
-	std::shared_ptr<const Collection::IdentifiableCollection<std::shared_ptr<const NODE>>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_static_node_collection() const
+	std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_static_node_collection() const
 	{
 		create_nodes();
 		set_connectivities();
@@ -36,7 +36,7 @@ namespace Graph
 	/// 更新可能な状態でコレクションを取得する．
 	///</summary>
 	template <typename NODE, typename EDGE, typename EDGE_DATA>
-	std::shared_ptr<Collection::IdentifiableCollection<std::shared_ptr<NODE>>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_updateable_node_collection()
+	std::shared_ptr<Collection::IdentifiableCollection<NODE>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_updateable_node_collection()
 	{
 		create_nodes();
 		set_connectivities();

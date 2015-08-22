@@ -27,8 +27,9 @@ namespace Collection
 		std::shared_ptr<T> get_by_id(const long& id);
 		bool remove_by_id(const long& id);
 		
-		const std::vector<long> get_id_list() const;
-		bool contains(Identifiable id) const;
+		const std::unique_ptr<std::vector<long>> get_id_list() const;
+		bool contains(T id) const;
+		bool contains(std::shared_ptr<T const> id) const;
 		bool contains(long id) const;
 		bool add(std::shared_ptr<T> val);
 		bool add(T val);

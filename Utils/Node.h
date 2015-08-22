@@ -38,9 +38,6 @@ namespace Graph
 
 		void for_each_edge(const std::function<void(std::shared_ptr<EDGE>)>& execute_function);
 		void for_each_edge(const std::function<void(std::shared_ptr<EDGE const>)>& execute_function) const;
-		
-		bool operator==(Graph::Node<NODE_DATA, EDGE> node) const;
-		bool operator!=(Graph::Node<NODE_DATA, EDGE> node) const;
 	};
 }
 #include "Node.hpp"

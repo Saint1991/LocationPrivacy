@@ -7,8 +7,8 @@ namespace Graph
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	RoutingTable::RoutingTable(std::unique_ptr<std::vector<std::vector<node_id>>> table, std::unique_ptr<std::unordered_map<node_id, int>> conversion_map) 
-		: table(std::move(table)), conversion_map(std::move(conversion_map))
+	RoutingTable::RoutingTable(std::unique_ptr<std::vector<std::vector<node_id>>> table, std::unique_ptr < std::vector<std::vector<double>>> shortest_distance_table, std::unique_ptr<std::unordered_map<node_id, int>> conversion_map)
+		: routing_table(std::move(table)), shortest_distance_table(std::move(shortest_distance_table)), conversion_map(std::move(conversion_map))
 	{
 	}
 
@@ -29,7 +29,7 @@ namespace Graph
 	{
 		long index_from = conversion_map->at(from);
 		long index_to = conversion_map->at(to);
-		node_id next = table->at(from).at(to);
+		node_id next = routing_table->at(index_from).at(index_to);
 		return next;
 	}
 
@@ -50,5 +50,18 @@ namespace Graph
 		}
 		return std::move(shortest_path);
 	}
+
+
+	///<summary>
+	/// fromからtoへ到達する最短経路の距離を返す
+	///</summary>
+	double RoutingTable::shortest_distance(const node_id& from, const node_id& to) const
+	{
+		long index_from = conversion_map->at(from);
+		long index_to = conversion_map->at(to);
+		double shortest_distance = shortest_distance_table->at(index_from).at(index_to);
+		return shortest_distance;
+	}
+
 }
 

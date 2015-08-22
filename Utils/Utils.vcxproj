@@ -227,7 +227,6 @@
     <ClInclude Include="Probability.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoutingMethod.h" />
-    <ClInclude Include="RoutingMethod.hpp" />
     <ClInclude Include="RoutingTable.h" />
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="stdafx.h" />

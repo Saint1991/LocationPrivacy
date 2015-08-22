@@ -246,11 +246,8 @@
     <ClInclude Include="Map.hpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="RoutingMethod.hpp">
-      <Filter>ソース ファイル\Graph\Routing</Filter>
-    </ClInclude>
     <ClInclude Include="RoutingTable.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Graph\Routing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -333,7 +330,7 @@
       <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
     <ClCompile Include="RoutingTable.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Graph\Routing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

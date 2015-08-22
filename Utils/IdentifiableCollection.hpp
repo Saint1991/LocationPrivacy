@@ -30,7 +30,7 @@ namespace Collection
 	template <typename T>
 	std::shared_ptr<T const> IdentifiableCollection<T>::read_by_id(const long &id) const
 	{
-		auto target_iter = find(id);
+		auto target_iter = find(std::make_shared<Identifiable>(id));
 		if (target_iter == end()) {
 			return nullptr;
 		}
@@ -60,7 +60,7 @@ namespace Collection
 	template <typename T>
 	bool IdentifiableCollection<T>::remove_by_id(const long &id)
 	{
-		auto target_iter =  find(std::make_shared<T>(id));
+		auto target_iter =  find(id);
 
 		// 要素が見つからない場合はfalseを返して終了
 		if (target_iter == end()) {
@@ -77,9 +77,9 @@ namespace Collection
 	/// 順序は昇順にソートされる
 	///</summary>
 	template <typename T>
-	const std::vector<long>  IdentifiableCollection<T>::get_id_list() const
+	const std::unique_ptr<std::vector<long>> IdentifiableCollection<T>::get_id_list() const
 	{
-		std::vector<long> id_list(size(), INVALID);
+		std::unique_ptr<std::vector<long>> id_list = std::make_unique<std::vector<long>>(size(), INVALID);
 		for (std::set< std::shared_ptr<T>>::const_iterator iter = begin(), long index = 0; iter != end(); iter++, index++) {
 			id_list->at(index) = (*iter)->get_id();
 		}
@@ -92,17 +92,27 @@ namespace Collection
 	template <typename T>
 	bool IdentifiableCollection<T>::contains(long id) const
 	{
-		bool is_contained = find(std::make_shared<T>(id)) != end();
+		bool is_contained = find(id) != end();
 		return is_contained;
 	}
 
+
 	///<summary>
-	/// 指定したIDを持つ要素を含んでいるかを判定する
+	/// 同一のIDを持つ要素を含んでいるかを判定する
 	///</summary>
 	template <typename T>
-	bool IdentifiableCollection<T>::contains(Identifiable id) const
+	bool IdentifiableCollection<T>::contains(T id) const
 	{
 		return contains(id.get_id());
+	}
+
+	///<summary>
+	/// 同一のIDを持つ要素を含んでいるかを判定する
+	///</summary>
+	template <typename T>
+	bool IdentifiableCollection<T>::contains(std::shared_ptr<T const> id) const
+	{
+		return contains(id->get_id());
 	}
 
 
@@ -116,7 +126,7 @@ namespace Collection
 	{
 		//既存IDの場合は追加しない
 		long id = val->get_id();
-		if (contains(id)) {
+		if (contains(val)) {
 			throw DuplicatedIdException(id);
 			return false;
 		}
