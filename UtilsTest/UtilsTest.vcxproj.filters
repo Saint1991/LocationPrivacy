@@ -92,6 +92,9 @@
     <ClCompile Include="UniquePtrTest.cpp">
       <Filter>ソース ファイル\Others</Filter>
     </ClCompile>
+    <ClCompile Include="GeoCalculationTest.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

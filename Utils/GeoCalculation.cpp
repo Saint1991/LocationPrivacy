@@ -18,7 +18,7 @@ Geography::GeoCalculation::~GeoCalculation()
 /// Harversineを計算する
 /// 参照(http://www.movable-type.co.uk/scripts/latlong.html)
 ///</summary>
-double Geography::GeoCalculation::harversine(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
+double Geography::GeoCalculation::haversine(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
 {
 	double lat1 = Math::AngleUtility::convert_to_radian(ll1.lat());
 	double lat2 = Math::AngleUtility::convert_to_radian(ll2.lat());
@@ -32,9 +32,9 @@ double Geography::GeoCalculation::harversine(const Geography::LatLng& ll1, const
 /// Haversine法に基づく距離計算 (m)
 /// 参照(http://www.movable-type.co.uk/scripts/latlong.html)
 ///</summary>
-double Geography::GeoCalculation::harversine_distance(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
+double Geography::GeoCalculation::haversine_distance(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
 {
-	double a = harversine(ll1, ll2);
+	double a = haversine(ll1, ll2);
 	double c = 2.0 * std::atan(std::sqrt(a) / std::sqrt(1 - a));
 	return R * c;
 }
@@ -48,7 +48,6 @@ double Geography::GeoCalculation::lambert_distance(const Geography::LatLng& ll1,
 {
 	//扁平率と極半径
 	static const double F = 1.0 / 298.257222101;
-	static const double B = R * (1.0 - F);
 
 	//ラジアン単位に変換
 	double lat1 = Math::AngleUtility::convert_to_radian(ll1.lat());
@@ -57,8 +56,8 @@ double Geography::GeoCalculation::lambert_distance(const Geography::LatLng& ll1,
 	double lng2 = Math::AngleUtility::convert_to_radian(ll2.lng());
 
 	//化成緯度の計算
-	double phi1 = std::atan( (B / R) * std::tan(lat1) );
-	double phi2 = std::atan( (B / R) * std::tan(lat2) );
+	double phi1 = std::atan( (1.0 - F) * std::tan(lat1) );
+	double phi2 = std::atan( (1.0 - F) * std::tan(lat2) );
 
 	//球面上の距離
 	double spherical_distance = std::acos(std::sin(phi1) * std::sin(phi2) + std::cos(phi1) * std::cos(phi2) * std::cos(lng1 - lng2));
@@ -85,7 +84,6 @@ double Geography::GeoCalculation::lambert_azimuth_angle(const Geography::LatLng&
 
 	//扁平率と極半径
 	static const double F = 1.0 / 298.257222101;
-	static const double B = R * (1.0 - F);
 
 	//ラジアン単位に変換
 	double lat1 = Math::AngleUtility::convert_to_radian(from.lat());
@@ -94,13 +92,13 @@ double Geography::GeoCalculation::lambert_azimuth_angle(const Geography::LatLng&
 	double lng2 = Math::AngleUtility::convert_to_radian(to.lng());
 
 	//化成緯度の計算
-	double phi1 = std::atan((B / R) * std::tan(lat1));
-	double phi2 = std::atan((B / R) * std::tan(lat2));
+	double phi1 = std::atan((1.0 - F) * std::tan(lat1));
+	double phi2 = std::atan((1.0 - F) * std::tan(lat2));
 
 	//hとZcの計算
-	double h = Math::AngleUtility::convert_to_radian(from.lng()) - Math::AngleUtility::convert_to_radian(to.lng());
+	double h = lng1 - lng2;
 	if (h < 0) h += 2.0 * M_PI;
-	double Zc = std::atan(std::sin(h) / std::cos(phi1) * std::tan(phi2) - std::sin(phi1) * std::cos(h));
+	double Zc = std::atan(std::sin(h) / (std::cos(phi1) * std::tan(phi2) - std::sin(phi1) * std::cos(h)));
 
 	//東0度の時計周りの座標系に変換
 	if (h <= M_PI) {
@@ -116,7 +114,7 @@ double Geography::GeoCalculation::lambert_azimuth_angle(const Geography::LatLng&
 			Zc = M_PI_2 - Zc;
 		}
 		else {
-			Zc = 3.0 * M_PI_2 + Zc;
+			Zc = 3.0 * M_PI_2 - Zc;
 		}
 	}
 	return Zc;

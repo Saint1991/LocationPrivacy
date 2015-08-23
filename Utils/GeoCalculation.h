@@ -27,8 +27,8 @@ namespace Geography
 		~GeoCalculation();
 
 	public:
-		GEOGRAPHIC_CALC_API static double harversine(const LatLng& ll1, const LatLng& ll2);
-		GEOGRAPHIC_CALC_API static double harversine_distance(const LatLng& ll1, const LatLng& ll2);
+		GEOGRAPHIC_CALC_API static double haversine(const LatLng& ll1, const LatLng& ll2);
+		GEOGRAPHIC_CALC_API static double haversine_distance(const LatLng& ll1, const LatLng& ll2);
 		GEOGRAPHIC_CALC_API static double lambert_distance(const LatLng& ll1, const LatLng& ll2);
 		GEOGRAPHIC_CALC_API static double lambert_azimuth_angle(const LatLng& from, const LatLng& to);
 
