@@ -95,6 +95,9 @@
     <ClCompile Include="GeoCalculationTest.cpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
+    <ClCompile Include="NodeTest.cpp">
+      <Filter>ソース ファイル\Graph\Node</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
