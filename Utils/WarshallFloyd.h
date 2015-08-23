@@ -5,17 +5,23 @@
 
 namespace Graph
 {
+
+	///<summary>
+	/// ワーシャルフロイド法によるルーティングテーブルの作成
+	/// 使用後は各フィールドがnullptrになるので注意
+	///</summary>
 	template <typename NODE, typename EDGE>
 	class WarshallFloyd : public RoutingMethod<NODE, EDGE> 
 	{
 	private:
-		std::unique_ptr<std::unordered_map<node_id, int>> conversion_map;
-		std::unique_ptr<std::vector<std::vector<double>>> distance_map;
-		
 		long node_count = -1L;
-		void initialize();
+		std::unique_ptr<std::unordered_map<node_id, int>> conversion_map;
+		std::unique_ptr<std::vector<node_id>> reverse_conversion_map;
+		std::unique_ptr<std::vector<std::vector<double>>> distance_map;
+		std::unique_ptr<std::vector<std::vector<node_id>>> routing_table;
+		
+		void initialize(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection);
 		void 	create_conversion_map(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection);
-		void initialize_distance_map(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection);
 		
 	public:
 		WarshallFloyd();

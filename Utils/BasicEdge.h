@@ -10,6 +10,7 @@ namespace Graph
 
 	typedef long node_id;
 	constexpr node_id NOWHERE = -1L;
+	constexpr node_id SELF = -2L;
 
 	///<summary>
 	/// 接続先を示すエッジの基本データ

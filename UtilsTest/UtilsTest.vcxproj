@@ -176,6 +176,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ProbabilityTest.cpp" />
+    <ClCompile Include="UniquePtrTest.cpp" />
     <ClCompile Include="Vector2dTest.cpp" />
   </ItemGroup>
   <ItemGroup>
