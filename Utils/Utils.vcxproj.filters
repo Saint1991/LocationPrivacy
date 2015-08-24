@@ -97,6 +97,12 @@
     <Filter Include="ソース ファイル\Graph\Node">
       <UniqueIdentifier>{31a89a91-9bc9-45ea-82d9-e89ed684c466}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Time">
+      <UniqueIdentifier>{7d3addb9-30e2-4bc6-95a0-209f51d5cf06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Time">
+      <UniqueIdentifier>{d4d3db95-5865-4ffc-9778-39e44cb5b0a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -253,7 +259,13 @@
       <Filter>ヘッダー ファイル\Geography</Filter>
     </ClInclude>
     <ClInclude Include="PoiData.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Geography\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>ヘッダー ファイル\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeUtility.h">
+      <Filter>ヘッダー ファイル\Time</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -341,8 +353,14 @@
     <ClCompile Include="Poi.cpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>ソース ファイル\Time</Filter>
+    </ClCompile>
     <ClCompile Include="PoiData.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Geography\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeUtility.cpp">
+      <Filter>ソース ファイル\Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
