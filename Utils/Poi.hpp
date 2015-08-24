@@ -6,7 +6,8 @@ namespace Geography
 	/// コンストラクタ
 	///</summary>
 	template <typename POI_DATA>
-	Poi<POI_DATA>::Poi(std::string id, std::shared_ptr<POI_DATA> data) : id(id), data(data), connection_map(std::make_unique<std::unordered_map<node_poi_relation>>())
+	Poi<POI_DATA>::Poi(std::string id, std::shared_ptr<POI_DATA> data) 
+		: Identifiable<std::string>(id), data(data), connection_map(std::make_unique<std::unordered_map<node_poi_relation>>())
 	{
 	}
 
@@ -17,16 +18,6 @@ namespace Geography
 	template <typename POI_DATA>
 	Poi<POI_DATA>::~Poi()
 	{
-	}
-
-
-	///<summary>
-	/// POIのIDの取得
-	///</summary>
-	template <typename POI_DATA>
-	const std::string Poi<POI_DATA>::get_id() const
-	{
-		return id;
 	}
 
 

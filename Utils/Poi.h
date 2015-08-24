@@ -1,13 +1,8 @@
-#ifdef UTILS_EXPORTS
-#define POI_API __declspec(dllexport)
-#else
-#define POI_API __declspec(dllimport)
-#endif
-
 #pragma once
 #include "stdafx.h"
 #include "BasicGeoNodeData.h"
 #include "BasicPath.h"
+#include "Identifiable.h"
 
 namespace Geography
 {
@@ -18,7 +13,7 @@ namespace Geography
 	/// connection_map‚Åƒm[ƒh‚Æ‚Ç‚Ì‚æ‚¤‚ÉÚ‘±‚µ‚Ä‚¢‚é‚©‚ğ•Û‚·‚é
 	///</summary>
 	template <typename POI_DATA>
-	class POI_API Poi
+	class Poi : Identifiable<std::string>
 	{
 	
 	static_assert(std::is_base_of<BasicGeoNodeData, POI_DATA>::value, "template type POI_DATA is not derived from BasicGeoNodeData");
@@ -26,14 +21,12 @@ namespace Geography
 
 	protected:
 		std::unique_ptr<std::unordered_map<node_poi_relation>> connection_map;
-		std::string id;
 		std::shared_ptr<POI_DATA> data;
 
 	public:
 		Poi(std::string id, std::shared_ptr<POI_DATA> data);
 		virtual ~Poi();
 
-		const std::string get_id() const;
 		std::shared_ptr<POI_DATA const> get_static_data() const;
 		std::shared_ptr<POI_DATA> get_data();
 
