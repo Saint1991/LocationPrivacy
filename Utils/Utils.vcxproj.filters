@@ -270,6 +270,9 @@
     <ClInclude Include="BasicPoiData.h">
       <Filter>ヘッダー ファイル\Geography\Data</Filter>
     </ClInclude>
+    <ClInclude Include="Poi.hpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -352,9 +355,6 @@
     </ClCompile>
     <ClCompile Include="RoutingTable.cpp">
       <Filter>ソース ファイル\Graph\Routing</Filter>
-    </ClCompile>
-    <ClCompile Include="Poi.cpp">
-      <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>ソース ファイル\Time</Filter>
