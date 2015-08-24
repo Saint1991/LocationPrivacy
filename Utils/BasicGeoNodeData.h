@@ -17,12 +17,12 @@ namespace Geography
 	class BASIC_GEONODE_DATA_API BasicGeoNodeData
 	{
 	protected:
-		std::unique_ptr<Geography::LatLng> position;
+		Geography::LatLng position;
 	public:
 		BasicGeoNodeData(Geography::LatLng position);
 		BasicGeoNodeData(double latitude, double longitude);
 		~BasicGeoNodeData();		
-		const Geography::LatLng get_position() const;
+		Geography::LatLng get_position() const;
 	};
 }
 

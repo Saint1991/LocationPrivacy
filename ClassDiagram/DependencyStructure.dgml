@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="(@1 @43)" Category="CodeSchema_ProjectItem" Bounds="2552.30707385204,636.529677713836,154.328000077079,25.998000077079" FilePath="$(VsSolution)\Utils\MobileEntityState.h" Label="MobileEntityState.h" />
+    <Node Id="(@1 @72)" Category="CodeSchema_ProjectItem" Bounds="2736.56569543294,636.529677656036,112.604666743746,25.998000077079" FilePath="$(VsSolution)\Utils\Probability.h" Label="Probability.h" />
+    <Node Id="(@1 @73)" Category="CodeSchema_ProjectItem" Bounds="2404.39574044162,636.529677713836,117.911333410412,25.998000077079" FilePath="$(VsSolution)\Utils\AngleUtility.h" Label="AngleUtility.h" />
+    <Node Id="@10" Category="CodeSchema_ProjectItem" Bounds="2243.44408481177,292.104177193562,97.088000077079,25.998000077079" FilePath="$(VsSolution)\Utils\PoiData.h" Label="PoiData.h" />
+    <Node Id="@12" Category="CodeSchema_ProjectItem" Bounds="1949.96502853503,636.529677656036,108.984666743746,25.998000077079" FilePath="$(VsSolution)\Utils\MySQLDb.h" Label="MySQLDb.h" />
+    <Node Id="@14" Category="CodeSchema_ProjectItem" Bounds="2062.6470039851,407.47517740552,104.614666743746,25.998000077079" FilePath="$(VsSolution)\Utils\Vector2d.h" Label="Vector2d.h" />
+    <Node Id="@16" Category="CodeSchema_ProjectItem" Bounds="1764.64408481177,407.47517734772,140.688000077079,25.998000077079" FilePath="$(VsSolution)\Utils\RoutingMethod.h" Label="RoutingMethod.h" />
+    <Node Id="@18" Category="CodeSchema_ProjectItem" Bounds="1867.2874181451,349.789677270641,133.401333410412,25.998000077079" FilePath="$(VsSolution)\Utils\WarshallFloyd.h" Label="WarshallFloyd.h" />
+    <Node Id="@2" Category="CodeSchema_PoundIncludeFile" Bounds="1447.41575147844,194.418677116483,1498.82633341041,712.101000924949" FilePath="$(VsSolution)\Utils\Utils.vcxproj" Group="Expanded" Label="Utils.vcxproj" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@20" Category="CodeSchema_ProjectItem" Bounds="2371.4924181451,292.104177193562,112.991333410412,25.998000077079" FilePath="$(VsSolution)\Utils\BasicNode.h" Label="BasicNode.h" />
+    <Node Id="@22" Category="CodeSchema_ProjectItem" Bounds="2493.44908481177,234.418677116483,107.078000077079,25.998000077079" FilePath="$(VsSolution)\Utils\MapNode.h" Label="MapNode.h" />
+    <Node Id="@24" Category="CodeSchema_ProjectItem" Bounds="1952.5624181451,465.160677424799,82.8513334104123,25.998000077079" FilePath="$(VsSolution)\Utils\Node.h" Label="Node.h" />
+    <Node Id="@26" Category="CodeSchema_ProjectItem" Bounds="1914.15408481177,580.531677578957,111.668000077079,25.998000077079" FilePath="$(VsSolution)\Utils\BasicEdge.h" Label="BasicEdge.h" />
+    <Node Id="@28" Category="CodeSchema_ProjectItem" Bounds="2001.22408481177,522.846177501878,81.5280000770788,25.998000077079" FilePath="$(VsSolution)\Utils\Edge.h" Label="Edge.h" />
+    <Node Id="@30" Category="CodeSchema_ProjectItem" Bounds="2067.12002853503,692.527677733115,102.674666743746,25.998000077079" FilePath="$(VsSolution)\Utils\Bindable.h" Label="Bindable.h" />
+    <Node Id="@32" Category="CodeSchema_ProjectItem" Bounds="1821.02408481177,522.846177501878,117.928000077079,25.998000077079" FilePath="$(VsSolution)\Utils\Identifiable.h" Label="Identifiable.h" />
+    <Node Id="@34" Category="CodeSchema_ProjectItem" Bounds="1589.0574181451,465.160677424799,127.861333410412,25.998000077079" FilePath="$(VsSolution)\Utils\RoutingTable.h" Label="RoutingTable.h" />
+    <Node Id="@36" Category="CodeSchema_ProjectItem" Bounds="2682.54075147844,522.846177501878,134.894666743746,25.998000077079" FilePath="$(VsSolution)\Utils\FileExportable.h" Label="FileExportable.h" />
+    <Node Id="@38" Category="CodeSchema_ProjectItem" Bounds="2228.20336186837,860.521677964353,118.508000077079,25.998000077079" FilePath="$(VsSolution)\Utils\Serializable.h" Label="Serializable.h" />
+    <Node Id="@4" Category="CodeSchema_ProjectItem" Bounds="1647.9666952017,692.527677733115,102.981333410412,25.998000077079" FilePath="$(VsSolution)\Utils\tinyxml2.h" Label="tinyxml2.h" />
+    <Node Id="@40" Category="CodeSchema_ProjectItem" Bounds="2035.69336186837,748.525677810194,137.528000077079,25.998000077079" FilePath="$(VsSolution)\Utils\TableStructure.h" Label="TableStructure.h" />
+    <Node Id="@42" Category="CodeSchema_ProjectItem" Bounds="2096.9474181451,465.160677424799,116.081333410412,25.998000077079" FilePath="$(VsSolution)\Utils\Coordinate.h" Label="Coordinate.h" />
+    <Node Id="@45" Category="CodeSchema_ProjectItem" Bounds="2613.9024181451,465.160677424799,92.1713334104124,25.998000077079" FilePath="$(VsSolution)\Utils\LatLng.h" Label="LatLng.h" />
+    <Node Id="@47" Category="CodeSchema_ProjectItem" Bounds="2373.72408481177,349.789677270641,108.528000077079,25.998000077079" FilePath="$(VsSolution)\Utils\BasicPath.h" Label="BasicPath.h" />
+    <Node Id="@49" Category="CodeSchema_ProjectItem" Bounds="2393.16908481177,234.418677116483,69.6380000770791,25.998000077079" FilePath="$(VsSolution)\Utils\Poi.h" Label="Poi.h" />
+    <Node Id="@51" Category="CodeSchema_ProjectItem" Bounds="1955.86002853503,804.523677887273,97.1946667437455,25.998000077079" FilePath="$(VsSolution)\Utils\Column.h" Label="Column.h" />
+    <Node Id="@53" Category="CodeSchema_ProjectItem" Bounds="2512.43075147844,522.846177501878,139.114666743746,25.998000077079" FilePath="$(VsSolution)\Utils\GeoCalculation.h" Label="GeoCalculation.h" />
+    <Node Id="@55" Category="CodeSchema_ProjectItem" Bounds="1747.80575147844,465.160677424799,174.364666743746,25.998000077079" FilePath="$(VsSolution)\Utils\IdentifiableCollection.h" Label="IdentifiableCollection.h" />
+    <Node Id="@57" Category="CodeSchema_ProjectItem" Bounds="1494.95002853503,692.527677733115,123.014666743746,25.998000077079" FilePath="$(VsSolution)\Utils\IOException.h" Label="IOException.h" />
+    <Node Id="@59" Category="CodeSchema_ProjectItem" Bounds="1695.62408481177,349.789677270641,76.7280000770791,25.998000077079" FilePath="$(VsSolution)\Utils\Map.h" Label="Map.h" />
+    <Node Id="@6" Category="CodeSchema_ProjectItem" Bounds="2578.3724181451,407.47517734772,163.231333410412,25.998000077079" FilePath="$(VsSolution)\Utils\BasicGeoNodeData.h" Label="BasicGeoNodeData.h" />
+    <Node Id="@61" Category="CodeSchema_ProjectItem" Bounds="1469.2666952017,636.529677656037,174.381333410412,25.998000077079" FilePath="$(VsSolution)\Utils\DbSettingsFileLoader.h" Label="DbSettingsFileLoader.h" />
+    <Node Id="@63" Category="CodeSchema_ProjectItem" Bounds="1781.78502853503,692.527677733115,159.344666743746,25.998000077079" FilePath="$(VsSolution)\Utils\IDbSettingsLoader.h" Label="IDbSettingsLoader.h" />
+    <Node Id="@65" Category="CodeSchema_ProjectItem" Bounds="2736.5624181451,465.160677424799,120.851333410412,25.998000077079" FilePath="$(VsSolution)\Utils\FileExporter.h" Label="FileExporter.h" />
+    <Node Id="@67" Category="CodeSchema_ProjectItem" Bounds="1803.33336186837,748.525677810194,116.248000077079,25.998000077079" FilePath="$(VsSolution)\Utils\DbSettings.h" Label="DbSettings.h" />
+    <Node Id="@69" Category="CodeSchema_ProjectItem" Bounds="2062.7524181451,349.789677270641,146.471333410412,25.998000077079" FilePath="$(VsSolution)\Utils\Vector2dFactory.h" Label="Vector2dFactory.h" />
+    <Node Id="@71" Category="CodeSchema_ProjectItem" Bounds="1467.41575147844,407.47517734772,181.144666743746,25.998000077079" FilePath="$(VsSolution)\Utils\NodeCollectionFactory.h" Label="NodeCollectionFactory.h" />
+    <Node Id="@75" Category="CodeSchema_ProjectItem" Bounds="2200.58836186837,692.527677733115,173.738000077079,25.998000077079" FilePath="$(VsSolution)\Utils\QueryGenerateUtility.h" Label="QueryGenerateUtility.h" />
+    <Node Id="@77" Category="CodeSchema_ProjectItem" Bounds="2197.83575147844,407.47517734772,120.304666743746,25.998000077079" FilePath="$(VsSolution)\Utils\GraphUtility.h" Label="GraphUtility.h" />
+    <Node Id="@79" Category="CodeSchema_ProjectItem" Bounds="2803.73408481177,407.47517734772,122.508000077079,25.998000077079" FilePath="$(VsSolution)\Utils\MobileEntity.h" Label="MobileEntity.h" />
+    <Node Id="@8" Category="CodeSchema_ProjectItem" Bounds="2379.99908481177,407.47517734772,135.978000077079,25.998000077079" FilePath="$(VsSolution)\Utils\BasicPathData.h" Label="BasicPathData.h" />
+  </Nodes>
+  <Links>
+    <Link Source="@12" Target="@30" Category="PoundInclude" Bounds="2030.92053222656,662.527648925781,52.9954833984375,26.031982421875" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@12" Target="@40" Category="PoundInclude" Bounds="2011.88562011719,662.527648925781,69.8392333984375,80.2767944335938" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@12" Target="@51" Category="PoundInclude" Bounds="2004.45739746094,662.527648925781,0,132.996032714844" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@12" Target="@63" Category="PoundInclude" Bounds="1903.03283691406,662.527648925781,68.2294921875,26.7183227539063" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@12" Target="@67" Category="PoundInclude" Bounds="1895.25952148438,662.527648925781,101.76953125,81.9442749023438" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@12" Target="@75" Category="PoundInclude" Bounds="2058.85083007813,660.291687011719,154.083984375,30.489013671875" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@14" Target="@42" Category="PoundInclude" Bounds="2124.00170898438,433.473175048828,16.84423828125,24.2915954589844" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@16" Target="@24" Category="PoundInclude" Bounds="1894.92919921875,433.473175048828,80.6148681640625,25.7076721191406" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@16" Target="@28" Category="PoundInclude" Bounds="1904.43408203125,432.613647460938,161.553955078125,83.0877075195313" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@16" Target="@34" Category="PoundInclude" Bounds="1690.06384277344,433.473175048828,91.743408203125,28.0494384765625" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@16" Target="@55" Category="PoundInclude" Bounds="1834.98803710938,433.473175048828,0,22.6875" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@18" Target="@16" Category="PoundInclude" Bounds="1865.0732421875,375.787689208984,46.60595703125,27.1564331054688" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@18" Target="@55" Category="PoundInclude" Bounds="1889.15087890625,375.787689208984,46.837158203125,86.8652648925781" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@2" Target="(@1 @43)" Category="Contains" />
+    <Link Source="@2" Target="(@1 @72)" Category="Contains" />
+    <Link Source="@2" Target="(@1 @73)" Category="Contains" />
+    <Link Source="@2" Target="@10" Category="Contains" />
+    <Link Source="@2" Target="@12" Category="Contains" />
+    <Link Source="@2" Target="@14" Category="Contains" />
+    <Link Source="@2" Target="@16" Category="Contains" />
+    <Link Source="@2" Target="@18" Category="Contains" />
+    <Link Source="@2" Target="@20" Category="Contains" />
+    <Link Source="@2" Target="@22" Category="Contains" />
+    <Link Source="@2" Target="@24" Category="Contains" />
+    <Link Source="@2" Target="@26" Category="Contains" />
+    <Link Source="@2" Target="@28" Category="Contains" />
+    <Link Source="@2" Target="@30" Category="Contains" />
+    <Link Source="@2" Target="@32" Category="Contains" />
+    <Link Source="@2" Target="@34" Category="Contains" />
+    <Link Source="@2" Target="@36" Category="Contains" />
+    <Link Source="@2" Target="@38" Category="Contains" />
+    <Link Source="@2" Target="@4" Category="Contains" />
+    <Link Source="@2" Target="@40" Category="Contains" />
+    <Link Source="@2" Target="@42" Category="Contains" />
+    <Link Source="@2" Target="@45" Category="Contains" />
+    <Link Source="@2" Target="@47" Category="Contains" />
+    <Link Source="@2" Target="@49" Category="Contains" />
+    <Link Source="@2" Target="@51" Category="Contains" />
+    <Link Source="@2" Target="@53" Category="Contains" />
+    <Link Source="@2" Target="@55" Category="Contains" />
+    <Link Source="@2" Target="@57" Category="Contains" />
+    <Link Source="@2" Target="@59" Category="Contains" />
+    <Link Source="@2" Target="@6" Category="Contains" />
+    <Link Source="@2" Target="@61" Category="Contains" />
+    <Link Source="@2" Target="@63" Category="Contains" />
+    <Link Source="@2" Target="@65" Category="Contains" />
+    <Link Source="@2" Target="@67" Category="Contains" />
+    <Link Source="@2" Target="@69" Category="Contains" />
+    <Link Source="@2" Target="@71" Category="Contains" />
+    <Link Source="@2" Target="@75" Category="Contains" />
+    <Link Source="@2" Target="@77" Category="Contains" />
+    <Link Source="@2" Target="@79" Category="Contains" />
+    <Link Source="@2" Target="@8" Category="Contains" />
+    <Link Source="@20" Target="@24" Category="PoundInclude" Bounds="1999.70654296875,318.101715087891,374.732666015625,138.356018066406" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@20" Target="@47" Category="PoundInclude" Bounds="2427.98803710938,318.102172851563,0,22.6875" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@22" Target="@20" Category="PoundInclude" Bounds="2462.90258789063,260.416687011719,57.269775390625,27.7616577148438" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@22" Target="@45" Category="PoundInclude" Bounds="2600.52709960938,254.250473022461,172.4609375,210.044692993164" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@22" Target="@53" Category="PoundInclude" Bounds="2546.98803710938,260.416687011719,13.38818359375,255.579711914063" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@24" Target="@26" Category="PoundInclude" Bounds="1969.98803710938,491.15869140625,13.18359375,80.3729858398438" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@24" Target="@28" Category="PoundInclude" Bounds="1997.59350585938,491.15869140625,19.1729736328125,26.2797241210938" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@24" Target="@32" Category="PoundInclude" Bounds="1914.18481445313,491.15869140625,54.56494140625,27.6768188476563" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@28" Target="@26" Category="PoundInclude" Bounds="1993.23645019531,548.844177246094,32.5269775390625,26.0601806640625" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@30" Target="@40" Category="PoundInclude" Bounds="2109.89013671875,718.525695800781,5.3173828125,21.2687377929688" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@34" Target="@26" Category="PoundInclude" Bounds="1652.98803710938,491.15869140625,252.203125,96.476318359375" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@40" Target="@51" Category="PoundInclude" Bounds="2035.52331542969,774.523681640625,45.7208251953125,25.6026611328125" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@42" Target="@32" Category="PoundInclude" Bounds="1947.62255859375,491.15869140625,152.83251953125,32.0191650390625" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@45" Target="@36" Category="PoundInclude" Bounds="2680.26879882813,491.15869140625,41.861328125,26.8308715820313" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@45" Target="@53" Category="PoundInclude" Bounds="2625.56567382813,491.15869140625,34.42236328125,28.5196533203125" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@47" Target="@28" Category="PoundInclude" Bounds="2091.59741210938,375.787689208984,300.78662109375,150.735870361328" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@47" Target="@8" Category="PoundInclude" Bounds="2432.49487304688,375.787689208984,8.0380859375,23.18408203125" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@49" Target="@10" Category="PoundInclude" Bounds="2330.92016601563,260.416687011719,66.42138671875,28.1731262207031" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@49" Target="@20" Category="PoundInclude" Bounds="2427.98803710938,260.416687011719,0,22.6875" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@51" Target="@38" Category="PoundInclude" Bounds="2053.0546875,827.138793945313,166.801513671875,33.0054931640625" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@53" Target="@45" Category="PoundInclude" Bounds="2581.98803710938,494.326538085938,34.422607421875,28.5196533203125" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@55" Target="@32" Category="PoundInclude" Bounds="1845.12854003906,491.15869140625,19.1834716796875,24.59130859375" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@59" Target="@16" Category="PoundInclude" Bounds="1756.74768066406,375.787689208984,47.6656494140625,27.2239074707031" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@59" Target="@34" Category="PoundInclude" Bounds="1659.72509765625,375.787689208984,49.926025390625,80.7815246582031" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@59" Target="@55" Category="PoundInclude" Bounds="1733.98803710938,375.787689208984,53.717529296875,86.4835510253906" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@59" Target="@71" Category="PoundInclude" Bounds="1606.20068359375,375.032012939453,90.4326171875,29.6400451660156" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@6" Target="@45" Category="PoundInclude" Bounds="2659.98803710938,433.473175048828,0,22.6875" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@61" Target="@4" Category="PoundInclude" Bounds="1589.65246582031,662.527648925781,68.2294921875,26.7183227539063" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@61" Target="@57" Category="PoundInclude" Bounds="1556.45739746094,662.527648925781,0,21" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@61" Target="@63" Category="PoundInclude" Bounds="1627.25805664063,662.527648925781,154.546630859375,28.3748168945313" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@61" Target="@67" Category="PoundInclude" Bounds="1474.72729492188,662.527648925781,319.640991210938,93.065185546875" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@63" Target="@67" Category="PoundInclude" Bounds="1861.45739746094,718.525695800781,0,21" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@65" Target="@36" Category="PoundInclude" Bounds="2766.26391601563,491.15869140625,20.133056640625,24.710205078125" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@69" Target="@14" Category="PoundInclude" Bounds="2122.79907226563,375.787689208984,8.456787109375,23.2304382324219" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@71" Target="@26" Category="PoundInclude" Bounds="1557.98803710938,433.473175048828,347.18798828125,155.520233154297" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@71" Target="@55" Category="PoundInclude" Bounds="1615.22509765625,433.473175048828,143.322143554688,29.9878845214844" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@75" Target="@38" Category="PoundInclude" Bounds="2287.45727539063,718.525695800781,0,132.995971679688" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@75" Target="@40" Category="PoundInclude" Bounds="2155.5439453125,718.525695800781,89.43310546875,27.3665161132813" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@77" Target="@42" Category="PoundInclude" Bounds="2186.05078125,433.473175048828,48.72705078125,27.2897644042969" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@79" Target="@45" Category="PoundInclude" Bounds="2714.90087890625,433.473175048828,123.046142578125,33.7635192871094" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@8" Target="@42" Category="PoundInclude" Bounds="2221.95629882813,433.473175048828,195.8359375,36.1398315429688" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@8" Target="@45" Category="PoundInclude" Bounds="2506.5771484375,433.473175048828,107.95703125,28.7226867675781" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+  </Links>
+  <Categories>
+    <Category Id="CodeSchema_PoundIncludeFile" Label="C++ プロジェクト ファイル" BasedOn="File" CanBeDataDriven="True" IsProviderRoot="False" NavigationActionLabel="C++ プロジェクト ファイル" />
+    <Category Id="CodeSchema_ProjectItem" Label="プロジェクト項目" BasedOn="File" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Type" Icon="File" NavigationActionLabel="プロジェクト項目" />
+    <Category Id="Contains" Label="内容" Description="リンクのソースにターゲット オブジェクトが含まれているかどうか" CanBeDataDriven="False" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="含まれる" IsContainment="True" OutgoingActionLabel="含む" />
+    <Category Id="File" Label="ファイル" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="File" NavigationActionLabel="ファイル" />
+    <Category Id="PoundInclude" Label="#include" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="#include 方法" OutgoingActionLabel="#include" />
+  </Categories>
+  <Properties>
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="CanBeDataDriven" Label="CanBeDataDriven" Description="CanBeDataDriven" DataType="System.Boolean" />
+    <Property Id="CanLinkedNodesBeDataDriven" Label="CanLinkedNodesBeDataDriven" Description="CanLinkedNodesBeDataDriven" DataType="System.Boolean" />
+    <Property Id="DefaultAction" Label="DefaultAction" Description="DefaultAction" DataType="System.String" />
+    <Property Id="Expression" DataType="System.String" />
+    <Property Id="FilePath" Label="ファイル パス" Description="ファイル パス" DataType="System.String" />
+    <Property Id="Group" Label="グループ" Description="ノードをグループとして表示" DataType="Microsoft.VisualStudio.GraphModel.GraphGroupStyle" />
+    <Property Id="GroupLabel" DataType="System.String" />
+    <Property Id="Icon" DataType="System.String" />
+    <Property Id="IncomingActionLabel" Label="IncomingActionLabel" Description="IncomingActionLabel" DataType="System.String" />
+    <Property Id="IsContainment" DataType="System.Boolean" />
+    <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="IsProviderRoot" Label="IsProviderRoot" Description="IsProviderRoot" DataType="System.Boolean" />
+    <Property Id="Label" Label="ラベル" Description="注釈を追加できるオブジェクトの表示可能なラベル" DataType="System.String" />
+    <Property Id="Language" Label="言語" Description="言語" DataType="System.String" />
+    <Property Id="NativeProvider_CodeItemIds" Label="NodeIds" Description="NodeIds" DataType="Microsoft.VisualStudio.Progression.SmallList`1[[System.Int64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Id="NavigationActionLabel" Label="NavigationActionLabel" Description="NavigationActionLabel" DataType="System.String" />
+    <Property Id="OutgoingActionLabel" Label="OutgoingActionLabel" Description="OutgoingActionLabel" DataType="System.String" />
+    <Property Id="TargetType" DataType="System.Type" />
+    <Property Id="Value" DataType="System.String" />
+    <Property Id="ValueLabel" DataType="System.String" />
+  </Properties>
+  <QualifiedNames>
+    <Name Id="Assembly" Label="アセンブリ" ValueType="Uri" />
+    <Name Id="File" Label="ファイル" ValueType="Uri" />
+  </QualifiedNames>
+  <IdentifierAliases>
+    <Alias n="1" Uri="Assembly=$(VsSolutionUri)/Utils/Utils.vcxproj" />
+    <Alias n="2" Id="(@1)" />
+    <Alias n="3" Uri="File=$(VsSolutionUri)/Utils/tinyxml2.h" />
+    <Alias n="4" Id="(@1 @3)" />
+    <Alias n="5" Uri="File=$(VsSolutionUri)/Utils/BasicGeoNodeData.h" />
+    <Alias n="6" Id="(@1 @5)" />
+    <Alias n="7" Uri="File=$(VsSolutionUri)/Utils/BasicPathData.h" />
+    <Alias n="8" Id="(@1 @7)" />
+    <Alias n="9" Uri="File=$(VsSolutionUri)/Utils/PoiData.h" />
+    <Alias n="10" Id="(@1 @9)" />
+    <Alias n="11" Uri="File=$(VsSolutionUri)/Utils/MySQLDb.h" />
+    <Alias n="12" Id="(@1 @11)" />
+    <Alias n="13" Uri="File=$(VsSolutionUri)/Utils/Vector2d.h" />
+    <Alias n="14" Id="(@1 @13)" />
+    <Alias n="15" Uri="File=$(VsSolutionUri)/Utils/RoutingMethod.h" />
+    <Alias n="16" Id="(@1 @15)" />
+    <Alias n="17" Uri="File=$(VsSolutionUri)/Utils/WarshallFloyd.h" />
+    <Alias n="18" Id="(@1 @17)" />
+    <Alias n="19" Uri="File=$(VsSolutionUri)/Utils/BasicNode.h" />
+    <Alias n="20" Id="(@1 @19)" />
+    <Alias n="21" Uri="File=$(VsSolutionUri)/Utils/MapNode.h" />
+    <Alias n="22" Id="(@1 @21)" />
+    <Alias n="23" Uri="File=$(VsSolutionUri)/Utils/Node.h" />
+    <Alias n="24" Id="(@1 @23)" />
+    <Alias n="25" Uri="File=$(VsSolutionUri)/Utils/BasicEdge.h" />
+    <Alias n="26" Id="(@1 @25)" />
+    <Alias n="27" Uri="File=$(VsSolutionUri)/Utils/Edge.h" />
+    <Alias n="28" Id="(@1 @27)" />
+    <Alias n="29" Uri="File=$(VsSolutionUri)/Utils/Bindable.h" />
+    <Alias n="30" Id="(@1 @29)" />
+    <Alias n="31" Uri="File=$(VsSolutionUri)/Utils/Identifiable.h" />
+    <Alias n="32" Id="(@1 @31)" />
+    <Alias n="33" Uri="File=$(VsSolutionUri)/Utils/RoutingTable.h" />
+    <Alias n="34" Id="(@1 @33)" />
+    <Alias n="35" Uri="File=$(VsSolutionUri)/Utils/FileExportable.h" />
+    <Alias n="36" Id="(@1 @35)" />
+    <Alias n="37" Uri="File=$(VsSolutionUri)/Utils/Serializable.h" />
+    <Alias n="38" Id="(@1 @37)" />
+    <Alias n="39" Uri="File=$(VsSolutionUri)/Utils/TableStructure.h" />
+    <Alias n="40" Id="(@1 @39)" />
+    <Alias n="41" Uri="File=$(VsSolutionUri)/Utils/Coordinate.h" />
+    <Alias n="42" Id="(@1 @41)" />
+    <Alias n="43" Uri="File=$(VsSolutionUri)/Utils/MobileEntityState.h" />
+    <Alias n="44" Uri="File=$(VsSolutionUri)/Utils/LatLng.h" />
+    <Alias n="45" Id="(@1 @44)" />
+    <Alias n="46" Uri="File=$(VsSolutionUri)/Utils/BasicPath.h" />
+    <Alias n="47" Id="(@1 @46)" />
+    <Alias n="48" Uri="File=$(VsSolutionUri)/Utils/Poi.h" />
+    <Alias n="49" Id="(@1 @48)" />
+    <Alias n="50" Uri="File=$(VsSolutionUri)/Utils/Column.h" />
+    <Alias n="51" Id="(@1 @50)" />
+    <Alias n="52" Uri="File=$(VsSolutionUri)/Utils/GeoCalculation.h" />
+    <Alias n="53" Id="(@1 @52)" />
+    <Alias n="54" Uri="File=$(VsSolutionUri)/Utils/IdentifiableCollection.h" />
+    <Alias n="55" Id="(@1 @54)" />
+    <Alias n="56" Uri="File=$(VsSolutionUri)/Utils/IOException.h" />
+    <Alias n="57" Id="(@1 @56)" />
+    <Alias n="58" Uri="File=$(VsSolutionUri)/Utils/Map.h" />
+    <Alias n="59" Id="(@1 @58)" />
+    <Alias n="60" Uri="File=$(VsSolutionUri)/Utils/DbSettingsFileLoader.h" />
+    <Alias n="61" Id="(@1 @60)" />
+    <Alias n="62" Uri="File=$(VsSolutionUri)/Utils/IDbSettingsLoader.h" />
+    <Alias n="63" Id="(@1 @62)" />
+    <Alias n="64" Uri="File=$(VsSolutionUri)/Utils/FileExporter.h" />
+    <Alias n="65" Id="(@1 @64)" />
+    <Alias n="66" Uri="File=$(VsSolutionUri)/Utils/DbSettings.h" />
+    <Alias n="67" Id="(@1 @66)" />
+    <Alias n="68" Uri="File=$(VsSolutionUri)/Utils/Vector2dFactory.h" />
+    <Alias n="69" Id="(@1 @68)" />
+    <Alias n="70" Uri="File=$(VsSolutionUri)/Utils/NodeCollectionFactory.h" />
+    <Alias n="71" Id="(@1 @70)" />
+    <Alias n="72" Uri="File=$(VsSolutionUri)/Utils/Probability.h" />
+    <Alias n="73" Uri="File=$(VsSolutionUri)/Utils/AngleUtility.h" />
+    <Alias n="74" Uri="File=$(VsSolutionUri)/Utils/QueryGenerateUtility.h" />
+    <Alias n="75" Id="(@1 @74)" />
+    <Alias n="76" Uri="File=$(VsSolutionUri)/Utils/GraphUtility.h" />
+    <Alias n="77" Id="(@1 @76)" />
+    <Alias n="78" Uri="File=$(VsSolutionUri)/Utils/MobileEntity.h" />
+    <Alias n="79" Id="(@1 @78)" />
+  </IdentifierAliases>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="C++ プロジェクト ファイル" ValueLabel="カテゴリあり">
+      <Condition Expression="HasCategory('CodeSchema_PoundIncludeFile')" />
+      <Setter Property="Background" Value="#FFEFEFEF" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="外部" ValueLabel="カテゴリあり">
+      <Condition Expression="HasCategory('Externals')" />
+      <Setter Property="Background" Value="#FFA08080" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="ソース ファイル" ValueLabel="カテゴリあり">
+      <Condition Expression="HasCategory('CodeSchema_ProjectItem')" />
+      <Setter Property="Background" Value="#FFC0C0C0" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="#include グループ" ValueLabel="カテゴリあり">
+      <Condition Expression="HasCategory('CodeSchema_PoundIncludeGroup')" />
+      <Setter Property="Background" Value="#FFEFEFEF" />
+    </Style>
+  </Styles>
+  <Paths>
+    <Path Id="VsSolution" Value="C:\Users\Mizuno\Documents\Visual Studio 2015\Projects\LocationPrivacy" />
+    <Path Id="VsSolutionUri" Value="file:///C:/Users/Mizuno/Documents/Visual Studio 2015/Projects/LocationPrivacy" />
+  </Paths>
+</DirectedGraph>
