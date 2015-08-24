@@ -6,6 +6,9 @@
 
 namespace Geography
 {
+	
+	typedef std::string poi_id;
+	typedef std::pair<std::pair<Graph::node_id, Graph::node_id>, std::pair<double, double>> node_poi_relation;
 
 	///<summary>
 	/// POIを表すテンプレートクラス
@@ -13,18 +16,18 @@ namespace Geography
 	/// connection_mapでノードとどのように接続しているかを保持する
 	///</summary>
 	template <typename POI_DATA>
-	class Poi : Identifiable<std::string>
+	class Poi : Identifiable<poi_id>
 	{
 	
 	static_assert(std::is_base_of<BasicGeoNodeData, POI_DATA>::value, "template type POI_DATA is not derived from BasicGeoNodeData");
-	typedef std::pair<std::pair<Graph::node_id, Graph::node_id>, std::pair<double, double>> node_poi_relation;
+	
 
 	protected:
 		std::unique_ptr<std::unordered_map<node_poi_relation>> connection_map;
 		std::shared_ptr<POI_DATA> data;
 
 	public:
-		Poi(std::string id, std::shared_ptr<POI_DATA> data);
+		Poi(poi_id id, std::shared_ptr<POI_DATA> data);
 		virtual ~Poi();
 
 		std::shared_ptr<POI_DATA const> get_static_data() const;

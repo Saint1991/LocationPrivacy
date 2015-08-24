@@ -1,5 +1,6 @@
 #pragma once
 #include "BasicEdge.h"
+#include "Edge.h"
 #include "IdentifiableCollection.h"
 
 namespace Graph 
@@ -10,15 +11,17 @@ namespace Graph
 	/// create_nodes, set_connectivityを実装が必要．
 	/// create_nodes, set_connectivityの順序で実行され，IdentifiableCollectionの内容を作成する．
 	/// 作成後は，今後も更新を加えるかによってcreate_static_node_collectionとcreate_updateable_node_collectionを使い分けて取得する．
-	/// 取得後はファクトリ内のコレクションは使用できなくなるので注意
+	/// 取得後はファクトリ内のコレクションはnullptrになるので注意
 	/// また，NODE, EDGE, EDGE_DATAの型の整合性がとれていないとコンパイルできないので注意
+	/// EDGEにはBasicEdgeかEdge<EDGE_DATA>の派生クラスのみ使用できます
 	/// Connect系のメソッドがBasicEdgeで別動作，かつBasicEdge以外で別動作できないようになっているか確認が必要
 	/// BasicEdgeを使う時はEDGE_DATAをnullptr_tにしてください
 	///</summary>
 	template <typename NODE, typename EDGE, typename EDGE_DATA>
 	class NodeCollectionFactory
 	{
-	
+	static_assert(std::is_base_of<Edge<EDGE_DATA>, EDGE>::value || std::is_same<BasicEdge, EDGE>::value, "template type EDGE is not derived from Edge<EDGE_DATA>");
+
 	private:
 		//コピー禁止
 		NodeCollectionFactory(const NodeCollectionFactory& factory);
