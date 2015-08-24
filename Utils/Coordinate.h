@@ -13,7 +13,7 @@ namespace Graph
 	///<summary>
 	/// ユークリッド空間の点を表すクラス
 	///</summary>
-	class  COORDINATE_API Coordinate : public Identifiable
+	class  COORDINATE_API Coordinate : public Identifiable<unsigned int>
 	{
 	private:
 		double _x;

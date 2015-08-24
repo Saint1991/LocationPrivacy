@@ -10,31 +10,30 @@ namespace Collection
 	///<summary>
 	/// ID付きの要素を格納するコレクション
 	/// IDは昇順にソートされる
-	/// 特殊化にはIdentifiableを継承しているクラスのみ使用可能
+	/// ID_TYPEはIdentifiableのType (ただし，operator< での比較可能性があるクラスのみ)
+	/// DATA_TYPEにはIdentifiableを継承しているクラスのみ使用可能
+	/// ID_TYPEはDATA_TYPEが持っているIDの型と一致していなくてはならないので注意
 	///</summary>
-	template <typename T>
-	class IdentifiableCollection : std::set<std::shared_ptr<T>, std::function<bool(const std::shared_ptr<T>, const std::shared_ptr<T>)>>
+	template <typename ID_TYPE, typename DATA_TYPE>
+	class IdentifiableCollection : std::set<std::shared_ptr<DATA_TYPE>, std::function<bool(const std::shared_ptr<DATA_TYPE>, const std::shared_ptr<DATA_TYPE>)>>
 	{
-		
-	//TがIdentifiableを継承しているか判定
-	static_assert(std::is_base_of<Identifiable, T>::value, "Template type T is not Derived from Identifiable");
 
 	public:
 		IdentifiableCollection();
 		virtual ~IdentifiableCollection();
 
-		std::shared_ptr<T const> read_by_id(const long& id) const;
-		std::shared_ptr<T> get_by_id(const long& id);
-		bool remove_by_id(const long& id);
+		std::shared_ptr<DATA_TYPE const> read_by_id(const ID_TYPE& id) const;
+		std::shared_ptr<DATA_TYPE> get_by_id(const ID_TYPE& id);
+		bool remove_by_id(const ID_TYPE& id);
 		
-		const std::unique_ptr<std::vector<long>> get_id_list() const;
-		bool contains(T id) const;
-		bool contains(std::shared_ptr<T const> id) const;
-		bool contains(long id) const;
-		bool add(std::shared_ptr<T> val);
-		bool add(T val);
-		void foreach(const std::function<void(std::shared_ptr<T>)>& execute_function);		
-		void foreach(const std::function<void(std::shared_ptr<T const>)>& execute_function) const;
+		const std::unique_ptr<std::vector<ID_TYPE>> get_id_list() const;
+		bool contains(const DATA_TYPE& id) const;
+		bool contains(std::shared_ptr<DATA_TYPE const> id) const;
+		bool contains(const ID_TYPE& id) const;
+		bool add(std::shared_ptr<DATA_TYPE> val);
+		bool add(DATA_TYPE val);
+		void foreach(const std::function<void(std::shared_ptr<DATA_TYPE>)>& execute_function);		
+		void foreach(const std::function<void(std::shared_ptr<DATA_TYPE const>)>& execute_function) const;
 	};
 }
 

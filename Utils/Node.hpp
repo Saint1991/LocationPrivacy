@@ -9,7 +9,7 @@ namespace Graph
 	///<param name='data'>ノードに持たせたいデータ</param>
 	template <typename NODE_DATA, typename EDGE>
 	Node<NODE_DATA, EDGE>::Node(node_id id, std::shared_ptr<NODE_DATA> data)
-		: Identifiable(id), data(data), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
+		: Identifiable<node_id>(id), data(data), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
 	{
 	}
 
@@ -19,7 +19,7 @@ namespace Graph
 	///</summary>
 	template <typename NODE_DATA, typename EDGE>
 	Node<NODE_DATA, EDGE>::Node(const Node<NODE_DATA, EDGE> &node) 
-		: Identifiable(node), data(node.data), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
+		: Identifiable<node_id>(node), data(node.data), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
 	{
 		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = node.edge_list->begin(); iter != node.edge_list->end(); iter++) {
 			EDGE copy = *(*iter);

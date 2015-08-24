@@ -24,7 +24,7 @@ namespace Graph
 		NodeCollectionFactory(const NodeCollectionFactory& factory);
 	
 	protected:
-		std::shared_ptr<Collection::IdentifiableCollection<NODE>> node_collection;
+		std::shared_ptr<Collection::IdentifiableCollection<long, NODE>> node_collection;
 		virtual void create_nodes() = 0;
 		virtual void set_connectivities() = 0;
 
@@ -43,8 +43,8 @@ namespace Graph
 
 		//構成後に用途に応じてこれらのいずれかを用いてIdentifiableCollectionを取得する想定
 		//これらのメソッド取得後は，このファクトリが保持するnode_collectionは空に初期化し直される．
-		std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> create_static_node_collection() const;
-		std::shared_ptr<Collection::IdentifiableCollection<NODE>> create_updateable_node_collection();
+		std::shared_ptr<const Collection::IdentifiableCollection<long, NODE const>> create_static_node_collection() const;
+		std::shared_ptr<Collection::IdentifiableCollection<long, NODE>> create_updateable_node_collection();
 	};
 
 	#pragma region BasicEdge

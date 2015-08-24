@@ -8,9 +8,9 @@ namespace Test
 {
 
 	//IdentifiableÇÃîhê∂ÉNÉâÉXÇ≈Ç‡Ç§Ç‹Ç≠Ç¢Ç≠Ç©ééÇ∑ÇΩÇﬂ
-	class DerivedFromIdentifiable : public Identifiable {
+	class DerivedFromIdentifiable : public Identifiable<long> {
 	public :
-		DerivedFromIdentifiable(const long& id) : Identifiable(id) {}
+		DerivedFromIdentifiable(const long& id) : Identifiable<long>(id) {}
 	};
 
 
@@ -20,8 +20,8 @@ namespace Test
 
 		TEST_METHOD(IdentifiableCollection_Constructor)
 		{
-			Collection::IdentifiableCollection<Identifiable> collection;
-			Collection::IdentifiableCollection<DerivedFromIdentifiable> collection2;
+			Collection::IdentifiableCollection<long, Identifiable<long>> collection;
+			Collection::IdentifiableCollection<long, DerivedFromIdentifiable> collection2;
 		}
 	};
 }

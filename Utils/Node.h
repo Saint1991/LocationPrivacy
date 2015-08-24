@@ -11,7 +11,7 @@ namespace Graph
 	/// EDGEにはBasicEdgeから派生したクラスのみ指定可能
 	///</summary>
 	template <typename NODE_DATA, typename EDGE>
-	class Node : public Identifiable
+	class Node : public Identifiable<node_id>
 	{
 
 	//EDGEがBasicEdgeから派生したクラスかを判定

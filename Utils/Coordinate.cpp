@@ -7,7 +7,7 @@ namespace Graph
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	Coordinate::Coordinate(double x, double y, unsigned int id) : Identifiable(id), _x(x), _y(y)
+	Coordinate::Coordinate(double x, double y, unsigned int id) : Identifiable<unsigned int>(id), _x(x), _y(y)
 	{
 	}
 
