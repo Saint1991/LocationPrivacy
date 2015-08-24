@@ -3,11 +3,11 @@
 
 namespace Geography
 {
-
-	Poi::Poi() : BasicNode<PoiData>()
+	/*
+	Poi::Poi() : BasicNode<PoiData>() : BasicNode
 	{
 	}
-
+	*/
 
 	Poi::~Poi()
 	{

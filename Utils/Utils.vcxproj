@@ -219,6 +219,8 @@
     <ClInclude Include="MobileEntityState.h" />
     <ClInclude Include="Column.h" />
     <ClInclude Include="MySQLDb.h" />
+    <ClInclude Include="Poi.h" />
+    <ClInclude Include="PoiData.h" />
     <ClInclude Include="QueryGenerateUtility.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Node.hpp" />
@@ -270,6 +272,8 @@
     <ClCompile Include="MobileEntityState.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
+    <ClCompile Include="Poi.cpp" />
+    <ClCompile Include="PoiData.cpp" />
     <ClCompile Include="QueryGenerateUtility.cpp" />
     <ClCompile Include="Probability.cpp" />
     <ClCompile Include="RoutingTable.cpp" />

@@ -109,5 +109,31 @@ namespace UtilsTest
 			Assert::AreEqual(expected, actual, ANGLE_PRECISION);
 		}
 
+		//êºîˆå§Ç©ÇÁå©ÇΩÉOÉâÉìÉhÇÃï˚à äp
+		TEST_METHOD(GeoCalculation_lambert_azimuth_angle3)
+		{
+			LatLng nishio_lab(34.818292, 135.522105);
+			LatLng ground(34.816566, 135.523197);
+			double actual = Math::AngleUtility::convert_to_degree(GeoCalculation::lambert_azimuth_angle(nishio_lab, ground));
+			double expected = 62.4454194;
+
+			double error = expected - actual;
+			std::string log = "Error angle is " + std::to_string(error) + "[Åã]\n";
+			Logger::WriteMessage(log.c_str());
+			Assert::AreEqual(expected, actual, ANGLE_PRECISION);
+		}
+
+		TEST_METHOD(GeoCalculation_lambert_azimuth_angle4) 
+		{
+			LatLng nishio_lab(34.818292, 135.522105);
+			LatLng dental_hospital (34.819728, 135.520848);
+			double actual = Math::AngleUtility::convert_to_degree(GeoCalculation::lambert_azimuth_angle(nishio_lab, dental_hospital));
+			double expected = 234.17522;
+
+			double error = expected - actual;
+			std::string log = "Error angle is " + std::to_string(error) + "[Åã]\n";
+			Logger::WriteMessage(log.c_str());
+			Assert::AreEqual(expected, actual, ANGLE_PRECISION);
+		}
 	};
 }

@@ -249,6 +249,12 @@
     <ClInclude Include="RoutingTable.h">
       <Filter>ヘッダー ファイル\Graph\Routing</Filter>
     </ClInclude>
+    <ClInclude Include="Poi.h">
+      <Filter>ヘッダー ファイル\Geography</Filter>
+    </ClInclude>
+    <ClInclude Include="PoiData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -331,6 +337,12 @@
     </ClCompile>
     <ClCompile Include="RoutingTable.cpp">
       <Filter>ソース ファイル\Graph\Routing</Filter>
+    </ClCompile>
+    <ClCompile Include="Poi.cpp">
+      <Filter>ソース ファイル\Geography</Filter>
+    </ClCompile>
+    <ClCompile Include="PoiData.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
