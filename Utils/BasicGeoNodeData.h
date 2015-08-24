@@ -6,6 +6,7 @@
 
 #pragma once
 #include "LatLng.h"
+#include "FileExportable.h"
 
 
 namespace Geography
@@ -14,7 +15,7 @@ namespace Geography
 	///<summary>
 	/// 地理的なノードがもつ基本情報(緯度・経度)
 	///</summary>
-	class BASIC_GEONODE_DATA_API BasicGeoNodeData
+	class BASIC_GEONODE_DATA_API BasicGeoNodeData : IO::FileExportable
 	{
 	protected:
 		Geography::LatLng position;
@@ -23,6 +24,8 @@ namespace Geography
 		BasicGeoNodeData(double latitude, double longitude);
 		~BasicGeoNodeData();		
 		Geography::LatLng get_position() const;
+
+		std::unordered_map<std::string, std::string> get_export_data()  const;
 	};
 }
 

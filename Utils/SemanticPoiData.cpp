@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "PoiData.h"
+#include "SemanticPoiData.h"
 
 namespace Geography
 {
@@ -9,7 +9,7 @@ namespace Geography
 	/// コンストラクタ
 	///</summary>
 	PoiData::PoiData(const std::string& venue_name, const std::string& category_id, const std::string& category_name, const LatLng& position)
-		: BasicGeoNodeData(position), venue_name(venue_name), category_id(category_id), category_name(category_name)
+		: BasicPoiData(venue_name, position), category_id(category_id), category_name(category_name)
 	{
 
 	}
@@ -18,7 +18,7 @@ namespace Geography
 	/// コンストラクタ
 	///</summary>
 	PoiData::PoiData(const std::string& venue_name, const std::string& category_id, const std::string& category_name, double latitude, double longitude)
-		: BasicGeoNodeData(latitude, longitude), category_id(category_id), category_name(category_name), venue_name(venue_name)
+		: BasicPoiData(venue_name, latitude, longitude), category_id(category_id), category_name(category_name)
 	{
 	}
 
@@ -49,12 +49,26 @@ namespace Geography
 	}
 
 
+	#pragma region Export
+
+	const std::string PoiData::CATEGORY_ID = "category_id";
+	const std::string PoiData::CATEGORY_NAME = "category_name";
+
 	///<summary>
-	/// POI名の取得
+	/// ファイルエクスポート用
 	///</summary>
-	const std::string PoiData::get_venue_name() const
+	std::unordered_map<std::string, std::string> PoiData::get_export_data() const
 	{
-		return venue_name;
+		std::unordered_map<std::string, std::string> ret = {
+			{BasicPoiData::VENUE_NAME, venue_name},
+			{CATEGORY_ID, category_id},
+			{CATEGORY_NAME, category_name},
+			{LatLng::LATITUDE, std::to_string(position.lat())},
+			{LatLng::LONGITUDE, std::to_string(position.lng())}
+		};
+		return ret;
 	}
+
+	#pragma endregion ファイルエクスポート関係
 }
 

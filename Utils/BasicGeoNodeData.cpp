@@ -35,4 +35,19 @@ namespace Geography
 		return this->position;
 	}
 
+	#pragma region Export
+
+	///<summary>
+	/// ファイルエクスポート用
+	///</summary>
+	std::unordered_map<std::string, std::string> BasicGeoNodeData::get_export_data() const
+	{
+		std::unordered_map<std::string, std::string> ret = {
+			{LatLng::LATITUDE, std::to_string(position.lat())},
+			{LatLng::LONGITUDE, std::to_string(position.lng())}
+		};
+		return ret;
+	}
+
+	#pragma endregion Export関係
 }

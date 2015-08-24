@@ -5,7 +5,7 @@
 #endif
 
 #pragma once
-#include "BasicGeoNodeData.h"
+#include "BasicPoiData.h"
 
 namespace Geography
 {
@@ -13,21 +13,25 @@ namespace Geography
 	//POI‚ÌID (ƒJƒeƒSƒŠID‚Å‚Í‚È‚¢)
 	typedef long poi_id;
 
-	struct POI_DATA_API PoiData : public BasicGeoNodeData
+	struct POI_DATA_API PoiData : public BasicPoiData
 	{
 	protected:
 		std::string category_id;
 		std::string category_name;
-		std::string venue_name;
 	
 	public:
+
+		static const std::string CATEGORY_ID;
+		static const std::string CATEGORY_NAME;
+
 		PoiData(const std::string& venue_name, const std::string& category_id, const std::string& category_name, const LatLng& position);
 		PoiData(const std::string& venue_name, const std::string& category_id, const std::string& category_name, double latitude, double longitude);
 		virtual ~PoiData();
 		
 		const std::string get_category_id() const;
 		const std::string get_category_name() const;
-		const std::string get_venue_name() const;
+
+		std::unordered_map<std::string, std::string> get_export_data() const;
 	};
 }
 

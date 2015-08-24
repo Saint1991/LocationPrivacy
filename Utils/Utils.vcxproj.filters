@@ -258,14 +258,17 @@
     <ClInclude Include="Poi.h">
       <Filter>ヘッダー ファイル\Geography</Filter>
     </ClInclude>
-    <ClInclude Include="PoiData.h">
-      <Filter>ヘッダー ファイル\Geography\Data</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>ヘッダー ファイル\Time</Filter>
     </ClInclude>
     <ClInclude Include="TimeUtility.h">
       <Filter>ヘッダー ファイル\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticPoiData.h">
+      <Filter>ヘッダー ファイル\Geography\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicPoiData.h">
+      <Filter>ヘッダー ファイル\Geography\Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -356,11 +359,14 @@
     <ClCompile Include="Timer.cpp">
       <Filter>ソース ファイル\Time</Filter>
     </ClCompile>
-    <ClCompile Include="PoiData.cpp">
-      <Filter>ソース ファイル\Geography\Data</Filter>
-    </ClCompile>
     <ClCompile Include="TimeUtility.cpp">
       <Filter>ソース ファイル\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPoiData.cpp">
+      <Filter>ソース ファイル\Geography\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticPoiData.cpp">
+      <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

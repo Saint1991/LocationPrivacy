@@ -195,6 +195,7 @@
     <ClInclude Include="BasicNode.hpp" />
     <ClInclude Include="BasicPath.h" />
     <ClInclude Include="BasicPathData.h" />
+    <ClInclude Include="BasicPoiData.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="DbSettings.h" />
     <ClInclude Include="DbSettingsFileLoader.h" />
@@ -220,7 +221,7 @@
     <ClInclude Include="Column.h" />
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="Poi.h" />
-    <ClInclude Include="PoiData.h" />
+    <ClInclude Include="SemanticPoiData.h" />
     <ClInclude Include="QueryGenerateUtility.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Node.hpp" />
@@ -248,6 +249,7 @@
     <ClCompile Include="BasicGeoNodeData.cpp" />
     <ClCompile Include="BasicPath.cpp" />
     <ClCompile Include="BasicPathData.cpp" />
+    <ClCompile Include="BasicPoiData.cpp" />
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="DbSettings.cpp" />
     <ClCompile Include="DbSettingsFileLoader.cpp" />
@@ -275,7 +277,7 @@
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
     <ClCompile Include="Poi.cpp" />
-    <ClCompile Include="PoiData.cpp" />
+    <ClCompile Include="SemanticPoiData.cpp" />
     <ClCompile Include="QueryGenerateUtility.cpp" />
     <ClCompile Include="Probability.cpp" />
     <ClCompile Include="RoutingTable.cpp" />

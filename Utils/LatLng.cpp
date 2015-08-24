@@ -65,18 +65,24 @@ namespace Geography
 		return longitude;
 	}
 
+	#pragma region Export
+	
+	const std::string LatLng::LATITUDE = "latitude";
+	const std::string LatLng::LONGITUDE = "longitude";
 
 	///<summary>
 	/// ファイル出力向けのハッシュデータを作成します．
 	///</summary>
 	std::unordered_map<std::string, std::string> LatLng::get_export_data() const
 	{
-		std::unordered_map<std::string, std::string> ret_data;
-		ret_data.insert(std::make_pair("latitude", std::to_string(latitude)));
-		ret_data.insert(std::make_pair("longitude", std::to_string(longitude)));
-		return ret_data;
+		std::unordered_map<std::string, std::string> ret = {
+			{LATITUDE, std::to_string(latitude)},
+			{LONGITUDE, std::to_string(longitude)}
+		};
+		return ret;
 	}
 
+	#pragma endregion Export関係
 
 	///<summary>
 	/// Lambert-Andoyerの公式に基づく2点間の距離計算 [m]

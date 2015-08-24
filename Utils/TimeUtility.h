@@ -1,3 +1,8 @@
+#ifdef UTILS_EXPORTS
+#define TIME_UTILITY_API __declspec(dllexport)
+#else
+#define TIME_UTILITY_API __declspec(dllimport)
+#endif
 #pragma once
 
 namespace Time
@@ -9,7 +14,7 @@ namespace Time
 		~TimeUtility();
 
 	public:
-		static const std::string current_timestamp();
+		TIME_UTILITY_API static const std::string current_timestamp();
 	};
 }
 
