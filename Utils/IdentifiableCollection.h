@@ -18,6 +18,8 @@ namespace Collection
 	class IdentifiableCollection : std::set<std::shared_ptr<DATA_TYPE>, std::function<bool(const std::shared_ptr<DATA_TYPE>, const std::shared_ptr<DATA_TYPE>)>>
 	{
 
+	static_assert(std::is_integral<ID_TYPE>::value ||std::is_same<std::string, ID_TYPE>::value, "Only Integral type and string are allowed for ID_TYPE");
+	
 	public:
 		IdentifiableCollection();
 		virtual ~IdentifiableCollection();

@@ -3,10 +3,13 @@
 
 ///<summary>
 /// IDをもつクラス用のテンプレート
+/// Integral Typeとstringが使えるが，基本はlongかstringを想定
 ///</summary>
 template <typename ID_TYPE>
 class Identifiable
 {
+
+static_assert(std::is_integral<ID_TYPE>::value || std::is_same<std::string, ID_TYPE>::value, "Only Integral type and string are allowed for ID_TYPE");
 
 protected:
 	ID_TYPE id;

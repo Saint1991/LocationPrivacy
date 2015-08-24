@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "IdentifiableCollection.h"
 
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Test
