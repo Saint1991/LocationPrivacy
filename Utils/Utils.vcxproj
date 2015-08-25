@@ -222,7 +222,6 @@
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="Poi.h" />
     <ClInclude Include="Poi.hpp" />
-    <ClInclude Include="PoiCollectionFactory.h" />
     <ClInclude Include="SemanticPoiData.h" />
     <ClInclude Include="QueryGenerateUtility.h" />
     <ClInclude Include="Node.h" />
@@ -278,7 +277,6 @@
     <ClCompile Include="MobileEntityState.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
-    <ClCompile Include="PoiCollectionFactory.cpp" />
     <ClCompile Include="SemanticPoiData.cpp" />
     <ClCompile Include="QueryGenerateUtility.cpp" />
     <ClCompile Include="Probability.cpp" />

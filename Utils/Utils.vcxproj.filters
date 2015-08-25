@@ -273,9 +273,6 @@
     <ClInclude Include="Poi.hpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClInclude>
-    <ClInclude Include="PoiCollectionFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -370,9 +367,6 @@
     </ClCompile>
     <ClCompile Include="Vector2dFactory.cpp">
       <Filter>ソース ファイル\Graph\Node</Filter>
-    </ClCompile>
-    <ClCompile Include="PoiCollectionFactory.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
