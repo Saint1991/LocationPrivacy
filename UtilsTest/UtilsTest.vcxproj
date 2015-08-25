@@ -165,6 +165,7 @@
     <ClCompile Include="BasicEdgeTest.cpp" />
     <ClCompile Include="BasicPathDataTest.cpp" />
     <ClCompile Include="CoordinateTest.cpp" />
+    <ClCompile Include="DbSettingsTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />
     <ClCompile Include="GeoCalculationTest.cpp" />
     <ClCompile Include="IdentifiableCollectionTest.cpp" />
