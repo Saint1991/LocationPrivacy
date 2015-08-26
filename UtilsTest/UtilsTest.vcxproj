@@ -170,6 +170,7 @@
     <ClCompile Include="GeoCalculationTest.cpp" />
     <ClCompile Include="IdentifiableCollectionTest.cpp" />
     <ClCompile Include="IdentifiableTest.cpp" />
+    <ClCompile Include="LatLngTest.cpp" />
     <ClCompile Include="NodeCollectionFactoryTest.cpp" />
     <ClCompile Include="NodeTest.cpp" />
     <ClCompile Include="stdafx.cpp">
