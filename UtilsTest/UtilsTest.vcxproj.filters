@@ -104,6 +104,9 @@
     <ClCompile Include="LatLngTest.cpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
+    <ClCompile Include="Vector2dFactoryTest.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

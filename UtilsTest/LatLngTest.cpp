@@ -38,7 +38,7 @@ namespace UtilsTest
 		}
 
 		
-		TEST_METHOD(LatLng_dist)
+		/*TEST_METHOD(LatLng_dist)
 		{
 			Geography::LatLng latlng1(1.0, 2.0); 
 			Geography::LatLng latlng2(10.0, 20.0);
@@ -52,7 +52,7 @@ namespace UtilsTest
 			Geography::LatLng latlng2(10.0, 20.0);
 			double latlng_a = angle(latlng1, latlng2);//friendä÷êîÇ¡ÇƒâΩÅH
 			Assert::AreEqual(1.0, latlng_a, PRECISION);
-		}
+		}*/
 		
 
 

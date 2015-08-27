@@ -181,6 +181,7 @@
     </ClCompile>
     <ClCompile Include="ProbabilityTest.cpp" />
     <ClCompile Include="UniquePtrTest.cpp" />
+    <ClCompile Include="Vector2dFactoryTest.cpp" />
     <ClCompile Include="Vector2dTest.cpp" />
   </ItemGroup>
   <ItemGroup>
