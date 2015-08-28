@@ -51,10 +51,10 @@ namespace UtilsTest
 		{
 			Geography::LatLng latlng1(1.0, 2.0); 
 			Geography::LatLng latlng2(10.0, 20.0);
-			double latlng_d = dist(latlng1, latlng2);
+			double distance = dist(latlng1, latlng2);
 
 			double expected = 2227169.605;
-			Assert::AreEqual(expected, latlng_d, expected * PRECISION_D);
+			Assert::AreEqual(expected, distance, expected * PRECISION_D);
 		}
 
 		TEST_METHOD(LatLng_angle)
@@ -62,8 +62,8 @@ namespace UtilsTest
 			Geography::LatLng latlng1(1.0, 2.0);
 			Geography::LatLng latlng2(10.0, 20.0);
 
-			double latlng_a = Math::AngleUtility::convert_to_degree(angle(latlng1, latlng2));
-			Assert::AreEqual(332.8221555555556, latlng_a, PRECISION_A);
+			double ang = Math::AngleUtility::convert_to_degree(angle(latlng1, latlng2));
+			Assert::AreEqual(332.8221555555556, ang, PRECISION_A);
 		}
 		
 	};

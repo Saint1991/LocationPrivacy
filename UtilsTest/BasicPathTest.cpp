@@ -17,7 +17,11 @@ namespace UtilsTest
 
 		TEST_METHOD(BasicPath_distance)
 		{
+			Graph::BasicPathData bpd(100.0);
+			Graph::BasicPath bp(1L, std::make_shared<Graph::BasicPathData>(bpd));
+			
 
+		
 		}
 
 		TEST_METHOD(BasicPath_update_distance)
