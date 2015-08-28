@@ -24,7 +24,6 @@ namespace UtilsTest
 			Graph::BasicPath bp(1L, std::make_shared<Graph::BasicPathData>(bpd));
 			double dist = bp.distance();
 			Assert::AreEqual(100.0, dist);
-
 		}
 
 		TEST_METHOD(BasicPath_update_distance)
