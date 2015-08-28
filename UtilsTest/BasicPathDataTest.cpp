@@ -15,7 +15,30 @@ namespace UtilsTest
 
 		const double precision = 0.1;
 
-		TEST_METHOD(BasicPathData_Constructors_and_get_distance)
+		TEST_METHOD(BasicPathData_Constructors)
+		{
+			BasicPathData data1(0.2);
+			
+			Assert::AreEqual(0.2, data1.get_distance(), precision);
+
+
+			Coordinate c1(1.0, 2.0, 1U);
+			Coordinate c2(2.0, 3.0, 2U);
+			BasicPathData data2(c1, c2);
+			
+			Assert::AreEqual(std::sqrt(2.0), data2.get_distance(), precision);
+
+
+			Geography::LatLng latlng1(1.0, 2.0);
+			Geography::LatLng latlng2(10.0, 20.0);
+			BasicPathData data3(latlng1, latlng2);
+			double expected = 2227169.605;
+
+			Assert::AreEqual(expected, data3.get_distance(), expected * precision);
+			
+		}
+
+		TEST_METHOD(BasicPathData_get_distance)
 		{
 			BasicPathData data1(0.2);
 			double get_d1 = data1.get_distance();
@@ -35,10 +58,12 @@ namespace UtilsTest
 			Geography::LatLng latlng2(10.0, 20.0);
 			BasicPathData data3(latlng1, latlng2);
 			double get_d3 = data3.get_distance();
+			double expected = 2227169.605;
 
-			//Assert::AreEqual(std::sqrt(2.0), data3.get_distance(), precision);
-			
+			Assert::AreEqual(expected, get_d3, expected * precision);
+
 		}
+
 
 		TEST_METHOD(BasicPathData_update_distance)
 		{

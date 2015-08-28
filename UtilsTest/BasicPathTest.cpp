@@ -10,7 +10,17 @@ namespace UtilsTest
 	{
 	public:
 
-		TEST_METHOD(METHOD)
+		TEST_METHOD(BasicPath_Constructor)
+		{
+
+		}
+
+		TEST_METHOD(BasicPath_distance)
+		{
+
+		}
+
+		TEST_METHOD(BasicPath_update_distance)
 		{
 
 		}

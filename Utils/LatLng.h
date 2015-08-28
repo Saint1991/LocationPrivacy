@@ -33,7 +33,7 @@ namespace Geography
 		double lng() const;
 		std::unordered_map<std::string, std::string> get_export_data() const;
 
-		friend double dist(const LatLng& ll1, const LatLng& ll2);
-		friend double angle(const LatLng& from, const LatLng& to);
+		LATLNG_API friend double dist(const LatLng& ll1, const LatLng& ll2);
+		LATLNG_API friend double angle(const LatLng& from, const LatLng& to);
 	};
 }

@@ -164,6 +164,7 @@
     <ClCompile Include="AngleUtilityTest.cpp" />
     <ClCompile Include="BasicEdgeTest.cpp" />
     <ClCompile Include="BasicPathDataTest.cpp" />
+    <ClCompile Include="BasicPathTest.cpp" />
     <ClCompile Include="CoordinateTest.cpp" />
     <ClCompile Include="DbSettingsTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />

@@ -366,7 +366,7 @@
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
     <ClCompile Include="Vector2dFactory.cpp">
-      <Filter>ソース ファイル\Graph\Node</Filter>
+      <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

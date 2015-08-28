@@ -107,6 +107,9 @@
     <ClCompile Include="Vector2dFactoryTest.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
+    <ClCompile Include="BasicPathTest.cpp">
+      <Filter>ソース ファイル\Graph\Edge</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
