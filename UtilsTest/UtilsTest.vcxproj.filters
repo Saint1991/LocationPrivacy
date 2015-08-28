@@ -46,6 +46,9 @@
     <Filter Include="ソース ファイル\Graph\Data">
       <UniqueIdentifier>{868d1045-d590-42ed-83bd-d0c4221a97e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Geography\Data">
+      <UniqueIdentifier>{c83139d9-a99b-4b87-9d93-70c73de52ea4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -109,6 +112,9 @@
     </ClCompile>
     <ClCompile Include="BasicPathTest.cpp">
       <Filter>ソース ファイル\Graph\Edge</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicGeoNodeDataTest.cpp">
+      <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
