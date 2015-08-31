@@ -11,7 +11,7 @@ namespace UtilsTest
 	TEST_CLASS(EdgeTest)
 	{
 	public:
-		const double PRECISION = 1.0E-8;
+		const double ACCURACY = 1.0E-8;
 
 		TEST_METHOD(Edge_Constructor)
 		{
@@ -20,7 +20,7 @@ namespace UtilsTest
 			std::shared_ptr<BasicPathData const> static_data = path.get_static_data();
 
 			double actual_distance = static_data->get_distance();
-			Assert::AreEqual(2L, path.get_to(), PRECISION);
+			Assert::AreEqual(2L, path.get_to(), ACCURACY);
 			Assert::AreEqual(2.3, actual_distance);
 		}
 
@@ -41,7 +41,7 @@ namespace UtilsTest
 			std::shared_ptr<BasicPathData const> data = path.get_static_data();
 
 			double dist = data->get_distance();
-			Assert::AreEqual(2.0, dist, PRECISION);
+			Assert::AreEqual(2.0, dist, ACCURACY);
 		}
 
 		TEST_METHOD(Edge_operators)

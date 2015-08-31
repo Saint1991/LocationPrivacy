@@ -16,10 +16,10 @@ namespace UtilsTest
 		//距離の許容誤差(絶対値でなく距離のオーダーに対して許容誤差を決める)
 		//すなわち下記はexpectedが100000mなら1000mまで誤差を許容するという意味
 		// (大きいようにも見えるが，Google Mapの距離がそもそも正解とは限らないというか，Google Mapはhaversineの方をベースにやってるっぽい)
-		const double DISTANCE_PRECISION = 1.0E-2;
+		const double DISTANCE_ACCURACY = 1.0E-2;
 
 		//角度の許容誤差[°]
-		const double ANGLE_PRECISION = 0.1;
+		const double ANGLE_ACCURACY = 0.1;
 
 		//西尾研から理工学図書館までの距離(m)
 		//Google Mapの距離計算を使って得られる距離が正しい距離としてテストしてます
@@ -33,7 +33,7 @@ namespace UtilsTest
 			double error = expected - actual;
 			std::string log = "Error Distance is " + std::to_string(error) + "[m]\n";
 			Logger::WriteMessage(log.c_str());
-			Assert::AreEqual(expected, actual, DISTANCE_PRECISION * expected);
+			Assert::AreEqual(expected, actual, DISTANCE_ACCURACY * expected);
 		}
 
 		//西尾研から梅田駅までの距離
@@ -47,7 +47,7 @@ namespace UtilsTest
 			double error = expected - actual;
 			std::string log = "Error Distance is " + std::to_string(error) + "[m]\n";
 			Logger::WriteMessage(log.c_str());
-			Assert::AreEqual(expected, actual, DISTANCE_PRECISION * expected);
+			Assert::AreEqual(expected, actual, DISTANCE_ACCURACY * expected);
 		}
 		
 		//西尾研から理工学図書館までの距離(m)
@@ -61,7 +61,7 @@ namespace UtilsTest
 			double error = expected - actual;
 			std::string log = "Error Distance is " + std::to_string(error) + "[m]\n";
 			Logger::WriteMessage(log.c_str());
-			Assert::AreEqual(expected, actual, DISTANCE_PRECISION * expected);
+			Assert::AreEqual(expected, actual, DISTANCE_ACCURACY * expected);
 		}
 
 		//西尾研から梅田駅までの距離
@@ -75,7 +75,7 @@ namespace UtilsTest
 			double error = expected - actual;
 			std::string log = "Error Distance is " + std::to_string(error) + "[m]\n";
 			Logger::WriteMessage(log.c_str());
-			Assert::AreEqual(expected, actual, DISTANCE_PRECISION * expected);
+			Assert::AreEqual(expected, actual, DISTANCE_ACCURACY * expected);
 		}
 
 
@@ -91,7 +91,7 @@ namespace UtilsTest
 			double error = expected - actual;
 			std::string log = "Error angle is " + std::to_string(error) + "[°]\n";
 			Logger::WriteMessage(log.c_str());
-			Assert::AreEqual(expected, actual, ANGLE_PRECISION);
+			Assert::AreEqual(expected, actual, ANGLE_ACCURACY);
 		}
 
 		//西尾研から見た理工学図書館への方位角
@@ -106,7 +106,7 @@ namespace UtilsTest
 			double error = expected - actual;
 			std::string log = "Error angle is " + std::to_string(error) + "[°]\n";
 			Logger::WriteMessage(log.c_str());
-			Assert::AreEqual(expected, actual, ANGLE_PRECISION);
+			Assert::AreEqual(expected, actual, ANGLE_ACCURACY);
 		}
 
 		//西尾研から見たグランドの方位角
@@ -120,7 +120,7 @@ namespace UtilsTest
 			double error = expected - actual;
 			std::string log = "Error angle is " + std::to_string(error) + "[°]\n";
 			Logger::WriteMessage(log.c_str());
-			Assert::AreEqual(expected, actual, ANGLE_PRECISION);
+			Assert::AreEqual(expected, actual, ANGLE_ACCURACY);
 		}
 
 		TEST_METHOD(GeoCalculation_lambert_azimuth_angle4) 
@@ -133,7 +133,7 @@ namespace UtilsTest
 			double error = expected - actual;
 			std::string log = "Error angle is " + std::to_string(error) + "[°]\n";
 			Logger::WriteMessage(log.c_str());
-			Assert::AreEqual(expected, actual, ANGLE_PRECISION);
+			Assert::AreEqual(expected, actual, ANGLE_ACCURACY);
 		}
 	};
 }
