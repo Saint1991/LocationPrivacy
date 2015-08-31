@@ -29,7 +29,6 @@ namespace UtilsTest
 			Edge<BasicPathData> path(2L, std::make_shared<BasicPathData>(2.0));
 			std::shared_ptr<BasicPathData> data = path.get_data();
 			data->update_distance(3.0);
-			path.get_static_data()->get_distance();
 			
 			Assert::AreEqual(3.0, path.get_static_data()->get_distance());
 		}
