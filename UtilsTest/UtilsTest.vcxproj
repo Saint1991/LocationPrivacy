@@ -163,13 +163,16 @@
   <ItemGroup>
     <ClCompile Include="AngleUtilityTest.cpp" />
     <ClCompile Include="BasicEdgeTest.cpp" />
+    <ClCompile Include="BasicGeoNodeDataTest.cpp" />
     <ClCompile Include="BasicPathDataTest.cpp" />
+    <ClCompile Include="BasicPathTest.cpp" />
     <ClCompile Include="CoordinateTest.cpp" />
     <ClCompile Include="DbSettingsTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />
     <ClCompile Include="GeoCalculationTest.cpp" />
     <ClCompile Include="IdentifiableCollectionTest.cpp" />
     <ClCompile Include="IdentifiableTest.cpp" />
+    <ClCompile Include="LatLngTest.cpp" />
     <ClCompile Include="NodeCollectionFactoryTest.cpp" />
     <ClCompile Include="NodeTest.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -180,6 +183,7 @@
     </ClCompile>
     <ClCompile Include="ProbabilityTest.cpp" />
     <ClCompile Include="UniquePtrTest.cpp" />
+    <ClCompile Include="Vector2dFactoryTest.cpp" />
     <ClCompile Include="Vector2dTest.cpp" />
   </ItemGroup>
   <ItemGroup>

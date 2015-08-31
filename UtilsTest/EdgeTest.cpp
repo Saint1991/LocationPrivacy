@@ -23,5 +23,38 @@ namespace UtilsTest
 			Assert::AreEqual(2L, path.get_to(), PRECISION);
 			Assert::AreEqual(2.3, actual_distance);
 		}
+
+		TEST_METHOD(Edge_update_distance)
+		{
+			Edge<BasicPathData> path(2L, std::make_shared<BasicPathData>(2.0));
+			std::shared_ptr<BasicPathData> data = path.get_data();
+			data->update_distance(3.0);
+			
+			Assert::AreEqual(3.0, path.get_static_data()->get_distance());
+		}
+
+
+		TEST_METHOD(Edge_update_data)
+		{
+			Edge<BasicPathData> path(2L, std::make_shared<BasicPathData>(1.0));
+			path.update_data(std::make_shared<BasicPathData>(2.0));
+			std::shared_ptr<BasicPathData const> data = path.get_static_data();
+
+			double dist = data->get_distance();
+			Assert::AreEqual(2.0, dist, PRECISION);
+		}
+
+		TEST_METHOD(Edge_operators)
+		{
+			Edge<BasicPathData> path1(1L, std::make_shared<BasicPathData>(1.0));
+			Edge<BasicPathData> path2(2L, std::make_shared<BasicPathData>(1.0));
+			Edge<BasicPathData> path3(2L, std::make_shared<BasicPathData>(1.0));
+
+			Assert::IsFalse(path1 == path2);
+			Assert::IsTrue(path2 == path3);
+			Assert::IsTrue(path1 != path2);
+			Assert::IsFalse(path2 != path3);
+		}
+
 	};
 }
