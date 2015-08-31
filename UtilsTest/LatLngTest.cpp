@@ -26,12 +26,26 @@ namespace UtilsTest
 		{
 			try
 			{
-				Geography::LatLng latlng(-100.0, 200.0);
+				Geography::LatLng latlng(-100.0, 10.0);
 				Assert::Fail();
 			}
 			catch (const std::invalid_argument)
 			{
 				
+			}
+			catch (const std::exception) {
+				Assert::Fail();
+			}
+
+
+			try
+			{
+				Geography::LatLng latlng(10.0, 300.0);
+				Assert::Fail();
+			}
+			catch (const std::invalid_argument)
+			{
+
 			}
 			catch (const std::exception) {
 				Assert::Fail();
