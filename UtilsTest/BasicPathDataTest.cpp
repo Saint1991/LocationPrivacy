@@ -43,9 +43,9 @@ namespace UtilsTest
 
 		TEST_METHOD(BasicPathData_update_distance1)
 		{
-			BasicPathData data1(0.2);
-			data1.update_distance(2.0);
-			double distance = data1.get_distance();
+			BasicPathData data(0.2);
+			data.update_distance(2.0);
+			double distance = data.get_distance();
 			Assert::AreEqual(2.0, distance, PRECISION);
 		}
 
@@ -53,9 +53,9 @@ namespace UtilsTest
 		{
 			Coordinate c1(1.0, 2.0);
 			Coordinate c2(2.0, 3.0);
-			BasicPathData data2(c1, c2);
-			data2.update_distance(10.0);
-			double distance = data2.get_distance();
+			BasicPathData data(c1, c2);
+			data.update_distance(10.0);
+			double distance = data.get_distance();
 			Assert::AreEqual(10.0, distance, PRECISION);
 		}
 
@@ -64,9 +64,9 @@ namespace UtilsTest
 
 			Geography::LatLng latlng1(1.0, 2.0);
 			Geography::LatLng latlng2(10.0, 20.0);
-			BasicPathData data3(latlng1, latlng2);
-			data3.update_distance(20.0);
-			double distance = data3.get_distance();
+			BasicPathData data(latlng1, latlng2);
+			data.update_distance(20.0);
+			double distance = data.get_distance();
 			Assert::AreEqual(20.0, distance, PRECISION);
 		}
 	};
