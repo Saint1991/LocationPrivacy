@@ -116,6 +116,9 @@
     <ClCompile Include="BasicGeoNodeDataTest.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
+    <ClCompile Include="ColumnTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
