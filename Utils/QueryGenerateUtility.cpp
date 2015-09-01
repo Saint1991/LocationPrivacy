@@ -53,19 +53,7 @@ std::string Db::QueryGenerateUtility::make_round_bracket_clause(const std::list<
 ///</summary>
 const std::string Db::QueryGenerateUtility::make_create_table_query(const Db::TableStructure& table_info) 
 {
-	if (table_info.columns == nullptr || table_info.columns->size() == 0) return "";
-
-	std::stringstream query;
-	query << "CREATE TABLE " << table_info.table_name << " ";
-	std::string column_clause = " " + make_round_bracket_clause(table_info.get_column_name_list());
-
-	if (table_info.primary_keys != nullptr && table_info.primary_keys->size() > 0) {
-		std::string primary_key = ", PRIMARY KEY" + make_round_bracket_clause(*(table_info.primary_keys)) + ")";
-		column_clause.replace(column_clause.end() - 1, column_clause.end(), primary_key);
-	}
-
-	query << column_clause << " CHARACTER SET UTF8;";
-	return query.str();
+	return table_info.to_string();
 }
 
 ///<summary>

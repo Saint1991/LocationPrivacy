@@ -6,6 +6,7 @@
 
 #pragma once
 #include "Column.h"
+#include "Serializable.h"
 
 namespace Db 
 {
@@ -13,10 +14,10 @@ namespace Db
 	///<summary>
 	/// テーブルの構造を表す構造体
 	///</summary>
-	struct TableStructure
+	struct TableStructure : public Serializable
 	{
-		std::string table_name;
-		std::unique_ptr<std::list<Db::Column>> columns;
+		std::string table_name = "";
+		std::unique_ptr<std::list<Db::Column>> columns = nullptr;
 		std::unique_ptr<std::list<std::string>> primary_keys = nullptr;
 	
 		TABLE_STRUCTURE_API TableStructure(const std::string& table_name, std::list<Db::Column> columns);
@@ -26,6 +27,7 @@ namespace Db
 		TABLE_STRUCTURE_API bool is_column_exists(const std::string& column_name) const;
 		TABLE_STRUCTURE_API unsigned int get_column_index(const std::string& column_name) const;
 		TABLE_STRUCTURE_API const std::list<std::string> get_column_name_list() const;
+		TABLE_STRUCTURE_API const std::string to_string() const;
 		TABLE_STRUCTURE_API bool add_primary_key(std::string primary_key);
 	};
 }

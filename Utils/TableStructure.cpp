@@ -13,7 +13,7 @@ namespace Db
 		for (std::list<Column>::iterator iter = columns.begin(); iter != columns.end(); iter++) {
 			auto target = std::find(iter->options->begin(), iter->options->end(), "PRIMARY KEY");
 			if (target != iter->options->end()) {
-				primary_keys->push_back(iter->column_name);
+				add_primary_key(iter->column_name);
 				iter->options->erase(target);
 			}
 		}
@@ -86,6 +86,37 @@ namespace Db
 		return column_names;
 	}
 
+
+	///<summary>
+	/// to_stringではCREATE TABLE クエリを返す
+	/// カラムが何も指定されていない場合は空文字列を返す
+	///</summary>
+	const std::string TableStructure::to_string() const
+	{
+		if (columns == nullptr || columns->size() == 0 || table_name.length() == 0) return "";
+
+		std::stringstream query;
+		query << "CREATE TABLE " << table_name << " (";
+
+		for (std::list<Column>::const_iterator iter = columns->begin(); iter != columns->end(); iter++) {
+			query << iter->to_string() << ", ";
+		}
+
+		if (primary_keys != nullptr && primary_keys->size() > 0) {
+			std::stringstream primary_key;
+			primary_key << "PRIMARY KEY (";
+			for (std::list<std::string>::const_iterator iter = primary_keys->begin(); iter != primary_keys->end(); iter++) {
+				primary_key << *iter << ", ";
+			}
+			std::string primary_key_clause = primary_key.str();
+			primary_key_clause.replace(primary_key_clause.end() - 2, primary_key_clause.end(), "), ");
+			query << primary_key_clause;
+		}
+
+		std::string ret = query.str();
+		ret.replace(ret.end() - 2, ret.end(), ") CHARACTER SET UTF8;");
+		return ret;
+	}
 
 	///<summary>
 	/// PRIMARY KEYの設定を追加します
