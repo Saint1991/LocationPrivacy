@@ -22,5 +22,8 @@ namespace Db
 		Column(const Db::Column& column);
 		virtual ~Column();
 		const std::string to_string() const;
+
+		friend bool operator==(const Column& column1, const Column& column2);
+		friend bool operator!=(const Column& column1, const Column& column2);
 	};
 }

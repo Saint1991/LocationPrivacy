@@ -25,8 +25,23 @@ namespace Time
 		
 		std::stringstream timestamp;
 		int year = tm_now.tm_year + 1900;
-		int month = tm_now.tm_mon + 1;
-		timestamp << year << month << tm_now.tm_mday << tm_now.tm_min << tm_now.tm_sec;
+		
+		char month[3];
+		sprintf_s(month, 3, "%02d", tm_now.tm_mon + 1);
+		
+		char day[3];
+		sprintf_s(day, 3, "%02d", tm_now.tm_mday);
+
+		char hour[3];
+		sprintf_s(hour, 3, "%02d", tm_now.tm_hour);
+
+		char min[3];
+		sprintf_s(min, 3, "%02d", tm_now.tm_min);
+
+		char sec[3];
+		sprintf_s(sec, 3, "%02d", tm_now.tm_sec);
+
+		timestamp << year << month << day << hour <<min << sec;
 		return timestamp.str();
 	}
 }

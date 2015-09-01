@@ -18,12 +18,14 @@ namespace Db
 	///</summary>
 	 TableStructure::TableStructure(const  TableStructure& structure) : table_name(structure.table_name), columns(std::make_unique<std::list< Column>>())
 	{
-		for (std::list< Column>::const_iterator iter = structure.columns->begin(); iter != structure.columns->end(); iter++) {
+		for (std::list<Column>::const_iterator iter = structure.columns->begin(); iter != structure.columns->end(); iter++) {
 			columns->push_back(*iter);
 		}
-		if (structure.primary_keys != nullptr) primary_keys = std::make_unique<std::list<std::string>>();
-		for (std::list<std::string>::const_iterator iter = structure.primary_keys->begin(); iter != structure.primary_keys->end(); iter++) {
-			primary_keys->push_back(*iter);
+		if (structure.primary_keys != nullptr) {
+			primary_keys = std::make_unique<std::list<std::string>>();
+			for (std::list<std::string>::const_iterator iter = structure.primary_keys->begin(); iter != structure.primary_keys->end(); iter++) {
+				primary_keys->push_back(*iter);
+			}
 		}
 	}
 

@@ -46,4 +46,24 @@ namespace Db
 		}
 		return column.str();
 	}
+
+
+	bool operator==(const Column& column1, const Column& column2)
+	{
+		bool is_same = column1.column_name == column2.column_name;
+		is_same &= column1.data_type == column2.data_type;
+		is_same &= column1.default_value == column2.default_value;
+		
+		is_same &= column1.options->size() == column2.options->size();
+		for (std::list<std::string>::const_iterator iter = column1.options->begin(); iter != column1.options->end(); iter++) {
+			is_same &= std::find(column2.options->begin(), column2.options->end(), *iter) != column2.options->end();
+		}
+
+		return is_same;
+	}
+
+	bool operator!=(const Column& column1, const Column& column2)
+	{
+		return !(column1 == column2);
+	}
 }
