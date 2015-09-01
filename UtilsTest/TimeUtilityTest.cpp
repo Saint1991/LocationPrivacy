@@ -9,20 +9,12 @@ namespace UtilisTest
 	TEST_CLASS(TimeUtilityTest)
 	{
 	public:
-
-		TEST_METHOD(TimeUlitity_)
+		
+		TEST_METHOD(TimeUlitity_current_timestamp)
 		{
-
+			std::string timestamp = Time::TimeUtility::current_timestamp();
+			Logger::WriteMessage(timestamp.c_str());
 		}
-
-		TEST_METHOD(TimeUlitity_)
-		{
-
-		}
-
-		TEST_METHOD(TimeUlitity_)
-		{
-
-		}
+		
 	};
 }
