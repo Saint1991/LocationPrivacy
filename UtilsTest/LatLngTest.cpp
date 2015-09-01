@@ -31,7 +31,6 @@ namespace UtilsTest
 			}
 			catch (const std::invalid_argument)
 			{
-				
 			}
 			catch (const std::exception) {
 				Assert::Fail();
@@ -65,6 +64,9 @@ namespace UtilsTest
 		{
 			Geography::LatLng latlng1(1.0, 2.0); 
 			Geography::LatLng latlng2(10.0, 20.0);
+			Assert::IsTrue(latlng1.is_valid_point());
+			Assert::IsTrue(latlng2.is_valid_point());
+			
 			double distance = dist(latlng1, latlng2);
 
 			double expected = 2227169.605;

@@ -8,10 +8,9 @@ namespace Geography
 	/// コンストラクタ
 	/// 緯度が[-90, 90]でない場合，経度が[-180, 180]でない場合はinvalid_argumentをスローします．
 	///</summary>
-	LatLng::LatLng(double latitude, double longitude)
+	LatLng::LatLng(double latitude, double longitude) : Graph::Coordinate(longitude, latitude)
 	{
-		set_lat(latitude);
-		set_lng(longitude);
+		is_valid = validate(latitude, longitude);
 	}
 
 	///<summary>
@@ -21,30 +20,21 @@ namespace Geography
 	{
 	}
 
-
 	///<summary>
-	/// 緯度を設定します．
-	/// [-90, 90]でない場合はinvalid_argumentをスローします．
+	/// 緯度経度の値をチェックします．
+	/// 不正な値の場合invalid_argumentをスローしてfalseを返します
 	///</summary>
-	void LatLng::set_lat(double latitude)
+	bool LatLng::validate(double latitude, double longitude)
 	{
 		if (latitude < -90.0 || 90.0 < latitude) {
 			throw std::invalid_argument("Latitude must be within the range [-90, 90]");
+			return false;
 		}
-		this->latitude = latitude;
-	}
-
-
-	///<summary>
-	/// 経度を設定します．
-	/// [-180, 180]でない場合はinvalid_argumentをスローします．
-	///</summary>
-	void LatLng::set_lng(double longitude)
-	{
 		if (longitude < -180.0 || 180.0 < longitude) {
 			throw std::invalid_argument("Longitude must be within the range [-180, 180]");
+			return false;
 		}
-		this->longitude = longitude;
+		return true;
 	}
 
 
@@ -53,7 +43,7 @@ namespace Geography
 	///</summary>
 	double LatLng::lat() const
 	{
-		return latitude;
+		return _y;
 	}
 
 
@@ -62,7 +52,16 @@ namespace Geography
 	///</summary>
 	double LatLng::lng() const
 	{
-		return longitude;
+		return _x;
+	}
+
+
+	///<summary>
+	/// 不正な値で構成されているかどうかを返す
+	///</summary>
+	bool LatLng::is_valid_point() const
+	{
+		return is_valid;
 	}
 
 	#pragma region Export
@@ -76,8 +75,8 @@ namespace Geography
 	std::unordered_map<std::string, std::string> LatLng::get_export_data() const
 	{
 		std::unordered_map<std::string, std::string> ret = {
-			{LATITUDE, std::to_string(latitude)},
-			{LONGITUDE, std::to_string(longitude)}
+			{LATITUDE, std::to_string(_y)},
+			{LONGITUDE, std::to_string(_x)}
 		};
 		return ret;
 	}

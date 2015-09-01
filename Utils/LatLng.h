@@ -7,6 +7,7 @@
 #pragma once
 #include "FileExportable.h"
 #include "GeoCalculation.h"
+#include "Coordinate.h"
 
 namespace Geography 
 {
@@ -14,14 +15,11 @@ namespace Geography
 	///<summary>
 	/// 緯度・経度を表すクラス
 	///</summary>
-	class LATLNG_API LatLng : public IO::FileExportable
+	class LATLNG_API LatLng : public Graph::Coordinate, public IO::FileExportable
 	{
 	protected:
-		double latitude;
-		double longitude;
-
-		void set_lat(double latitude);
-		void set_lng(double longitude);
+		bool is_valid = false;
+		bool validate(double latitude, double longitude);
 
 	public:
 		static const std::string LATITUDE;
@@ -31,6 +29,7 @@ namespace Geography
 		virtual ~LatLng();
 		double lat() const;
 		double lng() const;
+		bool is_valid_point() const;
 		std::unordered_map<std::string, std::string> get_export_data() const;
 
 		LATLNG_API friend double dist(const LatLng& ll1, const LatLng& ll2);

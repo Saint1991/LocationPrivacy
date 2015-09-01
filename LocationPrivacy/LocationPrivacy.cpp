@@ -2,11 +2,16 @@
 //
 
 #include "stdafx.h"
-#include "MysqlDb.h"
-#include "DbSettingsFileLoader.h"
+#include "ISimulator.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {	
+	//‚±‚±‚ÅISimulator‚ðŽÀ‘•‚µ‚½ƒNƒ‰ƒX‚ðŽg‚¢•ª‚¯‚é
+	//std::unique_ptr<Simulation::ISimulator> simulator = ;
+	//simulator.initialize();
+	//simulator.run();
+	//simulator.export_datas();
+	//simulator.terminate();
 	return 0;
 }
 

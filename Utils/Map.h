@@ -24,7 +24,7 @@ namespace Graph
 	{
 
 	protected:
-		std::shared_ptr<const Collection::IdentifiableCollection<<NODE const>> node_collection;
+		std::shared_ptr<const Collection::IdentifiableCollection<NODE const> node_collection;
 		virtual void build_map() = 0;
 
 		///<summary>

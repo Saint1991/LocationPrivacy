@@ -15,7 +15,7 @@ namespace Graph
 	///</summary>
 	class  COORDINATE_API Coordinate : public Identifiable<unsigned int>
 	{
-	private:
+	protected:
 		double _x;
 		double _y;
 	

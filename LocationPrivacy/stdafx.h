@@ -3,11 +3,11 @@
 // を記述します。
 //
 
-#pragma once
 #define _USE_MATH_DEFINES
-
-#include "targetver.h"
+#pragma once
 #include <tchar.h>
+#include "targetver.h"
+
 
 // Windows ヘッダー ファイル:
 // Windows ヘッダーから使用されていない部分を除外します。
