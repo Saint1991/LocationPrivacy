@@ -21,15 +21,12 @@ namespace Entity
 		static const std::string USER_PROBABILITY;
 
 		std::shared_ptr<POSITION_TYPE> position;
-		double user_probability;
 
 	public:
-		BasicMobileEntityState(const POSITION_TYPE& position, double probability);
+		BasicMobileEntityState(const POSITION_TYPE& position);
 		virtual ~BasicMobileEntityState();
 
-		double get_user_probability() const;
 		const std::shared_ptr<POSITION_TYPE const> read_position() const;
-
 		std::unordered_map<std::string, std::string> get_export_data() const;
 	};
 

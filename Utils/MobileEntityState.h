@@ -16,7 +16,7 @@ namespace Entity
 	public:
 		static const std::string CATEGORY_ID;
 
-		MobileEntityState(const POSITION_TYPE& position, double user_probability, const std::string& category_id);
+		MobileEntityState(const POSITION_TYPE& position, const std::string& category_id);
 		virtual ~MobileEntityState();
 
 		const std::string get_category_id() const;
