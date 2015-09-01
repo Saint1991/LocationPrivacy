@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\Simulations">
+      <UniqueIdentifier>{69c79f1f-a5f2-46f6-9cda-ba3b9d6dbf69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Simulations">
+      <UniqueIdentifier>{7cf960c0-238a-4af8-9989-55ddcb90837b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Simulations\Mizuno">
+      <UniqueIdentifier>{e8adb790-4caa-4f2a-9d2c-e2dce529cf1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Simulations\Mizuno">
+      <UniqueIdentifier>{142f4429-c1ec-4b60-b096-547a04243582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Simulations\Mizuno\Map">
+      <UniqueIdentifier>{df8e2a5e-023e-461a-871e-54b0bc7303dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Simulations\Mizuno\User">
+      <UniqueIdentifier>{f875ec1a-eb12-49a9-aa60-ec5b37943aba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Simulations\Mizuno\Map">
+      <UniqueIdentifier>{2c6fad7a-bee3-46fa-ab15-9f93238a5caa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Simulations\Mizuno\User">
+      <UniqueIdentifier>{89b6fd90-4ff3-4eb1-9452-46f684a979f2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MizunoMasterThesisSimulator.h">
+      <Filter>ヘッダー ファイル\Simulations\Mizuno</Filter>
+    </ClInclude>
+    <ClInclude Include="ISimulator.h">
+      <Filter>ヘッダー ファイル\Simulations</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulator.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="MizunoMasterThesisSimulator.cpp">
+      <Filter>ソース ファイル\Simulations\Mizuno</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -7,11 +7,12 @@
 int _tmain(int argc, _TCHAR* argv[])
 {	
 	//‚±‚±‚ÅISimulator‚ðŽÀ‘•‚µ‚½ƒNƒ‰ƒX‚ðŽg‚¢•ª‚¯‚é
-	//std::unique_ptr<Simulation::ISimulator> simulator = ;
-	//simulator.initialize();
-	//simulator.run();
-	//simulator.export_datas();
-	//simulator.terminate();
+	//std::unique_ptr<Simulation::ISimulator<>> simulator = 
+	//simulator->build_map();
+	//simulator->create_user();
+	//simulator->make_requirement_list();
+	//simulator->run();
+
 	return 0;
 }
 
