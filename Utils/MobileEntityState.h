@@ -15,6 +15,10 @@ namespace Entity
 
 		const std::string get_category_id() const;
 	};
+
+	//–¾Ž¦“I“ÁŽê‰»
+	template class MobileEntityState<Graph::Coordinate>;
+	template class MobileEntityState<Geography::LatLng>;
 }
 
 

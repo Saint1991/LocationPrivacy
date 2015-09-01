@@ -3,12 +3,20 @@
 
 namespace Entity
 {
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
 	template <typename POSITION_TYPE>
 	MobileEntityState<POSITION_TYPE>::MobileEntityState(const POSITION_TYPE& position, double user_probability, const std::string& category_id) 
 		: BasicMobileEntityState<POSITION_TYPE>(position, user_probability)
 	{
 	}
 
+
+	///<summary>
+	/// デストラクタ
+	///</summary>
 	template <typename POSITION_TYPE>
 	MobileEntityState<POSITION_TYPE>::~MobileEntityState()
 	{
