@@ -31,8 +31,9 @@ namespace UtilsTest
 			Assert::AreEqual(table_name, table1.table_name);
 			Assert::AreEqual(table_name, table2.table_name);
 
-			std::list<Db::Column>::const_iterator iter2 = table1.columns->begin();
-			for (std::list<Db::Column>::const_iterator iter = column.begin();
+			/*
+			std::list<Db::Column>::const_iterator iter2 = table1.columns->options->begin();
+			for (std::list<Db::Column>::const_iterator iter = column.column();
 				 iter != column.end() && iter2 != table1.columns->end();
 				 iter++, iter2++)
 			{
@@ -46,12 +47,14 @@ namespace UtilsTest
 			{
 				Assert::AreEqual(*iter, *iter3);
 			}
-
+			*/
 			
 			/*‚±‚±‚Ì‘‚«•û‚ª•s–¾
 			Logger::WriteMessage(table1);
 			Logger::WriteMessage(table2);
 			*/
+
+			
 		}
 
 		TEST_METHOD(TableStructure_is_column_exists)

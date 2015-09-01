@@ -9,25 +9,18 @@ namespace UtilsTest
 	TEST_CLASS(TimerTest)
 	{
 	public:
-		TEST_METHOD(Timer_start_and_end)
+		TEST_METHOD(Timer_Constructor)
 		{
-			time_t start_time = 0;
-			Time::Timer timer(start_time);
+			Time::Timer time;
+			Assert::IsFalse(time.is_finished());
+			time.start();
+			Assert::IsFalse(time.is_finished());
+			time.end();
+			Assert::IsTrue(time.is_finished());
+
+			std::string message = "duration:" + std::to_string(time.duration());
+			Logger::WriteMessage(message.c_str());
 		}
 		
-		TEST_METHOD(Timer_is_finished)
-		{
-
-		}
-		
-		TEST_METHOD(Timer_duration)
-		{
-
-		}
-		
-		TEST_METHOD(Timer_to_string)
-		{
-
-		}
 	};
 }
