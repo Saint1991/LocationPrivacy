@@ -103,17 +103,23 @@
     <Filter Include="ヘッダー ファイル\Time">
       <UniqueIdentifier>{d4d3db95-5865-4ffc-9778-39e44cb5b0a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Frameworks">
-      <UniqueIdentifier>{7f63b534-e68a-4fa2-8db2-3314191e4dc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Frameworks">
-      <UniqueIdentifier>{44ff541c-2745-41d8-91d9-c4eeadef3cb8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Entity\Data">
       <UniqueIdentifier>{0ff77a22-621b-4edd-8058-f9fd1c026013}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Entity\Data">
       <UniqueIdentifier>{7c6eb4b6-5611-4110-aee7-6d2914b97b3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Requirement">
+      <UniqueIdentifier>{a90217b2-70a1-4ad4-92e5-4578834f0c5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Requirement">
+      <UniqueIdentifier>{f35a7ffa-3387-4dfb-9516-7c6260c96467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Framework">
+      <UniqueIdentifier>{7f63b534-e68a-4fa2-8db2-3314191e4dc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Framework">
+      <UniqueIdentifier>{44ff541c-2745-41d8-91d9-c4eeadef3cb8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -288,6 +294,24 @@
     <ClInclude Include="BasicMobileEntityState.h">
       <Filter>ヘッダー ファイル\Entity\Data</Filter>
     </ClInclude>
+    <ClInclude Include="MobileEntity.hpp">
+      <Filter>ソース ファイル\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicRequirement.h">
+      <Filter>ヘッダー ファイル\Requirement</Filter>
+    </ClInclude>
+    <ClInclude Include="IProposedMethod.hpp">
+      <Filter>ソース ファイル\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="IProposedMethod.h">
+      <Filter>ヘッダー ファイル\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicUser.hpp">
+      <Filter>ソース ファイル\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicUser.h">
+      <Filter>ヘッダー ファイル\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -313,9 +337,6 @@
     </ClCompile>
     <ClCompile Include="FileExporter.cpp">
       <Filter>ソース ファイル\IO</Filter>
-    </ClCompile>
-    <ClCompile Include="MobileEntity.cpp">
-      <Filter>ソース ファイル\Entity</Filter>
     </ClCompile>
     <ClCompile Include="Coordinate.cpp">
       <Filter>ソース ファイル\Graph</Filter>
@@ -385,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="BasicMobileEntityState.cpp">
       <Filter>ソース ファイル\Entity\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicRequirement.cpp">
+      <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

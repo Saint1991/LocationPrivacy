@@ -18,8 +18,6 @@ namespace Entity
 	static_assert(std::is_base_of<Graph::Coordinate, POSITION_TYPE>::value, "template type POSITION_TYPE must be derived from Coordinate");
 
 	protected:
-		static const std::string USER_PROBABILITY;
-
 		std::shared_ptr<POSITION_TYPE> position;
 
 	public:

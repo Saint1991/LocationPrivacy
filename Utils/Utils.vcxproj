@@ -197,6 +197,9 @@
     <ClInclude Include="BasicPath.h" />
     <ClInclude Include="BasicPathData.h" />
     <ClInclude Include="BasicPoiData.h" />
+    <ClInclude Include="BasicRequirement.h" />
+    <ClInclude Include="BasicUser.h" />
+    <ClInclude Include="BasicUser.hpp" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="DbSettings.h" />
     <ClInclude Include="DbSettingsFileLoader.h" />
@@ -205,6 +208,8 @@
     <ClInclude Include="FileExportable.h" />
     <ClInclude Include="FileExporter.h" />
     <ClInclude Include="GeoCalculation.h" />
+    <ClInclude Include="IProposedMethod.h" />
+    <ClInclude Include="IProposedMethod.hpp" />
     <ClInclude Include="MapNode.h" />
     <ClInclude Include="GraphUtility.h" />
     <ClInclude Include="Bindable.h" />
@@ -218,6 +223,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="MobileEntity.h" />
+    <ClInclude Include="MobileEntity.hpp" />
     <ClInclude Include="MobileEntityState.h" />
     <ClInclude Include="Column.h" />
     <ClInclude Include="MySQLDb.h" />
@@ -253,6 +259,7 @@
     <ClCompile Include="BasicPath.cpp" />
     <ClCompile Include="BasicPathData.cpp" />
     <ClCompile Include="BasicPoiData.cpp" />
+    <ClCompile Include="BasicRequirement.cpp" />
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="DbSettings.cpp" />
     <ClCompile Include="DbSettingsFileLoader.cpp" />
@@ -275,7 +282,6 @@
     <ClCompile Include="MapNode.cpp" />
     <ClCompile Include="GraphUtility.cpp" />
     <ClCompile Include="LatLng.cpp" />
-    <ClCompile Include="MobileEntity.cpp" />
     <ClCompile Include="MobileEntityState.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="MySQLDb.cpp" />

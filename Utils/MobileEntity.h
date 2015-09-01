@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include "Identifiable.h"
 #include "Coordinate.h"
 #include "LatLng.h"
@@ -34,5 +35,7 @@ namespace Entity
 		const std::vector<std::shared_ptr<POSITION_TYPE const>> previous_positions(unsigned int count) const;
 	};
 }
+
+#include "MobileEntity.hpp"
 
 
