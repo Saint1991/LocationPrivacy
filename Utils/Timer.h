@@ -15,7 +15,7 @@ namespace Time
 	///<summary>
 	/// 実行速度計測用タイマークラス
 	///</summary>
-	class Timer : public Serializable
+	class TIMER_API Timer : public Serializable
 	{
 	private:
 		static const time_t INVALID = -1;

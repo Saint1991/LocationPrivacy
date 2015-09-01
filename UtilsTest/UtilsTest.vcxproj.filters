@@ -49,6 +49,9 @@
     <Filter Include="ソース ファイル\Geography\Data">
       <UniqueIdentifier>{c83139d9-a99b-4b87-9d93-70c73de52ea4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Time">
+      <UniqueIdentifier>{0a8335f0-a9ab-48e1-b084-aaa0343364b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -115,6 +118,18 @@
     </ClCompile>
     <ClCompile Include="BasicGeoNodeDataTest.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="ColumnTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="TableStructureTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeUtilityTest.cpp">
+      <Filter>ソース ファイル\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerTest.cpp">
+      <Filter>ソース ファイル\Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
