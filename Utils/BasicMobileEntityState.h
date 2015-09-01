@@ -18,6 +18,8 @@ namespace Entity
 	static_assert(std::is_base_of<Graph::Coordinate, POSITION_TYPE>::value, "template type POSITION_TYPE must be derived from Coordinate");
 
 	protected:
+		static const std::string USER_PROBABILITY;
+
 		std::shared_ptr<POSITION_TYPE> position;
 		double user_probability;
 
@@ -27,6 +29,8 @@ namespace Entity
 
 		double get_user_probability() const;
 		const std::shared_ptr<POSITION_TYPE const> read_position() const;
+
+		std::unordered_map<std::string, std::string> get_export_data() const;
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»

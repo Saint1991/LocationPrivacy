@@ -56,4 +56,18 @@ namespace Graph
 		double y_diff = c2._y - c1._y;
 		return std::sqrt(x_diff * x_diff + y_diff * y_diff);
 	}
+
+	#pragma region Export
+	const std::string Coordinate::X = "X";
+	const std::string Coordinate::Y = "Y";
+
+	std::unordered_map<std::string, std::string> Coordinate::get_export_data() const
+	{
+		std::unordered_map<std::string, std::string> ret = {
+			{ X, std::to_string(_x) },
+			{ Y, std::to_string(_y) }
+		};
+		return ret;
+	}
+	#pragma endregion ExportŠÖ˜A
 }

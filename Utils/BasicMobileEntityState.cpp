@@ -41,5 +41,18 @@ namespace Entity
 		return user_probability;
 	}
 
+
+	#pragma region Export
+	template <typename POSITION_TYPE>
+	const std::string BasicMobileEntityState<POSITION_TYPE>::USER_PROBABILITY = "User Probability";
+
+	template <typename POSITION_TYPE>
+	std::unordered_map<std::string, std::string> BasicMobileEntityState<POSITION_TYPE>::get_export_data() const
+	{
+		std::unordered_map<std::string, std::string> ret = position->get_export_data();
+		ret.insert(std::make_pair(USER_PROBABILITY, std::to_string(user_probability)));
+		return ret;
+	}
+	#pragma endregion ExportŠÖ˜A
 }
 
