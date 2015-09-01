@@ -8,8 +8,15 @@ namespace Db
 	/// コンストラクタ
 	///</summary>
 	 TableStructure::TableStructure(const std::string& table_name, std::list<Column> columns)
-		: table_name(table_name), columns(std::make_unique<std::list< Column>>(columns))
+		: table_name(table_name), columns(std::make_unique<std::list<Column>>(columns))
 	{
+		for (std::list<Column>::iterator iter = columns.begin(); iter != columns.end(); iter++) {
+			auto target = std::find(iter->options->begin(), iter->options->end(), "PRIMARY KEY");
+			if (target != iter->options->end()) {
+				primary_keys->push_back(iter->column_name);
+				iter->options->erase(target);
+			}
+		}
 	}
 
 
