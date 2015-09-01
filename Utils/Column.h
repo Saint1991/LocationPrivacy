@@ -23,7 +23,7 @@ namespace Db
 		virtual ~Column();
 		const std::string to_string() const;
 
-		friend bool operator==(const Column& column1, const Column& column2);
-		friend bool operator!=(const Column& column1, const Column& column2);
+		COLUMN_API friend bool operator==(const Column& column1, const Column& column2);
+		COLUMN_API friend bool operator!=(const Column& column1, const Column& column2);
 	};
 }

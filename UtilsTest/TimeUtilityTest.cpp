@@ -13,6 +13,7 @@ namespace UtilisTest
 		TEST_METHOD(TimeUlitity_current_timestamp)
 		{
 			std::string timestamp = Time::TimeUtility::current_timestamp();
+			Assert::AreEqual(14U, timestamp.length());
 			Logger::WriteMessage(timestamp.c_str());
 		}
 		
