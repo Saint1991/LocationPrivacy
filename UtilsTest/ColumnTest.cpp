@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "Column.h"
@@ -10,33 +9,40 @@ namespace UtilsTest
 	{
 	public:
 
-		TEST_METHOD(Column_Constructor1)
+		TEST_METHOD(Column_Constructor)
 		{
 			std::string column_name = "nishio";
 			std::string type = "INT";
 			std::list<std::string> options = { "PRIMARY KEY", "AUTO INCREMENT" };
-			Db::Column column(column_name, type, options);
-			
+			std::string default_value = "teacher";
+			Db::Column column(column_name, type, options, default_value);
+
 			Assert::AreEqual(column_name, column.column_name);
 			Assert::AreEqual(type, column.data_type);
 
 
 			std::list<std::string>::const_iterator iter2 = column.options->begin();
 			for (std::list<std::string>::const_iterator iter = options.begin();
-				 iter != options.end() && iter2 != column.options->end();
-				 iter++, iter2++) 
+			iter != options.end() && iter2 != column.options->end();
+				iter++, iter2++)
 			{
 				Assert::AreEqual(*iter, *iter2);
 			}
 
+			Assert::AreEqual(default_value, column.default_value);
+
+			std::string expected = "nishio INT DEFAULT teacher PRIMARY KEY AUTO INCREMENT ";
+			Assert::AreEqual(expected, column.to_string());
+
 			Logger::WriteMessage(column.to_string().c_str());
 		}
-		
-		TEST_METHOD(Column_Constructor2)
+
+		TEST_METHOD(Column_CopyConstructor)
 		{
 			std::string column_name = "nishio";
 			std::string type = "INT";
 			std::list<std::string> options = { "PRIMARY KEY", "AUTO INCREMENT" };
+
 			Db::Column column1(column_name, type, options);
 			Db::Column column2(column1);
 
@@ -77,6 +83,6 @@ namespace UtilsTest
 			Assert::IsFalse(column1 != column2);
 			Assert::IsTrue(column2 != column3);
 		}
-				
+
 	};
 }
