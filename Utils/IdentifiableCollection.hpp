@@ -128,7 +128,7 @@ namespace Collection
 		//Šù‘¶ID‚Ìê‡‚Í’Ç‰Á‚µ‚È‚¢
 		ID_TYPE id = val->get_id();
 		if (contains(val)) {
-			throw DuplicatedIdException();
+			throw DuplicatedIdException<ID_TYPE>();
 			return false;
 		}
 	
