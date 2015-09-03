@@ -1,7 +1,7 @@
 #pragma once
+#include "stdafx.h"
 #include "BasicUser.h"
 #include "BasicRequirement.h"
-
 
 namespace Simulation
 {
