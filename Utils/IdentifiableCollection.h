@@ -18,7 +18,7 @@ namespace Collection
 	class IdentifiableCollection : std::set<std::shared_ptr<DATA_TYPE>, std::function<bool(const std::shared_ptr<DATA_TYPE>, const std::shared_ptr<DATA_TYPE>)>>
 	{
 
-	static_assert(std::is_integral<ID_TYPE>::value ||std::is_same<std::string, ID_TYPE>::value, "Only Integral type and string are allowed for ID_TYPE");
+	static_assert(std::is_integral<ID_TYPE>::value || std::is_same<std::string, ID_TYPE>::value, "Only Integral type and string are allowed for ID_TYPE");
 	static_assert(std::is_base_of<Identifiable<ID_TYPE>, DATA_TYPE>::value, "Template type DATA_TYPE is not derived from Identifiable<ID_TYPE>");
 	
 	public:

@@ -52,6 +52,9 @@
     <Filter Include="ソース ファイル\Time">
       <UniqueIdentifier>{0a8335f0-a9ab-48e1-b084-aaa0343364b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Requirement">
+      <UniqueIdentifier>{ca16fa38-15bf-4197-b587-d3a7849b3674}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="TimerTest.cpp">
       <Filter>ソース ファイル\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicRequirementTest.cpp">
+      <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
