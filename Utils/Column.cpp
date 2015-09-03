@@ -11,6 +11,7 @@ namespace Db
 	 Column::Column(const std::string& column_name, const std::string& type, std::list<std::string> options, const std::string& default_value) :
 		column_name(column_name), data_type(type), options(std::make_unique<std::list<std::string>>(options)), default_value(default_value)
 	{
+		if (type.substr(0, 7) == "VARCHAR" && default_value.length() > 1) this->default_value = "'" + default_value + "'";
 	}
 
 

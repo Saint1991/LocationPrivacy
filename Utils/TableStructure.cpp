@@ -124,7 +124,7 @@ namespace Db
 	///</summary>
 	bool  TableStructure::add_primary_key(std::string primary_key)
 	{
-		if (is_column_exists(primary_key)) {
+		if (is_column_exists(primary_key) && std::find(primary_keys->begin(), primary_keys->end(), primary_key) == primary_keys->end()) {
 			if (primary_keys == nullptr) primary_keys = std::make_unique<std::list<std::string>>();
 			primary_keys->push_back(primary_key);
 			return true;
