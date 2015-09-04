@@ -11,6 +11,7 @@ namespace UtilsTest
 
 		TEST_METHOD(Column_Constructor)
 		{
+			//DefaultƒAƒŠ‚Ì•û
 			std::string column_name = "nishio";
 			std::string type = "VARCHAR(32)";
 			std::list<std::string> options = { "PRIMARY KEY", "AUTO INCREMENT" };
@@ -19,22 +20,25 @@ namespace UtilsTest
 
 			Assert::AreEqual(column_name, column.column_name);
 			Assert::AreEqual(type, column.data_type);
+			Assert::IsTrue(column.default_value == "'teacher'");
 
+			std::list<std::string>::const_iterator iter = column.options->begin();
+			Assert::IsTrue(*iter == "PRIMARY KEY");
+			iter++;
+			Assert::IsTrue(*iter == "AUTO INCREMENT");
 
-			std::list<std::string>::const_iterator iter2 = column.options->begin();
-			for (std::list<std::string>::const_iterator iter = options.begin();
-			iter != options.end() && iter2 != column.options->end();
-				iter++, iter2++)
-			{
-				Assert::AreEqual(*iter, *iter2);
-			}
-
-			Assert::AreEqual(default_value, column.default_value);
-
-			std::string expected = "nishio VARCHAR(32) DEFAULT teacher PRIMARY KEY AUTO INCREMENT ";
+			std::string expected = "nishio VARCHAR(32) DEFAULT 'teacher' PRIMARY KEY AUTO INCREMENT ";
 			Assert::AreEqual(expected, column.to_string());
-			
 			Logger::WriteMessage(column.to_string().c_str());
+
+
+			//Default‚È‚µ‚Ì•û
+			Db::Column column2(column_name, type, options);
+			Assert::IsTrue(column2.default_value.length() == 0);
+
+			expected = "nishio VARCHAR(32) PRIMARY KEY AUTO INCREMENT ";
+			Assert::AreEqual(expected, column2.to_string());
+		
 		}
 
 		TEST_METHOD(Column_CopyConstructor)
