@@ -24,16 +24,22 @@ namespace UtilsTest
 
 
 			std::string table_name = "lab_teachers";
-			std::list<Db::Column> column = { column1,column2 };
-			Db::TableStructure table(table_name, column);
+			std::list<Db::Column> columns = { column1,column2 };
+			std::list<Db::Column> columns2 = {};
+			Db::TableStructure table(table_name, columns);
+			Db::TableStructure table2(table_name, columns2);
 
-			Assert::IsTrue(table.primary_keys == nullptr);
+			std::list<std::string>::const_iterator primary_keys = table.primary_keys->begin();
+			Assert::AreEqual("nishio",primary_keys->c_str());
+			Assert::AreEqual("hara",(++primary_keys)->c_str());
+
+			Assert::IsTrue(table2.primary_keys == nullptr);
 			Assert::AreEqual(table_name, table.table_name);
 
 
 			std::list<Db::Column>::const_iterator iter2 = table.columns->begin();
-			for (std::list<Db::Column>::const_iterator iter = column.begin();
-			iter != column.end() && iter2 != table.columns->end();
+			for (std::list<Db::Column>::const_iterator iter = columns.begin();
+			iter != columns.end() && iter2 != table.columns->end();
 				iter++, iter2++)
 			{
 				Assert::IsTrue(*iter == *iter2);
