@@ -31,7 +31,7 @@ namespace Collection
 	template <typename ID_TYPE, typename DATA_TYPE>
 	std::shared_ptr<DATA_TYPE const> IdentifiableCollection<ID_TYPE, DATA_TYPE>::read_by_id(const ID_TYPE& id) const
 	{
-		auto target_iter = find(id);
+		auto target_iter = find(std::make_shared<Identifiable<ID_TYPE>>(id));
 		if (target_iter == end()) {
 			return nullptr;
 		}
@@ -47,7 +47,7 @@ namespace Collection
 	template <typename ID_TYPE, typename DATA_TYPE>
 	std::shared_ptr<DATA_TYPE> IdentifiableCollection<ID_TYPE, DATA_TYPE>::get_by_id(const ID_TYPE& id)
 	{
-		auto target_iter = find(id);
+		auto target_iter = find(std::make_shared<Identifiable<ID_TYPE>>(id));
 		if (target_iter == end()) {
 			return nullptr;
 		}
@@ -61,7 +61,7 @@ namespace Collection
 	template <typename ID_TYPE, typename DATA_TYPE>
 	bool IdentifiableCollection<ID_TYPE, DATA_TYPE>::remove_by_id(const ID_TYPE &id)
 	{
-		auto target_iter =  find(id);
+		auto target_iter =  find(std::make_shared<Identifiable<ID_TYPE>>(id));
 
 		// —v‘f‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚Ífalse‚ğ•Ô‚µ‚ÄI—¹
 		if (target_iter == end()) {
@@ -93,7 +93,7 @@ namespace Collection
 	template <typename ID_TYPE, typename DATA_TYPE>
 	bool IdentifiableCollection<ID_TYPE, DATA_TYPE>::contains(const ID_TYPE& id) const
 	{
-		bool is_contained = find(id) != end();
+		bool is_contained = find(std::make_shared<Identifiable<ID_TYPE>>(id)) != end();
 		return is_contained;
 	}
 
