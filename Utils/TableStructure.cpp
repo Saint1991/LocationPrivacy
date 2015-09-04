@@ -8,14 +8,10 @@ namespace Db
 	/// コンストラクタ
 	///</summary>
 	 TableStructure::TableStructure(const std::string& table_name, std::list<Column> columns)
-		: table_name(table_name), columns(std::make_unique<std::list<Column>>(columns))
+		: table_name(table_name), columns(std::make_shared<std::list<Column>>())
 	{
 		for (std::list<Column>::iterator iter = columns.begin(); iter != columns.end(); iter++) {
-			auto target = std::find(iter->options->begin(), iter->options->end(), "PRIMARY KEY");
-			if (target != iter->options->end()) {
-				add_primary_key(iter->column_name);
-				iter->options->erase(target);
-			}
+			add_column(*iter);
 		}
 	}
 
@@ -23,13 +19,13 @@ namespace Db
 	///<summary>
 	/// コピーコンストラクタ
 	///</summary>
-	 TableStructure::TableStructure(const  TableStructure& structure) : table_name(structure.table_name), columns(std::make_unique<std::list< Column>>())
+	 TableStructure::TableStructure(const  TableStructure& structure) : table_name(structure.table_name), columns(std::make_shared<std::list< Column>>())
 	{
 		for (std::list<Column>::const_iterator iter = structure.columns->begin(); iter != structure.columns->end(); iter++) {
 			columns->push_back(*iter);
 		}
 		if (structure.primary_keys != nullptr) {
-			primary_keys = std::make_unique<std::list<std::string>>();
+			primary_keys = std::make_shared<std::list<std::string>>();
 			for (std::list<std::string>::const_iterator iter = structure.primary_keys->begin(); iter != structure.primary_keys->end(); iter++) {
 				primary_keys->push_back(*iter);
 			}
@@ -53,7 +49,6 @@ namespace Db
 			return column_name == column.column_name;
 		});
 		return iter != columns->end();
-		return false;
 	}
 
 
@@ -72,7 +67,22 @@ namespace Db
 		return index > columns->size() ? 0 : index;
 	}
 
+	
+	///<summary>
+	/// カラムリストを読み出し専用で取得
+	///</summary>
+	const std::shared_ptr<const std::list<Column>> TableStructure::get_column_list() const 
+	{
+		return columns;
+	}
 
+	///<summary>
+	/// primary_keysを読み出し専用で取得
+	///</summary>
+	const std::shared_ptr<const std::list<std::string>> TableStructure::get_primary_keys() const
+	{
+		return primary_keys;
+	}
 
 	///<summary>
 	/// カラム名の一覧を取得する
@@ -118,16 +128,44 @@ namespace Db
 		return ret;
 	}
 
+
+	///<summary>
+	/// カラムを追加します
+	/// 既に同名のカラムが存在する場合はfalseを返して更新は行いません
+	///</summary>
+	bool TableStructure::add_column(const Column& column)
+	{
+		if (is_column_exists(column.column_name)) return false;
+		
+		auto target = std::find(column.options->begin(), column.options->end(), "PRIMARY KEY");
+		if (target != column.options->end()) {
+			column.options->erase(target);
+			columns->push_back(column);
+			add_primary_key(column.column_name);
+		} 
+		else {
+			columns->push_back(column);
+		}
+		return true;
+	}
+
 	///<summary>
 	/// PRIMARY KEYの設定を追加します
 	/// 存在しないカラムを指定した場合はfalseを返します．
 	///</summary>
 	bool  TableStructure::add_primary_key(std::string primary_key)
 	{
-		if (is_column_exists(primary_key) && std::find(primary_keys->begin(), primary_keys->end(), primary_key) == primary_keys->end()) {
-			if (primary_keys == nullptr) primary_keys = std::make_unique<std::list<std::string>>();
-			primary_keys->push_back(primary_key);
-			return true;
+		//存在しないカラムの場合はfalseで終了
+		if (is_column_exists(primary_key)) {
+			
+			//primary_keysがnullptrの場合は作成
+			if (primary_keys == nullptr) primary_keys = std::make_shared<std::list<std::string>>();
+			
+			//既存のPRIMARY KEYでない場合は追加
+			if (std::find(primary_keys->begin(), primary_keys->end(), primary_key) == primary_keys->end()) {
+				primary_keys->push_back(primary_key);
+				return true;
+			}
 		}
 		return false;
 	}

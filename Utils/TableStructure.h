@@ -16,18 +16,23 @@ namespace Db
 	///</summary>
 	struct TableStructure : public Serializable
 	{
-		std::string table_name = "";
-		std::unique_ptr<std::list<Db::Column>> columns = nullptr;
-		std::unique_ptr<std::list<std::string>> primary_keys = nullptr;
+	protected:
+		std::shared_ptr<std::list<Db::Column>> columns = nullptr;
+		std::shared_ptr<std::list<std::string>> primary_keys = nullptr;
 	
+	public:
+		std::string table_name = "";	
 		TABLE_STRUCTURE_API TableStructure(const std::string& table_name, std::list<Db::Column> columns);
 		TABLE_STRUCTURE_API TableStructure(const Db::TableStructure& structure);
 		TABLE_STRUCTURE_API virtual ~TableStructure();
 
 		TABLE_STRUCTURE_API bool is_column_exists(const std::string& column_name) const;
 		TABLE_STRUCTURE_API unsigned int get_column_index(const std::string& column_name) const;
+		TABLE_STRUCTURE_API const std::shared_ptr<const std::list<Column>> get_column_list() const;
+		TABLE_STRUCTURE_API const std::shared_ptr<const std::list<std::string>> get_primary_keys() const;
 		TABLE_STRUCTURE_API const std::list<std::string> get_column_name_list() const;
 		TABLE_STRUCTURE_API const std::string to_string() const;
+		TABLE_STRUCTURE_API bool add_column(const Column& column);
 		TABLE_STRUCTURE_API bool add_primary_key(std::string primary_key);
 	};
 }

@@ -79,7 +79,7 @@ const std::string Db::QueryGenerateUtility::make_insert_query(const std::string&
 ///</summary>
 const std::string Db::QueryGenerateUtility::make_insert_query(const Db::TableStructure& insert_columns)
 {
-	if (insert_columns.columns == nullptr) return "";
+	if (insert_columns.get_column_list() == nullptr) return "";
 	return make_insert_query(insert_columns.table_name, insert_columns.get_column_name_list());
 }
 
@@ -104,7 +104,7 @@ const std::string Db::QueryGenerateUtility::make_select_query(const std::string&
 ///</summary>
 const std::string Db::QueryGenerateUtility::make_select_query(const Db::TableStructure& select_columns, const std::string& where_clause) 
 {
-	if (select_columns.columns == nullptr) return "";
+	if (select_columns.get_column_list() == nullptr) return "";
 	return make_select_query(select_columns.table_name, select_columns.get_column_name_list(), where_clause);
 }
 
@@ -137,6 +137,6 @@ const std::string Db::QueryGenerateUtility::make_update_query(const std::string&
 ///</summary>
 const std::string Db::QueryGenerateUtility::make_update_query(const Db::TableStructure& update_columns, const std::string& where_clause) 
 {
-	if (update_columns.columns == nullptr) return "";
+	if (update_columns.get_column_list() == nullptr) return "";
 	return make_update_query(update_columns.table_name, update_columns.get_column_name_list(), where_clause);
 }
