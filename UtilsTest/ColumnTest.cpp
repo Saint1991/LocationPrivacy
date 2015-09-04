@@ -53,16 +53,20 @@ namespace UtilsTest
 			Assert::AreEqual(column_name, column2.column_name);
 			Assert::AreEqual(type, column2.data_type);
 
+			
+			std::list<std::string>::const_iterator iter = column2.options->begin();
+			Assert::IsTrue(*iter == "PRIMARY KEY");
+			iter++;
+			Assert::IsTrue(*iter == "AUTO INCREMENT");
 
-			std::list<std::string>::const_iterator iter2 = column2.options->begin();
-			for (std::list<std::string>::const_iterator iter = options.begin();
-			iter != options.end() && iter2 != column2.options->end();
-				iter++, iter2++)
-			{
-				Assert::AreEqual(*iter, *iter2);
-			}
-
+			std::string expected = "nishio INT PRIMARY KEY AUTO INCREMENT ";
+			Assert::AreEqual(expected, column1.to_string());
 			Logger::WriteMessage(column2.to_string().c_str());
+
+			column2.options->push_back("UNIQUE");
+			Assert::AreEqual(2U, column1.options->size());
+			Logger::WriteMessage(column2.to_string().c_str());
+						
 		}
 
 		TEST_METHOD(Column_operators)
