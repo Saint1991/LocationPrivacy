@@ -1,3 +1,8 @@
+#ifdef UTILS_EXPORTS
+#define BASIC_REQUIREMENT_API __declspec(dllexport)
+#else
+#define BASIC_REQUIREMENT_API __declspec(dllimport)
+#endif
 #pragma once
 
 namespace Requirement
@@ -6,7 +11,7 @@ namespace Requirement
 	///<summary>
 	/// シミュレーションのパラメータ
 	///</summary>
-	struct BasicRequirement
+	struct BASIC_REQUIREMENT_API BasicRequirement
 	{
 		unsigned int simulation_time;
 		unsigned int service_interval;
