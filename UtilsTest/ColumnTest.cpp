@@ -12,7 +12,7 @@ namespace UtilsTest
 		TEST_METHOD(Column_Constructor)
 		{
 			std::string column_name = "nishio";
-			std::string type = "INT";
+			std::string type = "VARCHAR(32)";
 			std::list<std::string> options = { "PRIMARY KEY", "AUTO INCREMENT" };
 			std::string default_value = "teacher";
 			Db::Column column(column_name, type, options, default_value);
@@ -31,9 +31,9 @@ namespace UtilsTest
 
 			Assert::AreEqual(default_value, column.default_value);
 
-			std::string expected = "nishio INT DEFAULT teacher PRIMARY KEY AUTO INCREMENT ";
+			std::string expected = "nishio VARCHAR(32) DEFAULT teacher PRIMARY KEY AUTO INCREMENT ";
 			Assert::AreEqual(expected, column.to_string());
-
+			
 			Logger::WriteMessage(column.to_string().c_str());
 		}
 

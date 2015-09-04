@@ -23,12 +23,12 @@ namespace UtilsTest
 			Db::Column column2(column_name2, type2, options2);
 
 
-			std::string table_name = "lab_teacher";
+			std::string table_name = "lab_teachers";
 			std::list<Db::Column> column = { column1,column2 };
 			Db::TableStructure table(table_name, column);
 
+			Assert::IsTrue(table.primary_keys == nullptr);
 			Assert::AreEqual(table_name, table.table_name);
-
 
 
 			std::list<Db::Column>::const_iterator iter2 = table.columns->begin();
@@ -39,26 +39,29 @@ namespace UtilsTest
 				Assert::IsTrue(*iter == *iter2);
 			}
 
+			
+
 		}
 
 		TEST_METHOD(TableStructure_CopyConstructor)
 		{
 			std::string column_name1 = "nishio";
-			std::string type1 = "INT";
+			std::string type1 = "VARCHAR(32)";
 			std::list<std::string> options1 = { "PRIMARY KEY", "AUTO INCREMENT" };
-			Db::Column column1(column_name1, type1, options1);
+			std::string default_value1 = "teacher";
+			Db::Column column1(column_name1, type1, options1, default_value1);
 
 			std::string column_name2 = "hara";
-			std::string type2 = "DOUBLE";
+			std::string type2 = "VARCHAR(32)";
 			std::list<std::string> options2 = { "PRIMARY KEY", "AUTO INCREMENT" };
-			Db::Column column2(column_name2, type2, options2);
+			std::string default_value2 = "teacher";
+			Db::Column column2(column_name2, type2, options2, default_value2);
 
 
-			std::string table_name = "lab_teacher";
+			std::string table_name = "lab_teachers";
 			std::list<Db::Column> column = { column1,column2 };
 			Db::TableStructure table1(table_name, column);
 			Db::TableStructure table2(table1);
-
 
 			std::list<Db::Column>::const_iterator iter2 = table2.columns->begin();
 			for (std::list<Db::Column>::const_iterator iter = column.begin();
@@ -67,6 +70,11 @@ namespace UtilsTest
 			{
 				Assert::IsTrue(*iter == *iter2);
 			}
+
+			table2.columns->begin()->options->push_back("ALTERNATE KEY");
+			Logger::WriteMessage(table1.columns->begin()->to_string().c_str());
+			Logger::WriteMessage(table2.columns->begin()->to_string().c_str());
+
 		}
 
 		TEST_METHOD(TableStructure_is_column_exists)
@@ -83,7 +91,7 @@ namespace UtilsTest
 			Db::Column column2(column_name2, type2, options2);
 
 
-			std::string table_name = "lab_teacher";
+			std::string table_name = "lab_teachers";
 			std::list<Db::Column> column = { column1,column2 };
 			Db::TableStructure table(table_name, column);
 
@@ -106,14 +114,15 @@ namespace UtilsTest
 			Db::Column column2(column_name2, type2, options2);
 
 
-			std::string table_name = "lab_teacher";
+			std::string table_name = "lab_teachers";
 			std::list<Db::Column> column = { column1,column2 };
 			Db::TableStructure table(table_name, column);
 
-			std::list<std::string> name_list = table.get_column_name_list();
-			std::list<std::string>::const_iterator iter = name_list.begin();
+			
+			Assert::AreEqual(0U, table.get_column_index("lab"));
+			Assert::AreEqual(1U, table.get_column_index(column1.column_name));
+			Assert::AreEqual(2U, table.get_column_index(column2.column_name));
 
-			Assert::AreEqual(1U, table.get_column_index(*iter));
 
 		}
 
@@ -130,17 +139,16 @@ namespace UtilsTest
 			Db::Column column2(column_name2, type2, options2);
 
 
-			std::string table_name = "lab_teacher";
+			std::string table_name = "lab_teachers";
 			std::list<Db::Column> column = { column1,column2 };
 			Db::TableStructure table(table_name, column);
 
 			std::list<std::string> name_list = table.get_column_name_list();
 
-			for (std::list<std::string>::const_iterator iter = name_list.begin();
-			iter != name_list.end();
-				iter++)
+			for (std::list<std::string>::iterator iter = name_list.begin();
+				iter->c_str() == "nishio"; iter++)
 			{
-				Logger::WriteMessage(iter->c_str());
+				Assert::AreEqual("hara", iter->c_str());
 			}
 		}
 
@@ -157,14 +165,13 @@ namespace UtilsTest
 			Db::Column column2(column_name2, type2, options2);
 
 
-			std::string table_name = "lab_teacher";
+			std::string table_name = "lab_teachers";
 			std::list<Db::Column> column = { column1,column2 };
 			Db::TableStructure table(table_name, column);
 
 
-			if (table.add_primary_key(column_name1) == false) {
-				Assert::Fail();
-			}
+			Assert::IsFalse(table.add_primary_key("lab"));
+			Assert::IsFalse(table.add_primary_key("nisio"));
 
 		}
 
