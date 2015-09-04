@@ -1,3 +1,4 @@
+#pragma once
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "Node.h"
@@ -13,7 +14,7 @@ namespace UtilsTest
 	TEST_CLASS(NodeTest)
 	{
 	public:
-		
+
 		TEST_METHOD(Node_Constructor)
 		{
 			Node<double, Edge<BasicPathData>> node(2L, std::make_shared<double>(2.3));
@@ -24,39 +25,34 @@ namespace UtilsTest
 			Assert::AreEqual(2.3, *node2.data);
 			Assert::AreEqual(2L, node2.get_id());
 		}
-		
+		/*
 		TEST_METHOD(Node_CopyConstructor)
 		{
-			Node<double, Edge<BasicPathData>> node(2L, std::make_shared<double>(2.3));
-			Node<double, Edge<BasicPathData>> node2(node);
-			
-			Assert::AreEqual(2.3, *node2.data);
-			Assert::AreEqual(2L, node2.get_id());
-		
+		Node<double, Edge<BasicPathData>> node(2L, std::make_shared<double>(2.3));
+		Node<double, Edge<BasicPathData>> node2(node);
+
+		Assert::AreEqual(2.3, *node2.data);
+		Assert::AreEqual(2L, node2.get_id());
+
 		}
-		
+
 		TEST_METHOD(Node_get_static_edge_to)
 		{
-			//std::shared_ptr<Edge<BasicPathData> const> edge = std::make_shared<double>(2.3);
-			//Node<double, Edge<BasicPathData>> node(2L, edge) const; 
-			
-			auto edge = std::make_shared<double>(2.3);
-			Node<double, Edge<BasicPathData>> node(2L, edge);
+			Node<double, Edge<BasicPathData>> node(2L, std::make_shared<double>(2.3));
+			Edge<BasicPathData> edge(1L, std::make_shared<BasicPathData>(2.0));
 
-			std::shared_ptr<Edge<BasicPathData> const> static_edge1 = node.get_static_edge_to(node.get_id());
-			std::shared_ptr<Edge<BasicPathData> const> static_edge2 = node.get_static_edge_to(1L);
-			std::shared_ptr<Edge<BasicPathData> const> static_edge3 = node.get_static_edge_to(3L);
-
-			//Assert::AreEqual(node., static_edge1);
+			std::shared_ptr<Edge<BasicPathData> const> edge_pointer1 = node.get_static_edge_to(1L);
+			std::shared_ptr<Edge<BasicPathData> const> edge_pointer2= node.get_static_edge_to(5L);
+			Assert::IsTrue(edge == *edge_pointer1);
+			Assert::IsTrue(nullptr == edge_pointer2);
 
 		}
-
-		/*
+		*/
 		TEST_METHOD(Node_)
 		{
 
 		}
-
+		/*
 		TEST_METHOD(Node_)
 		{
 
