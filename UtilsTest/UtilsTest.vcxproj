@@ -166,6 +166,7 @@
     <ClCompile Include="BasicGeoNodeDataTest.cpp" />
     <ClCompile Include="BasicPathDataTest.cpp" />
     <ClCompile Include="BasicPathTest.cpp" />
+    <ClCompile Include="BasicPoiDataTest.cpp" />
     <ClCompile Include="BasicRequirementTest.cpp" />
     <ClCompile Include="ColumnTest.cpp" />
     <ClCompile Include="CoordinateTest.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="LatLngTest.cpp" />
     <ClCompile Include="NodeCollectionFactoryTest.cpp" />
     <ClCompile Include="NodeTest.cpp" />
+    <ClCompile Include="SemanticPoiDataTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
