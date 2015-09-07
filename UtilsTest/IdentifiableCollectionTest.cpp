@@ -19,6 +19,7 @@ namespace UtilsTest
 	TEST_CLASS(IdentifiableCollectionTest)
 	{
 	public:
+		const double ACCURACY = 1.0E-10;
 
 		TEST_METHOD(IdentifiableCollection_Constructor)
 		{
@@ -56,9 +57,6 @@ namespace UtilsTest
 		
 		TEST_METHOD(IdentifiableCollection_get_by_id)
 		{
-			//Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection;
-			//collection.add(Graph::Node < Geography::LatLng, Graph::BasicPath>(1L, std::make_shared<Geography::LatLng>(10.0,20.0)));
-
 
 			Collection::IdentifiableCollection<std::string, Identifiable<std::string>> collection;
 			collection.add(Identifiable<std::string>("C"));
@@ -73,6 +71,16 @@ namespace UtilsTest
 			Assert::AreEqual("B", (*iter)->get_id().c_str() );
 			iter++;
 			Assert::AreEqual("C", (*iter)->get_id().c_str());	
+		}
+
+		TEST_METHOD(IdentifiableCollection_get_by_id2)
+		{
+			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection;
+			collection.add(Graph::Node < Geography::LatLng, Graph::BasicPath>(1L, std::make_shared<Geography::LatLng>(10.0, 20.0)));
+			std::shared_ptr<Graph::Node<Geography::LatLng, Graph::BasicPath> const> node = collection.read_by_id(1L);
+			Assert::AreEqual(1L, node->get_id());
+			Assert::AreEqual(10.0, node->data->lat(), ACCURACY);
+			Assert::AreEqual(20.0, node->data->lng(), ACCURACY);
 		}
 		
 		TEST_METHOD(IdentifiableCollection_remove_by_id)

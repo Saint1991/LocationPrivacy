@@ -6,8 +6,9 @@ namespace Collection
 	///</summary>
 	template <typename ID_TYPE, typename DATA_TYPE>
 	IdentifiableCollection<ID_TYPE, DATA_TYPE>::IdentifiableCollection() : 
-		std::set < std::shared_ptr<DATA_TYPE>, 
-		std::function<bool(const std::shared_ptr<DATA_TYPE>, const std::shared_ptr<DATA_TYPE>)> >([](const std::shared_ptr<DATA_TYPE> a, const std::shared_ptr<DATA_TYPE> b) {
+		std::set < std::shared_ptr<Identifiable<ID_TYPE>>, 
+		std::function<bool(const std::shared_ptr<Identifiable<ID_TYPE>>, const std::shared_ptr<Identifiable<ID_TYPE>>)> 
+	>([](const std::shared_ptr<Identifiable<ID_TYPE>> a, const std::shared_ptr<Identifiable<ID_TYPE>> b) {		
 			return a->get_id() < b->get_id();
 		}
 	){}
@@ -35,7 +36,7 @@ namespace Collection
 		if (target_iter == end()) {
 			return nullptr;
 		}
-		return *target_iter;
+		return std::dynamic_pointer_cast<DATA_TYPE const>(*target_iter);
 	}
 
 	///<summary>
@@ -51,7 +52,7 @@ namespace Collection
 		if (target_iter == end()) {
 			return nullptr;
 		}
-		return *target_iter;
+		return std::dynamic_pointer_cast<DATA_TYPE>(*target_iter);
 	}
 
 	///<summary>
