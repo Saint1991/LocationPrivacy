@@ -137,6 +137,12 @@
     <ClCompile Include="BasicRequirementTest.cpp">
       <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
+    <ClCompile Include="BasicPoiDataTest.cpp">
+      <Filter>ソース ファイル\Geography\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticPoiDataTest.cpp">
+      <Filter>ソース ファイル\Geography\Data</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
