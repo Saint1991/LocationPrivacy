@@ -3,7 +3,6 @@
 #include "Node.h"
 #include "Edge.h"
 #include "BasicPath.h"
-#include "BasicPathData.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Graph;
@@ -12,6 +11,7 @@ namespace UtilsTest
 {
 	TEST_CLASS(NodeTest)
 	{
+
 	public:
 		
 		TEST_METHOD(Node_Constructor)
@@ -24,15 +24,21 @@ namespace UtilsTest
 			Assert::AreEqual(2.3, *node2.data);
 			Assert::AreEqual(2L, node2.get_id());
 		}
-		/*
+
+		TEST_METHOD(Node_CompileCheck) 
+		{
+			Node<double, Edge<BasicPathData>> node(2L, std::make_shared<double>(2.3));
+			//node.connect_to(std::make_shared<Edge<BasicPathData>>(2L, std::make_shared<BasicPathData>(1.0)));
+
+		}
+		
 		TEST_METHOD(Node_CopyConstructor)
 		{
 			Node<double, Edge<BasicPathData>> node(2L, std::make_shared<double>(2.3));
 			Node<double, Edge<BasicPathData>> node2(node);
 			
-			Assert::AreEqual(2.3, *node2.data);
-			Assert::AreEqual(2L, node2.get_id());
-		
+			//Assert::AreEqual(2.3, *node2.data);
+			//Assert::AreEqual(2L, node2.get_id());
 		}
 		/*
 		TEST_METHOD(Node_get_static_edge_to)

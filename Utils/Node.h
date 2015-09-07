@@ -24,7 +24,7 @@ namespace Graph
 		std::shared_ptr<NODE_DATA> data;
 
 		Node(node_id id, std::shared_ptr<NODE_DATA> data);
-		Node(const Node& node);
+		Node(const Node<NODE_DATA, EDGE>& node);
 		virtual ~Node();
 
 		std::shared_ptr<EDGE const> get_static_edge_to(node_id id) const;

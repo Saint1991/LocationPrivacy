@@ -12,7 +12,7 @@ namespace UtilsTest
 	{
 	public:
 		const double ACCURACY = 1.0E-8;
-
+		
 		TEST_METHOD(Edge_Constructor)
 		{
 			Edge<BasicPathData> path(2L, std::make_shared<BasicPathData>(2.3));
@@ -55,6 +55,5 @@ namespace UtilsTest
 			Assert::IsTrue(path1 != path2);
 			Assert::IsFalse(path2 != path3);
 		}
-
 	};
 }

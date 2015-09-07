@@ -22,8 +22,7 @@ namespace Graph
 		: Identifiable<node_id>(node), data(node.data), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
 	{
 		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = node.edge_list->begin(); iter != node.edge_list->end(); iter++) {
-			EDGE copy = *(*iter);
-			edge_list->push_back(std::make_shared<EDGE>(copy));
+			edge_list->push_back(std::make_shared<EDGE>(**iter));
 		}
 	}
 

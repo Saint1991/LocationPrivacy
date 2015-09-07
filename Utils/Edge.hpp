@@ -1,5 +1,4 @@
 
-
 namespace Graph 
 {
 	///<summary>
@@ -12,7 +11,7 @@ namespace Graph
 	{
 	}
 
-
+	
 	///<summary>
 	/// コピーコンストラクタ
 	///</summary>
@@ -22,6 +21,7 @@ namespace Graph
 		EDGE_DATA copy = *edge.data;
 		data = std::make_shared<EDGE_DATA>(copy);
 	}
+
 
 	///<summary>
 	/// デストラクタ
@@ -72,3 +72,4 @@ namespace Graph
 		return _to != e.get_to();
 	}
 }
+

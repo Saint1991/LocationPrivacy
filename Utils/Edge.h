@@ -2,6 +2,9 @@
 #include "stdafx.h"
 #include "BasicEdge.h"
 
+
+
+
 namespace Graph 
 {
 
@@ -24,7 +27,8 @@ namespace Graph
 		std::shared_ptr<EDGE_DATA const> get_static_data() const;
 		bool operator==(const Edge<EDGE_DATA>& e) const;
 		bool operator!=(const Edge<EDGE_DATA>& e) const;
-	};	
+	};
+
 }
 
 #include "Edge.hpp"
