@@ -1,6 +1,5 @@
 #pragma once
 #include "BasicEdge.h"
-#include "Edge.h"
 #include "Identifiable.h"
 
 namespace Graph 
@@ -15,7 +14,7 @@ namespace Graph
 	{
 
 	//EDGE‚ªBasicEdge‚©‚ç”h¶‚µ‚½ƒNƒ‰ƒX‚©‚ğ”»’è
-	static_assert(std::is_base_of<BasicEdge, EDGE>::value, "Template type EDGE is not derived from BasicEdge");
+	static_assert(std::is_base_of<BasicEdge, EDGE>::value, "Template type EDGE must be derived from BasicEdge");
 	
 	protected:
 		std::shared_ptr<std::list<std::shared_ptr<EDGE>>> edge_list;

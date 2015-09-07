@@ -22,7 +22,7 @@ namespace Graph
 		data = std::make_shared<EDGE_DATA>(copy);
 	}
 
-
+	
 	///<summary>
 	/// デストラクタ
 	///</summary>
@@ -30,7 +30,6 @@ namespace Graph
 	Edge<EDGE_DATA>::~Edge()
 	{
 	}
-
 
 	///<summary>
 	/// データの更新を行う

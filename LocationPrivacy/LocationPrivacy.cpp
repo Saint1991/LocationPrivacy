@@ -12,7 +12,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	//simulator->create_user();
 	//simulator->make_requirement_list();
 	//simulator->run();
-
 	return 0;
 }
 

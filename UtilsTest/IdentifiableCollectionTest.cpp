@@ -73,7 +73,7 @@ namespace UtilsTest
 			Assert::AreEqual("C", (*iter)->get_id().c_str());	
 		}
 
-		TEST_METHOD(IdentifiableCollection_get_by_id2)
+		TEST_METHOD(IdentifiableCollection_read_by_id2)
 		{
 			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection;
 			collection.add(Graph::Node < Geography::LatLng, Graph::BasicPath>(1L, std::make_shared<Geography::LatLng>(10.0, 20.0)));

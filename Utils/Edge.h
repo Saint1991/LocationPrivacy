@@ -2,9 +2,6 @@
 #include "stdafx.h"
 #include "BasicEdge.h"
 
-
-
-
 namespace Graph 
 {
 
