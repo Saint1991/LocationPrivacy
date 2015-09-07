@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "IdentifiableCollection.h"
-
-
+#include "Node.h"
+#include "BasicPath.h"
+#include "LatLng.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UtilsTest
@@ -52,51 +53,53 @@ namespace UtilsTest
 			std::shared_ptr<Identifiable<long> const> id = collection.read_by_id(1L);
 			Assert::AreEqual(1L, id->get_id());
 		}
-		/*
-		TEST_METHOD(IdentifiableCollection_)
+		
+		TEST_METHOD(IdentifiableCollection_get_by_id)
+		{
+			//Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection;
+			//collection.add(Graph::Node < Geography::LatLng, Graph::BasicPath>(1L, std::make_shared<Geography::LatLng>(10.0,20.0)));
+
+
+			Collection::IdentifiableCollection<std::string, Identifiable<std::string>> collection;
+			collection.add(Identifiable<std::string>("C"));
+			collection.add(Identifiable<std::string>("A"));
+			collection.add(Identifiable<std::string>("B"));
+			std::shared_ptr<Identifiable<std::string>> id = collection.get_by_id("A");
+			Assert::AreEqual("A", id->get_id().c_str());
+			
+			auto iter = collection.begin();
+			Assert::AreEqual("A", (*iter)->get_id().c_str());
+			iter++;
+			Assert::AreEqual("B", (*iter)->get_id().c_str() );
+			iter++;
+			Assert::AreEqual("C", (*iter)->get_id().c_str());	
+		}
+		
+		TEST_METHOD(IdentifiableCollection_remove_by_id)
 		{
 
 		}
 
-		TEST_METHOD(IdentifiableCollection_)
+		TEST_METHOD(IdentifiableCollection_get_id_list)
 		{
 
 		}
 
-		TEST_METHOD(IdentifiableCollection_)
+		TEST_METHOD(IdentifiableCollection_contains)
 		{
 
 		}
 
-		TEST_METHOD(IdentifiableCollection_)
+		TEST_METHOD(IdentifiableCollection_add)
 		{
 
 		}
 
-		TEST_METHOD(IdentifiableCollection_)
+		TEST_METHOD(IdentifiableCollection_foreach)
 		{
 
 		}
 
-		TEST_METHOD(IdentifiableCollection_)
-		{
-
-		}
-
-		TEST_METHOD(IdentifiableCollection_)
-		{
-
-		}
-
-		TEST_METHOD(IdentifiableCollection_)
-		{
-
-		}
-
-		TEST_METHOD(IdentifiableCollection_)
-		{
-
-		}*/
-
+	
 	};
 }

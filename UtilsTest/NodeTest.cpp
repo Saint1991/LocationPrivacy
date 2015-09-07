@@ -35,7 +35,7 @@ namespace UtilsTest
 		TEST_METHOD(Node_CopyConstructor)
 		{
 			Node<double, Edge<BasicPathData>> node(2L, std::make_shared<double>(2.3));
-			Node<double, Edge<BasicPathData>> node2(node);
+			//Node<double, Edge<BasicPathData>> node2(node);
 			
 			//Assert::AreEqual(2.3, *node2.data);
 			//Assert::AreEqual(2L, node2.get_id());
