@@ -13,7 +13,7 @@ namespace Collection
 	/// ID_TYPE‚ÍDATA_TYPE‚ª‚Á‚Ä‚¢‚éID‚ÌŒ^‚Æˆê’v‚µ‚Ä‚¢‚È‚­‚Ä‚Í‚È‚ç‚È‚¢‚Ì‚Å’ˆÓ
 	///</summary>
 	template <typename ID_TYPE, typename DATA_TYPE>
-	class IdentifiableCollection : public std::set<std::shared_ptr<Identifiable<ID_TYPE>>, std::function<bool(const std::shared_ptr<Identifiable<ID_TYPE>>, const std::shared_ptr<Identifiable<ID_TYPE>>)>>
+	class IdentifiableCollection : protected std::set<std::shared_ptr<Identifiable<ID_TYPE>>, std::function<bool(const std::shared_ptr<Identifiable<ID_TYPE>>, const std::shared_ptr<Identifiable<ID_TYPE>>)>>
 	{
 
 	static_assert(std::is_integral<ID_TYPE>::value || std::is_same<std::string, ID_TYPE>::value, "Only Integral type and string are allowed for ID_TYPE");
@@ -27,12 +27,13 @@ namespace Collection
 		std::shared_ptr<DATA_TYPE> get_by_id(const ID_TYPE& id);
 		bool remove_by_id(const ID_TYPE& id);
 		
-		const std::unique_ptr<std::vector<ID_TYPE>> get_id_list() const;
+		std::unique_ptr<std::vector<ID_TYPE>> get_id_list() const;
 		bool contains(const DATA_TYPE& id) const;
 		bool contains(std::shared_ptr<DATA_TYPE const> id) const;
 		bool contains(const ID_TYPE& id) const;
 		bool add(std::shared_ptr<DATA_TYPE> val);
 		bool add(DATA_TYPE val);
+		size_t size() const;
 		void foreach(const std::function<void(std::shared_ptr<DATA_TYPE>)>& execute_function);		
 		void foreach(const std::function<void(std::shared_ptr<DATA_TYPE const>)>& execute_function) const;
 	};

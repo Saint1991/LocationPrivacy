@@ -70,7 +70,7 @@ namespace Collection
 		}
 
 		//要素が見つかった場合は削除してtureを返す
-		 erase(target_iter);
+		erase(target_iter);
 		return true;
 	}
 
@@ -79,11 +79,12 @@ namespace Collection
 	/// 順序は昇順にソートされる
 	///</summary>
 	template <typename ID_TYPE, typename DATA_TYPE>
-	const std::unique_ptr<std::vector<ID_TYPE>> IdentifiableCollection<ID_TYPE, DATA_TYPE>::get_id_list() const
+	std::unique_ptr<std::vector<ID_TYPE>> IdentifiableCollection<ID_TYPE, DATA_TYPE>::get_id_list() const
 	{
 		std::unique_ptr<std::vector<ID_TYPE>> id_list = std::make_unique<std::vector<ID_TYPE>>(size());
-		for (std::set< std::shared_ptr<DATA_TYPE>>::const_iterator iter = begin(); iter != end(); iter++) {
-			id_list->push_back((*iter)->get_id());
+		int index = 0;
+		for (std::set<std::shared_ptr<Identifiable<ID_TYPE>>>::const_iterator iter = begin(); iter != end(); iter++, index++) {
+			id_list->at(index) = (*iter)->get_id();
 		}
 		return std::move(id_list);
 	}
@@ -139,7 +140,7 @@ namespace Collection
 			return false;
 		}
 
-		 insert(val);
+		insert(val);
 		return true;
 	}
 
@@ -154,6 +155,16 @@ namespace Collection
 		return add(std::make_shared<DATA_TYPE>(val));
 	}
 
+
+	///<summary>
+	///要素数を返す
+	///</summary>
+	template <typename ID_TYPE, typename DATA_TYPE>
+	size_t IdentifiableCollection<ID_TYPE, DATA_TYPE>::size() const
+	{
+		return std::set<std::shared_ptr<Identifiable<ID_TYPE>>, std::function<bool(const std::shared_ptr<Identifiable<ID_TYPE>>, const std::shared_ptr<Identifiable<ID_TYPE>>)>>::size();
+	}
+
 	///<summary>
 	/// 各要素についてexecute_functionを実行する
 	/// 中身の変更も影響するので注意
@@ -161,8 +172,9 @@ namespace Collection
 	template <typename ID_TYPE, typename DATA_TYPE>
 	void IdentifiableCollection<ID_TYPE, DATA_TYPE>::foreach(const std::function<void(std::shared_ptr<DATA_TYPE>)>& execute_function)
 	{
-		for (std::set<std::shared_ptr<DATA_TYPE>>::const_iterator iter =  begin(); iter != end(); iter++) {
-			execute_function(*iter);
+		for (std::set<std::shared_ptr<Identifiable<ID_TYPE>>>::const_iterator iter =  begin(); iter != end(); iter++) {
+			std::shared_ptr<DATA_TYPE> element = std::dynamic_pointer_cast<DATA_TYPE>(*iter);
+			execute_function(element);
 		}
 	}
 
@@ -172,8 +184,9 @@ namespace Collection
 	template <typename ID_TYPE, typename DATA_TYPE>
 	void IdentifiableCollection<ID_TYPE, DATA_TYPE>::foreach(const std::function<void(std::shared_ptr<DATA_TYPE const>)>& execute_function) const
 	{
-		for (std::set<std::shared_ptr<DATA_TYPE const>>::const_iterator iter = begin(); iter != end(); iter++) {
-			execute_function(*iter);
+		for (std::set<std::shared_ptr<Identifiable<ID_TYPE> const>>::const_iterator iter = begin(); iter != end(); iter++) {
+			std::shared_ptr<DATA_TYPE const> element = std::dynamic_pointer_cast<DATA_TYPE const>(*iter);
+			execute_function(element);
 		}
 	}
 

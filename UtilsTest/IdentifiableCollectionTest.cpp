@@ -36,6 +36,7 @@ namespace UtilsTest
 			collection.read_by_id(1L);
 			collection.get_by_id(1L);
 			collection.remove_by_id(1L);
+			collection.get_id_list();
 			collection.contains(2L);
 			collection.contains(Identifiable<long>(2L));
 			collection.contains(std::make_shared<Identifiable<long>>(2L));
@@ -43,6 +44,26 @@ namespace UtilsTest
 
 			});
 			collection.foreach([](std::shared_ptr<Identifiable<long> const> element) {
+
+			});
+
+			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection2;
+			Assert::IsTrue(collection2.add(Graph::Node<Geography::LatLng, Graph::BasicPath>(1L, std::make_shared<Geography::LatLng>(10.0, 10.0))));
+			Assert::IsTrue(collection2.add(std::make_shared<Graph::Node<Geography::LatLng, Graph::BasicPath>>(2L, std::make_shared<Geography::LatLng>(10.0, 20.0))));
+			Assert::IsTrue(collection2.read_by_id(1L) != nullptr);
+			Assert::IsTrue(collection2.get_by_id(1L) != nullptr);
+			Assert::IsTrue(collection2.remove_by_id(1L));
+			std::unique_ptr<std::vector<Graph::node_id>> id_list = collection2.get_id_list();
+			Assert::AreEqual(1U, collection2.get_id_list()->size());
+			Assert::AreEqual(1U, collection2.size());
+			Assert::IsTrue(collection2.contains(2L));
+			Assert::IsTrue(collection2.contains(Graph::Node<Geography::LatLng, Graph::BasicPath > (2L, std::make_shared<Geography::LatLng>(10.0, 20.0))));
+			Assert::IsTrue(collection2.contains(std::make_shared<Graph::Node<Geography::LatLng, Graph::BasicPath>>(2L, std::make_shared<Geography::LatLng>(10.0, 20.0))));
+			
+			collection2.foreach([](std::shared_ptr<Identifiable<long>> element) {
+
+			});
+			collection2.foreach([](std::shared_ptr<Identifiable<long> const> element) {
 
 			});
 		}
@@ -64,13 +85,14 @@ namespace UtilsTest
 			collection.add(Identifiable<std::string>("B"));
 			std::shared_ptr<Identifiable<std::string>> id = collection.get_by_id("A");
 			Assert::AreEqual("A", id->get_id().c_str());
-			
+			/*
 			auto iter = collection.begin();
 			Assert::AreEqual("A", (*iter)->get_id().c_str());
 			iter++;
 			Assert::AreEqual("B", (*iter)->get_id().c_str() );
 			iter++;
-			Assert::AreEqual("C", (*iter)->get_id().c_str());	
+			Assert::AreEqual("C", (*iter)->get_id().c_str());
+			*/
 		}
 
 		TEST_METHOD(IdentifiableCollection_read_by_id2)
