@@ -105,7 +105,7 @@ namespace UtilsTest
 			Assert::AreEqual(1L, *iter);
 			iter++;
 			Assert::AreEqual(2L, *iter);
-		}*/
+		}
 
 		TEST_METHOD(IdentifiableCollection_contains)
 		{
@@ -138,7 +138,7 @@ namespace UtilsTest
 			collection.foreach([]
 				(){Assert::AreEqual(collection.read_by_id());
 
-		}
+		}*/
 
 	
 	};

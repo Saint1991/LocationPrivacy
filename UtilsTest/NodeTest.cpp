@@ -46,61 +46,59 @@ namespace UtilsTest
 		
 		TEST_METHOD(Node_CopyConstructor)
 		{
-			
+			Node<Geography::LatLng, BasicPath> node(1L, std::make_shared<Geography::LatLng>(10.0, 20.0));
+			Node<Geography::LatLng, BasicPath> node2(node);
+
+			Assert::AreEqual(1L, node2.get_id());
+			Assert::AreEqual(10.0, node2.data->lat());
+			Assert::AreEqual(20.0, node2.data->lng());
 		}
 
 		/*
 		TEST_METHOD(Node_get_static_edge_to)
 		{
-			//std::shared_ptr<Edge<BasicPathData> const> edge = std::make_shared<double>(2.3);
-			//Node<double, Edge<BasicPathData>> node(2L, edge) const; 
+			std::shared_ptr<Edge<BasicPathData>> edge = std::make_shared<Edge<BasicPathData>>(2.0);
+			Node<Geography::LatLng, Edge<BasicPathData>> node(1L,std::make_shared<Geography::LatLng>(10.0,20.0));
+			node.connect_to(edge);
+
+			std::shared_ptr<Edge<BasicPathData> const> static_edge= node.get_static_edge_to(1L);
 			
-			auto edge = std::make_shared<double>(2.3);
-			Node<double, Edge<BasicPathData>> node(2L, edge);
-
-			std::shared_ptr<Edge<BasicPathData> const> static_edge1 = node.get_static_edge_to(node.get_id());
-			std::shared_ptr<Edge<BasicPathData> const> static_edge2 = node.get_static_edge_to(1L);
-			std::shared_ptr<Edge<BasicPathData> const> static_edge3 = node.get_static_edge_to(3L);
-
-			//Assert::AreEqual(node., static_edge1);
+			Assert::IsTrue(edge == static_edge);
 
 		}
-		*/
-		/*
-		TEST_METHOD(Node_)
+		
+		
+		TEST_METHOD(Node_get_edge_to)
 		{
 
 		}
 
-		TEST_METHOD(Node_)
+		TEST_METHOD(Node_connect_to)
 		{
 
 		}
 
-		TEST_METHOD(Node_)
+		TEST_METHOD(Node_disconnect_from)
 		{
 
 		}
 
-		TEST_METHOD(Node_)
+		TEST_METHOD(Node_is_connecting_to)
 		{
 
 		}
 
-		TEST_METHOD(Node_)
+		TEST_METHOD(Node_get_connecting_node_list)
 		{
 
 		}
 
-		TEST_METHOD(Node_)
+		TEST_METHOD(Node_for_each_edge)
 		{
 
 		}
 
-		TEST_METHOD(Node_)
-		{
-
-		}*/
+	*/
 
 
 	};
