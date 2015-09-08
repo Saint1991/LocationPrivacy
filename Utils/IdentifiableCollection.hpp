@@ -54,7 +54,7 @@ namespace Collection
 		}
 		return std::dynamic_pointer_cast<DATA_TYPE>(*target_iter);
 	}
-
+	
 	///<summary>
 	/// 指定したIDを持つ要素を探索し，削除する．
 	/// 要素が存在し，削除できた場合はtrueを，それ以外の場合はfalseを返す．
