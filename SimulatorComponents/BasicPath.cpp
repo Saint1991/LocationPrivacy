@@ -27,7 +27,7 @@ namespace Graph
 		return data->get_distance();
 	}
 
-	
+
 	///<summary>
 	/// ‹——£‚ğXV
 	///</summary>

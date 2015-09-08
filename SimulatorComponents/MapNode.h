@@ -1,4 +1,4 @@
-#ifdef UTILS_EXPORTS
+#ifdef SIMULATORCOMPONENTS_EXPORTS
 #define MAP_NODE_API __declspec(dllexport)
 #else
 #define MAP_NODE_API __declspec(dllimport)

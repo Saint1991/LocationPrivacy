@@ -1,4 +1,4 @@
-#ifdef UTILS_EXPORTS
+#ifdef SIMULATORCOMPONENTS_EXPORTS
 #define BASIC_PATH_API __declspec(dllexport)
 #else
 #define BASIC_PATH_API __declspec(dllimport)

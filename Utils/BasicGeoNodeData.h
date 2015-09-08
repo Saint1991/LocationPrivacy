@@ -15,7 +15,7 @@ namespace Geography
 	///<summary>
 	/// 地理的なノードがもつ基本情報(緯度・経度)
 	///</summary>
-	class BASIC_GEONODE_DATA_API BasicGeoNodeData : IO::FileExportable
+	class BASIC_GEONODE_DATA_API BasicGeoNodeData : public IO::FileExportable
 	{
 	protected:
 		Geography::LatLng position;

@@ -116,9 +116,6 @@
     <ClCompile Include="Vector2dFactoryTest.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
-    <ClCompile Include="BasicPathTest.cpp">
-      <Filter>ソース ファイル\Graph\Edge</Filter>
-    </ClCompile>
     <ClCompile Include="BasicGeoNodeDataTest.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>

@@ -30,7 +30,6 @@ namespace Entity
 		MobileEntity(entity_id id);
 		virtual ~MobileEntity();
 
-		
 		const std::shared_ptr<POSITION_TYPE const> current_position() const;
 		const std::vector<std::shared_ptr<POSITION_TYPE const>> previous_positions(unsigned int count) const;
 	};

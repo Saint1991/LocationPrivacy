@@ -1,6 +1,3 @@
-#pragma once
-#include "BasicMobileEntityState.h"
-#include "LatLng.h"
 #include "MobileEntity.h"
 
 namespace Entity
@@ -20,5 +17,3 @@ namespace Entity
 }
 
 #include "BasicUser.hpp"
-
-

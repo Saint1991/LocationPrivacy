@@ -234,9 +234,6 @@
     <ClInclude Include="Edge.h">
       <Filter>ヘッダー ファイル\Graph\Edge</Filter>
     </ClInclude>
-    <ClInclude Include="BasicPath.h">
-      <Filter>ヘッダー ファイル\Graph\Edge</Filter>
-    </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>ヘッダー ファイル\Graph\Node</Filter>
     </ClInclude>
@@ -257,9 +254,6 @@
     </ClInclude>
     <ClInclude Include="NodeCollectionFactory.hpp">
       <Filter>ソース ファイル\Graph\Node</Filter>
-    </ClInclude>
-    <ClInclude Include="MapNode.h">
-      <Filter>ヘッダー ファイル\Geography</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
@@ -305,12 +299,6 @@
     </ClInclude>
     <ClInclude Include="IProposedMethod.h">
       <Filter>ヘッダー ファイル\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicUser.hpp">
-      <Filter>ソース ファイル\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicUser.h">
-      <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -376,12 +364,6 @@
     </ClCompile>
     <ClCompile Include="BasicEdge.cpp">
       <Filter>ソース ファイル\Graph\Edge</Filter>
-    </ClCompile>
-    <ClCompile Include="BasicPath.cpp">
-      <Filter>ソース ファイル\Graph\Edge</Filter>
-    </ClCompile>
-    <ClCompile Include="MapNode.cpp">
-      <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
     <ClCompile Include="RoutingTable.cpp">
       <Filter>ソース ファイル\Graph\Routing</Filter>

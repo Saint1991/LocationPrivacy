@@ -2,9 +2,9 @@
 #include "MapNode.h"
 
 
-namespace Geography 
+namespace Geography
 {
-	
+
 	///<summary>
 	/// コンストラクタ
 	///</summary>
@@ -27,16 +27,16 @@ namespace Geography
 	{
 	}
 
-	
+
 	///<summary>
 	/// ノード間の距離計算(m)
 	///</summary>
-	double distance(const MapNode& node1, const MapNode& node2) 
+	double distance(const MapNode& node1, const MapNode& node2)
 	{
 		return GeoCalculation::lambert_distance(*node1.data, *node2.data);
 	}
 
-	
+
 	///<summary>
 	/// ノードfromから見たノードtoの方位角の計算
 	/// (東0度，南90度，西180度，北270度，単位はラジアン)

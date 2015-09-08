@@ -2,7 +2,8 @@
 #include "CppUnitTest.h"
 #include "IdentifiableCollection.h"
 #include "Node.h"
-#include "BasicPath.h"
+#include "Edge.h"
+#include "BasicPathData.h"
 #include "LatLng.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -47,9 +48,9 @@ namespace UtilsTest
 
 			});
 
-			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection2;
-			Assert::IsTrue(collection2.add(Graph::Node<Geography::LatLng, Graph::BasicPath>(1L, std::make_shared<Geography::LatLng>(10.0, 10.0))));
-			Assert::IsTrue(collection2.add(std::make_shared<Graph::Node<Geography::LatLng, Graph::BasicPath>>(2L, std::make_shared<Geography::LatLng>(10.0, 20.0))));
+			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>> collection2;
+			Assert::IsTrue(collection2.add(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(1L, std::make_shared<Geography::LatLng>(10.0, 10.0))));
+			Assert::IsTrue(collection2.add(std::make_shared<Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>>(2L, std::make_shared<Geography::LatLng>(10.0, 20.0))));
 			Assert::IsTrue(collection2.read_by_id(1L) != nullptr);
 			Assert::IsTrue(collection2.get_by_id(1L) != nullptr);
 			Assert::IsTrue(collection2.remove_by_id(1L));
@@ -57,8 +58,8 @@ namespace UtilsTest
 			Assert::AreEqual(1U, collection2.get_id_list()->size());
 			Assert::AreEqual(1U, collection2.size());
 			Assert::IsTrue(collection2.contains(2L));
-			Assert::IsTrue(collection2.contains(Graph::Node<Geography::LatLng, Graph::BasicPath > (2L, std::make_shared<Geography::LatLng>(10.0, 20.0))));
-			Assert::IsTrue(collection2.contains(std::make_shared<Graph::Node<Geography::LatLng, Graph::BasicPath>>(2L, std::make_shared<Geography::LatLng>(10.0, 20.0))));
+			Assert::IsTrue(collection2.contains(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData> > (2L, std::make_shared<Geography::LatLng>(10.0, 20.0))));
+			Assert::IsTrue(collection2.contains(std::make_shared<Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>>(2L, std::make_shared<Geography::LatLng>(10.0, 20.0))));
 			
 			collection2.foreach([](std::shared_ptr<Identifiable<long>> element) {
 
@@ -97,9 +98,9 @@ namespace UtilsTest
 
 		TEST_METHOD(IdentifiableCollection_read_by_id2)
 		{
-			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection;
-			collection.add(Graph::Node < Geography::LatLng, Graph::BasicPath>(1L, std::make_shared<Geography::LatLng>(10.0, 20.0)));
-			std::shared_ptr<Graph::Node<Geography::LatLng, Graph::BasicPath> const> node = collection.read_by_id(1L);
+			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>> collection;
+			collection.add(Graph::Node < Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(1L, std::make_shared<Geography::LatLng>(10.0, 20.0)));
+			std::shared_ptr<Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>> const> node = collection.read_by_id(1L);
 			Assert::AreEqual(1L, node->get_id());
 			Assert::AreEqual(10.0, node->data->lat(), ACCURACY);
 			Assert::AreEqual(20.0, node->data->lng(), ACCURACY);
@@ -107,20 +108,20 @@ namespace UtilsTest
 		
 		TEST_METHOD(IdentifiableCollection_remove_by_id)
 		{
-			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection;
-			collection.add(Graph::Node<Geography::LatLng,Graph::BasicPath>(1L,std::make_shared<Geography::LatLng>(10.0, 20.0)));
+			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>> collection;
+			collection.add(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(1L,std::make_shared<Geography::LatLng>(10.0, 20.0)));
 			Assert::IsFalse(collection.remove_by_id(2L));
 			Assert::IsTrue(collection.remove_by_id(1L));
 
-			std::shared_ptr<Graph::Node<Geography::LatLng, Graph::BasicPath> const> node = collection.read_by_id(1L);
+			std::shared_ptr<Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>> const> node = collection.read_by_id(1L);
 			Assert::IsTrue(nullptr == node);
 		}
 		
 		TEST_METHOD(IdentifiableCollection_get_id_list)
 		{
-			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection;
-			collection.add(Graph::Node<Geography::LatLng, Graph::BasicPath>(1L, std::make_shared<Geography::LatLng>(10.0, 20.0)));
-			collection.add(Graph::Node<Geography::LatLng, Graph::BasicPath>(2L, std::make_shared<Geography::LatLng>(15.0, 20.0)));
+			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>> collection;
+			collection.add(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(1L, std::make_shared<Geography::LatLng>(10.0, 20.0)));
+			collection.add(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(2L, std::make_shared<Geography::LatLng>(15.0, 20.0)));
 			//const std::unique_ptr<std::vector<Graph::node_id>> list = std::make_unique<std::vector<Graph::node_id>>(collection.get_id_list());
 			//auto iter = list->begin();
 
