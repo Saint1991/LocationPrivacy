@@ -93,20 +93,20 @@ namespace UtilsTest
 			std::shared_ptr<Graph::Node<Geography::LatLng, Graph::BasicPath> const> node = collection.read_by_id(1L);
 			Assert::IsTrue(nullptr == node);
 		}
-		/*
+		
 		TEST_METHOD(IdentifiableCollection_get_id_list)
 		{
 			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection;
 			collection.add(Graph::Node<Geography::LatLng, Graph::BasicPath>(1L, std::make_shared<Geography::LatLng>(10.0, 20.0)));
-			collection.add(Graph::Node<Geography::LatLng, Graph::BasicPath>(2L, std::make_shared<Geography::LatLng>(100.0, 20.0)));
-			std::unique_ptr<std::vector<Graph::node_id> const> list = std::make_unique<std::vector<Graph::node_id> const>(collection.get_id_list());
-			auto iter = list->begin();
+			collection.add(Graph::Node<Geography::LatLng, Graph::BasicPath>(2L, std::make_shared<Geography::LatLng>(15.0, 20.0)));
+			//const std::unique_ptr<std::vector<Graph::node_id>> list = std::make_unique<std::vector<Graph::node_id>>(collection.get_id_list());
+			//auto iter = list->begin();
 
-			Assert::AreEqual(1L, *iter);
-			iter++;
-			Assert::AreEqual(2L, *iter);
+			//Assert::AreEqual(1L, *iter);
+			//iter++;
+			//Assert::AreEqual(2L, *iter);
 		}
-
+		/*
 		TEST_METHOD(IdentifiableCollection_contains)
 		{
 			Collection::IdentifiableCollection<Graph::node_id, Graph::Node<Geography::LatLng, Graph::BasicPath>> collection;
