@@ -140,6 +140,9 @@
     <ClCompile Include="SemanticPoiDataTest.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
+    <ClCompile Include="FileExporterTest.cpp">
+      <Filter>ソース ファイル\IO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

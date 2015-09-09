@@ -171,6 +171,7 @@
     <ClCompile Include="CoordinateTest.cpp" />
     <ClCompile Include="DbSettingsTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />
+    <ClCompile Include="FileExporterTest.cpp" />
     <ClCompile Include="GeoCalculationTest.cpp" />
     <ClCompile Include="IdentifiableCollectionTest.cpp" />
     <ClCompile Include="IdentifiableTest.cpp" />
