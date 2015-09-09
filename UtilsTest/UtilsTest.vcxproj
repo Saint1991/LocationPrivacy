@@ -167,6 +167,7 @@
     <ClCompile Include="BasicPathDataTest.cpp" />
     <ClCompile Include="BasicPoiDataTest.cpp" />
     <ClCompile Include="BasicRequirementTest.cpp" />
+    <ClCompile Include="BindableTest.cpp" />
     <ClCompile Include="ColumnTest.cpp" />
     <ClCompile Include="CoordinateTest.cpp" />
     <ClCompile Include="DbSettingsFileLoaderTest.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="LatLngTest.cpp" />
     <ClCompile Include="NodeCollectionFactoryTest.cpp" />
     <ClCompile Include="NodeTest.cpp" />
+    <ClCompile Include="QueryGenerateUtilityTest.cpp" />
     <ClCompile Include="SemanticPoiDataTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

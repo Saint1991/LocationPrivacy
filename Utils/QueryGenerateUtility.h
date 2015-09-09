@@ -22,10 +22,11 @@ namespace Db
 		QUERY_GENERATE_UTILITY_API static const std::string make_create_table_query(const Db::TableStructure& table_info);
 		QUERY_GENERATE_UTILITY_API static const std::string make_insert_query(const Db::TableStructure& insert_columns);
 		QUERY_GENERATE_UTILITY_API static const std::string make_insert_query(const std::string& table_name, const std::list<std::string>& columns);
-		QUERY_GENERATE_UTILITY_API static const std::string make_select_query(const std::string& table_name, const std::list<std::string>& columns, const std::string& where_clause = "");
 		QUERY_GENERATE_UTILITY_API static const std::string make_select_query(const Db::TableStructure& select_columns, const std::string& where_clause = "");
-		QUERY_GENERATE_UTILITY_API static const std::string make_update_query(const std::string& table_name, const std::list<std::string>& columns, const std::string& where_clause);
+		QUERY_GENERATE_UTILITY_API static const std::string make_select_query(const std::string& table_name, const std::list<std::string>& columns, const std::string& where_clause = "");
 		QUERY_GENERATE_UTILITY_API static const std::string make_update_query(const Db::TableStructure& update_columns, const std::string& where_clause = "");
+		QUERY_GENERATE_UTILITY_API static const std::string make_update_query(const std::string& table_name, const std::list<std::string>& columns, const std::string& where_clause="");
+		
 	};
 }
 

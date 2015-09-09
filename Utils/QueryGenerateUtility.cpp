@@ -19,7 +19,8 @@ Db::QueryGenerateUtility::~QueryGenerateUtility()
 std::string Db::QueryGenerateUtility::make_round_bracket_clause(const std::list<std::string>& elements)
 {
 	if (elements.size() == 0) return "";
-	std::stringstream stream("(");
+	std::stringstream stream;
+	stream << "(";
 	for (std::list<std::string>::const_iterator iter = elements.begin(); iter != elements.end(); iter++) {
 		stream << *iter << ", ";
 	}
@@ -36,7 +37,8 @@ std::string Db::QueryGenerateUtility::make_round_bracket_clause(const std::list<
 std::string Db::QueryGenerateUtility::make_round_bracket_clause(const std::list<std::shared_ptr<Serializable>>& elements)
 {
 	if (elements.size() == 0) return "";
-	std::stringstream stream("(");
+	std::stringstream stream;
+	stream << "(";
 	for (std::list<std::shared_ptr<Serializable>>::const_iterator iter = elements.begin(); iter != elements.end(); iter++) {
 		stream << (*iter)->to_string() << ", ";
 	}
@@ -92,6 +94,7 @@ const std::string Db::QueryGenerateUtility::make_select_query(const std::string&
 	if (columns.size() == 0) return "";
 
 	std::string column_clause = make_round_bracket_clause(columns);
+	column_clause = column_clause.substr(1, column_clause.length() - 2);
 	std::stringstream query;
 
 	query << "SELECT " << column_clause << " FROM " << table_name;
