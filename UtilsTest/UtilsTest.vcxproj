@@ -169,6 +169,7 @@
     <ClCompile Include="BasicRequirementTest.cpp" />
     <ClCompile Include="ColumnTest.cpp" />
     <ClCompile Include="CoordinateTest.cpp" />
+    <ClCompile Include="DbSettingsFileLoaderTest.cpp" />
     <ClCompile Include="DbSettingsTest.cpp" />
     <ClCompile Include="EdgeTest.cpp" />
     <ClCompile Include="FileExporterTest.cpp" />

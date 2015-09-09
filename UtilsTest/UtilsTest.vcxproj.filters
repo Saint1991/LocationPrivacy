@@ -143,6 +143,9 @@
     <ClCompile Include="FileExporterTest.cpp">
       <Filter>ソース ファイル\IO</Filter>
     </ClCompile>
+    <ClCompile Include="DbSettingsFileLoaderTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
