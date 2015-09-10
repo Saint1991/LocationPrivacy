@@ -167,31 +167,17 @@ namespace UtilsTest
 			
 			try
 			{
-				collection.add(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(1L, std::make_shared<Geography::LatLng>(10.0, 20.0)));
+				collection.add(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(1L, std::make_shared<Geography::LatLng>(15.0, 20.0)));
 				Assert::Fail();
 			}
-			catch (DuplicatedIdException<Graph::node_id>())
-			{
-
-			}
-			catch (const std::exception) {
-				//Assert::Fail();
-			}
-			/*
-			try
-			{
-				collection.add(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(-3L, std::make_shared<Geography::LatLng>(15.0, 20.0)));
-				Assert::Fail();
-			}
-			catch (const std::out_of_range)
+			catch (DuplicatedIdException<Graph::node_id>)
 			{
 
 			}
 			catch (const std::exception) {
 				Assert::Fail();
 			}
-			*/
-
+			
 		}
 
 		TEST_METHOD(IdentifiableCollection_foreach)
