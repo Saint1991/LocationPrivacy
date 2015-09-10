@@ -44,5 +44,24 @@ namespace Time
 		timestamp << year << month << day << hour <<min << sec;
 		return timestamp.str();
 	}
+
+
+	///<summary>
+	/// Timestamp•¶š—ñ‚ğunixtimestamp (time_t)‚É•ÏŠ·‚·‚é
+	/// •s³‚ÈTimestamp‚Ìê‡‚ÍINVALID = -1‚ğ•Ô‚·
+	///</summary>
+	time_t TimeUtility::convert_to_unixtimestamp(std::string timestamp)
+	{
+		if (timestamp.length() != 19U) return INVALID;
+		tm time;
+		time.tm_year = std::stoi(timestamp.substr(0, 4)) - 1900;
+		time.tm_mon = std::stoi(timestamp.substr(5, 2)) - 1;
+		time.tm_mday = std::stoi(timestamp.substr(8, 2));
+		time.tm_hour = std::stoi(timestamp.substr(11, 2));
+		time.tm_min = std::stoi(timestamp.substr(14, 2));
+		time.tm_sec = std::stoi(timestamp.substr(17, 2));
+		time.tm_isdst = -1;
+		return mktime(&time);
+	}
 }
 

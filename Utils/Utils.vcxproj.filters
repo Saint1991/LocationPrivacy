@@ -300,6 +300,9 @@
     <ClInclude Include="IProposedMethod.h">
       <Filter>ヘッダー ファイル\Framework</Filter>
     </ClInclude>
+    <ClInclude Include="TimeSlotManager.h">
+      <Filter>ヘッダー ファイル\Time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -391,6 +394,9 @@
     </ClCompile>
     <ClCompile Include="BasicRequirement.cpp">
       <Filter>ソース ファイル\Requirement</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeSlotManager.cpp">
+      <Filter>ソース ファイル\Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

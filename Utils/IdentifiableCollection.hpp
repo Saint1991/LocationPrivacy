@@ -122,7 +122,7 @@ namespace Collection
 	///<summary>
 	/// コレクションの末尾に指定した要素を格納する
 	/// IDが重複する場合はDuplicatedIdExceptionをスローする．
-	/// 負のIDやmax_sizeを超える領域を指定した場合はout_of_rangeをスローする
+	/// max_sizeを超える領域を指定した場合はout_of_rangeをスローする
 	///</summary>
 	template <typename ID_TYPE, typename DATA_TYPE>
 	bool IdentifiableCollection<ID_TYPE, DATA_TYPE>::add(std::shared_ptr<DATA_TYPE> val)
@@ -133,7 +133,7 @@ namespace Collection
 			throw DuplicatedIdException<ID_TYPE>();
 			return false;
 		}
-	
+
 		// IDが負の場合や要素数がmax_sizeより大きくなる場合はout_of_rangeをスローする
 		if (size() == max_size()) {
 			throw std::out_of_range("The number of elements reached to the upper limitation");

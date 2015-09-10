@@ -13,13 +13,11 @@ namespace Requirement
 	///</summary>
 	struct BASIC_REQUIREMENT_API BasicRequirement
 	{
-		unsigned int simulation_time;
-		unsigned int service_interval;
 		double required_anonymous_area;
 		size_t dummy_num;
 		
 		BasicRequirement();
-		BasicRequirement(unsigned int simulation_time, unsigned int service_interval, double required_anonymous_area, size_t dummy_num);
+		BasicRequirement(double required_anonymous_area, size_t dummy_num);
 		~BasicRequirement();
 	};
 }
