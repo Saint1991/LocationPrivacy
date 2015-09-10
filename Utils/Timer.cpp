@@ -65,5 +65,21 @@ namespace Time
 		if (!is_finished()) return "NOT FINISHED";
 		return std::to_string(duration()) + "[sec]";
 	}
+
+	#pragma region Export
+	const std::string Timer::DURATION = "Duration";
+
+
+	///<summary>
+	/// Export用データの作成
+	///</summary>
+	std::unordered_map<std::string, std::string> Timer::get_export_data()  const
+	{
+		std::unordered_map<std::string, std::string> data = {
+			{DURATION, std::to_string(duration())}
+		};
+		return data;
+	}
+	#pragma endregion
 }
 

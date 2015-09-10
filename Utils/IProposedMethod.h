@@ -1,6 +1,9 @@
 #pragma once
 #include "stdafx.h"
 #include "BasicRequirement.h"
+#include "TimeSlotManager.h"
+#include "Timer.h"
+#include "FileExporter.h"
 
 namespace Framework
 {
@@ -13,16 +16,20 @@ namespace Framework
 		std::shared_ptr<MAP_TYPE const> map;
 		std::shared_ptr<USER_TYPE const> user;
 		std::shared_ptr<REQUIREMENT_TYPE const> requirement;
+		std::shared_ptr<Time::TimeSlotManager> time_manager;
 		std::unique_ptr<std::vector<DUMMY_TYPE>> dummies;
-	
-	public:
-		IProposedMethod(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE const> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement);
-		virtual ~IProposedMethod();
-
+		std::shared_ptr<Time::Timer> timer;
+		
 		virtual void initialize() = 0;
-		virtual void run() = 0;
+		virtual void phase(time_t time, long interval, int phase) = 0;
 		virtual void export_results() = 0;
 		virtual void terminate() = 0;
+
+	public:
+		IProposedMethod(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE const> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
+		virtual ~IProposedMethod();
+
+		void run();
 	};
 }
 
