@@ -132,8 +132,8 @@ namespace UtilsTest
 			std::list<Db::Column> columns = { column1,column2 };
 			Db::TableStructure table(table_name, columns);
 
-			std::list<std::string> name_list = table.get_column_name_list();
-			std::list<std::string>::const_iterator iter = name_list.begin();
+			std::vector<std::string> name_list = table.get_column_names();
+			std::vector<std::string>::const_iterator iter = name_list.begin();
 			Assert::AreEqual(std::string("name"), *iter++);
 			Assert::AreEqual(std::string("age"), *iter);
 		}

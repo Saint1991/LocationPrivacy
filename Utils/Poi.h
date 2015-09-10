@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "BasicGeoNodeData.h"
-#include "BasicPath.h"
+#include "BasicEdge.h"
 #include "Identifiable.h"
 
 namespace Geography

@@ -21,7 +21,6 @@ namespace Graph
 	class NodeCollectionFactory
 	{
 	static_assert(std::is_base_of<Edge<EDGE_DATA>, EDGE>::value || std::is_same<BasicEdge, EDGE>::value, "template type EDGE is not derived from Edge<EDGE_DATA>");
-
 	private:
 		//ÉRÉsÅ[ã÷é~
 		NodeCollectionFactory(const NodeCollectionFactory& factory);

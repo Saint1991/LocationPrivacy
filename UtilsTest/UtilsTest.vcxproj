@@ -94,7 +94,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)\Utils;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories);$(SolutionDir)mysql_connector\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions);CPPCONN_PUBLIC_FUNC=</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
     </ClCompile>
     <Link>
@@ -167,7 +167,6 @@
     <ClCompile Include="BasicPathDataTest.cpp" />
     <ClCompile Include="BasicPoiDataTest.cpp" />
     <ClCompile Include="BasicRequirementTest.cpp" />
-    <ClCompile Include="BindableTest.cpp" />
     <ClCompile Include="ColumnTest.cpp" />
     <ClCompile Include="CoordinateTest.cpp" />
     <ClCompile Include="DbSettingsFileLoaderTest.cpp" />
@@ -178,6 +177,7 @@
     <ClCompile Include="IdentifiableCollectionTest.cpp" />
     <ClCompile Include="IdentifiableTest.cpp" />
     <ClCompile Include="LatLngTest.cpp" />
+    <ClCompile Include="MySQLDbTest.cpp" />
     <ClCompile Include="NodeCollectionFactoryTest.cpp" />
     <ClCompile Include="NodeTest.cpp" />
     <ClCompile Include="QueryGenerateUtilityTest.cpp" />

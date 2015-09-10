@@ -142,7 +142,7 @@ namespace Db
 		std::list<std::string> ret;
 		result_set->beforeFirst();
 		while (result_set->next()) {
-			std::string dbname = result_set->getString(0);
+			std::string dbname = result_set->getString(1);
 			ret.push_back(dbname);
 		}
 		delete result_set;
@@ -162,7 +162,7 @@ namespace Db
 		std::list<std::string> ret;
 		result_set->beforeFirst();
 		while (result_set->next()) {
-			std::string table_name = result_set->getString(0);
+			std::string table_name = result_set->getString(1);
 			ret.push_back(table_name);
 		}
 		delete result_set;
@@ -185,7 +185,7 @@ namespace Db
 	/// INSERTを実行するユーティリティ
 	/// 失敗した場合はfalseを返す
 	///</summary>
-	bool  MySQLDb::insert(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<Bindable const> data)
+	bool  MySQLDb::insert(const std::string& table_name, const std::vector<std::string>& columns, std::shared_ptr<Bindable const> data)
 	{
 		bool* ret = execute_if_connection_is_alive<bool>([&]() {
 			const std::string query =  QueryGenerateUtility::make_insert_query(table_name, columns);
@@ -206,7 +206,7 @@ namespace Db
 	///</summary>
 	bool  MySQLDb::insert(const TableStructure& insert_columns, std::shared_ptr<Bindable const> data)
 	{
-		return insert(insert_columns.table_name, insert_columns.get_column_name_list(), data);
+		return insert(insert_columns.table_name, insert_columns.get_column_names(), data);
 	}
 
 
@@ -215,7 +215,7 @@ namespace Db
 	/// 複数データをインサートする場合はこちらを使うと効率がよい
 	/// 失敗した場合はfalseを返す
 	///</summary>
-	bool  MySQLDb::insert(const std::string& table_name, const std::list<std::string>& columns, const std::list<std::shared_ptr<Bindable const>>& data_list)
+	bool  MySQLDb::insert(const std::string& table_name, const std::vector<std::string>& columns, const std::list<std::shared_ptr<Bindable const>>& data_list)
 	{
 		bool* result = execute_if_connection_is_alive<bool>([&]() {
 			const std::string query =  QueryGenerateUtility::make_insert_query(table_name, columns);
@@ -242,7 +242,7 @@ namespace Db
 	///</summary>
 	bool  MySQLDb::insert(const  TableStructure& insert_columns, const std::list<std::shared_ptr<Bindable const>>& data_list)
 	{
-		return insert(insert_columns.table_name, insert_columns.get_column_name_list(), data_list);
+		return insert(insert_columns.table_name, insert_columns.get_column_names(), data_list);
 	}
 
 
@@ -251,7 +251,7 @@ namespace Db
 	/// 変更されたカラム数を返す
 	/// 失敗した場合は-1を返す
 	///</summary>
-	int  MySQLDb::update(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<Bindable const> data, const std::string& where_clause)
+	int  MySQLDb::update(const std::string& table_name, const std::vector<std::string>& columns, std::shared_ptr<Bindable const> data, const std::string& where_clause)
 	{
 		int* ret = execute_if_connection_is_alive<int>([&]() {
 			const std::string query =  QueryGenerateUtility::make_update_query(table_name, columns, where_clause);
@@ -274,7 +274,7 @@ namespace Db
 	///</summary>
 	int  MySQLDb::update(const  TableStructure& update_columns, std::shared_ptr<Bindable const> data, std::string where_clause)
 	{
-		return update(update_columns.table_name, update_columns.get_column_name_list(), data, where_clause);
+		return update(update_columns.table_name, update_columns.get_column_names(), data, where_clause);
 	}
 
 
@@ -283,7 +283,7 @@ namespace Db
 	/// 簡単なSELECTクエリを実行するユーティリティ
 	/// 生のポインタを用いているのでdeleteを忘れず行うこと!
 	///</summary>
-	sql::ResultSet*  MySQLDb::select(const std::string& table_name, const std::list<std::string>& columns, const std::string& where_clause)
+	sql::ResultSet*  MySQLDb::select(const std::string& table_name, const std::vector<std::string>& columns, const std::string& where_clause)
 	{
 		const std::string query =  QueryGenerateUtility::make_select_query(table_name, columns, where_clause);
 		return std::move(raw_query(query));
@@ -295,7 +295,7 @@ namespace Db
 	///</summary>
 	sql::ResultSet*  MySQLDb::select(const  TableStructure& select_columns, const std::string where_clause)
 	{
-		return std::move(select(select_columns.table_name, select_columns.get_column_name_list(), where_clause));
+		return std::move(select(select_columns.table_name, select_columns.get_column_names(), where_clause));
 	}
 }
 

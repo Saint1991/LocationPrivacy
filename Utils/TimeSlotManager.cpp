@@ -63,7 +63,7 @@ namespace Time
 	/// 各時刻についてexecute_functionを実行する
 	/// 引数は時刻, 1つ前のPhaseからの経過時間，現在のPhase
 	///</summary>
-	void TimeSlotManager::foreach_time(const std::function<void(time_t, long, int)>& execute_function) const
+	void TimeSlotManager::for_each_time(const std::function<void(time_t, long, int)>& execute_function) const
 	{
 		execute_function(timeslots->at(0), 0, 0);
 		for (int phase = 1; phase < timeslots->size(); phase++) {

@@ -87,9 +87,9 @@ namespace Db
 	///<summary>
 	/// ƒJƒ‰ƒ€–¼‚Ìˆê——‚ðŽæ“¾‚·‚é
 	///</summary>
-	const std::list<std::string>  TableStructure::get_column_name_list() const
+	const std::vector<std::string>  TableStructure::get_column_names() const
 	{
-		std::list<std::string> column_names;
+		std::vector<std::string> column_names;
 		for (std::list< Column>::const_iterator iter = columns->begin(); iter != columns->end(); iter++) {
 			column_names.push_back(iter->column_name);
 		}

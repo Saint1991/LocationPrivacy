@@ -18,7 +18,7 @@ namespace UtilsTest
 
 		TEST_METHOD(QueryGenerateUtility_make_round_bracket_clause1)
 		{
-			std::list<std::string> elements = { "a", "b" };
+			std::vector<std::string> elements = { "a", "b" };
 			std::string expected = "(a, b)";
 			std::string actual = Db::QueryGenerateUtility::make_round_bracket_clause(elements);
 			Assert::AreEqual(expected, actual);
@@ -33,7 +33,7 @@ namespace UtilsTest
 			std::shared_ptr<SerializableSample> sample1 = std::make_shared<SerializableSample>();
 			std::shared_ptr<SerializableSample> sample2 = std::make_shared<SerializableSample>();
 			std::shared_ptr<SerializableSample> sample3 = std::make_shared<SerializableSample>();
-			std::list<std::shared_ptr<Serializable>> sample_list = { sample1, sample2, sample3 };
+			std::vector<std::shared_ptr<Serializable>> sample_list = { sample1, sample2, sample3 };
 			std::string actual = Db::QueryGenerateUtility::make_round_bracket_clause(sample_list);
 			std::string expected = "(Serialized, Serialized, Serialized)";
 			Assert::AreEqual(expected, actual);
@@ -88,7 +88,7 @@ namespace UtilsTest
 		TEST_METHOD(QueryGenerateUtility_make_insert_query2)
 		{
 			std::string table_name = "lab_teachers";
-			std::list<std::string> columns = { "name", "age" };
+			std::vector<std::string> columns = { "name", "age" };
 			std::string actual = Db::QueryGenerateUtility::make_insert_query(table_name, columns);
 			std::string expected = "INSERT INTO lab_teachers (name, age) VALUES (?, ?)";
 			Assert::AreEqual(expected, actual);

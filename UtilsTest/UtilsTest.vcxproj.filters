@@ -146,10 +146,10 @@
     <ClCompile Include="DbSettingsFileLoaderTest.cpp">
       <Filter>ソース ファイル\Db</Filter>
     </ClCompile>
-    <ClCompile Include="BindableTest.cpp">
-      <Filter>ソース ファイル\Interfaces</Filter>
-    </ClCompile>
     <ClCompile Include="QueryGenerateUtilityTest.cpp">
+      <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="MySQLDbTest.cpp">
       <Filter>ソース ファイル\Db</Filter>
     </ClCompile>
   </ItemGroup>

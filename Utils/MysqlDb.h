@@ -41,13 +41,13 @@ namespace Db
 
 		///‚±‚±‚ç‚Ö‚ñ‚Í—vÄŒŸ“¢
 		bool create_table(const Db::TableStructure& table_info);
-		bool insert(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<Bindable const> data);
+		bool insert(const std::string& table_name, const std::vector<std::string>& columns, std::shared_ptr<Bindable const> data);
 		bool insert(const Db::TableStructure& insert_columns, std::shared_ptr<Bindable const> data);
-		bool insert(const std::string& table_name, const std::list<std::string>& columns, const std::list<std::shared_ptr<Bindable const>>& data_list);
+		bool insert(const std::string& table_name, const std::vector<std::string>& columns, const std::list<std::shared_ptr<Bindable const>>& data_list);
 		bool insert(const Db::TableStructure& insert_columns, const std::list<std::shared_ptr<Bindable const>>& data_list);
-		int update(const std::string& table_name, const std::list<std::string>& columns, std::shared_ptr<Bindable const> data, const std::string& where_clause);
+		int update(const std::string& table_name, const std::vector<std::string>& columns, std::shared_ptr<Bindable const> data, const std::string& where_clause);
 		int update(const Db::TableStructure& update_columns, std::shared_ptr<Bindable const> data, std::string where_clause);
-		sql::ResultSet* select(const std::string& table_name, const std::list<std::string>& columns, const std::string& where_clause = "");
+		sql::ResultSet* select(const std::string& table_name, const std::vector<std::string>& columns, const std::string& where_clause = "");
 		sql::ResultSet* select(const Db::TableStructure& select_columns, const std::string where_clause = "");
 	};
 }

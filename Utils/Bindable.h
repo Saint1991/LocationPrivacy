@@ -17,7 +17,7 @@ protected:
 
 public:
 	virtual void bind(sql::PreparedStatement* statement, const Db::TableStructure& table_info) const = 0;
-	virtual void bind(sql::PreparedStatement* statement, const std::list<std::string>& columns) const = 0;
+	virtual void bind(sql::PreparedStatement* statement, const std::vector<std::string>& columns) const = 0;
 };
 
 #include "Bindable.hpp"

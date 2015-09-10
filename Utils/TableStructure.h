@@ -30,7 +30,7 @@ namespace Db
 		TABLE_STRUCTURE_API unsigned int get_column_index(const std::string& column_name) const;
 		TABLE_STRUCTURE_API const std::shared_ptr<const std::list<Column>> get_column_list() const;
 		TABLE_STRUCTURE_API const std::shared_ptr<const std::list<std::string>> get_primary_keys() const;
-		TABLE_STRUCTURE_API const std::list<std::string> get_column_name_list() const;
+		TABLE_STRUCTURE_API const std::vector<std::string> get_column_names() const;
 		TABLE_STRUCTURE_API const std::string to_string() const;
 		TABLE_STRUCTURE_API bool add_column(const Column& column);
 		TABLE_STRUCTURE_API bool add_primary_key(std::string primary_key);
