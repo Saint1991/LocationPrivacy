@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "BasicPath.h"
+#include "BasicRoad.h"
 
 
-namespace Graph
+namespace Map
 {
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	BasicPath::BasicPath(const node_id& to, std::shared_ptr<BasicPathData> data) : Edge<BasicPathData>(to, data)
+	BasicRoad::BasicRoad(Graph::node_id to, double distance) : Edge<Graph::BasicPathData>(to, std::make_shared<Graph::BasicPathData>(distance))
 	{
 	}
 
 	///<summary>
 	/// デストラクタ
 	///</summary>
-	BasicPath::~BasicPath()
+	BasicRoad::~BasicRoad()
 	{
 	}
 
@@ -22,7 +22,7 @@ namespace Graph
 	///<summary>
 	/// 距離を取得
 	///</summary>
-	const double BasicPath::distance() const
+	double BasicRoad::distance() const
 	{
 		return data->get_distance();
 	}
@@ -31,7 +31,7 @@ namespace Graph
 	///<summary>
 	/// 距離を更新
 	///</summary>
-	void BasicPath::update_distance(const double& distance)
+	void BasicRoad::update_distance(const double& distance)
 	{
 		data->update_distance(distance);
 	}

@@ -62,11 +62,8 @@ namespace UtilsTest
 			Assert::IsTrue(path->get_to() == static_edge1->get_to());
 			Assert::IsTrue(path->get_static_data() == static_edge1->get_static_data());
 
-
 			std::shared_ptr<Edge<BasicPathData> const> static_edge2 = node1.get_static_edge_to(1L);
-
 			Assert::IsTrue(static_edge2 == nullptr);
-
 		}
 		
 		
@@ -85,11 +82,8 @@ namespace UtilsTest
 			Assert::AreEqual(3.0, edge1->get_data()->get_distance());
 			Assert::AreEqual(3.0, node1.get_edge_to(2L)->get_data()->get_distance());
 
-
 			std::shared_ptr<Edge<BasicPathData>> edge2 = node1.get_edge_to(1L);
-
 			Assert::IsTrue(edge2 == nullptr);
-
 		}
 		
 		TEST_METHOD(Node_connect_to)
@@ -103,9 +97,7 @@ namespace UtilsTest
 			Assert::IsTrue(node1.connect_to(path1));
 			Assert::IsTrue(node1.connect_to(path2));
 			Assert::IsFalse(node1.connect_to(path1));
-			
 			Assert::AreEqual(2U, node1.get_connecting_node_list().size());
-		
 		}
 		
 		TEST_METHOD(Node_disconnect_from)
@@ -123,7 +115,6 @@ namespace UtilsTest
 
 			Assert::AreEqual(2L, *(node1.get_connecting_node_list().begin()));
 			Assert::AreEqual(1U, node1.get_connecting_node_list().size());
-
 		}
 
 		TEST_METHOD(Node_is_connecting_to)
@@ -152,7 +143,6 @@ namespace UtilsTest
 
 			Assert::AreEqual(2L, *(node1.get_connecting_node_list().begin())); 
 			Assert::AreEqual(3L, ++*(node1.get_connecting_node_list().begin()));
-
 		}
 		
 		TEST_METHOD(Node_for_each_edge)
@@ -171,7 +161,6 @@ namespace UtilsTest
 
 			Assert::AreEqual(2.0, path1->get_data()->get_distance());
 			Assert::AreEqual(3.0, path2->get_data()->get_distance());
-
 		}
 	};
 }

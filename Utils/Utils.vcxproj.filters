@@ -264,9 +264,6 @@
     <ClInclude Include="RoutingTable.h">
       <Filter>ヘッダー ファイル\Graph\Routing</Filter>
     </ClInclude>
-    <ClInclude Include="Poi.h">
-      <Filter>ヘッダー ファイル\Geography</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>ヘッダー ファイル\Time</Filter>
     </ClInclude>
@@ -278,9 +275,6 @@
     </ClInclude>
     <ClInclude Include="BasicPoiData.h">
       <Filter>ヘッダー ファイル\Geography\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Poi.hpp">
-      <Filter>ソース ファイル\Geography</Filter>
     </ClInclude>
     <ClInclude Include="MobileEntityState.h">
       <Filter>ヘッダー ファイル\Entity\Data</Filter>

@@ -16,20 +16,14 @@
     <Filter Include="ヘッダー ファイル\Entity">
       <UniqueIdentifier>{f711121d-8549-40aa-bf52-5d1c4cafa720}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Geography">
-      <UniqueIdentifier>{b0949fda-71e7-40b7-a04d-cfb1f449c33d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Geography">
-      <UniqueIdentifier>{b8154b56-8c8e-4cdc-bf56-00ac78ce78aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Graph">
-      <UniqueIdentifier>{8e94bb9b-e312-4e0d-af3b-5533a18923fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Graph">
-      <UniqueIdentifier>{42a1149f-8c78-4eab-95cc-c30efbd0e5b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Entity">
       <UniqueIdentifier>{9ecfc544-2d17-4f98-9dff-5b1f1d682375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Map">
+      <UniqueIdentifier>{8e94bb9b-e312-4e0d-af3b-5533a18923fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Map">
+      <UniqueIdentifier>{42a1149f-8c78-4eab-95cc-c30efbd0e5b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,11 +42,11 @@
     <ClInclude Include="BasicUser.hpp">
       <Filter>ソース ファイル\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="MapNode.h">
-      <Filter>ヘッダー ファイル\Geography</Filter>
+    <ClInclude Include="DbNodeCollectionFactory.h">
+      <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
-    <ClInclude Include="BasicPath.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
+    <ClInclude Include="BasicRoad.h">
+      <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -65,11 +59,11 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MapNode.cpp">
-      <Filter>ソース ファイル\Geography</Filter>
+    <ClCompile Include="DbNodeCollectionFactory.cpp">
+      <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
-    <ClCompile Include="BasicPath.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
+    <ClCompile Include="BasicRoad.cpp">
+      <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

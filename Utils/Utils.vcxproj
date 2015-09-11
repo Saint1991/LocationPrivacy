@@ -223,8 +223,6 @@
     <ClInclude Include="MobileEntityState.h" />
     <ClInclude Include="Column.h" />
     <ClInclude Include="MySQLDb.h" />
-    <ClInclude Include="Poi.h" />
-    <ClInclude Include="Poi.hpp" />
     <ClInclude Include="SemanticPoiData.h" />
     <ClInclude Include="QueryGenerateUtility.h" />
     <ClInclude Include="Node.h" />
