@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "SemanticPoiData.h"
+#include "PoiData.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

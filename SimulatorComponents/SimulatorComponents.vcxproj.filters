@@ -48,10 +48,10 @@
     <ClInclude Include="BasicRoad.h">
       <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
-    <ClInclude Include="BasicIntersection.h">
+    <ClInclude Include="BasicMapNode.h">
       <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
-    <ClInclude Include="BasicMapNode.h">
+    <ClInclude Include="BasicPoi.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,10 +71,10 @@
     <ClCompile Include="BasicRoad.cpp">
       <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
-    <ClCompile Include="BasicIntersection.cpp">
+    <ClCompile Include="BasicMapNode.cpp">
       <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
-    <ClCompile Include="BasicMapNode.cpp">
+    <ClCompile Include="BasicPoi.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

@@ -264,9 +264,6 @@
     <ClInclude Include="TimeUtility.h">
       <Filter>ヘッダー ファイル\Time</Filter>
     </ClInclude>
-    <ClInclude Include="SemanticPoiData.h">
-      <Filter>ヘッダー ファイル\Geography\Data</Filter>
-    </ClInclude>
     <ClInclude Include="BasicPoiData.h">
       <Filter>ヘッダー ファイル\Geography\Data</Filter>
     </ClInclude>
@@ -290,6 +287,9 @@
     </ClInclude>
     <ClInclude Include="TimeSlotManager.h">
       <Filter>ヘッダー ファイル\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="PoiData.h">
+      <Filter>ヘッダー ファイル\Geography\Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -368,9 +368,6 @@
     <ClCompile Include="BasicPoiData.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
-    <ClCompile Include="SemanticPoiData.cpp">
-      <Filter>ソース ファイル\Geography\Data</Filter>
-    </ClCompile>
     <ClCompile Include="Vector2dFactory.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
@@ -385,6 +382,9 @@
     </ClCompile>
     <ClCompile Include="TimeSlotManager.cpp">
       <Filter>ソース ファイル\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="PoiData.cpp">
+      <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

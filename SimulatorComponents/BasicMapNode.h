@@ -29,6 +29,8 @@ namespace Map
 		bool connect_to(Graph::node_id, double distance);
 		double distance_to_next_node(Graph::node_id to) const;
 	};
+
+	typedef BasicMapNode BasicIntersection;
 }
 
 

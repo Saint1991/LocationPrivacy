@@ -146,8 +146,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BasicIntersection.h" />
     <ClInclude Include="BasicMapNode.h" />
+    <ClInclude Include="BasicPoi.h" />
     <ClInclude Include="BasicRoad.h" />
     <ClInclude Include="BasicUser.h" />
     <ClInclude Include="BasicUser.hpp" />
@@ -156,8 +156,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BasicIntersection.cpp" />
     <ClCompile Include="BasicMapNode.cpp" />
+    <ClCompile Include="BasicPoi.cpp" />
     <ClCompile Include="BasicRoad.cpp" />
     <ClCompile Include="DbNodeCollectionFactory.cpp" />
     <ClCompile Include="dllmain.cpp">

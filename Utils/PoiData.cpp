@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "SemanticPoiData.h"
+#include "PoiData.h"
 
 namespace Geography
 {
