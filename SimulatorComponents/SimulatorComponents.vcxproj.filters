@@ -51,8 +51,11 @@
     <ClInclude Include="BasicMapNode.h">
       <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
+    <ClInclude Include="DbPoiCollectionFactory.h">
+      <Filter>ヘッダー ファイル\Map</Filter>
+    </ClInclude>
     <ClInclude Include="BasicPoi.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -74,8 +77,11 @@
     <ClCompile Include="BasicMapNode.cpp">
       <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
+    <ClCompile Include="DbPoiCollectionFactory.cpp">
+      <Filter>ソース ファイル\Map</Filter>
+    </ClCompile>
     <ClCompile Include="BasicPoi.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

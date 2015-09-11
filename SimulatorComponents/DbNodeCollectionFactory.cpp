@@ -12,7 +12,6 @@ namespace Map
 	{
 		std::unique_ptr<Db::IDbSettingsLoader> loader = std::make_unique<Db::DbSettingsFileLoader>(setting_file_path);
 		db = std::make_unique<Db::MySQLDb>(std::move(loader));
-		db->use(db_name);
 	}
 
 	///<summary>

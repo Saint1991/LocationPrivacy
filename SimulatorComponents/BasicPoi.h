@@ -14,19 +14,21 @@ namespace Map
 
 	///<summary>
 	/// POIを表すクラス
-	/// connect_toはオーバーライドして使用禁止にしているが，
-	/// ポリモーフィズムできなくなるようであればただfalseを返すメソッドとしてpublicにすることを検討する
+	/// connect_toはオーバーライドして何もしないメソッドにしているので使用しないこと
+	/// NodeCollectionFactoryでもConnect系のヘルパメソッドは意味がないので使えない
 	///</summary>
 	class BASIC_POI_API BasicPoi : public Graph::Node<Geography::PoiData, BasicRoad>
 	{
 	private:
-		bool connect_to(std::shared_ptr<BasicRoad> road);
+		
 	public:
 		
 		BasicPoi(Graph::node_id id, Geography::PoiData data);
 		BasicPoi(Graph::node_id id, Geography::LatLng position, std::string venue_name, std::string category_id, std::string category_name);
 		BasicPoi(const BasicPoi& poi);
 		~BasicPoi();
+
+		bool connect_to(std::shared_ptr<BasicRoad> road);
 
 		const std::string category_id() const;
 		const std::string category_name() const;
