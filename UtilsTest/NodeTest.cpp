@@ -65,7 +65,7 @@ namespace UtilsTest
 
 			std::shared_ptr<Edge<BasicPathData> const> static_edge2 = node1.get_static_edge_to(1L);
 
-			Assert::IsTrue(nullptr == static_edge2);
+			Assert::IsTrue(static_edge2 == nullptr);
 
 		}
 		
@@ -83,11 +83,12 @@ namespace UtilsTest
 
 			edge1->get_data()->update_distance(3.0);
 			Assert::AreEqual(3.0, edge1->get_data()->get_distance());
-			
+			Assert::AreEqual(3.0, node1.get_edge_to(2L)->get_data()->get_distance());
+
 
 			std::shared_ptr<Edge<BasicPathData>> edge2 = node1.get_edge_to(1L);
 
-			Assert::IsTrue(nullptr == edge2);
+			Assert::IsTrue(edge2 == nullptr);
 
 		}
 		

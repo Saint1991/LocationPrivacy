@@ -76,7 +76,7 @@ namespace UtilsTest
 			std::shared_ptr<Identifiable<long> const> id = collection.read_by_id(1L);
 		
 			Assert::AreEqual(1L, id->get_id());
-			Assert::IsTrue(nullptr == collection.read_by_id(2L));
+			Assert::IsTrue(collection.read_by_id(2L) == nullptr);
 		}
 		
 		TEST_METHOD(IdentifiableCollection_get_by_id)
@@ -130,7 +130,7 @@ namespace UtilsTest
 			Assert::AreEqual(0U, collection.size());
 
 			std::shared_ptr<Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>> const> node = collection.read_by_id(1L);
-			Assert::IsTrue(nullptr == node);
+			Assert::IsTrue(node == nullptr);
 		}
 		
 		TEST_METHOD(IdentifiableCollection_get_id_list)
@@ -176,7 +176,7 @@ namespace UtilsTest
 			
 			try
 			{
-				collection.add(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(1L, std::make_shared<Geography::LatLng>(15.0, 20.0)));
+				collection.add(Graph::Node<Geography::LatLng, Graph::Edge<Graph::BasicPathData>>(1L, std::make_shared<Geography::LatLng>(15.0, 25.0)));
 				Assert::Fail();
 			}
 			catch (DuplicatedIdException<Graph::node_id>)
@@ -188,6 +188,13 @@ namespace UtilsTest
 			}
 
 			Assert::IsTrue(collection.contains(1L));
+			Assert::AreEqual(1U, collection.size());
+			
+			auto data = collection.read_by_id(1L)->data;
+			Assert::AreEqual(10.0, data->lat());
+			Assert::AreEqual(20.0, data->lng());
+
+
 			
 		}
 
