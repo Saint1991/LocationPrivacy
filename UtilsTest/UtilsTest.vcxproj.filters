@@ -137,9 +137,6 @@
     <ClCompile Include="BasicPoiDataTest.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
-    <ClCompile Include="SemanticPoiDataTest.cpp">
-      <Filter>ソース ファイル\Geography\Data</Filter>
-    </ClCompile>
     <ClCompile Include="FileExporterTest.cpp">
       <Filter>ソース ファイル\IO</Filter>
     </ClCompile>
@@ -151,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="MySQLDbTest.cpp">
       <Filter>ソース ファイル\Db</Filter>
+    </ClCompile>
+    <ClCompile Include="PoiDataTest.cpp">
+      <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

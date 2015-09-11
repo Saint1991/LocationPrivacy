@@ -181,7 +181,7 @@
     <ClCompile Include="NodeCollectionFactoryTest.cpp" />
     <ClCompile Include="NodeTest.cpp" />
     <ClCompile Include="QueryGenerateUtilityTest.cpp" />
-    <ClCompile Include="SemanticPoiDataTest.cpp" />
+    <ClCompile Include="PoiDataTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

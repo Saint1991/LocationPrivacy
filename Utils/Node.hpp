@@ -19,7 +19,7 @@ namespace Graph
 	///</summary>
 	template <typename NODE_DATA, typename EDGE>
 	Node<NODE_DATA, EDGE>::Node(const Node<NODE_DATA, EDGE> &node) 
-		: Identifiable<node_id>(node), data(node.data), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
+		: Identifiable<node_id>(node), data(std::make_shared<NODE_DATA>(*node.data)), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
 	{
 		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = node.edge_list->begin(); iter != node.edge_list->end(); iter++) {
 			edge_list->push_back(std::make_shared<EDGE>(**iter));

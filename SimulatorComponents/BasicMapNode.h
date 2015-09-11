@@ -27,6 +27,7 @@ namespace Map
 		double lng() const;
 
 		bool connect_to(Graph::node_id, double distance);
+		bool connect_to(std::shared_ptr<BasicRoad> road);
 		double distance_to_next_node(Graph::node_id to) const;
 	};
 

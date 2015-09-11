@@ -7,7 +7,7 @@ namespace Graph
 	///<param name='to'>接続先のノードID</param>
 	///<param name='data'>エッジの持つ属性値</param>
 	template <typename EDGE_DATA>
-	Edge<EDGE_DATA>::Edge(const Graph::node_id& to, std::shared_ptr<EDGE_DATA> data) : BasicEdge(to), data(data)
+	Edge<EDGE_DATA>::Edge(const Graph::node_id& to, std::shared_ptr<EDGE_DATA> data) : BasicEdge(to), data(std::make_shared<EDGE_DATA>(*data))
 	{
 	}
 

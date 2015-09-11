@@ -7,7 +7,7 @@ namespace Graph
 	///</summary>
 	template <typename NODE, typename EDGE, typename EDGE_DATA>
 	NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::NodeCollectionFactory() 
-		: node_collection(std::make_shared<Collection::IdentifiableCollection<std::shared_ptr<NODE>>>())
+		: node_collection(std::make_shared<Collection::IdentifiableCollection<Graph::node_id, NODE>>())
 	{
 	}
 
@@ -24,7 +24,7 @@ namespace Graph
 	/// 変更不可の状態にロックしたコレクションを取得する．
 	///</summary>
 	template <typename NODE, typename EDGE, typename EDGE_DATA>
-	std::shared_ptr<const Collection::IdentifiableCollection<long, NODE const>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_static_node_collection() const
+	std::shared_ptr<const Collection::IdentifiableCollection<long, NODE>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_static_node_collection()
 	{
 		create_nodes();
 		set_connectivities();
@@ -77,7 +77,7 @@ namespace Graph
 		if (node == nullptr || !is_to_exists) {
 			return false;
 		}
-		return node->connect_to(std::make_shared<EDGE>(id, data));
+		return node->connect_to(std::make_shared<EDGE>(to, data));
 	}
 
 
@@ -114,7 +114,7 @@ namespace Graph
 	bool NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::disconnect(const node_id& target, const node_id& from)
 	{
 		std::shared_ptr<NODE> node = node_collection->get_by_id(target);
-		if (target == nullptr) {
+		if (node == nullptr) {
 			return false;
 		}
 		return node->disconnect_from(from);
@@ -139,7 +139,7 @@ namespace Graph
 		}
 	}
 
-
+	
 	#pragma region BasicEdge
 	template <typename NODE>
 	bool NodeCollectionFactory<NODE, BasicEdge, nullptr_t>::connect(const node_id& from, const node_id& to) 
@@ -171,6 +171,6 @@ namespace Graph
 		return true;
 	}
 	#pragma endregion EDGEがBasicEdgeの時のための部分特殊化
-
+	
 }
 

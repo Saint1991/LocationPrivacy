@@ -11,6 +11,21 @@ namespace Map
 	{
 	}
 
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	BasicRoad::BasicRoad(Graph::node_id to, std::shared_ptr<Graph::BasicPathData> data) : Edge<Graph::BasicPathData>(to, data)
+	{
+	}
+
+	///<summary>
+	/// コピーコンストラクタ
+	///</summary>
+	BasicRoad::BasicRoad(const BasicRoad& road) : Edge<Graph::BasicPathData>(road.get_to(), std::make_shared<Graph::BasicPathData>(road.data->get_distance()))
+	{
+	}
+
 	///<summary>
 	/// デストラクタ
 	///</summary>

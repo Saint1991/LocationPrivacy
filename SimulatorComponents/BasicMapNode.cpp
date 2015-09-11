@@ -54,6 +54,14 @@ namespace Map
 		return Graph::Node<Geography::LatLng, BasicRoad>::connect_to(std::make_shared<BasicRoad>(to, distance));
 	}
 
+	///<summary>
+	/// toに対して距離distanceのエッジを作成
+	///</summary>
+	bool BasicMapNode::connect_to(std::shared_ptr<BasicRoad> road)
+	{
+		return Graph::Node<Geography::LatLng, BasicRoad>::connect_to(road);
+	}
+
 
 	///<summary>
 	/// toのノードまでの距離を取得します

@@ -18,6 +18,8 @@ namespace Map
 	{
 	public:
 		BasicRoad(Graph::node_id to, double distance);
+		BasicRoad(Graph::node_id to, std::shared_ptr<Graph::BasicPathData> data);
+		BasicRoad(const BasicRoad& road);
 		virtual ~BasicRoad();
 		double distance() const;
 		void update_distance(const double& distance);

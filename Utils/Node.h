@@ -29,7 +29,7 @@ namespace Graph
 		std::shared_ptr<EDGE const> get_static_edge_to(node_id id) const;
 		std::shared_ptr<EDGE> get_edge_to(node_id id);
 
-		bool connect_to(std::shared_ptr<EDGE> edge);
+		virtual bool connect_to(std::shared_ptr<EDGE> edge);
 		bool disconnect_from(node_id from);
 		
 		bool is_connecting_to(node_id id) const;

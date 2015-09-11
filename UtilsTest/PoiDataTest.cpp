@@ -7,7 +7,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UtilsTest
 {
-	TEST_CLASS(SemanticPoiDataTest)
+	TEST_CLASS(PoiDataTest)
 	{
 	public:
 
