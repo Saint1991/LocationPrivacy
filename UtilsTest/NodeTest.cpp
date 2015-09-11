@@ -17,10 +17,6 @@ namespace UtilsTest
 		
 		TEST_METHOD(Node_Constructor)
 		{
-			Node<double, Edge<BasicPathData>> node(2L, std::make_shared<double>(2.3));
-			Assert::AreEqual(2.3, *node.data);
-			Assert::AreEqual(2L, node.get_id());
-
 			Node<double, Graph::Edge<Graph::BasicPathData>> node2(2L, std::make_shared<double>(2.3));
 			Assert::AreEqual(2.3, *node2.data);
 			Assert::AreEqual(2L, node2.get_id());
@@ -58,12 +54,14 @@ namespace UtilsTest
 		TEST_METHOD(Node_get_static_edge_to)
 		{
 			std::shared_ptr<Edge<BasicPathData>> path = std::make_shared<Edge<BasicPathData>>(2L, std::make_shared<BasicPathData>(2.0));
-			Node<Geography::LatLng, Edge<BasicPathData>> node1(1L,std::make_shared<Geography::LatLng>(10.0,20.0));
+			Node<Geography::LatLng, Edge<BasicPathData>> node1(1L, std::make_shared<Geography::LatLng>(10.0, 20.0));
 			Node<Geography::LatLng, Edge<BasicPathData>> node2(2L, std::make_shared<Geography::LatLng>(10.0, 20.0));
 			node1.connect_to(path);
 
 			std::shared_ptr<Edge<BasicPathData> const> static_edge1= node1.get_static_edge_to(2L);
-			Assert::IsTrue(path == static_edge1);
+			Assert::IsTrue(path->get_to() == static_edge1->get_to());
+			Assert::IsTrue(path->get_static_data() == static_edge1->get_static_data());
+
 
 			std::shared_ptr<Edge<BasicPathData> const> static_edge2 = node1.get_static_edge_to(1L);
 
@@ -80,7 +78,12 @@ namespace UtilsTest
 			node1.connect_to(path);
 
 			std::shared_ptr<Edge<BasicPathData>> edge1= node1.get_edge_to(2L);
-			Assert::IsTrue(path == edge1);
+			Assert::IsTrue(path->get_to() == edge1->get_to());
+			Assert::IsTrue(path->get_data() == edge1->get_data());
+
+			edge1->get_data()->update_distance(3.0);
+			Assert::AreEqual(3.0, edge1->get_data()->get_distance());
+			
 
 			std::shared_ptr<Edge<BasicPathData>> edge2 = node1.get_edge_to(1L);
 
@@ -99,7 +102,8 @@ namespace UtilsTest
 			Assert::IsTrue(node1.connect_to(path1));
 			Assert::IsTrue(node1.connect_to(path2));
 			Assert::IsFalse(node1.connect_to(path1));
-		
+			
+			Assert::AreEqual(2U, node1.get_connecting_node_list().size());
 		
 		}
 		
@@ -117,6 +121,8 @@ namespace UtilsTest
 			Assert::IsFalse(node1.disconnect_from(3L));
 
 			Assert::AreEqual(2L, *(node1.get_connecting_node_list().begin()));
+			Assert::AreEqual(1U, node1.get_connecting_node_list().size());
+
 		}
 
 		TEST_METHOD(Node_is_connecting_to)
