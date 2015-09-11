@@ -192,8 +192,6 @@
     <ClInclude Include="BasicEdge.h" />
     <ClInclude Include="BasicGeoNodeData.h" />
     <ClInclude Include="BasicMobileEntityState.h" />
-    <ClInclude Include="BasicNode.h" />
-    <ClInclude Include="BasicNode.hpp" />
     <ClInclude Include="BasicPathData.h" />
     <ClInclude Include="BasicPoiData.h" />
     <ClInclude Include="BasicRequirement.h" />

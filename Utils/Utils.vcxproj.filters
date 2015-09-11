@@ -240,14 +240,8 @@
     <ClInclude Include="NodeCollectionFactory.h">
       <Filter>ヘッダー ファイル\Graph\Node</Filter>
     </ClInclude>
-    <ClInclude Include="BasicNode.h">
-      <Filter>ヘッダー ファイル\Graph\Node</Filter>
-    </ClInclude>
     <ClInclude Include="Edge.hpp">
       <Filter>ソース ファイル\Graph\Edge</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicNode.hpp">
-      <Filter>ソース ファイル\Graph\Node</Filter>
     </ClInclude>
     <ClInclude Include="Node.hpp">
       <Filter>ソース ファイル\Graph\Node</Filter>
