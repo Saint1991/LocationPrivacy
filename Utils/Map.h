@@ -1,9 +1,3 @@
-#ifdef UTILS_EXPORTS
-#define MAP_API __declspec(dllexport)
-#else
-#define MAP_API __declspec(dllimport)
-#endif
-
 #pragma once
 #include "NodeCollectionFactory.h"
 #include "IdentifiableCollection.h"
@@ -19,23 +13,27 @@ namespace Graph
 	/// NODE, PATHにはそれぞれNode, Edgeを継承したクラスが使える
 	/// PATHにはBasicPathDataを継承しているデータを保持しているEdgeしか使えないので注意
 	///</summary>
-	template <typename NODE, typename PATH>
-	class MAP_API Map
+	template <typename NODE, typename POI, typename PATH>
+	class Map
 	{
 
 	protected:
-		std::shared_ptr<const Collection::IdentifiableCollection<NODE const> node_collection;
+		std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection;
+		std::shared_ptr <const Collection::IdentifiableCollection<Graph::node_id, POI>> poi_collection;
 		virtual void build_map() = 0;
 
 		///<summary>
 		/// 最短路を格納するルーティングテーブル
 		/// SourceからDestinationへ行くのに次にどのノードに行く必要があるかを格納する．
+		/// Mapの構成はinitializeを呼び出した際に行われる
 		///</summary>
 		std::unique_ptr<RoutingTable const> routing_table;
 
 	public:
-		Map(std::unique_ptr<RoutingMethod<NODE>> routing_method);
+		Map();
 		virtual ~Map();
+
+		void initialize(std::unique_ptr<RoutingMethod<NODE, PATH>> routing_method);
 
 		node_id get_next_node_of_shortest_path(const node_id& from, const node_id& to) const;
 		const std::list<node_id> get_shortest_path(const node_id& source, const node_id& destination) const;
@@ -44,7 +42,6 @@ namespace Graph
 		
 		const std::list<node_id> get_connecting_nodes(const node_id& id) const;
 		std::shared_ptr<NODE const> get_static_node(const node_id& id) const;
-		std::shared_ptr<NODE> get_node(const node_id& id);
 	};
 }
 

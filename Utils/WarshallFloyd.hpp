@@ -24,7 +24,7 @@ namespace Graph
 	/// 距離行列，ルーティング結果の初期化
 	///</summary>
 	template <typename NODE, typename EDGE>
-	void WarshallFloyd<NODE, EDGE>::initialize(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection)
+	void WarshallFloyd<NODE, EDGE>::initialize(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection)
 	{
 		//ノード数の取得
 		node_count = node_collection->size();
@@ -46,11 +46,11 @@ namespace Graph
 				node_id id = edge->get_to();
 				long index_to = conversion_map->at(id);
 				double distance = edge->get_static_data()->get_distance();
-				distance_map->at(node_index)->at(index_to) = distance;
-				routing_table->at(node_index)->at(index_to) = id;
+				distance_map->at(node_index).at(index_to) = distance;
+				routing_table->at(node_index).at(index_to) = id;
 			});
-			distance_map->at(node_index)->at(node_index) = 0;
-			routing_table->at(node_index)->at(node_index) = SELF;
+			distance_map->at(node_index).at(node_index) = 0;
+			routing_table->at(node_index).at(node_index) = SELF;
 			node_index++;
 
 		});
@@ -62,7 +62,7 @@ namespace Graph
 	/// メモリ効率を優先するなら片方向にしてインデックスを探索するように直す
 	///</summary>
 	template <typename NODE, typename EDGE>
-	void WarshallFloyd<NODE, EDGE>::create_conversion_map(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection)
+	void WarshallFloyd<NODE, EDGE>::create_conversion_map(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection)
 	{
 		conversion_map = std::make_unique<std::unordered_map<node_id, int>>(node_count);
 		reverse_conversion_map = std::make_unique<std::vector<node_id>>(node_count);
@@ -82,24 +82,24 @@ namespace Graph
 	/// node_collectionが正しく渡されていないとnullptrが返る
 	///</summary>
 	template <typename NODE, typename EDGE>
-	std::unique_ptr<RoutingTable const>	WarshallFloyd<NODE>::create_routing_table(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection) const
+	std::unique_ptr<RoutingTable const>	WarshallFloyd<NODE, EDGE>::create_routing_table(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection)
 	{
 		//フィールドにnode_collectionへの参照を持たせる (距離計算 distanceメソッドのため)
 		if (node_collection == nullptr) return nullptr;
 
 		//各フィールドを初期化する
-		initialize();
+		initialize(node_collection);
 
 		//ワーシャルフロイド法で最短路を確定させていく
 		for (long source = 0; source < node_count; source++) {
 			for (long destination = 0; destination < node_count; destination++) {
 				for (long via = 0; via < node_count; via++) {
 					
-					double distance_src_dest = distance_map->at(source)->at(destination);
-					double distance_src_via_dest = distance_map->at(source)->at(via) + distance_map->at(via)->at(destination);
+					double distance_src_dest = distance_map->at(source).at(destination);
+					double distance_src_via_dest = distance_map->at(source).at(via) + distance_map->at(via).at(destination);
 					if (distance_src_via_dest < distance_src_dest) {
-						distance_map->at(source)->at(destination) = distance_src_via_dest;
-						routing_table->at(source)->at(destination) = reverse_conversion_map->at(via);
+						distance_map->at(source).at(destination) = distance_src_via_dest;
+						routing_table->at(source).at(destination) = reverse_conversion_map->at(via);
 					}
 
 				}

@@ -1,3 +1,9 @@
+#ifdef UTILS_EXPORTS
+#define ROUTING_TABLE_API __declspec(dllexport)
+#else
+#define ROUTING_TABLE_API __declspec(dllimport)
+#endif
+
 #pragma once
 #include "BasicEdge.h"
 
@@ -9,7 +15,7 @@ namespace Graph
 	///<summary>
 	/// ノード間の最短路を表すルーティングテーブル
 	///</summary>
-	class RoutingTable
+	class ROUTING_TABLE_API RoutingTable
 	{
 	protected:
 		std::unique_ptr<std::vector<std::vector<node_id>>> routing_table;

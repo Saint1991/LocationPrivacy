@@ -17,6 +17,6 @@ namespace Graph
 	{		
 	public:
 		virtual std::unique_ptr<RoutingTable const> 
-			create_routing_table(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection) const = 0;
+			create_routing_table(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection) = 0;
 	};
 }

@@ -184,7 +184,7 @@ namespace Collection
 	template <typename ID_TYPE, typename DATA_TYPE>
 	void IdentifiableCollection<ID_TYPE, DATA_TYPE>::foreach(const std::function<void(std::shared_ptr<DATA_TYPE const>)>& execute_function) const
 	{
-		for (std::set<std::shared_ptr<Identifiable<ID_TYPE> const>>::const_iterator iter = begin(); iter != end(); iter++) {
+		for (std::set<std::shared_ptr<Identifiable<ID_TYPE>>>::const_iterator iter = begin(); iter != end(); iter++) {
 			std::shared_ptr<DATA_TYPE const> element = std::dynamic_pointer_cast<DATA_TYPE const>(*iter);
 			execute_function(element);
 		}

@@ -20,14 +20,15 @@ namespace Graph
 		std::unique_ptr<std::vector<std::vector<double>>> distance_map;
 		std::unique_ptr<std::vector<std::vector<node_id>>> routing_table;
 		
-		void initialize(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection);
-		void 	create_conversion_map(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection);
+		void initialize(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection);
+		void 	create_conversion_map(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection);
 		
 	public:
 		WarshallFloyd();
 		virtual ~WarshallFloyd();
+
 		std::unique_ptr<RoutingTable const> 
-			create_routing_table(std::shared_ptr<const Collection::IdentifiableCollection<NODE const>> node_collection) const;
+			create_routing_table(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection);
 	};
 }
 
