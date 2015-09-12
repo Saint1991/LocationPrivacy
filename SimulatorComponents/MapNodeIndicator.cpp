@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MapNodeIdIndicator.h"
+#include "MapNodeIndicator.h"
 
 namespace Map
 {
@@ -7,7 +7,7 @@ namespace Map
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	MapNodeIdIndicator::MapNodeIdIndicator(Graph::node_id id, NodeType type) : _id(id), _type(type)
+	MapNodeIndicator::MapNodeIndicator(Graph::node_id id, NodeType type) : _id(id), _type(type)
 	{
 	}
 
@@ -15,7 +15,7 @@ namespace Map
 	///<summary>
 	/// デストラクタ
 	///</summary>
-	MapNodeIdIndicator::~MapNodeIdIndicator()
+	MapNodeIndicator::~MapNodeIndicator()
 	{
 	}
 
@@ -23,7 +23,7 @@ namespace Map
 	///<summary>
 	/// 指し示すIDの取得
 	///</summary>
-	Graph::node_id MapNodeIdIndicator::id() const
+	Graph::node_id MapNodeIndicator::id() const
 	{
 		return _id;
 	}
@@ -32,7 +32,7 @@ namespace Map
 	///<summary>
 	/// 指し示すノードの種別を取得
 	///</summary>
-	NodeType MapNodeIdIndicator::type() const
+	NodeType MapNodeIndicator::type() const
 	{
 		return _type;
 	}

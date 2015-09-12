@@ -60,7 +60,7 @@
     <ClInclude Include="BasicDbMap.h">
       <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
-    <ClInclude Include="MapNodeIdIndicator.h">
+    <ClInclude Include="MapNodeIndicator.h">
       <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,7 +92,7 @@
     <ClCompile Include="BasicDbMap.cpp">
       <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
-    <ClCompile Include="MapNodeIdIndicator.cpp">
+    <ClCompile Include="MapNodeIndicator.cpp">
       <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
   </ItemGroup>
