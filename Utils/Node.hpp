@@ -117,14 +117,14 @@ namespace Graph
 	/// ノード番号は昇順にソート
 	///</summary>
 	template <typename NODE_DATA, typename EDGE>
-	std::list<node_id> Node<NODE_DATA, EDGE>::get_connecting_node_list() const
+	std::vector<node_id> Node<NODE_DATA, EDGE>::get_connecting_node_list() const
 	{
-		std::list<node_id> connect_node_list;
+		std::vector<node_id> connect_node_list;
 		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
 			node_id id = (*iter)->get_to();
 			connect_node_list.push_back(id);
 		}
-		connect_node_list.sort();
+		std::sort(connect_node_list.begin(), connect_node_list.end());
 		return connect_node_list;
 	}
 

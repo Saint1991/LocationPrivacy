@@ -291,6 +291,9 @@
     <ClInclude Include="PoiData.h">
       <Filter>ヘッダー ファイル\Geography\Data</Filter>
     </ClInclude>
+    <ClInclude Include="MapNodeIndicator.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -385,6 +388,9 @@
     </ClCompile>
     <ClCompile Include="PoiData.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="MapNodeIndicator.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

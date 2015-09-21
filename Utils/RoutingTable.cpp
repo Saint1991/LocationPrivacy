@@ -42,9 +42,9 @@ namespace Graph
 	/// 到達不可能な場合は最後尾がNOWHEREになる
 	/// source == destinationの場合は空のリストが返される
 	///</summary>
-	const std::list<node_id> RoutingTable::get_shortest_path(const node_id& source, const node_id& destination) const
+	const std::vector<node_id> RoutingTable::get_shortest_path(const node_id& source, const node_id& destination) const
 	{
-		std::list<node_id> shortest_path;
+		std::vector<node_id> shortest_path;
 		if (source == destination) return shortest_path;
 
 		node_id iter = source;
@@ -65,6 +65,26 @@ namespace Graph
 		long index_to = conversion_map->at(to);
 		double shortest_distance = shortest_distance_table->at(index_from).at(index_to);
 		return shortest_distance;
+	}
+
+
+
+	///<summary>
+	/// candidatesのうちfromから最も近いものを返します
+	/// candidatesが不正な場合はNO_CONNECTIONを返します
+	///</summary>
+	node_id RoutingTable::get_nearest_from(const node_id& from, const std::vector<node_id>& candidates) const
+	{
+		node_id ret = NOWHERE;
+		double min_distance = NO_CONNECTION;
+		for (std::vector<node_id>::const_iterator iter = candidates.begin(); iter != candidates.end(); iter++) {
+			double distance = shortest_distance(from, *iter);
+			if (distance < min_distance) {
+				min_distance = distance;
+				ret = *iter;
+			}
+		}
+		return ret;
 	}
 }
 

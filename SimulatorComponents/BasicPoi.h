@@ -19,7 +19,6 @@ namespace Map
 	///</summary>
 	class BASIC_POI_API BasicPoi : public Graph::Node<Geography::PoiData, BasicRoad>
 	{
-	private:
 		
 	public:
 		
@@ -40,6 +39,7 @@ namespace Map
 		bool set_relation(std::pair<Graph::node_id, double> relation1, std::pair<Graph::node_id, double> relation2);
 
 		std::pair<Graph::node_id, Graph::node_id> between() const;
+		double distance_to(const Graph::node_id& to) const;
 	};
 }
 

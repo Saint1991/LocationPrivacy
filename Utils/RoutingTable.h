@@ -27,8 +27,9 @@ namespace Graph
 		virtual ~RoutingTable();
 
 		node_id get_next_node_of_shortest_path(const node_id& from, const node_id& to) const;
-		const std::list<node_id> get_shortest_path(const node_id& source, const node_id& destination) const;
+		const std::vector<node_id> get_shortest_path(const node_id& source, const node_id& destination) const;
 		double shortest_distance(const node_id& from, const node_id& to) const;
+		node_id get_nearest_from(const node_id& from, const std::vector<node_id>& candidates) const;
 	};
 }
 

@@ -216,6 +216,7 @@
     <ClInclude Include="LatLng.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Map.hpp" />
+    <ClInclude Include="MapNodeIndicator.h" />
     <ClInclude Include="MobileEntity.h" />
     <ClInclude Include="MobileEntity.hpp" />
     <ClInclude Include="MobileEntityState.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="GeoCalculation.cpp" />
     <ClCompile Include="GraphUtility.cpp" />
     <ClCompile Include="LatLng.cpp" />
+    <ClCompile Include="MapNodeIndicator.cpp" />
     <ClCompile Include="MobileEntityState.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="MySQLDb.cpp" />

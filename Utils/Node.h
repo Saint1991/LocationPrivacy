@@ -33,7 +33,7 @@ namespace Graph
 		bool disconnect_from(node_id from);
 		
 		bool is_connecting_to(node_id id) const;
-		std::list<node_id> get_connecting_node_list() const;
+		std::vector<node_id> get_connecting_node_list() const;
 
 		void for_each_edge(const std::function<void(std::shared_ptr<EDGE>)>& execute_function);
 		void for_each_edge(const std::function<void(std::shared_ptr<EDGE const>)>& execute_function) const;

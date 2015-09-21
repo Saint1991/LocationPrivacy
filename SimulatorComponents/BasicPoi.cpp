@@ -128,11 +128,21 @@ namespace Map
 		std::list<std::shared_ptr<BasicRoad>>::const_iterator iter = edge_list->begin();
 		Graph::node_id id1 = INVALID;
 		Graph::node_id id2 = INVALID;
-		if (iter != edge_list->end()) {
-			id1 = (*iter)->get_to();
-			iter++;
-		}
-		if (iter != edge_list->end()) id2 = (*iter)->get_to();
+		
+		if (edge_list->size() != 2) return std::pair<Graph::node_id, Graph::node_id>(id1, id2);
+		id1 = (*iter)->get_to();
+		id2 = (*(++iter))->get_to();
 		return std::pair<Graph::node_id, Graph::node_id>(id1, id2);
+	}
+
+
+	///<summary>
+	/// to‚Ü‚Å‚Ì‹——£‚ðŽæ“¾‚·‚é
+	///</summary>
+	double BasicPoi::distance_to(const Graph::node_id& to) const
+	{
+		std::shared_ptr<BasicRoad const> road = get_static_edge_to(to);
+		if (road == nullptr) return DBL_MAX;
+		return road->distance();
 	}
 }
