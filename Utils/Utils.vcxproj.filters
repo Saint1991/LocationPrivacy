@@ -303,6 +303,12 @@
     <ClInclude Include="UnorderedTree.h">
       <Filter>ヘッダー ファイル\Graph\Tree</Filter>
     </ClInclude>
+    <ClInclude Include="UnorderedTreeNode.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="UnorderedTreeNode.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

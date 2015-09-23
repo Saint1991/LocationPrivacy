@@ -241,6 +241,8 @@
     <ClInclude Include="TimeUtility.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="UnorderedTree.h" />
+    <ClInclude Include="UnorderedTreeNode.h" />
+    <ClInclude Include="UnorderedTreeNode.hpp" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="Vector2dFactory.h" />
     <ClInclude Include="WarshallFloyd.h" />

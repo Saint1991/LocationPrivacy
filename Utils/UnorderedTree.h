@@ -1,6 +1,7 @@
 #pragma once
 #include "Identifiable.h"
 #include "IdentifiableCollection.h"
+#include "UnorderedTreeNode.h"
 
 namespace Graph
 {
@@ -9,11 +10,11 @@ namespace Graph
 	/// 木構造を表すクラス
 	/// 子ノードはIDで昇順に並べられます
 	///</summary>
-	template <typename ID_TYPE, typename NODE, typename EDGE>
+	template <typename NODE, typename NODE_DATA, typename EDGE>
 	class UnorderedTree
 	{
 	
-	static_assert(std::is_base_of<Identifiable<ID_TYPE>, NODE>::value, "template type NODE must be derived from Identifiable<ID_TYPE>");
+	static_assert(std::is_base_of<UnorderedTreeNode<NODE_DATA, EDGE>, NODE>::value, "template type NODE must be derived from UnorderedTreeNode<NODE_DATA, EDGE>");
 	
 	#pragma region iterators
 	
@@ -22,7 +23,7 @@ namespace Graph
 	///</summary>
 	class DepthFirstIterator : public std::iterator<std::forward_iterator_tag, NODE> {
 	
-	friend class UnorderedTree<ID_TYPE, NODE, EDGE>;
+	friend class UnorderedTree<NODE, NODE_DATA, EDGE>;
 	private:
 		std::shared_ptr<NODE> node;
 		DepthFirstIterator();
@@ -40,7 +41,7 @@ namespace Graph
 	///</summary>
 	class DepthFirstConstIterator : public std::iterator<std::forward_iterator_tag, NODE> {
 	
-	friend class UnorderedTree<ID_TYPE, NODE, EDGE>;
+		friend class UnorderedTree<NODE, NODE_DATA, EDGE>;
 	private:
 		std::shared_ptr<NODE const> node;
 		DepthFirstConstIterator();
@@ -57,7 +58,7 @@ namespace Graph
 	///</summary>
 	class BreadthFirstIterator : public std::iterator<std::forward_iterator_tag, NODE> {
 	
-	friend class UnorderedTree<ID_TYPE, NODE, EDGE>;
+		friend class UnorderedTree<NODE, NODE_DATA, EDGE>;
 	private:
 		std::shared_ptr<NODE> node;
 		BreadthFirstIterator();
@@ -74,7 +75,7 @@ namespace Graph
 	///</summary>
 	class BreadthFirstConstIterator : public std::iterator<std::forward_iterator_tag, NODE> {
 	
-	friend class UnorderedTree<ID_TYPE, NODE, EDGE>;
+		friend class UnorderedTree<NODE, NODE_DATA, EDGE>;
 	private:
 		std::shared_ptr<NODE const> node;
 		BreadthFirstConstIterator();
@@ -89,10 +90,10 @@ namespace Graph
 	#pragma endregion イテレータ
 
 	private:
-		std::set<ID_TYPE> connected_ids;
+		std::set<node_id> connected_ids;
 
 	protected:
-		std::unique_ptr<Collection::IdentifiableCollection<ID_TYPE, NODE>> node_collection;
+		std::unique_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection;
 		std::shared_ptr<NODE const> root_node = nullptr;
 		void initialize(NODE root);
 

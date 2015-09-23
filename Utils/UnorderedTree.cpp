@@ -7,8 +7,8 @@ namespace Graph
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	template <typename ID_TYPE, typename NODE, typename EDGE>
-	UnorderedTree<ID_TYPE, NODE, EDGE>::UnorderedTree()
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	UnorderedTree<NODE, NODE_DATA, EDGE>::UnorderedTree()
 	{
 	}
 
@@ -16,8 +16,8 @@ namespace Graph
 	///<summary>
 	/// デストラクタ
 	///</summary>
-	template <typename ID_TYPE, typename NODE, typename EDGE>
-	UnorderedTree<ID_TYPE, NODE, EDGE>::~UnorderedTree()
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	UnorderedTree<NODE, NODE_DATA, EDGE>::~UnorderedTree()
 	{
 	}
 
@@ -25,8 +25,8 @@ namespace Graph
 	///<summary>
 	/// ルートノードを設定して木を初期化します
 	///</summary>
-	template <typename ID_TYPE, typename NODE, typename EDGE>
-	void UnorderedTree<ID_TYPE, NODE, EDGE>::initialize(NODE node)
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	void UnorderedTree<NODE, NODE_DATA, EDGE>::initialize(NODE node)
 	{
 		std::shared_ptr<NODE> root_ptr = std::make_shared<NODE>(node);
 		root_node = root_ptr;
@@ -38,8 +38,8 @@ namespace Graph
 	///<summary>
 	/// イテレータがさしているノードの子ノードとして
 	///</summary>
-	template <typename ID_TYPE, typename NODE, typename EDGE>
-	void UnorderedTree<ID_TYPE, NODE, EDGE>::insert(depth_first_iterator iter, NODE node)
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	void UnorderedTree<NODE, NODE_DATA, EDGE>::insert(depth_first_iterator iter, NODE node)
 	{
 		
 	}
