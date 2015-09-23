@@ -223,6 +223,7 @@
     <ClInclude Include="Column.h" />
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="PoiData.h" />
+    <ClInclude Include="PrefixTree.hpp" />
     <ClInclude Include="QueryGenerateUtility.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Node.hpp" />
@@ -240,9 +241,7 @@
     <ClInclude Include="TimeSlotManager.h" />
     <ClInclude Include="TimeUtility.h" />
     <ClInclude Include="tinyxml2.h" />
-    <ClInclude Include="UnorderedTree.h" />
-    <ClInclude Include="UnorderedTreeNode.h" />
-    <ClInclude Include="UnorderedTreeNode.hpp" />
+    <ClInclude Include="PrefixTree.h" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="Vector2dFactory.h" />
     <ClInclude Include="WarshallFloyd.h" />
@@ -296,7 +295,6 @@
     <ClCompile Include="TimeSlotManager.cpp" />
     <ClCompile Include="TimeUtility.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
-    <ClCompile Include="UnorderedTree.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Vector2d.cpp" />
     <ClCompile Include="Vector2dFactory.cpp" />

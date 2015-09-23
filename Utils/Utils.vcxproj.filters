@@ -300,14 +300,11 @@
     <ClInclude Include="MapNodeIndicator.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="UnorderedTree.h">
+    <ClInclude Include="PrefixTree.h">
       <Filter>ヘッダー ファイル\Graph\Tree</Filter>
     </ClInclude>
-    <ClInclude Include="UnorderedTreeNode.hpp">
+    <ClInclude Include="PrefixTree.hpp">
       <Filter>ソース ファイル\Graph\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="UnorderedTreeNode.h">
-      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -406,9 +403,6 @@
     </ClCompile>
     <ClCompile Include="MapNodeIndicator.cpp">
       <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="UnorderedTree.cpp">
-      <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
