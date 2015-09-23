@@ -9,7 +9,10 @@ namespace Graph
 	///<param name='data'>ノードに持たせたいデータ</param>
 	template <typename NODE_DATA, typename EDGE>
 	Node<NODE_DATA, EDGE>::Node(node_id id, std::shared_ptr<NODE_DATA> data)
-		: Identifiable<node_id>(id), data(data), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
+		: Identifiable<node_id>(id), data(data), 
+		edge_list(std::make_shared< std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>	>>([](std::shared_ptr<BasicEdge> edge1, std::shared_ptr<BasicEdge> edge2) {
+			return edge1->get_to() < edge2->get_to();
+		}))
 	{
 	}
 
@@ -19,10 +22,14 @@ namespace Graph
 	///</summary>
 	template <typename NODE_DATA, typename EDGE>
 	Node<NODE_DATA, EDGE>::Node(const Node<NODE_DATA, EDGE> &node) 
-		: Identifiable<node_id>(node), data(std::make_shared<NODE_DATA>(*node.data)), edge_list(std::make_shared<std::list<std::shared_ptr<EDGE>>>())
+		: Identifiable<node_id>(node), data(std::make_shared<NODE_DATA>(*node.data)), 
+		edge_list(std::make_shared< std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>	>>([](std::shared_ptr<BasicEdge> edge1, std::shared_ptr<BasicEdge> edge2) {
+		return edge1->get_to() < edge2->get_to();
+	}))
 	{
-		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = node.edge_list->begin(); iter != node.edge_list->end(); iter++) {
-			edge_list->push_back(std::make_shared<EDGE>(**iter));
+		for (std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::const_iterator iter = node.edge_list->begin(); iter != node.edge_list->end(); iter++) {
+			std::shared_ptr<EDGE> edge = std::dynamic_pointer_cast<EDGE>(*iter);
+			edge_list->insert(std::make_shared<EDGE>(*edge));
 		}
 	}
 
@@ -44,12 +51,9 @@ namespace Graph
 	template <typename NODE_DATA, typename EDGE>
 	std::shared_ptr<EDGE const> Node<NODE_DATA, EDGE>::get_static_edge_to(node_id id) const
 	{
-		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
-			if ((*iter)->get_to() == id) {
-				return *iter;
-			}
-		}
-		return nullptr;
+		std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::const_iterator iter = edge_list->find(std::make_shared<BasicEdge>(id));
+		if (iter == edge_list->end()) return nullptr;
+		return std::dynamic_pointer_cast<EDGE const>(*iter);
 	}
 
 
@@ -61,12 +65,9 @@ namespace Graph
 	template <typename NODE_DATA, typename EDGE>
 	std::shared_ptr<EDGE> Node<NODE_DATA, EDGE>::get_edge_to(node_id id)
 	{
-		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
-			if ((*iter)->get_to() == id) {
-				return *iter;
-			}
-		}
-		return nullptr;
+		std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::iterator iter = edge_list->find(std::make_shared<BasicEdge>(id));
+		if (iter == edge_list->end()) return nullptr;
+		return std::dynamic_pointer_cast<EDGE>(*iter);
 	}
 
 	///<summary>
@@ -78,12 +79,8 @@ namespace Graph
 	template <typename NODE_DATA, typename EDGE>
 	bool Node<NODE_DATA, EDGE>::connect_to(std::shared_ptr<EDGE> edge)
 	{
-		std::shared_ptr<EDGE> target = get_edge_to(edge->get_to());
-		if (target != nullptr) {
-			return false;
-		}
-		edge_list->push_back(edge);
-		return true;
+		std::pair<std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::iterator, bool > result = edge_list->insert(edge);
+		return result.second;
 	}
 
 
@@ -95,9 +92,9 @@ namespace Graph
 	template <typename NODE_DATA, typename EDGE>
 	bool Node<NODE_DATA, EDGE>::disconnect_from(node_id from)
 	{
-		std::shared_ptr<EDGE> target = get_edge_to(from);
-		if (target != nullptr) {
-			edge_list->remove(target);
+		std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::iterator target = edge_list->find(std::make_shared<BasicEdge>(from));
+		if (target != edge_list->end()) {
+			edge_list->erase(target);
 			return true;
 		}
 		return false;
@@ -120,7 +117,7 @@ namespace Graph
 	std::vector<node_id> Node<NODE_DATA, EDGE>::get_connecting_node_list() const
 	{
 		std::vector<node_id> connect_node_list;
-		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
+		for (std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
 			node_id id = (*iter)->get_to();
 			connect_node_list.push_back(id);
 		}
@@ -135,8 +132,9 @@ namespace Graph
 	template <typename NODE_DATA, typename EDGE>
 	void Node<NODE_DATA, EDGE>::for_each_edge(const std::function<void(std::shared_ptr<EDGE>)>& execute_function)
 	{
-		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
-			execute_function(*iter);
+		for (std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
+			std::shared_ptr<EDGE> edge = std::dynamic_pointer_cast<EDGE>(*iter);
+			execute_function(edge);
 		}
 	}
 
@@ -146,8 +144,9 @@ namespace Graph
 	template <typename NODE_DATA, typename EDGE>
 	void Node<NODE_DATA, EDGE>::for_each_edge(const std::function<void(std::shared_ptr<EDGE const>)>& execute_function) const
 	{
- 		for (std::list<std::shared_ptr<EDGE>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
-			execute_function(*iter);
+ 		for (std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::const_iterator iter = edge_list->begin(); iter != edge_list->end(); iter++) {
+			std::shared_ptr<EDGE const> edge = std::dynamic_pointer_cast<EDGE const>(*iter);
+			execute_function(edge);
 		}
 	}
 }

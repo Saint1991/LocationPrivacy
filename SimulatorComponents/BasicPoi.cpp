@@ -125,7 +125,7 @@ namespace Map
 	///</summary>
 	std::pair<Graph::node_id, Graph::node_id> BasicPoi::between() const
 	{
-		std::list<std::shared_ptr<BasicRoad>>::const_iterator iter = edge_list->begin();
+		std::set<std::shared_ptr<Graph::BasicEdge>, std::function<bool(std::shared_ptr<Graph::BasicEdge>, std::shared_ptr<Graph::BasicEdge>)>>::const_iterator iter = edge_list->begin();
 		Graph::node_id id1 = INVALID;
 		Graph::node_id id2 = INVALID;
 		

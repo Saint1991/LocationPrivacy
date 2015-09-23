@@ -27,6 +27,8 @@ namespace Graph
 		node_id get_to() const;
 		bool operator==(const BasicEdge& e) const;
 		bool operator!=(const BasicEdge& e) const;
+		bool operator==(const node_id& id) const;
+		bool operator!=(const node_id& id) const;
 	};
 }
 

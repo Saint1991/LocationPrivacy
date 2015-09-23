@@ -20,8 +20,8 @@ namespace Graph
 	template <typename DATA_TYPE, typename EDGE>
 	UnorderedTreeNode<DATA_TYPE, EDGE>::UnorderedTreeNode(const UnorderedTreeNode& node) : Identifiable<node_id>(node.id), data(std::make_shared<DATA_TYPE>(node.data)),
 		edge_list(std::make_shared< std::set<std::shared_ptr<EDGE>, std::function<bool(std::shared_ptr<EDGE>, std::shared_ptr<EDGE>)>	>>([](std::shared_ptr<EDGE> a, std::shared_ptr<EDGE> b) {
-		return a->get_to() < b->get_to();
-	}))
+			return a->get_to() < b->get_to();
+		}))
 	{
 		for (auto iter = node.edge_list->begin(); iter != node.edge_list->end(); iter++) {
 			edge_list->insert(std::make_shared<EDGE>(**iter));

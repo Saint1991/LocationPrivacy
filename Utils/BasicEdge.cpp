@@ -39,5 +39,15 @@ namespace Graph
 	{
 		return _to != e.get_to();
 	}
+
+	bool BasicEdge::operator==(const node_id& id) const
+	{
+		return _to == id;
+	}
+
+	bool BasicEdge::operator!=(const node_id& id) const
+	{
+		return _to != id;
+	}
 }
 
