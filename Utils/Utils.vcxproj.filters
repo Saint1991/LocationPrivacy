@@ -121,6 +121,12 @@
     <Filter Include="ヘッダー ファイル\Framework">
       <UniqueIdentifier>{44ff541c-2745-41d8-91d9-c4eeadef3cb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Graph\Tree">
+      <UniqueIdentifier>{525ba2b5-7c38-4794-9366-ddc1ab08e192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Graph\Tree">
+      <UniqueIdentifier>{6d455a48-2129-4999-8810-888bc314c642}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -294,6 +300,9 @@
     <ClInclude Include="MapNodeIndicator.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
+    <ClInclude Include="UnorderedTree.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -391,6 +400,9 @@
     </ClCompile>
     <ClCompile Include="MapNodeIndicator.cpp">
       <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="UnorderedTree.cpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
