@@ -12,8 +12,6 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	class DepthFirstIterator : public BaseIterator<NODE, NODE_DATA, EDGE>
 	{
-	//friend class PrefixTree<NODE, NODE_DATA, EDGE>;
-
 	protected:
 		DepthFirstIterator();
 		DepthFirstIterator(std::shared_ptr<NODE> node);

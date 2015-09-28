@@ -41,6 +41,15 @@ namespace Graph
 	}
 
 	///<summary>
+	/// 参照外し
+	///</summary>
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	std::shared_ptr<NODE> BaseIterator<NODE, NODE_DATA, EDGE>::operator->()
+	{
+		return node;
+	}
+
+	///<summary>
 	/// 条件に合う子要素を検索してイテレータを取得する
 	/// 条件に合う要素がない場合はnullptrを指すイテレータを返します
 	///</summary>

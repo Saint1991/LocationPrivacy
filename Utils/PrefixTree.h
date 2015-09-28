@@ -28,6 +28,12 @@ namespace Graph
 		typedef DepthFirstConstIterator<NODE, NODE_DATA, EDGE> depth_first_const_iterator;
 		typedef BreadthFirstIterator<NODE, NODE_DATA, EDGE> breadth_first_iterator;
 		typedef BreadthFirstConstIterator<NODE, NODE_DATA, EDGE> breadth_first_const_iterator;
+		friend class base_iterator;
+		friend class base_const_iterator;
+		friend class depth_first_iterator;
+		friend class depth_first_const_iterator;
+		friend class breadth_first_iterator;
+		friend class breadth_first_const_iterator;
 		#pragma endregion
 
 		PrefixTree();

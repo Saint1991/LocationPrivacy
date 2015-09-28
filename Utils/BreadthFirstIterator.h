@@ -12,7 +12,6 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	class BreadthFirstIterator : public BaseIterator<NODE, NODE_DATA, EDGE>
 	{
-	//friend class PrefixTree<NODE, NODE_DATA, EDGE>;
 	protected:
 		BreadthFirstIterator();
 		BreadthFirstIterator(std::shared_ptr<NODE> node);

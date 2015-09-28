@@ -12,7 +12,6 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	class BreadthFirstConstIterator : public BaseConstIterator<NODE, NODE_DATA, EDGE> 
 	{
-	//friend class PrefixTree<NODE, NODE_DATA, EDGE>;
 	private:
 		BreadthFirstConstIterator();
 		BreadthFirstConstIterator(std::shared_ptr<NODE const> node);

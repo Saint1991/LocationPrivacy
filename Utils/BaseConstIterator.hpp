@@ -6,7 +6,7 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator::BaseConstIterator() : node(root)
+	BaseConstIterator<NODE, NODE_DATA, EDGE>::BaseConstIterator() : node(root)
 	{
 
 	}
@@ -16,7 +16,7 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator::BaseConstIterator(std::shared_ptr<NODE const> node) : node(node)
+	BaseConstIterator<NODE, NODE_DATA, EDGE>::BaseConstIterator(std::shared_ptr<NODE const> node) : node(node)
 	{
 
 	}
@@ -26,7 +26,7 @@ namespace Graph
 	/// デストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator::~BaseConstIterator()
+	BaseConstIterator<NODE, NODE_DATA, EDGE>::~BaseConstIterator()
 	{
 
 	}
@@ -35,31 +35,33 @@ namespace Graph
 	/// 参照外し
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	std::shared_ptr<NODE const> PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator::operator*() const
+	std::shared_ptr<NODE const> BaseConstIterator<NODE, NODE_DATA, EDGE>::operator*() const
 	{
 		return node;
 	}
+
+	template <typename 
 
 	///<summary>
 	/// 条件に合う子要素を検索してイテレータを取得する
 	/// 条件に合う要素がない場合はnullptrを指すイテレータを返します
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator::find_child_if(const std::function<bool(std::shared_ptr<NODE const>)>& compare) const
+	BaseConstIterator<NODE, NODE_DATA, EDGE> BaseConstIterator<NODE, NODE_DATA, EDGE>::find_child_if(const std::function<bool(std::shared_ptr<NODE const>)>& compare) const
 	{
 		node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();
 			std::shared_ptr<NODE const> node = node_collection->read_by_id(to);
-			if (compare(node)) return PrefixTree<NODE, NODE_DATA, EDGE>::BaseIterator(node);
+			if (compare(node)) return BaseConstIterator<NODE, NODE_DATA, EDGE>(node);
 		});
-		return PrefixTree<NODE, NODE_DATA, EDGE>::BaseIterator(nullptr);
+		return BaseConstIterator<NODE, NODE_DATA, EDGE>(nullptr);
 	}
 
 	///<summary>
 	/// 比較演算子
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	bool PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator::operator==(const PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator& iter) const
+	bool BaseConstIterator<NODE, NODE_DATA, EDGE>::operator==(const BaseConstIterator<NODE, NODE_DATA, EDGE>& iter) const
 	{
 		return **iter == *node;
 	}
@@ -68,7 +70,7 @@ namespace Graph
 	/// 比較演算子
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	bool PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator::operator!=(const PrefixTree<NODE, NODE_DATA, EDGE>::BaseConstIterator& iter) const
+	bool BaseConstIterator<NODE, NODE_DATA, EDGE>::operator!=(const BaseConstIterator<NODE, NODE_DATA, EDGE>& iter) const
 	{
 		return **iter != *node;
 	}

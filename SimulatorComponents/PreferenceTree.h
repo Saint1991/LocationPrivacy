@@ -20,6 +20,9 @@ namespace User
 	public:
 		PreferenceTree();
 		~PreferenceTree();
+
+		base_iterator get_iter_by_sequence(std::vector<category_id> category_sequence);
+
 	};
 }
 

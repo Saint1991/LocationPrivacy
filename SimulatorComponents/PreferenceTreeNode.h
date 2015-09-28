@@ -5,19 +5,21 @@
 namespace User
 {
 
+	typedef std::string category_id;
+
 	///<summary>
 	/// PreferenceTreeÇ…ópÇ¢ÇÈÉmÅ[Éh
 	///</summary>
-	class PreferenceTreeNode : public Graph::Node<std::string, ProbabilityEdge>
+	class PreferenceTreeNode : public Graph::Node<category_id, ProbabilityEdge>
 	{
 	protected:
 		int counter;
 
 	public:
-		PreferenceTreeNode(Graph::node_id id, std::string category);
+		PreferenceTreeNode(Graph::node_id id, category_id category);
 		PreferenceTreeNode(const PreferenceTreeNode& node);
 		~PreferenceTreeNode();
-		const std::string category_id() const;
+		const category_id category_id() const;
 	};
 }
 
