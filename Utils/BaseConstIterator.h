@@ -8,7 +8,7 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	class BaseConstIterator : public std::iterator<std::forward_iterator_tag, NODE>
 	{
-	friend class PrefixTree<NODE, NODE_DATA, EDGE>;
+	//friend class PrefixTree<NODE, NODE_DATA, EDGE>;
 
 	protected:
 		std::shared_ptr<NODE const> node;

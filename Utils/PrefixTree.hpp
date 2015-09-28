@@ -8,6 +8,7 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	PrefixTree<NODE, NODE_DATA, EDGE>::PrefixTree()
 	{
+
 	}
 
 
@@ -17,6 +18,7 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	PrefixTree<NODE, NODE_DATA, EDGE>::~PrefixTree()
 	{
+
 	}
 
 
@@ -32,8 +34,9 @@ namespace Graph
 		node_collection->add(node);
 	}
 
+
 	///<summary>
-	/// rootノードを指すイテレータを取得
+	/// rootノードを指している状態でイテレータを取得する
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	template <typename ITER_TYPE>
@@ -43,19 +46,9 @@ namespace Graph
 		return ret;
 	}
 
-	///<summary>
-	/// rootノードを指すイテレータを取得
-	///</summary>
-	template <typename NODE, typename NODE_DATA, typename EDGE>
-	template <typename ITER_TYPE>
-	const ITER_TYPE PrefixTree<NODE, NODE_DATA, EDGE>::root() const
-	{
-		const ITER_TYPE ret(root_node);
-		return ret;
-	}
 
 	///<summary>
-	/// 終端(nullptr)を指すイテレータを返す
+	/// 終端ノード(nullptr)を指している状態でイテレータを取得する
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	template <typename ITER_TYPE>
@@ -65,20 +58,9 @@ namespace Graph
 		return ret;
 	}
 
-	///<summary>
-	/// 終端(nullptr)を指すイテレータを返す
-	///</summary>
-	template <typename NODE, typename NODE_DATA, typename EDGE>
-	template <typename ITER_TYPE>
-	const ITER_TYPE  PrefixTree<NODE, NODE_DATA, EDGE>::end() const
-	{
-		const ITER_TYPE ret(nullptr);
-		return ret;
-	}
-
 
 	///<summary>
-	/// 指定したIDを持つノードを指すイテレータを取得する
+	/// 指定したIDを持つノードを指して状態でイテレータを取得する
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	template <typename ITER_TYPE>
@@ -89,23 +71,12 @@ namespace Graph
 		return ret;
 	}
 
+		
 	///<summary>
-	/// 指定したIDを持つノードを指すイテレータを取得する
+	/// イテレータが指している要素の子要素としてデータがnode_dataのノードを挿入しedgeを張る
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	template <typename ITER_TYPE>
-	const ITER_TYPE PrefixTree<NODE, NODE_DATA, EDGE>::get_iter_by_id(node_id id) const
-	{
-		std::shared_ptr<NODE const> node = node_collection->read_by_id(id);
-		const ITER_TYPE ret(node);
-		return ret;
-	}
-
-	///<summary>
-	/// イテレータが指しているノードの子ノードとしてデータnode_dataを持つノードを挿入しedgeを張ります．
-	///</summary>
-	template <typename NODE, typename NODE_DATA, typename EDGE>
-	bool Graph::PrefixTree<NODE, NODE_DATA, EDGE>::insert(base_iterator iter, EDGE edge, NODE_DATA node_data)
+	bool PrefixTree<NODE, NODE_DATA, EDGE>::insert(base_iterator iter, EDGE edge, NODE_DATA node_data)
 	{
 		std::shared_ptr<NODE> target = *iter;
 		if (target == nullptr) return false;
@@ -116,4 +87,3 @@ namespace Graph
 		return result;
 	}
 }
-

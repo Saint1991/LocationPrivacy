@@ -12,7 +12,7 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	class DepthFirstConstIterator : public BaseConstIterator<NODE, NODE_DATA, EDGE>
 	{
-	friend class PrefixTree<NODE, NODE_DATA, EDGE>;
+	//friend class PrefixTree<NODE, NODE_DATA, EDGE>;
 	protected:
 		DepthFirstConstIterator();
 		DepthFirstConstIterator(std::shared_ptr<NODE const> node);

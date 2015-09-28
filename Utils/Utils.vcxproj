@@ -235,6 +235,7 @@
     <ClInclude Include="Column.h" />
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="PoiData.h" />
+    <ClInclude Include="PrefixTree.h" />
     <ClInclude Include="PrefixTree.hpp" />
     <ClInclude Include="QueryGenerateUtility.h" />
     <ClInclude Include="Node.h" />
@@ -253,7 +254,6 @@
     <ClInclude Include="TimeSlotManager.h" />
     <ClInclude Include="TimeUtility.h" />
     <ClInclude Include="tinyxml2.h" />
-    <ClInclude Include="PrefixTree.h" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="Vector2dFactory.h" />
     <ClInclude Include="WarshallFloyd.h" />

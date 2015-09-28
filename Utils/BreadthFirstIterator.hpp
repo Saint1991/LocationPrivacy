@@ -6,7 +6,7 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	PrefixTree<NODE, NODE_DATA, EDGE>::BreadthFirstIterator::BreadthFirstIterator() : PrefixTree<NODE, NODE_DATA, EDGE>::BaseIterator(root_node)
+	BreadthFirstIterator<NODE, NODE_DATA, EDGE>::BreadthFirstIterator() : BaseIterator<NODE, NODE_DATA, EDGE>(root_node)
 	{
 		if (root_node != nullptr) {
 			visited_node_ids.insert(root_node->get_id());
@@ -25,7 +25,7 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	PrefixTree<NODE, NODE_DATA, EDGE>::BreadthFirstIterator::BreadthFirstIterator(std::shared_ptr<NODE> node) : PrefixTree<NODE, NODE_DATA, EDGE>::BaseIterator(node)
+	BreadthFirstIterator<NODE, NODE_DATA, EDGE>::BreadthFirstIterator(std::shared_ptr<NODE> node) : BaseIterator<NODE, NODE_DATA, EDGE>(node)
 	{
 		if (node != nullptr) {
 			visited_node_ids.insert(node->get_id());
@@ -44,14 +44,14 @@ namespace Graph
 	/// インクリメント
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	PrefixTree<NODE, NODE_DATA, EDGE>::BreadthFirstIterator PrefixTree<NODE, NODE_DATA, EDGE>::BreadthFirstIterator::operator++()
+	BreadthFirstIterator<NODE, NODE_DATA, EDGE> BreadthFirstIterator<NODE, NODE_DATA, EDGE>::operator++()
 	{
-		if (queue.size() == 0) return PrefixTree<NODE, NODE_DATA, EDGE>::BreadthFirstIterator(nullptr);
+		if (queue.size() == 0) return BreadthFirstIterator<NODE, NODE_DATA, EDGE>(nullptr);
 		node_id id = queue.front();
 		queue.pop();
 
 		std::shared_ptr<NODE> node = node_collection->get_by_id(id);
-		PrefixTree<NODE, NODE_DATA, EDGE>::BreadthFirstIterator ret(node);
+		BreadthFirstIterator<NODE, NODE_DATA, EDGE> ret(node);
 
 		node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();

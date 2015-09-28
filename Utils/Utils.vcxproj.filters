@@ -300,12 +300,6 @@
     <ClInclude Include="MapNodeIndicator.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="PrefixTree.h">
-      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="PrefixTree.hpp">
-      <Filter>ソース ファイル\Graph\Tree</Filter>
-    </ClInclude>
     <ClInclude Include="BaseIterator.hpp">
       <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClInclude>
@@ -341,6 +335,12 @@
     </ClInclude>
     <ClInclude Include="BreadthFirstConstIterator.h">
       <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="PrefixTree.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="PrefixTree.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
