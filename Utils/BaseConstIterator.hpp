@@ -6,19 +6,10 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	BaseConstIterator<NODE, NODE_DATA, EDGE>::BaseConstIterator() : node(root)
+	BaseConstIterator<NODE, NODE_DATA, EDGE>::BaseConstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection) 
+		: node_collection(node_collection)
 	{
-
-	}
-
-
-	///<summary>
-	/// コンストラクタ
-	///</summary>
-	template <typename NODE, typename NODE_DATA, typename EDGE>
-	BaseConstIterator<NODE, NODE_DATA, EDGE>::BaseConstIterator(std::shared_ptr<NODE const> node) : node(node)
-	{
-
+		if (node_collection != nullptr) node = node_collection->get_by_id(id);
 	}
 
 
@@ -40,7 +31,15 @@ namespace Graph
 		return node;
 	}
 
-	template <typename 
+
+	///<summary>
+	/// 参照外し
+	///</summary>
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	std::shared_ptr<NODE const> BaseConstIterator<NODE, NODE_DATA, EDGE>::operator->() const
+	{
+		return node;
+	}
 
 	///<summary>
 	/// 条件に合う子要素を検索してイテレータを取得する

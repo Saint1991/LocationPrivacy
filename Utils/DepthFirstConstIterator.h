@@ -13,13 +13,11 @@ namespace Graph
 	class DepthFirstConstIterator : public BaseConstIterator<NODE, NODE_DATA, EDGE>
 	{
 	protected:
-		DepthFirstConstIterator();
-		DepthFirstConstIterator(std::shared_ptr<NODE const> node);
-
 		std::set<node_id> visited_node_ids;
 		std::stack<node_id> stack;
 
 	public:
+		DepthFirstConstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection);
 		DepthFirstConstIterator<NODE, NODE_DATA, EDGE> operator++();
 	};
 }

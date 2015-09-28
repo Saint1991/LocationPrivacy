@@ -9,11 +9,11 @@ namespace Graph
 	class BaseConstIterator : public std::iterator<std::forward_iterator_tag, NODE>
 	{
 	protected:
-		std::shared_ptr<NODE const> node;
+		std::shared_ptr<NODE> node;
+		std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection;
 		
 	public:
-		BaseConstIterator();
-		BaseConstIterator(std::shared_ptr<NODE const> node);
+		BaseConstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection);
 		virtual ~BaseConstIterator();
 		std::shared_ptr<NODE const> operator*() const;
 		std::shared_ptr<NODE const> operator->() const;
@@ -23,4 +23,4 @@ namespace Graph
 	};
 }
 
-#include "BaseConstIterator.h"
+#include "BaseConstIterator.hpp"

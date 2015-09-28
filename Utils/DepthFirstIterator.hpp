@@ -3,29 +3,11 @@ namespace Graph
 {
 
 	///<summary>
-	/// コンストラクタ 
-	///</summary>
-	template <typename NODE, typename NODE_DATA, typename EDGE>
-	DepthFirstIterator<NODE, NODE_DATA, EDGE>::DepthFirstIterator() : BaseIterator<NODE, NODE_DATA, EDGE>(root_node)
-	{
-		if (root_node != nullptr) {
-			visited_node_ids.insert(root_node->get_id());
-			root_node->rfor_each_edge([&](std::shared_ptr<EDGE const> edge) {
-				node_id to = edge->get_to();
-				if (visited_node_ids.find(to) == visited_node_ids.end()) {
-					visited_node_ids.insert(to);
-					stack.push(to);
-				}
-			});
-		}
-	}
-
-
-	///<summary>
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	DepthFirstIterator<NODE, NODE_DATA, EDGE>::DepthFirstIterator(std::shared_ptr<NODE> node) : BaseIterator<NODE, NODE_DATA, EDGE>(node)
+	DepthFirstIterator<NODE, NODE_DATA, EDGE>::DepthFirstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection)
+		: BaseIterator<NODE, NODE_DATA, EDGE>(id, node_collection)
 	{
 		if (node != nullptr) {
 			visited_node_ids.insert(node->get_id());

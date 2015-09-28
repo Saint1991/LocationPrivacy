@@ -12,14 +12,12 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	class BreadthFirstConstIterator : public BaseConstIterator<NODE, NODE_DATA, EDGE> 
 	{
-	private:
-		BreadthFirstConstIterator();
-		BreadthFirstConstIterator(std::shared_ptr<NODE const> node);
-
+	protected:
 		std::set<node_id> visited_node_ids;
 		std::queue<node_id> queue;
 
 	public:
+		BreadthFirstConstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection);
 		BreadthFirstConstIterator<NODE, NODE_DATA, EDGE> operator++();
 	};
 }

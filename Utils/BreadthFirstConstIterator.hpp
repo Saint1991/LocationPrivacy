@@ -6,25 +6,8 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	BreadthFirstConstIterator<NODE, NODE_DATA, EDGE>::BreadthFirstConstIterator() : BaseConstIterator<NODE, NODE_DATA, EDGE>(root_node)
-	{
-		if (root_node != nullptr) {
-			visited_node_ids.insert(root_node->get_id());
-			root_node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {
-				node_id to = edge->get_to();
-				if (visited_node_ids.find(to) == visited_node_ids.end()) {
-					visited_node_ids.insert(to);
-					queue.push(to);
-				}
-			});
-		}
-	}
-
-	///<summary>
-	/// コンストラクタ
-	///</summary>
-	template <typename NODE, typename NODE_DATA, typename EDGE>
-	BreadthFirstConstIterator<NODE, NODE_DATA, EDGE>::BreadthFirstConstIterator(std::shared_ptr<NODE const> node) : BaseConstIterator<NODE, NODE_DATA, EDGE>(node)
+	BreadthFirstConstIterator<NODE, NODE_DATA, EDGE>::BreadthFirstConstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection) 
+		: BaseConstIterator<NODE, NODE_DATA, EDGE>(id, node_collection)
 	{
 		if (node != nullptr) {
 			visited_node_ids.insert(node->get_id());

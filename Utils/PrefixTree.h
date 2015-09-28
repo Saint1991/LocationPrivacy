@@ -16,7 +16,7 @@ namespace Graph
 	{
 	static_assert(std::is_base_of<Node<NODE_DATA, EDGE>, NODE>::value, "template type NODE must be derived from Node<NODE_DATA, EDGE>");
 	protected:
-		std::unique_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection;
+		std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection;
 		std::shared_ptr<NODE> root_node = nullptr;
 		
 	public:

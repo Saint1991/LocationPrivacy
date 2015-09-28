@@ -6,9 +6,8 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	PrefixTree<NODE, NODE_DATA, EDGE>::PrefixTree()
+	PrefixTree<NODE, NODE_DATA, EDGE>::PrefixTree() : node_collection(std::make_shared<Collection::IdentifiableCollection<node_id, NODE>>())
 	{
-
 	}
 
 
@@ -42,7 +41,7 @@ namespace Graph
 	template <typename ITER_TYPE>
 	ITER_TYPE PrefixTree<NODE, NODE_DATA, EDGE>::root()
 	{
-		ITER_TYPE ret(root_node);
+		ITER_TYPE ret(root_node->get_id(), node_collection);
 		return ret;
 	}
 
@@ -54,7 +53,7 @@ namespace Graph
 	template <typename ITER_TYPE>
 	ITER_TYPE PrefixTree<NODE, NODE_DATA, EDGE>::end()
 	{
-		ITER_TYPE ret(nullptr);
+		ITER_TYPE ret(INVALID, nullptr);
 		return ret;
 	}
 
@@ -66,8 +65,7 @@ namespace Graph
 	template <typename ITER_TYPE>
 	ITER_TYPE PrefixTree<NODE, NODE_DATA, EDGE>::get_iter_by_id(node_id id)
 	{
-		std::shared_ptr<NODE> node = node_collection->get_by_id(id);
-		ITER_TYPE ret(node);
+		ITER_TYPE ret(id, node_collection);
 		return ret;
 	}
 
