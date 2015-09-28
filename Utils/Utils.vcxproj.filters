@@ -306,6 +306,42 @@
     <ClInclude Include="PrefixTree.hpp">
       <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClInclude>
+    <ClInclude Include="BaseIterator.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseConstIterator.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthFirstIterator.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthFirstConstIterator.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BreadthFirstIterator.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BreadthFirstConstIterator.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseIterator.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseConstIterator.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthFirstIterator.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthFirstConstIterator.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BreadthFirstIterator.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BreadthFirstConstIterator.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -149,6 +149,33 @@ namespace Graph
 			execute_function(edge);
 		}
 	}
+
+
+	///<summary>
+	/// 各エッジについてexecute_functionを実行する
+	/// ただし走査は逆順
+	///</summary>
+	template <typename NODE_DATA, typename EDGE>
+	void Node<NODE_DATA, EDGE>::rfor_each_edge(const std::function<void(std::shared_ptr<EDGE>)>& execute_function)
+	{
+		for (std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::reverse_iterator iter = edge_list->rbegin(); iter != edge_list->rend(); iter++) {
+			std::shared_ptr<EDGE> edge = std::dynamic_pointer_cast<EDGE>(*iter);
+			execute_function(edge);
+		}
+	}
+
+	///<summary>
+	/// 各エッジについてexecute_functionを実行する
+	/// ただし走査は逆順
+	///</summary>
+	template <typename NODE_DATA, typename EDGE>
+	void Node<NODE_DATA, EDGE>::rfot_each_edge(const std::function<void(std::shared_ptr<EDGE const>)>& execute_function) const
+	{
+		for (std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>>::const_reverse_iterator iter = edge_list->rbegin(); iter != edge_list->rend(); iter++) {
+			std::shared_ptr<EDGE const> edge = std::dynamic_pointer_cast<EDGE const>(*iter);
+			execute_function(edge);
+		}
+	}
 }
 
 

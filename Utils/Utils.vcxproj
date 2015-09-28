@@ -189,15 +189,27 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AngleUtility.h" />
+    <ClInclude Include="BaseConstIterator.h" />
+    <ClInclude Include="BaseConstIterator.hpp" />
+    <ClInclude Include="BaseIterator.h" />
+    <ClInclude Include="BaseIterator.hpp" />
     <ClInclude Include="BasicEdge.h" />
     <ClInclude Include="BasicGeoNodeData.h" />
     <ClInclude Include="BasicMobileEntityState.h" />
     <ClInclude Include="BasicPathData.h" />
     <ClInclude Include="BasicPoiData.h" />
     <ClInclude Include="BasicRequirement.h" />
+    <ClInclude Include="BreadthFirstConstIterator.h" />
+    <ClInclude Include="BreadthFirstConstIterator.hpp" />
+    <ClInclude Include="BreadthFirstIterator.h" />
+    <ClInclude Include="BreadthFirstIterator.hpp" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="DbSettings.h" />
     <ClInclude Include="DbSettingsFileLoader.h" />
+    <ClInclude Include="DepthFirstConstIterator.h" />
+    <ClInclude Include="DepthFirstConstIterator.hpp" />
+    <ClInclude Include="DepthFirstIterator.h" />
+    <ClInclude Include="DepthFirstIterator.hpp" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Edge.hpp" />
     <ClInclude Include="FileExportable.h" />

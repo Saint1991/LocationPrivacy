@@ -25,6 +25,18 @@
     <Filter Include="ヘッダー ファイル\Map">
       <UniqueIdentifier>{42a1149f-8c78-4eab-95cc-c30efbd0e5b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\User">
+      <UniqueIdentifier>{ee6b894a-7a78-4c09-acd5-2e8e9fd57238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\User">
+      <UniqueIdentifier>{a155da71-3952-498d-9be4-5551071dde27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\User\Preference">
+      <UniqueIdentifier>{e033ff44-34ed-4aba-9fcd-b910caae1f08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\User\Preference">
+      <UniqueIdentifier>{21faaa05-52e3-411b-a94a-789c0745951b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -60,6 +72,15 @@
     <ClInclude Include="BasicDbMap.h">
       <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
+    <ClInclude Include="PreferenceTree.h">
+      <Filter>ヘッダー ファイル\User\Preference</Filter>
+    </ClInclude>
+    <ClInclude Include="PreferenceTreeNode.h">
+      <Filter>ヘッダー ファイル\User\Preference</Filter>
+    </ClInclude>
+    <ClInclude Include="ProbabilityEdge.h">
+      <Filter>ヘッダー ファイル\User</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -88,6 +109,15 @@
     </ClCompile>
     <ClCompile Include="BasicDbMap.cpp">
       <Filter>ソース ファイル\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="PreferenceTree.cpp">
+      <Filter>ソース ファイル\User\Preference</Filter>
+    </ClCompile>
+    <ClCompile Include="PreferenceTreeNode.cpp">
+      <Filter>ソース ファイル\User\Preference</Filter>
+    </ClCompile>
+    <ClCompile Include="ProbabilityEdge.cpp">
+      <Filter>ソース ファイル\User\Preference</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

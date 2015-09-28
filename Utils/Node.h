@@ -37,6 +37,8 @@ namespace Graph
 
 		void for_each_edge(const std::function<void(std::shared_ptr<EDGE>)>& execute_function);
 		void for_each_edge(const std::function<void(std::shared_ptr<EDGE const>)>& execute_function) const;
+		void rfor_each_edge(const std::function<void(std::shared_ptr<EDGE>)>& execute_function);
+		void rfot_each_edge(const std::function<void(std::shared_ptr<EDGE const>)>& execute_function) const;
 	};
 }
 #include "Node.hpp"
