@@ -342,6 +342,12 @@
     <ClInclude Include="PrefixTree.hpp">
       <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClInclude>
+    <ClInclude Include="Sequence.h">
+      <Filter>ヘッダー ファイル\Collection</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence.hpp">
+      <Filter>ソース ファイル\Collection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

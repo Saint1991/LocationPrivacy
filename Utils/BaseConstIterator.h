@@ -9,8 +9,8 @@ namespace Graph
 	class BaseConstIterator : public std::iterator<std::forward_iterator_tag, NODE>
 	{
 	protected:
-		std::shared_ptr<NODE> node;
-		std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection;
+		std::shared_ptr<NODE> node = nullptr;
+		std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection = nullptr;
 		
 	public:
 		BaseConstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection);

@@ -72,16 +72,19 @@ namespace Graph
 		
 	///<summary>
 	/// イテレータが指している要素の子要素としてデータがnode_dataのノードを挿入しedgeを張る
+	/// Insertしたノードを返します
+	/// 追加に失敗した場合はnullptrを返します
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	bool PrefixTree<NODE, NODE_DATA, EDGE>::insert(base_iterator iter, EDGE edge, NODE_DATA node_data)
+	BaseIterator<NODE, NODE_DATA, EDGE> PrefixTree<NODE, NODE_DATA, EDGE>::insert(base_iterator iter, EDGE edge, NODE_DATA node_data)
 	{
 		std::shared_ptr<NODE> target = *iter;
-		if (target == nullptr) return false;
+		if (target == nullptr) return base_iterator(INVALID, nullptr);
 		bool result = target->connect_to(std::make_shared<EDGE>(edge));
 
 		node_id current_id = node_collection->size();
-		result = node_collection->add(std::make_shared<NODE>(current_id, node_data)) && result;
-		return result;
+		std::shared_ptr<NODE> node = std::make_shared<NODE>(current_id, node_data);
+		result = node_collection->add(node) && result;
+		return result ? base_iterator(current_id, node_collection) : base_iterator(INVALID, nullptr);
 	}
 }

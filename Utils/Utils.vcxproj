@@ -246,6 +246,8 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoutingMethod.h" />
     <ClInclude Include="RoutingTable.h" />
+    <ClInclude Include="Sequence.h" />
+    <ClInclude Include="Sequence.hpp" />
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TableStructure.h" />

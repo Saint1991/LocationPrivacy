@@ -44,7 +44,7 @@ namespace Graph
 		template <typename ITER_TYPE> ITER_TYPE root();
 		template <typename ITER_TYPE> ITER_TYPE end();
 		template <typename ITER_TYPE> ITER_TYPE get_iter_by_id(node_id id);
-		bool insert(base_iterator iter, EDGE edge, NODE_DATA node_data);
+		base_iterator insert(base_iterator iter, EDGE edge, NODE_DATA node_data);
 	};
 }
 
