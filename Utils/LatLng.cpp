@@ -4,6 +4,16 @@
 
 namespace Geography 
 {
+
+	///<summary>
+	/// コンストラクタ
+	/// 緯度，経度ともに0で初期化
+	///</summary>
+	LatLng::LatLng() : Graph::Coordinate()
+	{
+
+	}
+
 	///<summary>
 	/// コンストラクタ
 	/// 緯度が[-90, 90]でない場合，経度が[-180, 180]でない場合はinvalid_argumentをスローします．

@@ -20,7 +20,7 @@ namespace User
 		PreferenceTreeNode(Graph::node_id id, std::shared_ptr<category_id> category);
 		PreferenceTreeNode(const PreferenceTreeNode& node);
 		~PreferenceTreeNode();
-		const category_id category_id() const;
+		const User::category_id category_id() const;
 		int visit_count() const;
 		void count_up();
 	};

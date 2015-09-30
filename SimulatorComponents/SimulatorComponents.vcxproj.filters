@@ -37,6 +37,9 @@
     <Filter Include="ヘッダー ファイル\User\Preference">
       <UniqueIdentifier>{21faaa05-52e3-411b-a94a-789c0745951b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\User\State">
+      <UniqueIdentifier>{f5db6575-aea3-470a-a975-50b65aff8cff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -47,12 +50,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicUser.h">
-      <Filter>ヘッダー ファイル\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicUser.hpp">
-      <Filter>ソース ファイル\Entity</Filter>
     </ClInclude>
     <ClInclude Include="DbNodeCollectionFactory.h">
       <Filter>ヘッダー ファイル\Map</Filter>
@@ -79,7 +76,13 @@
       <Filter>ヘッダー ファイル\User\Preference</Filter>
     </ClInclude>
     <ClInclude Include="ProbabilityEdge.h">
-      <Filter>ヘッダー ファイル\User</Filter>
+      <Filter>ヘッダー ファイル\User\Preference</Filter>
+    </ClInclude>
+    <ClInclude Include="Dummy.h">
+      <Filter>ヘッダー ファイル\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicUser.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +121,12 @@
     </ClCompile>
     <ClCompile Include="ProbabilityEdge.cpp">
       <Filter>ソース ファイル\User\Preference</Filter>
+    </ClCompile>
+    <ClCompile Include="Dummy.cpp">
+      <Filter>ソース ファイル\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicUser.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

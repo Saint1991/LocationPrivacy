@@ -25,6 +25,7 @@ namespace Geography
 		static const std::string LATITUDE;
 		static const std::string LONGITUDE;
 
+		LatLng();
 		LatLng(double latitude, double longitude);
 		virtual ~LatLng();
 		double lat() const;

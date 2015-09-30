@@ -65,6 +65,7 @@ namespace Time
 	///</summary>
 	void TimeSlotManager::for_each_time(const std::function<void(time_t, long, int)>& execute_function) const
 	{
+		if (timeslots->size() == 0) return;
 		execute_function(timeslots->at(0), 0, 0);
 		for (int phase = 1; phase < timeslots->size(); phase++) {
 			long duration = timeslots->at(phase) - timeslots->at(phase - 1);
@@ -76,17 +77,31 @@ namespace Time
 	///<summary>
 	/// 指定したPhaseにおける時刻を取得する
 	///</summary>
-	time_t TimeSlotManager::time_of_phase(int phase) const {
+	time_t TimeSlotManager::time_of_phase(int phase) const 
+	{
 		return timeslots->at(phase);
+	}
+
+
+	///<summary>
+	/// timeをもとにphaseを取得します
+	/// 値がtimeのエントリが存在しない場合はINVALID=-1を返します
+	///</summary>
+	size_t TimeSlotManager::find_phase_of_time(time_t time) const
+	{
+		std::vector<time_t>::iterator iter = std::find(timeslots->begin(), timeslots->end(), time);
+		size_t index = std::distance(timeslots->begin(), iter);
+		if (index == timeslots->size()) return INVALID;
+		return index;
 	}
 
 
 	///<summary>
 	/// 最終Phaseを取得する
 	///</summary>
-	int TimeSlotManager::last_phase() const 
+	size_t TimeSlotManager::phase_count() const 
 	{
-		return timeslots->size() - 1;
+		return timeslots->size();
 	}
 }
 

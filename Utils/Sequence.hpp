@@ -7,6 +7,7 @@ namespace Collection
 	template <typename T>
 	Sequence<T>::Sequence() : std::vector<T>()
 	{
+
 	}
 
 
@@ -14,8 +15,18 @@ namespace Collection
 	/// コンストラクタ
 	///</summary>
 	template <typename T>
-	Sequence<T>::Sequence(std::vector<T> collection) : std::vector<T>(collection)
+	Sequence<T>::Sequence(size_t n) : std::vector<T>(n)
 	{
+
+	}
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	template <typename T>
+	Sequence<T>::Sequence(const std::vector<T>& collection) : std::vector<T>(collection)
+	{
+
 	}
 
 
@@ -25,6 +36,7 @@ namespace Collection
 	template <typename T>
 	Sequence<T>::~Sequence()
 	{
+
 	}
 
 	///<summary>

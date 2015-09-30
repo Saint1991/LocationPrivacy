@@ -195,7 +195,6 @@
     <ClInclude Include="BaseIterator.hpp" />
     <ClInclude Include="BasicEdge.h" />
     <ClInclude Include="BasicGeoNodeData.h" />
-    <ClInclude Include="BasicMobileEntityState.h" />
     <ClInclude Include="BasicPathData.h" />
     <ClInclude Include="BasicPoiData.h" />
     <ClInclude Include="BasicRequirement.h" />
@@ -230,8 +229,6 @@
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="MapNodeIndicator.h" />
     <ClInclude Include="MobileEntity.h" />
-    <ClInclude Include="MobileEntity.hpp" />
-    <ClInclude Include="MobileEntityState.h" />
     <ClInclude Include="Column.h" />
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="PoiData.h" />
@@ -265,7 +262,6 @@
     <ClCompile Include="AngleUtility.cpp" />
     <ClCompile Include="BasicEdge.cpp" />
     <ClCompile Include="BasicGeoNodeData.cpp" />
-    <ClCompile Include="BasicMobileEntityState.cpp" />
     <ClCompile Include="BasicPathData.cpp" />
     <ClCompile Include="BasicPoiData.cpp" />
     <ClCompile Include="BasicRequirement.cpp" />
@@ -291,8 +287,8 @@
     <ClCompile Include="GraphUtility.cpp" />
     <ClCompile Include="LatLng.cpp" />
     <ClCompile Include="MapNodeIndicator.cpp" />
-    <ClCompile Include="MobileEntityState.cpp" />
     <ClCompile Include="Column.cpp" />
+    <ClCompile Include="MobileEntity.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
     <ClCompile Include="PoiData.cpp" />
     <ClCompile Include="QueryGenerateUtility.cpp" />

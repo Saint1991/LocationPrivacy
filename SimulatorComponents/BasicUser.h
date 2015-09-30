@@ -1,19 +1,34 @@
-#include "MobileEntity.h"
+#ifdef SIMULATORCOMPONENTS_EXPORTS
+#define BASIC_USER_API __declspec(dllexport)
+#else
+#define BASIC_USER_API __declspec(dllimport)
+#endif
 
-namespace Entity
+#pragma once
+#include "Coordinate.h"
+#include "LatLng.h"
+#include "Dummy.h"
+#include "PreferenceTree.h"
+
+namespace User
 {
 
 	///<summary>
-	/// ユーザの基本クラス
-	/// デフォルトでユーザはID=0を持つ
+	/// ユーザを表すクラス
+	/// 嗜好の木は更新が適宜必要なのでpublicにしてある
 	///</summary>
-	template <typename STATE_TYPE>
-	class BasicUser : public MobileEntity<Geography::LatLng, STATE_TYPE>
+	template <typename POSITION_TYPE>
+	class BASIC_USER_API BasicUser : public Entity::Dummy<POSITION_TYPE>
 	{
 	public:
-		BasicUser(std::vector<std::shared_ptr<STATE_TYPE>> user_movement, entity_id id = 0U);
+		const std::shared_ptr<PreferenceTree> preference;
+
+		BasicUser(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<PreferenceTree> preference_tree, Entity::entity_id id = 0);
 		~BasicUser();
 	};
+
+	template class BasicUser<Graph::Coordinate>;
+	template class BasicUser<Geography::LatLng>;
 }
 
-#include "BasicUser.hpp"
+

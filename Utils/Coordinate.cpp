@@ -4,6 +4,16 @@
 
 namespace Graph
 {
+
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	Coordinate::Coordinate(unsigned int id) : Identifiable<unsigned int>(id), _x(0.0), _y(0.0)
+	{
+
+	}
+
 	///<summary>
 	/// コンストラクタ
 	///</summary>

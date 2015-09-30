@@ -24,6 +24,7 @@ namespace Graph
 		static const std::string X;
 		static const std::string Y;
 
+		Coordinate(unsigned int id = 0);
 		Coordinate(double x, double y, unsigned int id = 0);
 		~Coordinate(); 
 

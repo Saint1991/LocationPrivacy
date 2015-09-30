@@ -8,7 +8,8 @@ namespace Collection
 	{
 	public:
 		Sequence();
-		Sequence(std::vector<T> sequence);
+		Sequence(size_t n);
+		Sequence(const std::vector<T>& sequence);
 		~Sequence();
 		void for_each_gram(const std::function<void(iterator, iterator)>& execute_function);
 		void for_each_gram(const std::function<void(const_iterator, const_iterator)>& execute_function) const;
