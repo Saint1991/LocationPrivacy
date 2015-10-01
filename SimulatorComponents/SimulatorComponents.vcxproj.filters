@@ -37,6 +37,12 @@
     <Filter Include="ヘッダー ファイル\User\Preference">
       <UniqueIdentifier>{21faaa05-52e3-411b-a94a-789c0745951b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Method">
+      <UniqueIdentifier>{ee245a04-3eee-4c9c-bb76-19aceb5b1009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Method">
+      <UniqueIdentifier>{d2ca7d87-b4f7-41b3-b537-3cec621f0855}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -81,6 +87,9 @@
     <ClInclude Include="BasicUser.h">
       <Filter>ヘッダー ファイル\User</Filter>
     </ClInclude>
+    <ClInclude Include="MatsunoMethod.h">
+      <Filter>ヘッダー ファイル\Method</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -124,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="BasicUser.cpp">
       <Filter>ソース ファイル\User</Filter>
+    </ClCompile>
+    <ClCompile Include="MatsunoMethod.cpp">
+      <Filter>ソース ファイル\Method</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

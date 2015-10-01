@@ -154,6 +154,7 @@
     <ClInclude Include="DbNodeCollectionFactory.h" />
     <ClInclude Include="DbPoiCollectionFactory.h" />
     <ClInclude Include="Dummy.h" />
+    <ClInclude Include="MatsunoMethod.h" />
     <ClInclude Include="PreferenceTree.h" />
     <ClInclude Include="PreferenceTreeNode.h" />
     <ClInclude Include="ProbabilityEdge.h" />
@@ -183,6 +184,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Dummy.cpp" />
+    <ClCompile Include="MatsunoMethod.cpp" />
     <ClCompile Include="PreferenceTree.cpp" />
     <ClCompile Include="PreferenceTreeNode.cpp" />
     <ClCompile Include="ProbabilityEdge.cpp" />

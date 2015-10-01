@@ -22,7 +22,7 @@ namespace Framework
 		
 		virtual void initialize() = 0;
 		virtual void decide_dummy_positions() = 0;
-		virtual void evaluate = 0;
+		virtual void evaluate() = 0;
 		virtual void export_results() = 0;
 		virtual void terminate() = 0;
 

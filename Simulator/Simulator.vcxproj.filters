@@ -25,17 +25,11 @@
     <Filter Include="ソース ファイル\Simulations\Mizuno">
       <UniqueIdentifier>{142f4429-c1ec-4b60-b096-547a04243582}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Simulations\Mizuno\Map">
-      <UniqueIdentifier>{df8e2a5e-023e-461a-871e-54b0bc7303dc}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\Simulations\Matsuno">
+      <UniqueIdentifier>{5d1a4701-f622-4c52-a41d-574ee26fadd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Simulations\Mizuno\User">
-      <UniqueIdentifier>{f875ec1a-eb12-49a9-aa60-ec5b37943aba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Simulations\Mizuno\Map">
-      <UniqueIdentifier>{2c6fad7a-bee3-46fa-ab15-9f93238a5caa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Simulations\Mizuno\User">
-      <UniqueIdentifier>{89b6fd90-4ff3-4eb1-9452-46f684a979f2}</UniqueIdentifier>
+    <Filter Include="ヘッダー ファイル\Simulations\Matsuno">
+      <UniqueIdentifier>{0cb4cbae-7e3d-4366-a36f-1ef04e508458}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -47,9 +41,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MizunoMasterThesisSimulator.h">
-      <Filter>ヘッダー ファイル\Simulations\Mizuno</Filter>
     </ClInclude>
     <ClInclude Include="ISimulator.h">
       <Filter>ヘッダー ファイル\Simulations</Filter>
@@ -64,9 +55,6 @@
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MizunoMasterThesisSimulator.cpp">
-      <Filter>ソース ファイル\Simulations\Mizuno</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
