@@ -17,13 +17,16 @@ namespace Framework
 		std::shared_ptr<USER_TYPE const> user;
 		std::shared_ptr<REQUIREMENT_TYPE const> requirement;
 		std::shared_ptr<Time::TimeSlotManager> time_manager;
-		std::unique_ptr<std::vector<DUMMY_TYPE>> dummies;
+		std::shared_ptr<std::vector<std::shared_ptr<DUMMY_TYPE>>> dummies;
 		std::shared_ptr<Time::Timer> timer;
 		
 		virtual void initialize() = 0;
-		virtual void phase(time_t time, long interval, int phase) = 0;
+		virtual void decide_dummy_positions() = 0;
+		virtual void evaluate = 0;
 		virtual void export_results() = 0;
 		virtual void terminate() = 0;
+
+		void for_each_dummy(const std::function<void(int, std::shared_ptr<DUMMY_TYPE>)>& execute_function);
 
 	public:
 		IProposedMethod(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE const> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);

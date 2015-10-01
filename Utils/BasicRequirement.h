@@ -18,7 +18,7 @@ namespace Requirement
 		
 		BasicRequirement();
 		BasicRequirement(double required_anonymous_area, size_t dummy_num);
-		~BasicRequirement();
+		virtual ~BasicRequirement();
 	};
 }
 

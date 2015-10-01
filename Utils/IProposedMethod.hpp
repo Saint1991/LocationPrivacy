@@ -10,7 +10,7 @@ namespace Framework
 		: map(map), user(user), requirement(requirement)
 	{
 		size_t dummy_num = this->requirement->dummy_num;
-		dummies = std::make_unique<std::vector<DUMMY_TYPE>>(dummy_num);
+		dummies = std::make_shared<std::vector<DUMMY_TYPE>>(dummy_num);
 	}
 
 
@@ -22,6 +22,18 @@ namespace Framework
 	{
 	}
 
+
+	///<summary>
+	/// 各ダミーについてexecute_functionを実行するユーティリティ
+	///</summary>
+	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE>
+	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE>::for_each_dummy(const std::function<void(int, std::shared_ptr<DUMMY_TYPE>)>& execute_function)
+	{
+		for (std::vector<std::shared_ptr<DUMMY_TYPE>>::iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
+			int dummy_id = (*iter)->get_id();
+			execute_function(dummy_id, *iter);
+		}
+	}
 
 	///<summary>
 	/// ProposedMethodの実行
@@ -37,12 +49,13 @@ namespace Framework
 		initialize();
 
 		//ここが実行部分(各時刻のダミー位置を計算する)
-		time_manager->for_each_time([](time_t time, long interval, int phase) {
-			for_each_phase(time, interval, phase);
-		});
+		decide_dummy_positions();
 
 		//ここで計測を終了
 		timer->end();
+
+		//設定したダミー，ユーザの位置を基にMTCなどの評価指標を計算する
+		evaluate();
 
 		//実行時間以外のエクスポート
 		export_results();
