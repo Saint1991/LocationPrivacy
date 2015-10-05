@@ -47,7 +47,7 @@ namespace Entity
 		DummyState<POSITION_TYPE> read_state_of_phase(int phase) const;
 		DummyState<POSITION_TYPE> read_state_at(time_t time) const;
 
-		void for_each_state(const std::function<void(time_t, std::shared_ptr<POSITION_TYPE const>, category_id)>& execute_function) const;
+		void for_each_state(const std::function<void(time_t, DummyState<POSITION_TYPE const>)>& execute_function) const;
 	};
 
 

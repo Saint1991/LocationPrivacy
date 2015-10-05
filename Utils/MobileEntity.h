@@ -26,7 +26,7 @@ namespace Entity
 	protected:
 		std::shared_ptr<Time::TimeSlotManager const> timeslot;
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions;
-		std::shared_ptr<std::vector<int>> cross_counter;
+		std::shared_ptr<std::vector<bool>> cross_flg;
 		int total_cross_count;
 		
 	public:
@@ -38,6 +38,10 @@ namespace Entity
 
 		void set_crossing_position_of_phase(int phase, POSITION_TYPE position);
 		void set_crossing_position_at(time_t time, POSITION_TYPE position);
+
+		int get_cross_count() const;
+		bool is_cross_set_at_phase(int phase) const;
+		bool is_cross_set_at(time_t time) const;
 		
 		const std::shared_ptr<POSITION_TYPE const> read_position_of_phase(int phase) const;
 		const std::shared_ptr<POSITION_TYPE const> read_position_at(time_t time) const;

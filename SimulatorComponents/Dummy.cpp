@@ -71,12 +71,12 @@ namespace Entity
 	/// 引数は時刻，位置のポインタ，カテゴリID
 	///</summary>
 	template <typename POSITION_TYPE>
-	void Dummy<POSITION_TYPE>::for_each_state(const std::function<void(time_t, std::shared_ptr<POSITION_TYPE const>, category_id)>& execute_function) const
+	void Dummy<POSITION_TYPE>::for_each_state(const std::function<void(time_t, DummyState<POSITION_TYPE const>)>& execute_function) const
 	{
 		timeslot->for_each_time([&](time_t time, long duration, int phase) {
 			std::shared_ptr<POSITION_TYPE const> position = read_position_of_phase(phase);
 			category_id category = category_sequence->at(phase);
-			execute_function(time, position, category);
+			execute_function(time, DummyState<POSITION_TYPE const>(time, *position, category));
 		});
 	}
 }

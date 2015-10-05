@@ -9,7 +9,7 @@ namespace Entity
 	///</summary>
 	template <typename POSITION_TYPE>
 	MobileEntity<POSITION_TYPE>::MobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
-		: Identifiable<entity_id>(id), timeslot(timeslot), positions(std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count()))
+		: Identifiable<entity_id>(id), timeslot(timeslot), positions(std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count())), cross_flg(std::make_shared<std::vector<bool>>(timeslot->phase_count(), false)), total_cross_count(0)
 	{
 	}
 
@@ -49,7 +49,7 @@ namespace Entity
 	template <typename POSITION_TYPE>
 	void MobileEntity<POSITION_TYPE>::set_crossing_position_of_phase(int phase, POSITION_TYPE position)
 	{
-		cross_counter->at(phase) += 1;
+		cross_flg->at(phase) = true;
 		total_cross_count++;
 		set_position_of_phase(phase, position);
 	}
@@ -62,6 +62,37 @@ namespace Entity
 	{
 		int phase = timeslot->find_phase_of_time(time);
 		set_crossing_position_of_phase(phase, position);
+	}
+
+
+	///<summary>
+	/// 合計交差回数を取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	int MobileEntity<POSITION_TYPE>::get_cross_count() const
+	{
+		return total_cross_count;
+	}
+
+
+	///<summary>
+	/// 指定時刻に交差が設定済かどうかチェックする
+	///</summary>
+	template <typename POSITION_TYPE>
+	bool MobileEntity<POSITION_TYPE>::is_cross_set_at_phase(int phase) const
+	{
+		return cross_flg->at(phase);
+	}
+
+
+	///<summary>
+	/// 指定時刻に交差が設定済かどうかチェックする
+	///</summary>
+	template <typename POSITION_TYPE>
+	bool MobileEntity<POSITION_TYPE>::is_cross_set_at(time_t time) const
+	{
+		int phase = timeslot->find_phase_of_time(time);
+		return cross_flg->at(phase);
 	}
 
 	///<summary>
