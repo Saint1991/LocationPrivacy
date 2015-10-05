@@ -26,6 +26,8 @@ namespace Entity
 	protected:
 		std::shared_ptr<Time::TimeSlotManager const> timeslot;
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions;
+		std::shared_ptr<std::vector<int>> cross_counter;
+		int total_cross_count;
 		
 	public:
 		MobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
@@ -33,6 +35,9 @@ namespace Entity
 
 		void set_position_of_phase(int phase, POSITION_TYPE position);
 		void set_position_at(time_t time, POSITION_TYPE position);
+
+		void set_crossing_position_of_phase(int phase, POSITION_TYPE position);
+		void set_crossing_position_at(time_t time, POSITION_TYPE position);
 		
 		const std::shared_ptr<POSITION_TYPE const> read_position_of_phase(int phase) const;
 		const std::shared_ptr<POSITION_TYPE const> read_position_at(time_t time) const;

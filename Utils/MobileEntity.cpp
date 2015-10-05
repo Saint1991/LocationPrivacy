@@ -33,13 +33,35 @@ namespace Entity
 	}
 
 	///<summary>
-	/// 与えられたstateを保存する
+	/// 時刻tにおける位置を設定する
 	///</summary>
 	template <typename POSITION_TYPE>
 	void MobileEntity<POSITION_TYPE>::set_position_at(time_t time, POSITION_TYPE position)
 	{
 		int phase = timeslot->find_phase_of_time(time);
 		set_position_of_phase(phase, position);
+	}
+
+
+	///<summary>
+	/// 共有地点の設定をする
+	///</summary>
+	template <typename POSITION_TYPE>
+	void MobileEntity<POSITION_TYPE>::set_crossing_position_of_phase(int phase, POSITION_TYPE position)
+	{
+		cross_counter->at(phase) += 1;
+		total_cross_count++;
+		set_position_of_phase(phase, position);
+	}
+
+	///<summary>
+	/// 共有地点の設定をする
+	///</summary>
+	template <typename POSITION_TYPE>
+	void MobileEntity<POSITION_TYPE>::set_crossing_position_at(time_t time, POSITION_TYPE position)
+	{
+		int phase = timeslot->find_phase_of_time(time);
+		set_crossing_position_of_phase(phase, position);
 	}
 
 	///<summary>
