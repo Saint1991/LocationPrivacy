@@ -1,7 +1,7 @@
 #ifdef SIMULATORCOMPONENTS_EXPORTS
 #define DB_POI_COLLECTION_FACTORY_API __declspec(dllexport)
 #else
-#defineDB_POI_COLLECTION_FACTORY_API __declspec(dllimport)
+#define DB_POI_COLLECTION_FACTORY_API __declspec(dllimport)
 #endif
 
 #pragma once

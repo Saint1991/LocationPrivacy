@@ -22,8 +22,8 @@ namespace Simulation
 		std::list<std::shared_ptr<REQUIREMENT_TYPE const>> requirements;
 
 	public:
-		ISimulator();
-		virtual ~ISimulator();
+		ISimulator() {}
+		virtual ~ISimulator() {}
 
 		virtual void build_map() = 0;
 		virtual void create_user() = 0;
