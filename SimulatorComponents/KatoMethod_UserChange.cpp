@@ -3,7 +3,7 @@
 
 namespace Method
 {
-
+	/*
 	///<summary>
 	/// コンストラクタ
 	/// これにSimulatorで作成した各種入力への参照を渡す
@@ -271,4 +271,5 @@ namespace Method
 		//終了処理
 		terminate();
 	}
+	*/
 }
