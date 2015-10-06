@@ -1,5 +1,3 @@
-#include "stdafx.h"
-#include "EntityManager.h"
 
 namespace Entity
 {
@@ -9,7 +7,7 @@ namespace Entity
 	/// コンストラクタ
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	EntityManager<DUMMY, USER, POSITION_TYPE>::EntityManager(std::shared_ptr<USER> user, int num_of_dummy, std::shared_ptr<Time::TimeSlotManager> timeslot) 
+	EntityManager<DUMMY, USER, POSITION_TYPE>::EntityManager(std::shared_ptr<USER> user, int num_of_dummy, std::shared_ptr<Time::TimeSlotManager> timeslot)
 		: timeslot(timeslot), dummies(std::make_shared<std::vector<std::shared_ptr<DUMMY>>>(num_of_dummy)), user(user)
 	{
 		for (int id = 1; id <= num_of_dummy; id++) {
@@ -114,7 +112,7 @@ namespace Entity
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	std::shared_ptr<DUMMY> EntityManager<DUMMY, USER, POSITION_TYPE>::get_dummy_by_id(entity_id id)
 	{
-		std::shared_ptr<DUMMY const> dummy = dummies->at(id - 1);
+		std::shared_ptr<DUMMY> dummy = dummies->at(id - 1);
 		if (dummy->get_id() == id) {
 			return dummy;
 		}
@@ -159,7 +157,7 @@ namespace Entity
 	{
 		entity_id ret = user->get_id();
 		int min = user->get_cross_count();
-		for (std::vector<std::shared_ptr<DUMMY const>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
+		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
 			if ((*iter)->get_cross_count() < min) {
 				ret = (*iter)->get_id();
 			}

@@ -17,7 +17,7 @@ namespace Entity
 	/// ダミーの状態データ
 	///</summary>
 	template <typename POSITION_TYPE>
-	struct DummyState
+	struct DUMMY_API DummyState
 	{
 		DummyState(time_t time, POSITION_TYPE position, category_id category) : time(time), position(position), category(category){}
 		time_t time;

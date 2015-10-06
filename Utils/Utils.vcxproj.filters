@@ -336,6 +336,9 @@
     <ClInclude Include="EntityManager.h">
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="EntityManager.hpp">
+      <Filter>ソース ファイル\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -429,9 +432,6 @@
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
     <ClCompile Include="MobileEntity.cpp">
-      <Filter>ソース ファイル\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityManager.cpp">
       <Filter>ソース ファイル\Entity</Filter>
     </ClCompile>
   </ItemGroup>

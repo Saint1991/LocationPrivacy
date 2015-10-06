@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include "Coordinate.h"
 #include "LatLng.h"
 #include "MobileEntity.h"
@@ -40,4 +41,5 @@ namespace Entity
 	};
 }
 
+#include "EntityManager.hpp"
 

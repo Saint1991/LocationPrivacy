@@ -90,6 +90,9 @@
     <ClInclude Include="MatsunoMethod.h">
       <Filter>ヘッダー ファイル\Method</Filter>
     </ClInclude>
+    <ClInclude Include="SemanticEntityManager.h">
+      <Filter>ソース ファイル\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="MatsunoMethod.cpp">
       <Filter>ソース ファイル\Method</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticEntityManager.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -212,6 +212,7 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Edge.hpp" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="EntityManager.hpp" />
     <ClInclude Include="FileExportable.h" />
     <ClInclude Include="FileExporter.h" />
     <ClInclude Include="GeoCalculation.h" />
@@ -283,7 +284,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FileExporter.cpp" />
     <ClCompile Include="GeoCalculation.cpp" />
     <ClCompile Include="GraphUtility.cpp" />
