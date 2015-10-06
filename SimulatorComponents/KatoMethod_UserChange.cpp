@@ -24,15 +24,15 @@ namespace Method
 	///<summary>
 	/// T[s]ごとのグリッド領域を作成
 	///</summary>
-	void KatoMethod_UserChange::make_grid()
+	void KatoMethod_UserChange::make_grid(int side_length, const Geography::LatLng& center, int cell_num_on_side)
 	{
-
+		//vectorでrectangle管理する．
 	}
 
 	///<summary>
 	/// tの時のDの平均位置を中心とした3×3のセルG={G_0,...,G_8}をもつグリッド領域を作成
 	///</summary>
-	void KatoMethod_UserChange::make_center_grid()
+	void KatoMethod_UserChange::get_center_position()
 	{
 
 	}
