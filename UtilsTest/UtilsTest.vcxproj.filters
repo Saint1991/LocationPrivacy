@@ -152,6 +152,9 @@
     <ClCompile Include="PoiDataTest.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
+    <ClCompile Include="GraphUtilityTest.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
