@@ -242,6 +242,7 @@
     <ClInclude Include="NodeCollectionFactory.h" />
     <ClInclude Include="NodeCollectionFactory.hpp" />
     <ClInclude Include="Probability.h" />
+    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoutingMethod.h" />
     <ClInclude Include="RoutingTable.h" />
@@ -295,6 +296,7 @@
     <ClCompile Include="PoiData.cpp" />
     <ClCompile Include="QueryGenerateUtility.cpp" />
     <ClCompile Include="Probability.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="RoutingTable.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

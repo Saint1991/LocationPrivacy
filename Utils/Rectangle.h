@@ -11,28 +11,21 @@
 namespace Graph 
 {
 	
-	template <typename POSITION_TYPE> 
 	class RECTANGLE_API Rectangle
 	{
-	private:
-		POSITION_TYPE left_up;
-		POSITION_TYPE right_up;
-		POSITION_TYPE left_down;
-		POSITION_TYPE right_down;
-		
 	public:
-		Rectangle(POSITION_TYPE left_up, POSITION_TYPE right_up, POSITION_TYPE left_down, POSITION_TYPE right_down)
+		double top;
+		double left;
+		double bottom;
+		double right;
+
+		Rectangle(double top, double left, double bottom, double right);
 		~Rectangle();
-		int get_height();
-		int get_width();
-		int get_area();
-		void set();
-
-
-
+		double get_height();
+		double get_width();
+		double get_area();
+		
 	};
 
-	template class Rectangle<Coordinate>;
-	template class Rectangle<Geography::LatLng>;
 }
 
