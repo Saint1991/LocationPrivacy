@@ -84,7 +84,6 @@ namespace Method
 	{
 
 	}
-	*/
 
 	/*
 	///<summary>
@@ -225,6 +224,7 @@ namespace Method
 	{
 
 	}
+	*/
 
 	///<summary>
 	/// 初期化 (今回は特にやることはない)
@@ -240,9 +240,9 @@ namespace Method
 	///</summary>
 	void KatoMethod_UserChange::decide_dummy_positions()
 	{
-		decide_base_positions_and_arrive_time();// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
-		decide_share_positions_and_arrive_time();// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
-		decide_dummy_path();// 生成中ダミー(k番目)の移動経路の決定
+		//decide_base_positions_and_arrive_time();// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
+		//decide_share_positions_and_arrive_time();// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
+		//decide_dummy_path();// 生成中ダミー(k番目)の移動経路の決定
 	}
 	
 	
@@ -308,5 +308,5 @@ namespace Method
 		//終了処理
 		terminate();
 	}
-	*/
+	
 }
