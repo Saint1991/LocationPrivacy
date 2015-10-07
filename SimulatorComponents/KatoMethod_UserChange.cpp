@@ -25,7 +25,7 @@ namespace Method
 	/// T[s]ごとのグリッド領域を作成
 	/// grid_lengthはグリッド全体の長さ
 	///</summary>
-	void KatoMethod_UserChange::make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side)
+	std::vector<Graph::Rectangle> KatoMethod_UserChange::make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side)
 	{
 		double side_length = grid_length / cell_num_on_side;//セル一つ分の長方形の長さ
 		//centerの四点の座標
@@ -36,8 +36,8 @@ namespace Method
 		 
 		std::vector<Graph::Rectangle> grid_list;//グリッド全体を管理するリスト
 		
-		double base_left = left;//左上のx座標
-		double base_right = right;//左上のy座標
+		double base_left = left;//左上の正方形のleftをループの際の基準とする
+		double base_right = right;//左上の正方形のrightをループの際の基準とする
 
 		for (int i = 0; i < cell_num_on_side; i++)
 		{
@@ -53,19 +53,22 @@ namespace Method
 			left = base_left;
 			right = base_right;
 		}
+
+		return grid_list;
+	}
+
+
+	
+	///<summary>
+	/// tの時のDの平均位置を中心を求める
+	///</summary>
+	Geography::LatLng KatoMethod_UserChange::get_center_position()
+	{
+		return Geography::LatLng(10.0, 10.0);
 	}
 
 
 	/*
-	///<summary>
-	/// tの時のDの平均位置を中心とした3×3のセルG={G_0,...,G_8}をもつグリッド領域を作成
-	///</summary>
-	void KatoMethod_UserChange::get_center_position()
-	{
-
-	}
-
-
 	///<summary>
 	/// ユーザおよびダミーが存在する数が最小のセルを取得
 	///</summary>
@@ -81,8 +84,9 @@ namespace Method
 	{
 
 	}
+	*/
 
-
+	/*
 	///<summary>
 	/// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 	///</summary>
@@ -90,11 +94,14 @@ namespace Method
 	{
 		int t;
 		int T = 10;//周期
+		double anonymous_area = 1600.0;
+
 
 		for (t = 0; t < t_end; t++)
 		{
 			t = t + T;
-			make_grid();
+			Geography::LatLng center = get_center_position();
+			std::vector<Graph::Rectangle> grid_list = make_grid(std::sqrt(Requirement::BasicRequirement().required_anonymous_area),center,3);
 
 			for (int i = 0; i < 8; i++)
 			{
@@ -114,6 +121,8 @@ namespace Method
 
 		return PP <p_base, t_base>;
 	}
+
+	/*
 
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
