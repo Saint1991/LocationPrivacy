@@ -20,7 +20,7 @@ namespace Method
 		//変数
 
 
-		void make_grid(int side_length, const Geography::LatLng& center, int cell_num_on_side);//T[s]ごとの3×3のセルG={G_0,...,G_8}をもつグリッド領域を作成するメソッド
+		void make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//T[s]ごとの3×3のセルG={G_0,...,G_8}をもつグリッド領域を作成するメソッド
 		void get_center_position();//tの時のDの平均位置を中心を求める		
 		void get_min_dummy_cell();//ユーザおよびダミーが存在する数が最小のセルを取得
 		void get_min_dummy_num_time();//T秒間のユーザ及びダミーが存在する数が最小となる最初の時刻を取得
@@ -44,7 +44,7 @@ namespace Method
 
 		
 	public:
-		KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<User::BasicUser<Geography::LatLng> const> user, std::shared_ptr<Requirement::BasicRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
+		KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<User::BasicUser<Geography::LatLng>> user, std::shared_ptr<Requirement::BasicRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
 		~KatoMethod_UserChange();
 
 		void run();

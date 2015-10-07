@@ -3,12 +3,12 @@
 
 namespace Method
 {
-	/*
+	
 	///<summary>
 	/// コンストラクタ
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
-	KatoMethod_UserChange::KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<User::BasicUser<Geography::LatLng> const> user, std::shared_ptr<Requirement::BasicRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
+	KatoMethod_UserChange::KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<User::BasicUser<Geography::LatLng>> user, std::shared_ptr<Requirement::BasicRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
 		: Framework::IProposedMethod<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement>(map, user, requirement, time_manager)
 	{
 	}
@@ -23,12 +23,40 @@ namespace Method
 
 	///<summary>
 	/// T[s]ごとのグリッド領域を作成
+	/// grid_lengthはグリッド全体の長さ
 	///</summary>
-	void KatoMethod_UserChange::make_grid(int side_length, const Geography::LatLng& center, int cell_num_on_side)
+	void KatoMethod_UserChange::make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side)
 	{
-		//vectorでrectangle管理する．
+		double side_length = grid_length / cell_num_on_side;//セル一つ分の長方形の長さ
+		//centerの四点の座標
+		double top = center.y() + side_length * 1.5;
+		double left = center.x() - side_length * 1.5;
+		double bottom = center.y() + side_length * 0.5;
+		double right = center.x() - side_length * 0.5;
+		 
+		std::vector<Graph::Rectangle> grid_list;//グリッド全体を管理するリスト
+		
+		double base_left = left;//左上のx座標
+		double base_right = right;//左上のy座標
+
+		for (int i = 0; i < cell_num_on_side; i++)
+		{
+			for (int j = 0; j < cell_num_on_side; j++)
+			{
+				grid_list.push_back(Graph::Rectangle(top, left, bottom, right));
+				right += side_length;
+				left += side_length;
+			}
+
+			top -= side_length;
+			bottom -= side_length;
+			left = base_left;
+			right = base_right;
+		}
 	}
 
+
+	/*
 	///<summary>
 	/// tの時のDの平均位置を中心とした3×3のセルG={G_0,...,G_8}をもつグリッド領域を作成
 	///</summary>
