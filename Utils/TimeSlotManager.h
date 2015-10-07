@@ -27,7 +27,7 @@ namespace Time
 
 		void for_each_time(const std::function<void(time_t, long, int)>& execute_function) const;
 		time_t time_of_phase(int phase) const;
-		size_t find_phase_of_time(time_t time) const;
+		int find_phase_of_time(time_t time) const;
 		size_t phase_count() const;
 	};
 }

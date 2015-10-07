@@ -26,6 +26,12 @@ namespace Entity
 	public:
 		SemanticEntityManager(std::shared_ptr<User::BasicUser<POSITION_TYPE>> user, int num_of_dummy, std::shared_ptr<Time::TimeSlotManager> timeslot);
 		~SemanticEntityManager();
+
+		void set_category_of_phase(entity_id id, const category_id& category, int phase);
+		void set_category_at(entity_id id, const category_id& category, time_t time);
+
+		void set_state_of_phase(entity_id id, const POSITION_TYPE& position, const category_id& category, int phase);
+		void set_state_at(entity_id id, const POSITION_TYPE& position, const category_id& category, time_t time);
 	};
 
 	template class SemanticEntityManager<Graph::Coordinate>;

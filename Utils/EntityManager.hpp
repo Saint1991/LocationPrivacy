@@ -11,7 +11,7 @@ namespace Entity
 		: timeslot(timeslot), dummies(std::make_shared<std::vector<std::shared_ptr<DUMMY>>>(num_of_dummy)), user(user)
 	{
 		for (int id = 1; id <= num_of_dummy; id++) {
-			dummies->at(id) = std::make_shared<DUMMY>(id, timeslot);
+			dummies->at(id - 1) = std::make_shared<DUMMY>(id, timeslot);
 		}
 	}
 
@@ -46,6 +46,12 @@ namespace Entity
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	void EntityManager<DUMMY, USER, POSITION_TYPE>::set_crossing_point_of_phase(entity_id id1, entity_id id2, POSITION_TYPE position1, POSITION_TYPE position2, int phase)
 	{
+
+		if (id1 < 1 || id2 < 1 || dummies->size() <= id1 || dummies->size() <= id2) {
+			throw std::invalid_argument("INVALID dummy ID");
+			return;
+		}
+
 		std::shared_ptr<DUMMY> dummy1 = dummies->at(id1 - 1);
 		std::shared_ptr<DUMMY> dummy2 = dummies->at(id2 - 1);
 		if (dummy1 != nullptr && dummy2 != nullptr && dummy1->get_id() == id1 && dummy2->get_id() == id2) {
@@ -76,6 +82,11 @@ namespace Entity
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	void EntityManager<DUMMY, USER, POSITION_TYPE>::set_point_of_phase(entity_id id, POSITION_TYPE position, int phase)
 	{
+		if (id < 1 || dummies->size() <= id) {
+			throw std::invalid_argument("INVALID dummy ID");
+			return;
+		}
+
 		std::shared_ptr<DUMMY> dummy = dummies->at(id - 1);
 		if (dummy != nullptr && dummy->get_id() == id) {
 			dummy->set_position_of_phase(phase, position);

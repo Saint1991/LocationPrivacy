@@ -87,7 +87,7 @@ namespace Time
 	/// time‚ğ‚à‚Æ‚Éphase‚ğæ“¾‚µ‚Ü‚·
 	/// ’l‚ªtime‚ÌƒGƒ“ƒgƒŠ‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍINVALID=-1‚ğ•Ô‚µ‚Ü‚·
 	///</summary>
-	size_t TimeSlotManager::find_phase_of_time(time_t time) const
+	int TimeSlotManager::find_phase_of_time(time_t time) const
 	{
 		std::vector<time_t>::iterator iter = std::find(timeslots->begin(), timeslots->end(), time);
 		size_t index = std::distance(timeslots->begin(), iter);

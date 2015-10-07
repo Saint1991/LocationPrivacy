@@ -5,42 +5,29 @@ namespace Framework
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE>
-	IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE>::IProposedMethod (
-		std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE const> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager
-	) : map(map), user(user), requirement(requirement)
+	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE>
+	IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE>::IProposedMethod (
+		std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager
+	) : map(map), requirement(requirement)
 	{
 		size_t dummy_num = this->requirement->dummy_num;
-		dummies = std::make_shared<std::vector<std::shared_ptr<DUMMY_TYPE>>>(dummy_num);
+		entities = std::make_shared<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>>(user, dummy_num, time_manager);
 	}
 
 
 	///<summary>
 	/// デストラクタ
 	///</summary>
-	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE>
-	IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE>::~IProposedMethod()
+	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE>
+	IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE>::~IProposedMethod()
 	{
-	}
-
-
-	///<summary>
-	/// 各ダミーについてexecute_functionを実行するユーティリティ
-	///</summary>
-	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE>
-	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE>::for_each_dummy(const std::function<void(int, std::shared_ptr<DUMMY_TYPE>)>& execute_function)
-	{
-		for (std::vector<std::shared_ptr<DUMMY_TYPE>>::iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
-			int dummy_id = (*iter)->get_id();
-			execute_function(dummy_id, *iter);
-		}
 	}
 
 	///<summary>
 	/// ProposedMethodの実行
 	///</summary>
-	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE>
-	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE>::run() 
+	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE>
+	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE>::run() 
 	{
 
 		//ここで実行時間の計測を開始

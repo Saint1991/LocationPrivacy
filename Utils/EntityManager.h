@@ -20,7 +20,7 @@ namespace Entity
 	
 	protected:
 		std::shared_ptr<std::vector<std::shared_ptr<DUMMY>>> dummies;
-		std::shared_ptr<USER> user;
+		std::shared_ptr<USER const> user;
 		std::shared_ptr<Time::TimeSlotManager const> timeslot;
 
 	public:

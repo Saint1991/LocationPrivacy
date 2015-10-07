@@ -44,6 +44,9 @@ namespace Entity
 		void set_state_of_phase(int phase, POSITION_TYPE position, const category_id& category);
 		void set_state_at(time_t time, POSITION_TYPE position, const category_id& category);
 
+		void set_category_of_phase(int phase, const category_id& category);
+		void set_category_at(time_t time, const category_id& category);
+
 		DummyState<POSITION_TYPE> read_state_of_phase(int phase) const;
 		DummyState<POSITION_TYPE> read_state_at(time_t time) const;
 

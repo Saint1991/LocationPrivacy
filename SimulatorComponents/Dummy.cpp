@@ -42,7 +42,32 @@ namespace Entity
 	void Dummy<POSITION_TYPE>::set_state_at(time_t time, POSITION_TYPE position, const category_id& category)
 	{
 		int phase = timeslot->find_phase_of_time(time);
-		set_state_of_phase(phase, position, category);
+		if (phase != INVALID) {
+			set_state_of_phase(phase, position, category);
+		}
+	}
+
+
+	///<summary>
+	/// 指定したPhaseにおけるカテゴリを設定する
+	///</summary>
+	template <typename POSITION_TYPE>
+	void Dummy<POSITION_TYPE>::set_category_of_phase(int phase, const category_id& category)
+	{
+		category_sequence->at(phase) = category;
+	}
+
+
+	///<summary>
+	/// 時刻tにおけるカテゴリを設定する
+	///</summary>
+	template <typename POSITION_TYPE>
+	void Dummy<POSITION_TYPE>::set_category_at(time_t time, const category_id& category)
+	{
+		int phase = timeslot->find_phase_of_time(time);
+		if (phase != INVALID) {
+			category_sequence->at(phase) = category;
+		}
 	}
 
 
