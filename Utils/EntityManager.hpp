@@ -175,6 +175,50 @@ namespace Entity
 		}
 		return ret;
 	}
+
+
+	///<summary>
+	/// 指定したPhaseにおける位置確定済みエンティティの平均位置を取得する
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_of_phase(int phase)
+	{
+		double x = 0.0;
+		double y = 0.0;
+
+		std::shared_ptr<POSITION_TYPE const> position = user->read_position_of_phase(phase);
+		x += position->x();
+		y += position->y();
+		int fixed_count = 1;
+
+		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
+			position = (*iter)->read_position_of_phase(phase);
+			if (position != nullptr) {
+				fixed_count++;
+				x += position->x();
+				y += position->y();
+			}
+		}
+
+		x /= fixed_count;
+		y /= fixed_count;
+		return std::move(std::make_shared<POSITION_TYPE const>(x, y));
+	}
+
+
+	///<summary>
+	/// 時刻timeにおいて位置が確定しているエンティティの平均位置を取得します
+	/// 不正な時刻の場合はnullptrを返します．
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_at(time_t time)
+	{
+		int phase = timeslot->find_phase_of_time(time);
+		if (phase != INVALID) {
+			return get_average_position_of_phase(phase);
+		}
+		return nullptr;
+	}
 }
 
 

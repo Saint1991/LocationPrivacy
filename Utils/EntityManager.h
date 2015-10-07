@@ -38,6 +38,8 @@ namespace Entity
 		std::shared_ptr<DUMMY const> read_dummy_by_id(entity_id id) const;
 		entity_id get_min_cross_entity_id() const;
 
+		std::shared_ptr<POSITION_TYPE const> get_average_position_of_phase(int phase);
+		std::shared_ptr<POSITION_TYPE const> get_average_position_at(time_t time);
 	};
 }
 
