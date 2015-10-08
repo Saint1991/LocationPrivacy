@@ -243,7 +243,7 @@ namespace Method
 	}
 	*/
 
-	*/
+	
 
 	///<summary>
 	/// ‰Šú‰» (¡‰ñ‚Í“Á‚É‚â‚é‚±‚Æ‚Í‚È‚¢)
