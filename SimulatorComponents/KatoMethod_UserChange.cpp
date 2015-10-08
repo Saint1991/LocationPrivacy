@@ -68,49 +68,65 @@ namespace Method
 	}
 
 
-	/*
+	///<summary>
+	/// セルに位置するユーザ及び生成済みダミーの移動経路D={D_0,...,D_k-1}(停止地点，停止地点到着時間)の数
+	///</summary>
+	int KatoMethod_UserChange::get_entities_path_num_in_cell(const std::vector<Graph::Rectangle>& grid_list) {
+		int k=0;
+		//entities->find_dummy_if();
+		return k;
+	}
+
+	
 	///<summary>
 	/// ユーザおよびダミーが存在する数が最小のセルを取得
 	///</summary>
-	void KatoMethod_UserChange::get_min_dummy_cell()
+	Graph::Rectangle KatoMethod_UserChange::get_min_dummy_cell()
 	{
-
+		return Graph::Rectangle(1.0,1.0,1.0,1.0);//ここに返すのは最小のセル
 	}
 
+	
 	///<summary>
 	/// T秒間のユーザ及びダミーが存在する数が最小となる最初の時刻を取得
 	///</summary>
-	void KatoMethod_UserChange::get_min_dummy_num_time()
+	time_t KatoMethod_UserChange::get_min_dummy_num_time()
 	{
-
+		return 0;
 	}
 
 	/*
+	
 	///<summary>
 	/// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 	///</summary>
-	void KatoMethod_UserChange::decide_base_positions_and_arrive_time()
+	void KatoMethod_UserChange::decide_base_positions_and_arrive_time(int dummy_id)
 	{
-		int t;
-		int T = 10;//周期
-		double anonymous_area = 1600.0;
+		
+		time_t T = 1000;//周期：おそらくphaseで割るか，時刻で割るかしないといけない
+		time_t t = time_manager->time_of_phase(0);
 
-
-		for (t = 0; t < t_end; t++)
+		while (t <= time_manager->time_of_phase(time_manager->phase_count()))
 		{
-			t = t + T;
+			t += T;//サービス利用間隔をtime_managerから逐一求めないといけないかも
+			
+			//T[s]ごとにグリッドを作成
 			Geography::LatLng center = get_center_position();
-			std::vector<Graph::Rectangle> grid_list = make_grid(std::sqrt(Requirement::BasicRequirement().required_anonymous_area),center,3);
-
-			for (int i = 0; i < 8; i++)
+			std::vector<Graph::Rectangle> grid_list = make_grid(requirement->required_anonymous_area, center, 3);
+			
+			for (int i = 0; i < grid_list.size(); i++)
 			{
 				//領域Gに存在するダミーの移動経路の数
+				
+				//grid_listの各セルの範囲内に存在するダミーの数を求める関数を書く
+				//
+
 			}
 
 		}
 
-		get_min_dummy_cell();
-		get_min_dummy_num_time();
+		Graph::Rectangle G_base = get_min_dummy_cell();//ユーザおよびダミーが存在する数が最小のセル
+		time_t t_base = get_min_dummy_num_time();//T秒間のユーザおよびダミーの存在数が最小となる時刻
 
 		while (//p_baseがG_baseに存在
 			)
@@ -118,10 +134,11 @@ namespace Method
 			p_base = GetPausePosition();
 		}
 
-		return PP <p_base, t_base>;
+		//return entities->set_point_at();
 	}
 
-	/*
+	
+	
 
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
@@ -224,6 +241,8 @@ namespace Method
 	{
 
 	}
+	*/
+
 	*/
 
 	///<summary>

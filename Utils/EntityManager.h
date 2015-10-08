@@ -4,6 +4,7 @@
 #include "LatLng.h"
 #include "MobileEntity.h"
 #include "TimeSlotManager.h"
+#include "Rectangle.h"
 
 namespace Entity
 {
@@ -41,6 +42,9 @@ namespace Entity
 
 		std::shared_ptr<POSITION_TYPE const> get_average_position_of_phase(int phase);
 		std::shared_ptr<POSITION_TYPE const> get_average_position_at(time_t time);
+		int test(int phase, double top, double left, double bottom, double right);
+		int test(int phase, Graph::Rectangle rect);
+
 	};
 }
 
