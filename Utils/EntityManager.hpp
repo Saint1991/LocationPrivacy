@@ -173,6 +173,7 @@ namespace Entity
 	}
 
 
+
 	///<summary>
 	/// 交差回数が最小のエンティティのIDを取得
 	/// 0の場合はユーザ，1以上ならダミー
@@ -189,6 +190,18 @@ namespace Entity
 		}
 		return ret;
 	}
+
+	///<summary>
+	/// ダミーの総数を取得
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	size_t EntityManager<DUMMY, USER, POSITION_TYPE>::get_dummy_count() const
+	{
+		size_t total_dummy = dummies->size();
+		return total_dummy;
+	}
+
+
 
 
 	///<summary>
@@ -233,6 +246,31 @@ namespace Entity
 		}
 		return nullptr;
 	}
+
+	///<summary>
+	///　各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
+	/// 引数はセルの四点
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entities_num_in_cell(int phase, double top, double left, double bottom, double right) {
+
+	}
+
+	///<summary>
+	///　各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
+	///  引数はRectangle
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entities_num_in_cell(int phase, Graph::Rectangle rect) {
+		std::shared_ptr<USER const> user = get_user();
+		std::shared_ptr<USER const> dummies = get_();
+
+		//Entity::MobileEntity<Geography::LatLng> user(0,timeslot);
+		//user.positions = user.read_position_of_phase(phase);
+		
+
+	}
+
 }
 
 

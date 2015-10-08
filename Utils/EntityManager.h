@@ -39,11 +39,12 @@ namespace Entity
 		std::vector<std::shared_ptr<DUMMY>> find_all_dummies_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::shared_ptr<DUMMY const> read_dummy_by_id(entity_id id) const;
 		entity_id get_min_cross_entity_id() const;
+		size_t get_dummy_count() const;
 
 		std::shared_ptr<POSITION_TYPE const> get_average_position_of_phase(int phase);
 		std::shared_ptr<POSITION_TYPE const> get_average_position_at(time_t time);
-		int test(int phase, double top, double left, double bottom, double right);
-		int test(int phase, Graph::Rectangle rect);
+		int get_entities_num_in_cell(int phase, double top, double left, double bottom, double right);
+		int get_entities_num_in_cell(int phase, Graph::Rectangle rect);
 
 	};
 }

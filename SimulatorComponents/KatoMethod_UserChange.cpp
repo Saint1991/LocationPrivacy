@@ -143,7 +143,7 @@ namespace Method
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 	///</summary>
-	void KatoMethod_UserChange::decide_share_positions_and_arrive_time()
+	void KatoMethod_UserChange::decide_share_positions_and_arrive_time(int dummy_id)
 	{
 		for (size_t i = 0; 生成中のダミーの交差回数 > ave(D0cross); i++)
 		{
@@ -184,7 +184,7 @@ namespace Method
 	///<summary>
 	/// 生成中ダミー(k番目)の移動経路の決定
 	///</summary>
-	void KatoMethod_UserChange::decide_dummy_path()
+	void KatoMethod_UserChange::decide_dummy_path(int dummy_id)
 	{
 
 	}
@@ -242,7 +242,6 @@ namespace Method
 
 	}
 	*/
-
 	
 
 	///<summary>
@@ -259,9 +258,14 @@ namespace Method
 	///</summary>
 	void KatoMethod_UserChange::decide_dummy_positions()
 	{
-		//decide_base_positions_and_arrive_time();// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
-		//decide_share_positions_and_arrive_time();// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
-		//decide_dummy_path();// 生成中ダミー(k番目)の移動経路の決定
+		/*
+		for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
+		{
+			//decide_base_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
+			//decide_share_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
+			//decide_dummy_path(dummy_id);// 生成中ダミー(k番目)の移動経路の決定
+			
+		}*/
 	}
 	
 	
