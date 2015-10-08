@@ -4,9 +4,12 @@
 #include "RoutingMethod.h"
 #include "RoutingTable.h"
 #include "MapNodeIndicator.h"
+#include "boost\geometry\index\rtree.hpp"
 
 namespace Graph
 {
+
+	
 
 	///<summary>
 	/// 地図に関する抽象クラス
@@ -20,8 +23,11 @@ namespace Graph
 
 	protected:
 		std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection;
-		std::shared_ptr <const Collection::IdentifiableCollection<Graph::node_id, POI>> poi_collection;
+		std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, POI>> poi_collection;
+		
+		
 		virtual void build_map() = 0;
+		void build_r_tree_index();
 
 		///<summary>
 		/// 最短路を格納するルーティングテーブル

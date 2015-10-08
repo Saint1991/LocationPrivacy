@@ -449,5 +449,6 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

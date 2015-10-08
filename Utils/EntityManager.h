@@ -35,6 +35,7 @@ namespace Entity
 		std::shared_ptr<USER const> get_user() const;
 		std::shared_ptr<DUMMY> get_dummy_by_id(entity_id id);
 		std::shared_ptr<DUMMY> find_dummy_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
+		std::vector<std::shared_ptr<DUMMY>> find_all_dummies_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::shared_ptr<DUMMY const> read_dummy_by_id(entity_id id) const;
 		entity_id get_min_cross_entity_id() const;
 

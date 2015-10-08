@@ -145,6 +145,20 @@ namespace Entity
 
 
 	///<summary>
+	/// 条件に合うダミーを全て取得する
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	std::vector<std::shared_ptr<DUMMY>> EntityManager<DUMMY, USER, POSITION_TYPE>::find_all_dummies_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare)
+	{
+		std::vector<std::shared_ptr<DUMMY>> ret;
+		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
+			if (compare(*iter)) ret.push_back(*iter);
+		}
+		return ret;
+	}
+
+
+	///<summary>
 	/// 指定したIDのダミーを取得
 	/// 存在しない場合はnullptrが返る
 	///</summary>
