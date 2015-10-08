@@ -68,6 +68,15 @@ namespace Method
 	}
 
 
+	///<summary>
+	/// セルに位置するユーザ及び生成済みダミーの移動経路D={D_0,...,D_k-1}(停止地点，停止地点到着時間)の数
+	///</summary>
+	int KatoMethod_UserChange::get_entities_path_num_in_cell(const std::vector<Graph::Rectangle>& grid_list) {
+		int k=0;
+		//entities->find_dummy_if();
+		return k;
+	}
+
 	
 	///<summary>
 	/// ユーザおよびダミーが存在する数が最小のセルを取得
@@ -94,8 +103,8 @@ namespace Method
 	void KatoMethod_UserChange::decide_base_positions_and_arrive_time(int dummy_id)
 	{
 		
-		int T = 1000;//周期：おそらくphaseで割るか，時刻で割るかしないといけない
-		int t = time_manager->time_of_phase(0);
+		time_t T = 1000;//周期：おそらくphaseで割るか，時刻で割るかしないといけない
+		time_t t = time_manager->time_of_phase(0);
 
 		while (t <= time_manager->time_of_phase(time_manager->phase_count()))
 		{
@@ -128,6 +137,7 @@ namespace Method
 		//return entities->set_point_at();
 	}
 
+	
 	
 
 	///<summary>

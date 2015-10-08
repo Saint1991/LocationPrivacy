@@ -4,6 +4,7 @@
 #include "LatLng.h"
 #include "MobileEntity.h"
 #include "TimeSlotManager.h"
+#include "Rectangle.h"
 
 namespace Entity
 {
@@ -37,6 +38,9 @@ namespace Entity
 		std::shared_ptr<DUMMY> find_dummy_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::shared_ptr<DUMMY const> read_dummy_by_id(entity_id id) const;
 		entity_id get_min_cross_entity_id() const;
+
+		int test(int phase, double top, double left, double bottom, double right);
+		int test(int phase, Graph::Rectangle rect);
 
 	};
 }
