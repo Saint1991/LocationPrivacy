@@ -63,7 +63,7 @@ namespace RtreeTest
 			tree.insert(val);
 			box query_box(point(0, 0), point(5, 5));
 			std::vector<m_value> result_s;
-			//tree.query(bgi::contains(query_box), std::back_inserter(result_s));
+			tree.query(bgi::within(query_box), std::back_inserter(result_s));
 		}
 	};
 }
