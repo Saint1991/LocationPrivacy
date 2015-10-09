@@ -155,6 +155,9 @@
     <ClCompile Include="GraphUtilityTest.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
+    <ClCompile Include="RTreeTest.cpp">
+      <Filter>ソース ファイル\Others</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

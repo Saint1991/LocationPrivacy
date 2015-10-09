@@ -1,33 +1,58 @@
 #pragma once
 #include "NodeCollectionFactory.h"
+#include "LatLng.h"
 #include "IdentifiableCollection.h"
 #include "RoutingMethod.h"
 #include "RoutingTable.h"
 #include "MapNodeIndicator.h"
 #include "boost\geometry\index\rtree.hpp"
+#include "Rectangle.h"
 
 namespace Graph
 {
 
+	namespace geometry = boost::geometry;
+	namespace model = geometry::model;
+	namespace index = geometry::index;
 	
-
+	typedef model::point<double, 2, boost::geometry::cs::cartesian> point;
+	typedef model::box<point> box;
+	
 	///<summary>
 	/// 地図に関する抽象クラス
 	/// 具体的なマップはこれを継承して作る
 	/// NODE, PATHにはそれぞれNode, Edgeを継承したクラスが使える
 	/// PATHにはBasicPathDataを継承しているデータを保持しているEdgeしか使えないので注意
+	/// とりあえずR-Treeの座標は緯度，経度で固定している
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
 	class Map
 	{
 
+		#pragma region RTree
+		typedef std::shared_ptr<POI const> rtree_value;
+		class MyPoiAdapter
+		{
+		public:
+			
+			typedef point result_type;
+			point operator()(rtree_value val) const
+			{
+				double x = val->data->get_position().x();
+				double y = val->data->get_position().y();
+				return point(x, y);
+			}
+		};
+		typedef index::rtree<rtree_value, index::quadratic<16>, MyPoiAdapter> rtree;
+		#pragma endregion
+
 	protected:
 		std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection;
 		std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, POI>> poi_collection;
-		
+		std::unique_ptr<rtree> rtree_index;
 		
 		virtual void build_map() = 0;
-		void build_r_tree_index();
+		void build_rtree_index();
 
 		///<summary>
 		/// 最短路を格納するルーティングテーブル
@@ -49,6 +74,9 @@ namespace Graph
 		const std::vector<MapNodeIndicator> get_shortest_path(const MapNodeIndicator& source, const MapNodeIndicator& destination) const;
 		double calc_necessary_time(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed) const;
 		bool is_reachable(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, const double& time_limit) const;
+		
+		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const box& boundary) const;
+		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle& boundary) const;
 		
 		//到達可能なPOIを全て取得
 		//パスを全通り取得

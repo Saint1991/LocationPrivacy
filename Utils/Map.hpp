@@ -8,7 +8,7 @@ namespace Graph
 	template <typename NODE, typename POI, typename PATH>
 	Map<NODE, POI, PATH>::Map()
 		: node_collection(std::make_shared<const Collection::IdentifiableCollection<Graph::node_id, NODE>>()),
-		  poi_collection(std::make_shared<const Collection::IdentifiableCollection<Graph::node_id, POI>>())
+		  poi_collection(std::make_shared<Collection::IdentifiableCollection<Graph::node_id, POI>>())
 	{		
 	}
 
@@ -30,6 +30,23 @@ namespace Graph
 	{
 		build_map();
 		routing_table = routing_method->create_routing_table(node_collection);
+		build_rtree_index();
+	}
+
+	
+	///<summary>
+	/// R-Treeのインデックスを構築する
+	///</summary>
+	template <typename NODE, typename POI, typename PATH>
+	void Map<NODE, POI, PATH>::build_rtree_index()
+	{
+		boost::geometry::index::quadratic<16> param;
+		MyPoiAdapter adapter;
+		rtree_index = std::make_unique<rtree>(param, adapter);
+		
+		poi_collection->foreach([&](rtree_value poi) {
+			rtree_index->insert(poi);
+		});
 	}
 
 
@@ -203,6 +220,31 @@ namespace Graph
 	bool Map<NODE, POI, PATH>::is_reachable(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, const double& time_limit) const
 	{
 		return calc_necessary_time(from, to, avg_speed) <= time_limit;
+	}
+
+
+	///<summary>
+	/// 領域内に含まれるPOI一覧を取得する
+	///</summary>
+	template <typename NODE, typename POI, typename PATH>
+	std::vector<std::shared_ptr<POI const>> Map<NODE, POI, PATH>::find_pois_within_boundary(const box& boundary) const
+	{
+		std::vector<rtree_value> ret;
+		//rtree_index->query(index::contains(boundary), std::back_inserter(ret));
+		return ret;
+	}
+
+
+	///<summary>
+	/// 領域内に含まれるPOI一覧を取得する
+	///</summary>
+	template <typename NODE, typename POI, typename PATH>
+	std::vector<std::shared_ptr<POI const>> Map<NODE, POI, PATH>::find_pois_within_boundary(const Rectangle& boundary) const
+	{
+		std::vector<rtree_value> ret;
+		box query_box(point(boundary.left, boundary.bottom), point(boundary.right, boundary.top));
+		//rtree_index->query(index::contains(query_box), std::back_inserter(ret));
+		return ret;
 	}
 
 	///<summary>
