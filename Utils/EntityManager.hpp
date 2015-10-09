@@ -247,16 +247,16 @@ namespace Entity
 		return nullptr;
 	}
 
-	/*
+	
 	///<summary>
 	///　各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
 	/// 引数はセルの四点
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entities_num_in_grid(int phase, double top, double left, double bottom, double right) {
-
+		return get_entities_num_in_grid(phase, Graph::Rectangle(top, left, bottom, right));
 	}
-	*/
+	
 
 	///<summary>
 	///　各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
