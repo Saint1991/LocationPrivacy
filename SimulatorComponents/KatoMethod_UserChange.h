@@ -20,7 +20,7 @@ namespace Method
 		//変数
 
 
-		std::vector<Graph::Rectangle> make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//T[s]ごとの3×3のセルG={G_0,...,G_8}をもつグリッド領域を作成するメソッド
+		
 		Geography::LatLng get_center_position();//tの時のDの平均位置を中心を求める	
 		int get_entities_path_num_in_cell(const std::vector<Graph::Rectangle>& grid_list);//セルに位置するユーザ及び生成済みダミーの移動経路D={D_0,...,D_k-1}(停止地点，停止地点到着時間)の数
 		Graph::Rectangle get_min_dummy_cell();//ユーザおよびダミーが存在する数が最小のセルを取得

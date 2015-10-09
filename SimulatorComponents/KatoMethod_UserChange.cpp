@@ -20,7 +20,7 @@ namespace Method
 	{
 	}
 
-
+	/*
 	///<summary>
 	/// T[s]ごとのグリッド領域を作成
 	/// grid_lengthはグリッド全体の長さ
@@ -94,7 +94,7 @@ namespace Method
 	{
 		return 0;
 	}
-
+	*/
 	/*
 	
 	///<summary>
