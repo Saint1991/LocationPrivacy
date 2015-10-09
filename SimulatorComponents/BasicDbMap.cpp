@@ -45,6 +45,29 @@ namespace Map
 		node_collection = node_factory->create_static_node_collection();
 		poi_collection = poi_factory->create_static_node_collection();
 	}
+
+
+	///<summary>
+	/// 指定した区間内に存在するカテゴリIDがcategory_idのPOI一覧を取得する
+	///</summary>
+	std::vector<std::shared_ptr<BasicPoi const>> BasicDbMap::find_pois_within_boundary(const Graph::box& boundary, const std::string& category_id) const
+	{
+		std::vector<std::shared_ptr<BasicPoi const>> within_boundary = Graph::Map<BasicMapNode, BasicPoi, BasicRoad>::find_pois_within_boundary(boundary);
+		std::vector<std::shared_ptr<BasicPoi const>> ret;
+		for (std::vector<std::shared_ptr<BasicPoi const>>::iterator iter = within_boundary.begin(); iter != within_boundary.end(); iter++) {
+			if (*iter != nullptr && (*iter)->category_id() == category_id) ret.push_back(*iter);
+		}
+		return ret;
+	}
+
+	///<summary>
+	/// 指定した区間内に存在するカテゴリIDがcategory_idのPOI一覧を取得する
+	///</summary>
+	std::vector<std::shared_ptr<BasicPoi const>> BasicDbMap::find_pois_within_boundary(const Graph::Rectangle& boundary, const std::string& category_id) const
+	{
+		Graph::box query_box(Graph::point(boundary.left, boundary.bottom), Graph::point(boundary.right, boundary.top));
+		return find_pois_within_boundary(query_box, category_id);
+	}
 }
 
 

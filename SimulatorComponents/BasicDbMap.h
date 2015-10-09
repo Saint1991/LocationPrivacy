@@ -49,6 +49,9 @@ namespace Map
 			const std::string& poi_connection_table = "poi_connections"
 		);
 		virtual ~BasicDbMap();
+
+		std::vector<std::shared_ptr<BasicPoi const>> find_pois_within_boundary(const Graph::box& boundary, const std::string& category_id) const;
+		std::vector<std::shared_ptr<BasicPoi const>> find_pois_within_boundary(const Graph::Rectangle& boundary, const std::string& category_id) const;
 	};
 
 }
