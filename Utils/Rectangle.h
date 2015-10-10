@@ -10,7 +10,6 @@
 
 namespace Graph 
 {
-	
 	class RECTANGLE_API Rectangle
 	{
 	public:
@@ -24,8 +23,12 @@ namespace Graph
 		double get_height();
 		double get_width();
 		double get_area();
-		
+		bool contains(const std::shared_ptr<Geography::LatLng const> position) const;
+		bool contains(const std::shared_ptr<Graph::Coordinate const> position) const;
+
+
 	};
 
+	
 }
 

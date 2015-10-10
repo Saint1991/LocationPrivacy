@@ -48,5 +48,36 @@ namespace Graph {
 	}
 
 
+	///<summary>
+	/// 領域内にエンティティがあるかどうかを取得
+	/// 緯度経度Ver．
+	///</summary>
+	
+	bool Rectangle::contains(const std::shared_ptr<Geography::LatLng const> position) const{
+		if (bottom < position->y() && position->x() <= top && left <= position->x() && position->x() < right)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+
+	///<summary>
+	/// 領域内にエンティティがあるかどうかを取得
+	/// xy座標Ver．
+	///</summary>
+	bool Rectangle::contains(const std::shared_ptr<Graph::Coordinate const> position) const {
+		if (bottom < position->y() && position->x() <= top && left <= position->x() && position->x() < right)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 }
