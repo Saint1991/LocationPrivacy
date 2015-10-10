@@ -246,6 +246,16 @@ namespace Graph
 	}
 
 	///<summary>
+	/// 領域内に含まれるPOI一覧を取得する
+	///</summary>
+	template <typename NODE, typename POI, typename PATH>
+	std::vector<std::shared_ptr<POI const>> Map<NODE, POI, PATH>::find_pois_within_boundary(const Rectangle<Geography::LatLng>& boundary) const
+	{
+		box query_box(point(boundary.left, boundary.bottom), point(boundary.right, boundary.top));
+		return find_pois_within_boundary(query_box);
+	}
+
+	///<summary>
 	/// 指定したIDのノードを変更不可の状態で取得する
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>

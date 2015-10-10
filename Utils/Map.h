@@ -77,6 +77,7 @@ namespace Graph
 		
 		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const box& boundary) const;
 		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle<>& boundary) const;
+		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle<Geography::LatLng>& boundary) const;
 		
 		//到達可能なPOIを全て取得
 		//パスを全通り取得

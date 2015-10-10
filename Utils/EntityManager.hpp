@@ -303,9 +303,6 @@ namespace Entity
 		return get_entity_count_within_boundary(phase, Graph::Rectangle<POSITION_TYPE>(top, left, bottom, right));
 	}
 	
-
-	
-
 }
 
 
