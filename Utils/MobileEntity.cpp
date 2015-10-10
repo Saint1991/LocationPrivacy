@@ -49,8 +49,7 @@ namespace Entity
 	template <typename POSITION_TYPE>
 	void MobileEntity<POSITION_TYPE>::set_crossing_position_of_phase(int phase, POSITION_TYPE position)
 	{
-		cross_flg->at(phase) = true;
-		total_cross_count++;
+		register_as_cross_position(phase);
 		set_position_of_phase(phase, position);
 	}
 
@@ -64,6 +63,16 @@ namespace Entity
 		set_crossing_position_of_phase(phase, position);
 	}
 
+
+	///<summary>
+	/// phaseに訪問した地点を交差地点として設定し，交差回数をインクリメントします
+	///</summary>
+	template <typename POSITION_TYPE>
+	void MobileEntity<POSITION_TYPE>::register_as_cross_position(int phase)
+	{
+		cross_flg->at(phase) = true;
+		total_cross_count++;
+	}
 
 	///<summary>
 	/// 合計交差回数を取得する
@@ -112,12 +121,14 @@ namespace Entity
 
 	///<summary>
 	/// 交差が設定されていない時刻を一つランダムに取得する
+	/// 設定されていないphaseが存在しない場合はINVALIDを返す
 	///</summary>
 	template <typename POSITION_TYPE>
 	int MobileEntity<POSITION_TYPE>::randomly_pick_cross_not_set_phase() const
 	{
 		Math::Probability generator;
 		std::vector<int> not_set_phases = find_cross_not_set_phases();
+		if (not_set_phases.size() == 0) return INVALID;
 		return not_set_phases.at(generator.uniform_distribution(0, not_set_phases.size() - 1));
 	}
 

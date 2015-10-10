@@ -36,81 +36,11 @@ namespace Entity
 		return new_id;
 	}
 
-
-	///<summary>
-	/// 2エンティティ間の共有地点を設定する
-	/// これを呼ぶたびに各ダミーの交差回数が+1されるので注意
-	/// 交差設定に複数点の設定が必要な場合は一度だけこれを呼び出して，あとはset_positionの方をつかうこと
-	/// ダミーIDはID=1からダミー数分の連番になっているのを想定している
-	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	void EntityManager<DUMMY, USER, POSITION_TYPE>::set_crossing_point_of_phase(entity_id id1, entity_id id2, POSITION_TYPE position1, POSITION_TYPE position2, int phase)
-	{
-
-		if (id1 < 1 || id2 < 1 || dummies->size() <= id1 || dummies->size() <= id2) {
-			throw std::invalid_argument("INVALID dummy ID");
-			return;
-		}
-
-		std::shared_ptr<DUMMY> dummy1 = dummies->at(id1 - 1);
-		std::shared_ptr<DUMMY> dummy2 = dummies->at(id2 - 1);
-		if (dummy1 != nullptr && dummy2 != nullptr && dummy1->get_id() == id1 && dummy2->get_id() == id2) {
-			dummy1->set_crossing_position_of_phase(phase, position1);
-			dummy2->set_crossing_position_of_phase(phase, position2);
-		}
-	}
-
-	///<summary>
-	/// 2エンティティ間の共有地点を設定する
-	/// これを呼ぶたびに各ダミーの交差回数が+1されるので注意
-	/// 交差設定に複数点の設定が必要な場合は一度だけこれを呼び出して，あとはset_positionの方をつかうこと
-	/// ダミーIDはID=1からダミー数分の連番になっているのを想定している
-	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	void EntityManager<DUMMY, USER, POSITION_TYPE>::set_crossing_point_at(entity_id id1, entity_id id2, POSITION_TYPE position1, POSITION_TYPE position2, time_t time)
-	{
-		int phase = timeslot->find_phase_of_time(time);
-		if (phase != INVALID) {
-			set_crossing_point_of_phase(id1, id2, position1, position2, phase);
-		}
-	}
-
-
-	///<summary>
-	/// ダミーに地点の設定をする
-	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	void EntityManager<DUMMY, USER, POSITION_TYPE>::set_point_of_phase(entity_id id, POSITION_TYPE position, int phase)
-	{
-		if (id < 1 || dummies->size() <= id) {
-			throw std::invalid_argument("INVALID dummy ID");
-			return;
-		}
-
-		std::shared_ptr<DUMMY> dummy = dummies->at(id - 1);
-		if (dummy != nullptr && dummy->get_id() == id) {
-			dummy->set_position_of_phase(phase, position);
-		}
-	}
-
-	///<summary>
-	/// ダミーに地点の設定をする
-	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	void EntityManager<DUMMY, USER, POSITION_TYPE>::set_point_at(entity_id id, POSITION_TYPE type, time_t time)
-	{
-		int phase = timeslot->find_phase_of_time(time);
-		if (phase != INVALID) {
-			set_point_of_phase(id, type, phase);
-		}
-	}
-
-
 	///<summary>
 	/// ユーザを読み専用で取得
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::shared_ptr<USER const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_user() const
+	std::shared_ptr<USER> EntityManager<DUMMY, USER, POSITION_TYPE>::get_user()
 	{
 		return user;
 	}
@@ -188,6 +118,28 @@ namespace Entity
 				ret = (*iter)->get_id();
 			}
 		}
+		return ret;
+	}
+
+
+	///<summary>
+	/// 交差回数の小さい順にエンティティIDを格納したリストを返します
+	/// 未生成のダミーも交差回数0として含まれるので注意
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	std::list<std::pair<entity_id, int>> EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_id_list_order_by_cross_count() const
+	{
+		std::list<std::pair<entity_id, int>> ret;
+		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
+			if (*iter == nullptr) continue;
+			entity_id id = (*iter)->get_id();
+			int cross_count = (*iter)->get_cross_count();
+			ret.push_back(std::make_pair(id, cross_count));
+		}
+		ret.push_back(std::make_pair(0U, user->get_cross_count()));
+		ret.sort([](const std::pair<entity_id, int>& pair1, const std::pair<entity_id, int>& pair2) {
+			return pair1.second < pair2.second;
+		});
 		return ret;
 	}
 
@@ -270,8 +222,7 @@ namespace Entity
 
 	
 	///<summary>
-	///　各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
-	///  引数はRectangle
+	/// 各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_count_within_boundary(int phase, const Graph::Rectangle<POSITION_TYPE>& boundary) const 
@@ -280,7 +231,6 @@ namespace Entity
 		int counter = 0;
 
 		//ユーザが領域内に存在するか確認
-		std::shared_ptr<USER const> user = get_user();
 		const std::shared_ptr<POSITION_TYPE const> user_position = user->read_position_of_phase(phase);
 		if (user_position != nullptr && boundary.contains(*user_position)) counter++;
 
@@ -294,8 +244,7 @@ namespace Entity
 	}
 
 	///<summary>
-	///　各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
-	/// 引数はセルの四点
+	/// 各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right) const

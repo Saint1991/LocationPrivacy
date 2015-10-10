@@ -40,6 +40,7 @@ namespace Entity
 		void set_crossing_position_of_phase(int phase, POSITION_TYPE position);
 		void set_crossing_position_at(time_t time, POSITION_TYPE position);
 
+		void register_as_cross_position(int phase);
 		int get_cross_count() const;
 		bool is_cross_set_at_phase(int phase) const;
 		bool is_cross_set_at(time_t time) const;

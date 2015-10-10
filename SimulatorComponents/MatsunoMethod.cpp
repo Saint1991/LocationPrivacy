@@ -34,19 +34,36 @@ namespace Method
 	///</summary>
 	void MatsunoMethod::set_crossing_points(Entity::entity_id id, std::shared_ptr<Entity::Dummy<Geography::LatLng>> dummy)
 	{
-		Entity::entity_id cross_target = entities->get_min_cross_entity_id();
-		int target_phase = -1;
+		
+		//交差回数が少ないエンティティを優先的に交差対象にして繰り返す
+		std::list<std::pair<Entity::entity_id, int>> entity_list_order_by_cross = entities->get_entity_id_list_order_by_cross_count();
+		for (std::list<std::pair<Entity::entity_id, int>>::const_iterator iter = entity_list_order_by_cross.begin(); iter != entity_list_order_by_cross.end(); iter++) {
+			
+			//未生成のダミーのものはスキップ
+			if (iter->first > id) continue;
 
-		//ユーザに対する交差
-		if (cross_target == 0) {
-			std::shared_ptr<User::BasicUser<Geography::LatLng> const> user = entities->get_user();
-			target_phase = user->randomly_pick_cross_not_set_phase();
+			//交差対象のID
+			Entity::entity_id cross_target = iter->second;
+			int target_phase = INVALID;
+
+			//BasicUserはDummyを継承しているのでポインタ代入は可能
+			std::shared_ptr<Entity::Dummy<Geography::LatLng>> target = cross_target == 0 ? entities->get_user() : entities->get_dummy_by_id(cross_target);
+			std::vector<int> target_phases = target->find_cross_not_set_phases();
+			
+			//交差未設定の時刻からランダムに共有地点設定を試みる
+			std::random_device device;
+			std::mt19937_64 generator(device());
+			std::shuffle(target_phases.begin(), target_phases.end(), generator);
+
+			for (std::vector<int>::const_iterator target_phase = target_phases.begin(); target_phase != target_phases.end(); target_phase++) {
+				if (*target_phase == 0) continue;
+
+
+			}
 		}
-		//ダミーに対する交差
-		else {
-			std::shared_ptr<Entity::Dummy<Geography::LatLng>> dummy = entities->get_dummy_by_id(cross_target);
-			target_phase = dummy->randomly_pick_cross_not_set_phase();
-		}
+
+
+		
 	}
 
 
