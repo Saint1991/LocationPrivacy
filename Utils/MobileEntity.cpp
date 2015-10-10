@@ -95,6 +95,32 @@ namespace Entity
 		return cross_flg->at(phase);
 	}
 
+
+	///<summary>
+	/// 交差が設定されていないPhaseを全て取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::vector<int> MobileEntity<POSITION_TYPE>::find_cross_not_set_phases() const
+	{
+		std::vector<int> ret;
+		for (int phase = 0; phase < cross_flg->size(); phase++) {
+			if (cross_flg->at(phase)) ret.push_back(phase);
+		}
+		return ret;
+	}
+
+
+	///<summary>
+	/// 交差が設定されていない時刻を一つランダムに取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	int MobileEntity<POSITION_TYPE>::randomly_pick_cross_not_set_phase() const
+	{
+		Math::Probability generator;
+		std::vector<int> not_set_phases = find_cross_not_set_phases();
+		return not_set_phases.at(generator.uniform_distribution(0, not_set_phases.size() - 1));
+	}
+
 	///<summary>
 	/// phase時の位置を指定します
 	/// 存在しない場合はnullptrが返ります

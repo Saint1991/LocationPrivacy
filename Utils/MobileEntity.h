@@ -9,6 +9,7 @@
 #include "Coordinate.h"
 #include "LatLng.h"
 #include "TimeSlotManager.h"
+#include "Probability.h"
 
 namespace Entity
 {
@@ -42,6 +43,8 @@ namespace Entity
 		int get_cross_count() const;
 		bool is_cross_set_at_phase(int phase) const;
 		bool is_cross_set_at(time_t time) const;
+		std::vector<int> find_cross_not_set_phases() const;
+		int randomly_pick_cross_not_set_phase() const;
 		
 		const std::shared_ptr<POSITION_TYPE const> read_position_of_phase(int phase) const;
 		const std::shared_ptr<POSITION_TYPE const> read_position_at(time_t time) const;

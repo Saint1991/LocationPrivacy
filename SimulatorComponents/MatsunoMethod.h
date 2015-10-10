@@ -15,6 +15,10 @@ namespace Method
 	class MatsunoMethod 
 		: public Framework::IProposedMethod<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement>
 	{
+	private:
+		void set_crossing_points(Entity::entity_id id, std::shared_ptr<Entity::Dummy<Geography::LatLng>> dummy);
+		void set_expanding_points(Entity::entity_id id, std::shared_ptr<Entity::Dummy<Geography::LatLng>> dummy);
+
 	protected:
 		void initialize();
 		void decide_dummy_positions();
