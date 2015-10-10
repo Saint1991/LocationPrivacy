@@ -39,7 +39,7 @@ namespace Entity
 		std::vector<std::shared_ptr<DUMMY>> find_all_dummies_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::shared_ptr<DUMMY const> read_dummy_by_id(entity_id id) const;
 		entity_id get_min_cross_entity_id() const;
-		void for_each_dummy(const std::function<void(std::shared_ptr<DUMMY>)>& execute_function);
+		void for_each_dummy(const std::function<void(entity_id id, std::shared_ptr<DUMMY>)>& execute_function);
 
 		std::shared_ptr<POSITION_TYPE const> get_average_position_of_phase(int phase);
 		std::shared_ptr<POSITION_TYPE const> get_average_position_at(time_t time);

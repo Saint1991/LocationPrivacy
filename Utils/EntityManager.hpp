@@ -195,10 +195,10 @@ namespace Entity
 	/// 各ダミーについてexecute_functionを実行
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	void EntityManager<DUMMY, USER, POSITION_TYPE>::for_each_dummy(const std::function<void(std::shared_ptr<DUMMY>)>& execute_function)
+	void EntityManager<DUMMY, USER, POSITION_TYPE>::for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY>)>& execute_function)
 	{
 		for (std::vector<std::shared_ptr<DUMMY>>::iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
-			if (*iter != nullptr) execute_function(*iter);
+			if (*iter != nullptr) execute_function((*iter)->get_id(), *iter);
 		}
 	}
 
