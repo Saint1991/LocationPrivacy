@@ -197,12 +197,8 @@ namespace Entity
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	size_t EntityManager<DUMMY, USER, POSITION_TYPE>::get_dummy_count() const
 	{
-		size_t total_dummy = dummies->size();
-		return total_dummy;
+		return dummies->size();
 	}
-
-
-
 
 	///<summary>
 	/// 各ダミーについてexecute_functionを実行
@@ -216,10 +212,24 @@ namespace Entity
 	}
 
 	///<summary>
+	/// 各ダミーについてexecute_functionを実行
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	void EntityManager<DUMMY, USER, POSITION_TYPE>::for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY const>)>& execute_function) const
+	{
+		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
+			if (*iter != nullptr) {
+				std::shared_ptr<DUMMY const> dummy = *iter;
+				execute_function(dummy->get_id(), dummy);
+			}
+		}
+	}
+
+	///<summary>
 	/// 指定したPhaseにおける位置確定済みエンティティの平均位置を取得する
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_of_phase(int phase)
+	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_of_phase(int phase) const
 	{
 		double x = 0.0;
 		double y = 0.0;
@@ -249,7 +259,7 @@ namespace Entity
 	/// 不正な時刻の場合はnullptrを返します．
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_at(time_t time)
+	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_at(time_t time) const
 	{
 		int phase = timeslot->find_phase_of_time(time);
 		if (phase != INVALID) {
@@ -261,47 +271,40 @@ namespace Entity
 	
 	///<summary>
 	///　各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
-	/// 引数はセルの四点
-	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entities_num_in_grid(int phase, double top, double left, double bottom, double right) {
-		return get_entities_num_in_grid(phase, Graph::Rectangle(top, left, bottom, right));
-	}
-	
-
-	///<summary>
-	///　各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
 	///  引数はRectangle
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entities_num_in_grid(int phase, Graph::Rectangle rect) {
-		int count_entities_num = 0;
+	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_count_within_boundary(int phase, const Graph::Rectangle<POSITION_TYPE>& boundary) const 
+	{
 		
-		std::shared_ptr<USER const> user = get_user();//ユーザの取得
-		const std::shared_ptr<POSITION_TYPE const> user_position = user->read_position_of_phase(phase);//phaseのユーザの位置
+		int counter = 0;
 
-		if (rect.contains(user_position) == true) count_entities_num++;
+		//ユーザが領域内に存在するか確認
+		std::shared_ptr<USER const> user = get_user();
+		const std::shared_ptr<POSITION_TYPE const> user_position = user->read_position_of_phase(phase);
+		if (user_position != nullptr && boundary.contains(*user_position)) counter++;
 
-		//グリッドに含まれている生成済みダミーの取得
-		std::vector<std::shared_ptr<DUMMY>> created_dummies_in_grid = find_all_dummies_if([&rect, &phase](std::shared_ptr<DUMMY const> dummy)
-		{
-			if (dummy == nullptr) return false;
-			return rect.contains(dummy->read_position_of_phase(phase));
+		//領域内のダミー数の確認
+		for_each_dummy([&boundary, &counter, phase](entity_id id, std::shared_ptr<DUMMY const> dummy) {
+			const std::shared_ptr<POSITION_TYPE const> dummy_position = dummy->read_position_of_phase(phase);
+			if (dummy_position != nullptr && boundary.contains(*dummy_position)) counter++;
 		});
 
-		count_entities_num += created_dummies_in_grid.size();
-		return count_entities_num;
-	
-		/*
-		//const std::shared_ptr<POSITION_TYPE const> dummy_position = created_dummies.begin()->read_position_of_phase(phase);//phaseのユーザの位置
-		//phaseのcellごとの生成済みダミーの数を取得
-				
-		for (std::vector<std::shared_ptr<DUMMY const>>::iterator iter = created_dummies.begin(); iter != created_dummies.end(); iter++) {
-			if(rect.contains(iter->read_dummy_by_id(dummy_id)->read_position_of_phase(phase)) == true) count_entities_num++;
-		}
-		*/
-				
+		return counter;
 	}
+
+	///<summary>
+	///　各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
+	/// 引数はセルの四点
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right) const
+	{
+		return get_entity_count_within_boundary(phase, Graph::Rectangle<POSITION_TYPE>(top, left, bottom, right));
+	}
+	
+
+	
 
 }
 

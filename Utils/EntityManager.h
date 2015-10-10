@@ -40,12 +40,14 @@ namespace Entity
 		std::shared_ptr<DUMMY const> read_dummy_by_id(entity_id id) const;
 		entity_id get_min_cross_entity_id() const;
 		size_t get_dummy_count() const;
-		void for_each_dummy(const std::function<void(entity_id id, std::shared_ptr<DUMMY>)>& execute_function);
+		void for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY>)>& execute_function);
+		void for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY const>)>& execute_function) const;
 
-		std::shared_ptr<POSITION_TYPE const> get_average_position_of_phase(int phase);
-		std::shared_ptr<POSITION_TYPE const> get_average_position_at(time_t time);
-		int get_entities_num_in_grid(int phase, double top, double left, double bottom, double right);
-		int get_entities_num_in_grid(int phase, Graph::Rectangle rect);
+		std::shared_ptr<POSITION_TYPE const> get_average_position_of_phase(int phase) const;
+		std::shared_ptr<POSITION_TYPE const> get_average_position_at(time_t time) const;
+		int get_entity_count_within_boundary(int phase, const Graph::Rectangle<POSITION_TYPE>& boundary) const;
+		int get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right) const;
+		
 
 
 	};

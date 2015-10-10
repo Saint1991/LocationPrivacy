@@ -76,7 +76,7 @@ namespace Graph
 		bool is_reachable(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, const double& time_limit) const;
 		
 		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const box& boundary) const;
-		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle& boundary) const;
+		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle<>& boundary) const;
 		
 		//到達可能なPOIを全て取得
 		//パスを全通り取得

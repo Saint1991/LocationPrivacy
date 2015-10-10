@@ -52,10 +52,10 @@ namespace Map
 		virtual ~BasicDbMap();
 
 		std::vector<std::shared_ptr<BasicPoi const>> find_pois_within_boundary(const Graph::box& boundary, const std::string& category_id) const;
-		std::vector<std::shared_ptr<BasicPoi const>> find_pois_within_boundary(const Graph::Rectangle& boundary, const std::string& category_id) const;
+		std::vector<std::shared_ptr<BasicPoi const>> find_pois_within_boundary(const Graph::Rectangle<>& boundary, const std::string& category_id) const;
 
 		std::shared_ptr<BasicPoi const> find_random_poi_within_boundary(const Graph::box& boundary, const std::string& category_id) const;
-		std::shared_ptr<BasicPoi const> find_random_poi_within_boundary(const Graph::Rectangle& boundary, const std::string& category_id) const;
+		std::shared_ptr<BasicPoi const> find_random_poi_within_boundary(const Graph::Rectangle<>& boundary, const std::string& category_id) const;
 	};
 
 }

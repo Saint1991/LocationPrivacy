@@ -239,7 +239,7 @@ namespace Graph
 	/// —Ìˆæ“à‚ÉŠÜ‚Ü‚ê‚éPOIˆê——‚ðŽæ“¾‚·‚é
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
-	std::vector<std::shared_ptr<POI const>> Map<NODE, POI, PATH>::find_pois_within_boundary(const Rectangle& boundary) const
+	std::vector<std::shared_ptr<POI const>> Map<NODE, POI, PATH>::find_pois_within_boundary(const Rectangle<>& boundary) const
 	{
 		box query_box(point(boundary.left, boundary.bottom), point(boundary.right, boundary.top));
 		return find_pois_within_boundary(query_box);
