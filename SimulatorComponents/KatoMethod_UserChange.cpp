@@ -25,7 +25,7 @@ namespace Method
 	/// T[s]ごとのグリッド領域を作成
 	/// grid_lengthはグリッド全体の長さ
 	///</summary>
-	std::vector<Graph::Rectangle> KatoMethod_UserChange::make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side)
+	std::vector <Graph::Rectangle<Geography::LatLng>> KatoMethod_UserChange::make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side)
 	{
 		double side_length = grid_length / cell_num_on_side;//セル一つ分の長方形の長さ
 		//centerの四点の座標
@@ -34,7 +34,7 @@ namespace Method
 		double bottom = center.y() + side_length * 0.5;
 		double right = center.x() - side_length * 0.5;
 		 
-		std::vector<Graph::Rectangle> grid_list;//グリッド全体を管理するリスト
+		std::vector<Graph::Rectangle<Geography::LatLng>> grid_list;//グリッド全体を管理するリスト
 		
 		double base_left = left;//左上の正方形のleftをループの際の基準とする
 		double base_right = right;//左上の正方形のrightをループの際の基準とする
@@ -43,7 +43,7 @@ namespace Method
 		{
 			for (int j = 0; j < cell_num_on_side; j++)
 			{
-				grid_list.push_back(Graph::Rectangle(top, left, bottom, right));
+				grid_list.push_back(Graph::Rectangle<Geography::LatLng>(top, left, bottom, right));
 				right += side_length;
 				left += side_length;
 			}
