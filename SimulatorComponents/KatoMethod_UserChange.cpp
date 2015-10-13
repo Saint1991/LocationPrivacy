@@ -20,7 +20,7 @@ namespace Method
 	{
 	}
 
-	/*
+	
 	///<summary>
 	/// T[s]ごとのグリッド領域を作成
 	/// grid_lengthはグリッド全体の長さ
@@ -58,26 +58,36 @@ namespace Method
 	}
 
 
-	
+	/*
 	///<summary>
-	/// tの時のDの平均位置を中心を求める
+	/// T[s]ごとのグリッド領域を作成
+	/// grid_lengthはグリッド全体の長さ
 	///</summary>
-	Geography::LatLng KatoMethod_UserChange::get_center_position()
+	std::vector<std::vector<int>> KatoMethod_UserChange::make_table_of_entity_num_in_cell_at_phase(std::vector<Graph::Rectangle> grid_list, int phase)
 	{
-		return Geography::LatLng(10.0, 10.0);
-	}
 
-
-	///<summary>
-	/// セルに位置するユーザ及び生成済みダミーの移動経路D={D_0,...,D_k-1}(停止地点，停止地点到着時間)の数
-	///</summary>
-	int KatoMethod_UserChange::get_entities_path_num_in_cell(const std::vector<Graph::Rectangle>& grid_list) {
-		int k=0;
-		//entities->find_dummy_if();
-		return k;
 	}
+	*/
 
 	
+	///<summary>
+	/// グリッドテーブルの各グリッドごとのエンティティの合計を取得
+	///</summary>
+	std::vector<int> KatoMethod_UserChange::get_total_num_of_each_cell(std::vector<std::vector<int>>& entities_table) {
+		std::vector<int> total_entity_num_all_phase;
+		for (int grid_id = 0; grid_id < cell_nu_on_side*cell_nu_on_side; grid_id++)
+		{
+			int temp = 0;
+			for (int phase = 0; phase < time_manager->phase_count(); phase++)
+			{
+				temp += entities_table[grid_id][phase];
+			}
+			total_entity_num_all_phase.push_back(temp);
+		}
+		return total_entity_num_all_phase;
+	}
+
+	/*
 	///<summary>
 	/// ユーザおよびダミーが存在する数が最小のセルを取得
 	///</summary>
@@ -95,8 +105,8 @@ namespace Method
 		return 0;
 	}
 	*/
-	/*
 	
+	/*
 	///<summary>
 	/// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 	///</summary>
@@ -106,40 +116,57 @@ namespace Method
 		time_t T = 1000;//周期：おそらくphaseで割るか，時刻で割るかしないといけない
 		time_t t = time_manager->time_of_phase(0);
 
+		
+		//各グリッドの各フェイズにおけるentitiesの数を記憶するための動的配列の確保
+		std::vector<std::vector<int>> entities_total_num_in_cell;
+		entities_total_num_in_cell.resize(9);
+		for (int i = 0; i < 9; i++)
+		{
+			entities_total_num_in_cell[i].resize(time_manager->phase_count());
+		}
+
+
 		while (t <= time_manager->time_of_phase(time_manager->phase_count()))
 		{
 			t += T;//サービス利用間隔をtime_managerから逐一求めないといけないかも
-			
-			//T[s]ごとにグリッドを作成
-			Geography::LatLng center = get_center_position();
-			std::vector<Graph::Rectangle> grid_list = make_grid(requirement->required_anonymous_area, center, 3);
-			
-			for (int i = 0; i < grid_list.size(); i++)
-			{
-				//領域Gに存在するダミーの移動経路の数
 				
-				//grid_listの各セルの範囲内に存在するダミーの数を求める関数を書く
-				//
+			std::shared_ptr<Geography::LatLng const> center = entities->get_average_position_of_phase(0);//中心位置を求める
+			std::vector<Graph::Rectangle> grid_list = make_grid(requirement->required_anonymous_area, *center, 3);//T[s]ごとにグリッドを作成
+			
 
+			//あるphaseにおける各セルに存在するユーザ及び生成済みダミーの移動経路(停止地点)の数
+			//横がセルのid，縦がphaseを表す動的２次元配列で記憶
+			int cell_id = 0;//セルのid
+			for (std::vector<Graph::Rectangle>::iterator iter = grid_list.begin(); iter != grid_list.end(); iter++)
+			{
+				entities_total_num_in_cell[(cell_id++)-1][time_manager->find_phase_of_time(t)] = entities->get_entity_count_within_boundary(time_manager->find_phase_of_time(t), *iter);
 			}
-
 		}
 
-		Graph::Rectangle G_base = get_min_dummy_cell();//ユーザおよびダミーが存在する数が最小のセル
-		time_t t_base = get_min_dummy_num_time();//T秒間のユーザおよびダミーの存在数が最小となる時刻
-
+		//全てのフェーズにおける各セルのエンティティの合計
+		std::vector<int> total_entity_num_all_phase = get_total_num_of_each_cell(entities_total_num_in_cell);
+		
+		//全てのフェーズにおいて，エンティティが最小になるセルidを取得
+		int min_cell_id = std::min_element(total_entity_num_all_phase.front(),total_entity_num_all_phase.back());
+		
+		
+		//min_cell_idのセルで最小になる最初の時間を取得
+		time_t base_time = std::minmax_element(entities_total_num_in_cell[min_cell_id].front(), entities_total_num_in_cell[min_cell_id].back());
+		
+		
 		while (//p_baseがG_baseに存在
 			)
 		{
-			p_base = GetPausePosition();
+			Geography::LatLng base_point = GetPausePosition();
 		}
-
-		//return entities->set_point_at();
-	}
+		
+		return entities->set_point_at(dummy_id, base_point, base_time);
+		
+	}*/
 
 	
 	
-
+	/*
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 	///</summary>

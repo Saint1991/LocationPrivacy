@@ -279,6 +279,7 @@ namespace Entity
 		});
 
 		count_entities_num += created_dummies_in_grid.size();
+
 		return count_entities_num;
 		
 	}
