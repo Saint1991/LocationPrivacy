@@ -75,9 +75,9 @@ namespace Graph
 		double calc_necessary_time(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed) const;
 		bool is_reachable(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, const double& time_limit) const;
 		
-		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const box& boundary) const;
-		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle<>& boundary) const;
-		std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle<Geography::LatLng>& boundary) const;
+		virtual std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const box& boundary) const;
+		virtual std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle<>& boundary) const;
+		virtual std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle<Geography::LatLng>& boundary) const;
 
 		std::shared_ptr<NODE const> get_static_node(const node_id& id) const;
 		std::shared_ptr<POI const> get_static_poi(const node_id& poi_id) const;

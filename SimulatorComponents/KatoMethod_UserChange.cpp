@@ -9,7 +9,7 @@ namespace Method
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
 	KatoMethod_UserChange::KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<User::BasicUser<Geography::LatLng>> user, std::shared_ptr<Requirement::BasicRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement>(map, user, requirement, time_manager)
+		: Framework::IProposedMethod<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement>(map, user, requirement, time_manager),grid_list(std::vector<Grid>(time_manager->phase_count()))
 	{
 	}
 
@@ -75,14 +75,14 @@ namespace Method
 	///</summary>
 	std::vector<int> KatoMethod_UserChange::get_total_num_of_each_cell(std::vector<std::vector<int>>& entities_table) {
 		std::vector<int> total_entity_num_all_phase;
-		for (int grid_id = 0; grid_id < cell_nu_on_side*cell_nu_on_side; grid_id++)
+		for (int grid_id = 0; grid_id < CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE; grid_id++)
 		{
 			int temp = 0;
 			for (int phase = 0; phase < time_manager->phase_count(); phase++)
 			{
-				temp += entities_table[grid_id][phase];
+				temp += entities_table.at(grid_id).at(phase);
 			}
-			total_entity_num_all_phase.push_back(temp);
+			total_entity_num_all_phase.at(grid_id) = temp;
 		}
 		return total_entity_num_all_phase;
 	}
@@ -106,63 +106,63 @@ namespace Method
 	}
 	*/
 	
-	/*
+	
 	///<summary>
 	/// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 	///</summary>
 	void KatoMethod_UserChange::decide_base_positions_and_arrive_time(int dummy_id)
 	{
+		int phase = 0;//phase
+		const int GRID_TOTAL_NUM = CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE;//グリッドの数
 		
-		time_t T = 1000;//周期：おそらくphaseで割るか，時刻で割るかしないといけない
-		time_t t = time_manager->time_of_phase(0);
-
+		//各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
+		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>(time_manager->phase_count(),0));
 		
-		//各グリッドの各フェイズにおけるentitiesの数を記憶するための動的配列の確保
-		std::vector<std::vector<int>> entities_total_num_in_cell;
-		entities_total_num_in_cell.resize(9);
-		for (int i = 0; i < 9; i++)
-		{
-			entities_total_num_in_cell[i].resize(time_manager->phase_count());
-		}
 
-
-		while (t <= time_manager->time_of_phase(time_manager->phase_count()))
+		while (phase <= time_manager->phase_count())
 		{
-			t += T;//サービス利用間隔をtime_managerから逐一求めないといけないかも
-				
-			std::shared_ptr<Geography::LatLng const> center = entities->get_average_position_of_phase(0);//中心位置を求める
-			std::vector<Graph::Rectangle> grid_list = make_grid(requirement->required_anonymous_area, *center, 3);//T[s]ごとにグリッドを作成
-			
+			std::shared_ptr<Geography::LatLng const> center = entities->get_average_position_of_phase(phase);//中心位置を求める
+			Grid grid = make_grid(requirement->required_anonymous_area, *center, CELL_NUM_ON_SIDE);//phaseごとにグリッドを作成
+			grid_list.at(phase) = grid;
 
 			//あるphaseにおける各セルに存在するユーザ及び生成済みダミーの移動経路(停止地点)の数
 			//横がセルのid，縦がphaseを表す動的２次元配列で記憶
+			//k-2個目までのtableを作っておいて，k-1個目を＋１して更新すればより効率が良い
 			int cell_id = 0;//セルのid
-			for (std::vector<Graph::Rectangle>::iterator iter = grid_list.begin(); iter != grid_list.end(); iter++)
+			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid.begin(); iter != grid.end(); iter++)
 			{
-				entities_total_num_in_cell[(cell_id++)-1][time_manager->find_phase_of_time(t)] = entities->get_entity_count_within_boundary(time_manager->find_phase_of_time(t), *iter);
+				entities_num_table.at((cell_id++) - 1).at(phase) = entities->get_entity_count_within_boundary(phase, *iter);
 			}
+
+			phase++;//サービス利用間隔をtime_managerから逐一求めないといけないかも
 		}
 
 		//全てのフェーズにおける各セルのエンティティの合計
-		std::vector<int> total_entity_num_all_phase = get_total_num_of_each_cell(entities_total_num_in_cell);
+		std::vector<int> total_entity_num_all_phase = get_total_num_of_each_cell(entities_num_table);
 		
+				
 		//全てのフェーズにおいて，エンティティが最小になるセルidを取得
-		int min_cell_id = std::min_element(total_entity_num_all_phase.front(),total_entity_num_all_phase.back());
+		std::vector<int>::iterator cell_iter = std::min_element(total_entity_num_all_phase.begin(), total_entity_num_all_phase.end());
+		size_t min_cell_id = std::distance(total_entity_num_all_phase.begin(), cell_iter);
+
+		//min_cell_idのセルで最小になる最初のphaseを取得
+		std::vector<int>::iterator phase_iter = std::min_element(entities_num_table.at(min_cell_id).begin(), entities_num_table.at(min_cell_id).end());
+		int base_phase = std::distance(entities_num_table.at(min_cell_id).begin(), phase_iter);
+
 		
+		//取得したcell_id,phaseにおける停止地点を取得
+		//poiがなかった時の場合分けも考慮が必要かもしれない
+		Graph::Rectangle<Geography::LatLng> cell = grid_list.at(base_phase).at(min_cell_id);
+		std::vector<std::shared_ptr<Map::BasicPoi const>> poi_within_base_point_grid = map->find_pois_within_boundary(cell);
+		Math::Probability generator;
+		int index = generator.uniform_distribution(0, poi_within_base_point_grid.size() - 1);
+		std::shared_ptr<Map::BasicPoi const> poi = poi_within_base_point_grid.at(index);
 		
-		//min_cell_idのセルで最小になる最初の時間を取得
-		time_t base_time = std::minmax_element(entities_total_num_in_cell[min_cell_id].front(), entities_total_num_in_cell[min_cell_id].back());
+		Geography::LatLng base_point = poi->data->get_position();
 		
+		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(base_phase,base_point);
 		
-		while (//p_baseがG_baseに存在
-			)
-		{
-			Geography::LatLng base_point = GetPausePosition();
-		}
-		
-		entities->set_point_at(dummy_id, base_point, base_time);
-		
-	}*/
+	}
 
 	
 	/*

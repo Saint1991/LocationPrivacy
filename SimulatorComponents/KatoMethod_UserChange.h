@@ -18,7 +18,10 @@ namespace Method
 	{
 	private:
 		//•Ï”
-		int cell_nu_on_side;
+		const int CELL_NUM_ON_SIDE = 3;
+
+		typedef std::vector<Graph::Rectangle<Geography::LatLng>> Grid;
+		std::vector<Grid> grid_list;
 
 		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//Grid‚Ìì¬
 		std::vector<std::vector<int>> make_table_of_entity_num_in_cell_at_phase(std::vector<Graph::Rectangle<Geography::LatLng>> grid_list, int phase);
