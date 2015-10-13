@@ -160,21 +160,24 @@ namespace Method
 			Geography::LatLng base_point = GetPausePosition();
 		}
 		
-		return entities->set_point_at(dummy_id, base_point, base_time);
+		entities->set_point_at(dummy_id, base_point, base_time);
 		
 	}*/
 
 	
-	
 	/*
+	
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 	///</summary>
 	void KatoMethod_UserChange::decide_share_positions_and_arrive_time(int dummy_id)
 	{
-		for (size_t i = 0; 生成中のダミーの交差回数 > ave(D0cross); i++)
+		while (生成中のダミーの交差回数 > ave(D0cross))
 		{
-			D_min = std::min();
+			unsigned int min_cross_entity_id = entities->get_min_cross_entity_id();
+			
+			//userかdummyで場合分け
+			Geography::LatLng share_position = 
 			p_shared = random(Dmincrossの停止地点);
 			t_shared = p_sharedに到着する時間;
 
