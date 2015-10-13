@@ -43,8 +43,8 @@ namespace Entity
 
 		std::shared_ptr<POSITION_TYPE const> get_average_position_of_phase(int phase);
 		std::shared_ptr<POSITION_TYPE const> get_average_position_at(time_t time);
-		int get_entities_num_in_grid(int phase, double top, double left, double bottom, double right);
-		int get_entities_num_in_grid(int phase, Graph::Rectangle rect);
+		int get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right);
+		int get_entity_count_within_boundary(int phase, Graph::Rectangle rect);
 
 
 	};

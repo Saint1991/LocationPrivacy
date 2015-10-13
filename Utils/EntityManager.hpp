@@ -253,8 +253,8 @@ namespace Entity
 	/// 引数はセルの四点
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entities_num_in_grid(int phase, double top, double left, double bottom, double right) {
-		return get_entities_num_in_grid(phase, Graph::Rectangle(top, left, bottom, right));
+	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right) {
+		return get_entity_count_within_boundary(phase, Graph::Rectangle(top, left, bottom, right));
 	}
 	
 
@@ -263,13 +263,13 @@ namespace Entity
 	///  引数はRectangle
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entities_num_in_grid(int phase, Graph::Rectangle rect) {
+	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_count_within_boundary(int phase, Graph::Rectangle rect) {
 		int count_entities_num = 0;
 		
 		std::shared_ptr<USER const> user = get_user();//ユーザの取得
 		const std::shared_ptr<POSITION_TYPE const> user_position = user->read_position_of_phase(phase);//phaseのユーザの位置
 
-		if (rect.contains(user_position) == true) count_entities_num++;
+		if (rect.contains(user_position)) count_entities_num++;
 
 		//グリッドに含まれている生成済みダミーの取得
 		std::vector<std::shared_ptr<DUMMY>> created_dummies_in_grid = find_all_dummies_if([&rect, &phase](std::shared_ptr<DUMMY const> dummy)
@@ -280,16 +280,7 @@ namespace Entity
 
 		count_entities_num += created_dummies_in_grid.size();
 		return count_entities_num;
-	
-		/*
-		//const std::shared_ptr<POSITION_TYPE const> dummy_position = created_dummies.begin()->read_position_of_phase(phase);//phaseのユーザの位置
-		//phaseのcellごとの生成済みダミーの数を取得
-				
-		for (std::vector<std::shared_ptr<DUMMY const>>::iterator iter = created_dummies.begin(); iter != created_dummies.end(); iter++) {
-			if(rect.contains(iter->read_dummy_by_id(dummy_id)->read_position_of_phase(phase)) == true) count_entities_num++;
-		}
-		*/
-				
+		
 	}
 
 }

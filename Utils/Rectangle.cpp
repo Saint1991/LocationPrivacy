@@ -54,15 +54,7 @@ namespace Graph {
 	///</summary>
 	
 	bool Rectangle::contains(const std::shared_ptr<Geography::LatLng const> position) const{
-		if (bottom < position->y() && position->x() <= top && left <= position->x() && position->x() < right)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-		
+		return bottom <= position->y() && position->y() <= top && left <= position->x() && position->x() <= right;
 	}
 
 	///<summary>
@@ -70,14 +62,7 @@ namespace Graph {
 	/// xyç¿ïWVerÅD
 	///</summary>
 	bool Rectangle::contains(const std::shared_ptr<Graph::Coordinate const> position) const {
-		if (bottom < position->y() && position->x() <= top && left <= position->x() && position->x() < right)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return bottom <= position->y() && position->y() <= top && left <= position->x() && position->x() <= right;
 	}
 
 }
