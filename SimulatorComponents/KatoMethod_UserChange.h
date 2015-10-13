@@ -18,12 +18,12 @@ namespace Method
 	{
 	private:
 		//変数
+		int cell_nu_on_side;
 
-
-		
-		Geography::LatLng get_center_position();//tの時のDの平均位置を中心を求める	
-		int get_entities_path_num_in_cell(const std::vector<Graph::Rectangle<>>& grid_list);//セルに位置するユーザ及び生成済みダミーの移動経路D={D_0,...,D_k-1}(停止地点，停止地点到着時間)の数
-		Graph::Rectangle<> get_min_dummy_cell();//ユーザおよびダミーが存在する数が最小のセルを取得
+		std::vector<Graph::Rectangle> make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成
+		std::vector<std::vector<int>> make_table_of_entity_num_in_cell_at_phase(std::vector<Graph::Rectangle> grid_list, int phase);
+		std::vector<int> get_total_num_of_each_cell(std::vector<std::vector<int>>& entities_table);//各セルのフェーズトータルのエンティティの数
+		Graph::Rectangle get_min_dummy_cell();//ユーザおよびダミーが存在する数が最小のセルを取得
 		time_t get_min_dummy_num_time();//T秒間のユーザ及びダミーが存在する数が最小となる最初の時刻を取得
 		void decide_base_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 		void decide_share_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
