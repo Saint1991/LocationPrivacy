@@ -47,6 +47,9 @@ namespace Entity
 		std::vector<int> find_cross_not_set_phases() const;
 		int randomly_pick_cross_not_set_phase() const;
 		
+		std::pair<int, std::shared_ptr<POSITION_TYPE const>> find_previous_fixed_position(int phase) const;
+		std::pair<int, std::shared_ptr<POSITION_TYPE const>> find_next_fixed_position(int phase) const;
+
 		const std::shared_ptr<POSITION_TYPE const> read_position_of_phase(int phase) const;
 		const std::shared_ptr<POSITION_TYPE const> read_position_at(time_t time) const;
 		

@@ -132,6 +132,37 @@ namespace Entity
 		return not_set_phases.at(generator.uniform_distribution(0, not_set_phases.size() - 1));
 	}
 
+
+	///<summary>
+	/// 指定したphase直前の確定しているポイントの到達時刻と座標を取得します
+	/// 決定済みの点がない場合は(INVALID, nullptr)のペアを返します．
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::pair<int, std::shared_ptr<POSITION_TYPE const>> MobileEntity<POSITION_TYPE>::find_previous_fixed_position(int phase) const
+	{
+		for (int target = phase - 1; 0 <= target; target--) {
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(target);
+			if (position != nullptr) return std::make_pair(target, position);
+		}
+		return std::make_pair(INVALID, nullptr);
+	}
+
+
+
+	///<summary>
+	/// 指定したphase直後の確定しているポイントの到達時刻と座標を取得します
+	/// 決定済みの点がない場合は(INVALID, nullptr)のペアを返します．
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::pair<int, std::shared_ptr<POSITION_TYPE const>> MobileEntity<POSITION_TYPE>::find_next_fixed_position(int phase) const
+	{
+		for (int target = phase + 1; target < positions->size(); target++) {
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(target);
+			if (position != nullptr) return std::make_pair(target, position);
+		}
+		return std::make_pair(INVALID, nullptr);
+	}
+
 	///<summary>
 	/// phase時の位置を指定します
 	/// 存在しない場合はnullptrが返ります
