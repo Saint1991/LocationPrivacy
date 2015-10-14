@@ -148,19 +148,20 @@ namespace Method
 
 	
 	
-	
+	/*
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 	///</summary>
 	void KatoMethod_UserChange::decide_share_positions_and_arrive_time(int dummy_id)
 	{
-		while (entities->get_dummy_by_id(dummy_id)->get_cross_count() > ave(D0cross))
+
+		while (entities->get_dummy_by_id(dummy_id)->get_cross_count() > )
 		{
 			entity_id min_cross_entity_id = entities->get_min_cross_entity_id();//交差回数最小のエンティティidを取得
 			
 			//userかdummyで場合分け
 			//共有地点に設定されていないphaseをランダムに一つ取得
-			int share_phase =
+			int share_phase = 
 				(min_cross_entity_id == 0 ? entities->get_user()->randomly_pick_cross_not_set_phase() : entities->read_dummy_by_id(min_cross_entity_id)->randomly_pick_cross_not_set_phase());
 			
 			Geography::LatLng share_position = *entities->read_dummy_by_id(min_cross_entity_id)->read_position_of_phase(share_phase);
@@ -171,8 +172,9 @@ namespace Method
 			{
 				do
 				{
-					int last_phase = std::max_element(entities->read_dummy_id(dummy_id)->);
-					Geography::LatLng last_position = PPinに含まれるt_lastに到着する停止地点
+					//int last_phase = std::max_element(entities->read_dummy_id(dummy_id)->);
+					Geography::LatLng last_position = entities->get_dummy_by_id(dummy_id)
+						PPinに含まれるt_lastに到着する停止地点
 				} while (map->is_reachable(last_position, share_position, average_speed, time_limit));
 				
 			}
@@ -197,21 +199,62 @@ namespace Method
 				} while (map->is_reachable(last_position, share_position, average_speed, time_limit));
 			}
 
-			entities->get_dummy_by_id(dummy_id)->set_position_of_phase(share_phase, share_point);
-			Dmincross = += 1;
-			生成中のダミーの交差回数 += 1;
+			entities->get_dummy_by_id(dummy_id)->set_crossing_position_of_phase(share_phase, share_position);
+			entities->get_dummy_by_id(min_cross_entity_id)->get_cross_count()++;
+			
+			//Dmincross = += 1;
+			//生成中のダミーの交差回数 += 1;
 		}
 		
-	
 	}*/
-
+	/*
 	///<summary>
 	/// 生成中ダミー(k番目)の移動経路の決定
 	///</summary>
-	void KatoMethod_UserChange::decide_dummy_path(int dummy_id)
+	void KatoMethod_UserChange::decide_destination_on_the_way(int dummy_id)
 	{
+		//
+		int dest_phase = entities->get_dummy_by_id(dummy_id)->;
+		Geography::LatLng dest_position = PPinに含まれるdest_phaseに到着する停止地点;
 
-	}
+		//初期位置の決定
+		time_t init_pause_time = 0;
+		time_t start = 0;
+
+		do 
+		{
+			Geography::LatLng init_position = getpauseposition;
+		} while (map->is_reachable());
+		
+		PPoutに<position, start, pauseのinit>を追加;
+
+		//初期位置以降の停止地点の決定
+		while (startのタイムがPPinに含まれる停止地点到着時間を超えるまで)
+		{
+			do
+			{
+				//途中停止地点の決定
+				pause_i = random(Tmin, Tmax);
+				
+				do()
+				{
+
+				}while (map->is_reachable(position_i - 1, position_i, , ));
+
+				start_i = start_i - 1 + pause_i - 1 + time of from position_i - 1 to position_i;
+				PPoutに<position, start, pause>を追加;
+				i++;
+			} while (map->is_reachable());
+			
+			//途中目的地を停止地点として決定
+			
+
+		}
+
+
+
+
+	}*/
 
 	///<summary>
 	/// ダミーの行動プランを修正する
@@ -301,7 +344,6 @@ namespace Method
 
 	}
 
-		
 
 	///<summary>
 	/// 決定した位置を基にMTC等各種評価値を算出する

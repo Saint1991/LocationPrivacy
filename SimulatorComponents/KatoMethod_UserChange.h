@@ -30,7 +30,7 @@ namespace Method
 		std::vector<int> get_total_num_of_each_cell(std::vector<std::vector<int>>& entities_table);//各セルのフェーズトータルのエンティティの数
 		void decide_base_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 		void decide_share_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
-		void decide_dummy_path(int dummy_id);// 生成中ダミー(k番目)の移動経路の決定
+		void decide_destination_on_the_way(int dummy_id);// 生成中ダミー(k番目)の移動経路の決定
 		void revise_dummy_movement_plan();//ダミーの行動プランを修正する
 		void revise_dummy_pause_time();//ダミーの停止時間の修正
 		void revise_dummy_trajectory();//ダミーの移動経路の修正

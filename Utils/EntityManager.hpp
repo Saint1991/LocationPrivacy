@@ -102,26 +102,7 @@ namespace Entity
 		return nullptr;
 	}
 
-
-
-	///<summary>
-	/// 交差回数が最小のエンティティのIDを取得
-	/// 0の場合はユーザ，1以上ならダミー
-	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	entity_id EntityManager<DUMMY, USER, POSITION_TYPE>::get_min_cross_entity_id() const
-	{
-		entity_id ret = user->get_id();
-		int min = user->get_cross_count();
-		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
-			if ((*iter)->get_cross_count() < min) {
-				ret = (*iter)->get_id();
-			}
-		}
-		return ret;
-	}
-
-
+	
 	///<summary>
 	/// 交差回数の小さい順にエンティティIDを格納したリストを返します
 	/// 未生成のダミーも交差回数0として含まれるので注意
