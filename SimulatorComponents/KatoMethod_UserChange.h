@@ -6,6 +6,7 @@
 #include "BasicRequirement.h"
 #include "IProposedMethod.h"
 #include "Rectangle.h"
+#include "PauseMobileEntity.h"
 
 namespace Method
 {
@@ -14,7 +15,7 @@ namespace Method
 	/// ‰Á“¡‚³‚ñ’ñˆÄè–@‚ÌÀ‘•
 	///</summary>
 	class KatoMethod_UserChange
-		: public Framework::IProposedMethod<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement>
+		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::BasicRequirement>
 	{
 	private:
 		//•Ï”
@@ -48,7 +49,7 @@ namespace Method
 
 		
 	public:
-		KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<User::BasicUser<Geography::LatLng>> user, std::shared_ptr<Requirement::BasicRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
+		KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::BasicRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
 		~KatoMethod_UserChange();
 
 		void run();

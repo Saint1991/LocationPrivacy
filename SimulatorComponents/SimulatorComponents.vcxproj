@@ -146,6 +146,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Utils\PauseMobileEntity.h" />
     <ClInclude Include="BasicDbMap.h" />
     <ClInclude Include="BasicMapNode.h" />
     <ClInclude Include="BasicPoi.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Utils\PauseMobileEntity.cpp" />
     <ClCompile Include="BasicDbMap.cpp" />
     <ClCompile Include="BasicMapNode.cpp" />
     <ClCompile Include="BasicPoi.cpp" />
