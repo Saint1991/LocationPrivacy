@@ -87,25 +87,6 @@ namespace Method
 		return total_entity_num_all_phase;
 	}
 
-	/*
-	///<summary>
-	/// ユーザおよびダミーが存在する数が最小のセルを取得
-	///</summary>
-	Graph::Rectangle KatoMethod_UserChange::get_min_dummy_cell()
-	{
-		return Graph::Rectangle(1.0,1.0,1.0,1.0);//ここに返すのは最小のセル
-	}
-
-	
-	///<summary>
-	/// T秒間のユーザ及びダミーが存在する数が最小となる最初の時刻を取得
-	///</summary>
-	time_t KatoMethod_UserChange::get_min_dummy_num_time()
-	{
-		return 0;
-	}
-	*/
-	
 	
 	///<summary>
 	/// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
@@ -151,6 +132,7 @@ namespace Method
 
 		
 		//取得したcell_id,phaseにおける停止地点を取得
+		//一様分布でランダム取得
 		//poiがなかった時の場合分けも考慮が必要かもしれない
 		Graph::Rectangle<Geography::LatLng> cell = grid_list.at(base_phase).at(min_cell_id);
 		std::vector<std::shared_ptr<Map::BasicPoi const>> poi_within_base_point_grid = map->find_pois_within_boundary(cell);
@@ -165,51 +147,63 @@ namespace Method
 	}
 
 	
-	/*
+	
 	
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 	///</summary>
 	void KatoMethod_UserChange::decide_share_positions_and_arrive_time(int dummy_id)
 	{
-		while (生成中のダミーの交差回数 > ave(D0cross))
+		while (entities->get_dummy_by_id(dummy_id)->get_cross_count() > ave(D0cross))
 		{
-			unsigned int min_cross_entity_id = entities->get_min_cross_entity_id();
+			entity_id min_cross_entity_id = entities->get_min_cross_entity_id();//交差回数最小のエンティティidを取得
 			
 			//userかdummyで場合分け
-			Geography::LatLng share_position = 
-			p_shared = random(Dmincrossの停止地点);
-			t_shared = p_sharedに到着する時間;
+			//共有地点に設定されていないphaseをランダムに一つ取得
+			int share_phase =
+				(min_cross_entity_id == 0 ? entities->get_user()->randomly_pick_cross_not_set_phase() : entities->read_dummy_by_id(min_cross_entity_id)->randomly_pick_cross_not_set_phase());
+			
+			Geography::LatLng share_position = *entities->read_dummy_by_id(min_cross_entity_id)->read_position_of_phase(share_phase);
 
-			if (PPinに含まれる全ての停止地点到着時間<=t_shared)
+			//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが大きい場合
+			if (entities->read_dummy_by_id()
+				PPinに含まれる全ての停止地点到着時間(フェーズ)<=share_phase)
 			{
-				while (到達可能かどうか) {
-					t_last = std::max(PPinに含まれる停止地点到着時間);
-					p_last = PPinに含まれるt_lastに到着する停止地点;
-				}
+				do
+				{
+					int last_phase = std::max_element(entities->read_dummy_id(dummy_id)->);
+					Geography::LatLng last_position = PPinに含まれるt_lastに到着する停止地点
+				} while (map->is_reachable(last_position, share_position, average_speed, time_limit));
 				
 			}
-			else if (PPinに含まれる全ての停止地点到着時間 >= t_shared)
+			//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが小さい場合
+			else if (PPinに含まれる全ての停止地点到着時間 >= share_phase)
 			{
-				while (到達可能かどうか) {
-					t_first = std::min(PPinに含まれる停止地点到着時間);
-					p_first = PPinに含まれるt_firstに到着する停止地点;
-				}
+				do
+				{
+					int first_phase = std::min_element(entities->read_dummy_id(dummy_id)->);
+					Geography::LatLng first_position = PPinに含まれるt_lastに到着する停止地点
+				} while (map->is_reachable(first_position, share_position, average_speed, time_limit));
 			}
+			//生成中ダミーの既に停止位置が決定しているフェーズの間にある場合
 			else
 			{
-				while (previousとsharedの到達可能かどうか) {
-					t_previous = a;
-				}
+				do
+				{
+					int previous_phase = std::max_element(entities->read_dummy_id(dummy_id)->);
+					Geography::LatLng previous_position = PPinに含まれるt_lastに到着する停止地点
+					int next_phase = 
+					Geography::LatLng next_position = PPinに含まれるt_lastに到着する停止地点
+				} while (map->is_reachable(last_position, share_position, average_speed, time_limit));
 			}
 
-			PPに<p_shared, t_shared>を追加
+			entities->get_dummy_by_id(dummy_id)->set_position_of_phase(share_phase, share_point);
 			Dmincross = += 1;
 			生成中のダミーの交差回数 += 1;
 		}
 		
 	
-	}
+	}*/
 
 	///<summary>
 	/// 生成中ダミー(k番目)の移動経路の決定
@@ -271,7 +265,7 @@ namespace Method
 	{
 
 	}
-	*/
+	
 	
 
 	///<summary>

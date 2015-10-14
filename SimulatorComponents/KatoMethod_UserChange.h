@@ -23,11 +23,11 @@ namespace Method
 		typedef std::vector<Graph::Rectangle<Geography::LatLng>> Grid;
 		std::vector<Grid> grid_list;
 
+		typedef unsigned int entity_id;
+
 		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成
-		std::vector<std::vector<int>> make_table_of_entity_num_in_cell_at_phase(std::vector<Graph::Rectangle<Geography::LatLng>> grid_list, int phase);
+		//std::vector<std::vector<int>> make_table_of_entity_num_in_cell_at_phase(std::vector<Graph::Rectangle<Geography::LatLng>> grid_list, int phase);
 		std::vector<int> get_total_num_of_each_cell(std::vector<std::vector<int>>& entities_table);//各セルのフェーズトータルのエンティティの数
-		Graph::Rectangle<Geography::LatLng> get_min_dummy_cell();//ユーザおよびダミーが存在する数が最小のセルを取得
-		time_t get_min_dummy_num_time();//T秒間のユーザ及びダミーが存在する数が最小となる最初の時刻を取得
 		void decide_base_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 		void decide_share_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 		void decide_dummy_path(int dummy_id);// 生成中ダミー(k番目)の移動経路の決定
