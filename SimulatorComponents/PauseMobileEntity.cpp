@@ -14,6 +14,9 @@ namespace Entity
 	{
 	}
 
+	///<summary>
+	/// デストラクタ
+	///</summary>
 	template <typename POSITION_TYPE>
 	PauseMobileEntity<POSITION_TYPE>::~PauseMobileEntity()
 	{
