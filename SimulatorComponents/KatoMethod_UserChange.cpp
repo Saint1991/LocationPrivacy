@@ -13,6 +13,7 @@ namespace Method
 	{
 	}
 
+
 	///<summary>
 	/// デストラクタ
 	///</summary>
