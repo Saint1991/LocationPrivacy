@@ -96,7 +96,7 @@
     <ClInclude Include="KatoMethod_UserChange.h">
       <Filter>ヘッダー ファイル\Method</Filter>
     </ClInclude>
-    <ClInclude Include="..\Utils\PauseMobileEntity.h">
+    <ClInclude Include="PauseMobileEntity.h">
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
   </ItemGroup>
@@ -152,7 +152,7 @@
     <ClCompile Include="KatoMethod_UserChange.cpp">
       <Filter>ソース ファイル\Method</Filter>
     </ClCompile>
-    <ClCompile Include="..\Utils\PauseMobileEntity.cpp">
+    <ClCompile Include="PauseMobileEntity.cpp">
       <Filter>ソース ファイル\Entity</Filter>
     </ClCompile>
   </ItemGroup>
