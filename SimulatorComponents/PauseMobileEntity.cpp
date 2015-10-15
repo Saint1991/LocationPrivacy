@@ -22,6 +22,7 @@ namespace Entity
 	{
 	}
 
+
 	///<summary>
 	/// ’â~ŠÔ‚ğ‹‚ß‚é
 	///</summary>

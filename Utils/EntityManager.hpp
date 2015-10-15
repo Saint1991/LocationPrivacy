@@ -240,13 +240,13 @@ namespace Entity
 	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_all_entities_total_crossing_count() const
 	{
 		int counter = 0;
-		/*
+		
 		counter += user->get_cross_count();
 
-		for_each_dummy([&counter](std::shared_ptr<DUMMY const> dummy) {
+		for_each_dummy([&counter](Entity::entity_id id, std::shared_ptr<DUMMY const> dummy) {
 			counter += dummy->get_cross_count();
 		});
-		*/
+		
 		return counter;
 	}
 	
