@@ -121,6 +121,12 @@
     <Filter Include="ヘッダー ファイル\Graph\Tree">
       <UniqueIdentifier>{6d455a48-2129-4999-8810-888bc314c642}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Evaluation">
+      <UniqueIdentifier>{d94b9fc7-45a3-4f6d-931d-520a2c0660fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Evaluation">
+      <UniqueIdentifier>{20094aee-d356-46e2-a2bd-dad75319c09f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -341,6 +347,12 @@
     </ClInclude>
     <ClInclude Include="Rectangle.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="IEvaluator.h">
+      <Filter>ヘッダー ファイル\Evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="IEvaluationModule.h">
+      <Filter>ヘッダー ファイル\Evaluation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

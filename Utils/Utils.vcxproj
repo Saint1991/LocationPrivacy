@@ -216,6 +216,8 @@
     <ClInclude Include="FileExportable.h" />
     <ClInclude Include="FileExporter.h" />
     <ClInclude Include="GeoCalculation.h" />
+    <ClInclude Include="IEvaluationModule.h" />
+    <ClInclude Include="IEvaluator.h" />
     <ClInclude Include="IProposedMethod.h" />
     <ClInclude Include="IProposedMethod.hpp" />
     <ClInclude Include="GraphUtility.h" />
