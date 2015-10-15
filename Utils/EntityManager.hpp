@@ -232,6 +232,23 @@ namespace Entity
 	{
 		return get_entity_count_within_boundary(phase, Graph::Rectangle<POSITION_TYPE>(top, left, bottom, right));
 	}
+
+	///<summary>
+	/// 全てのエンティティの交差回数の合計を計算します
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_all_entities_total_crossing_count() const
+	{
+		int counter = 0;
+		/*
+		counter += user->get_cross_count();
+
+		for_each_dummy([&counter](std::shared_ptr<DUMMY const> dummy) {
+			counter += dummy->get_cross_count();
+		});
+		*/
+		return counter;
+	}
 	
 }
 

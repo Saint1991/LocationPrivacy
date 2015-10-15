@@ -15,8 +15,8 @@ namespace Requirement
 	{
 		double required_anonymous_area;
 		size_t dummy_num;
-		const double AVERAGE_SPEED;
-		const double RANGE_OF_SPEED;
+		const double AVERAGE_SPEED = 5.0;
+		const double RANGE_OF_SPEED = 2.5;
 		
 		BasicRequirement();
 		BasicRequirement(double required_anonymous_area, size_t dummy_num);

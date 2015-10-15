@@ -44,6 +44,7 @@ namespace Entity
 		std::shared_ptr<POSITION_TYPE const> get_average_position_at(time_t time) const;
 		int get_entity_count_within_boundary(int phase, const Graph::Rectangle<POSITION_TYPE>& boundary) const;
 		int get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right) const;
+		int get_all_entities_total_crossing_count() const;
 
 	};
 }
