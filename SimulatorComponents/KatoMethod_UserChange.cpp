@@ -143,7 +143,7 @@ namespace Method
 		
 		Geography::LatLng base_point = poi->data->get_position();
 		
-		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(base_phase,base_point);
+		//entities->get_dummy_by_id(dummy_id)->set_position_of_phase(base_phase,base_point);
 		
 	}
 

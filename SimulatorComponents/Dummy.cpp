@@ -28,9 +28,9 @@ namespace Entity
 	/// 指定したPhaseに位置とカテゴリを設定する
 	///</summary>
 	template <typename POSITION_TYPE>
-	void Dummy<POSITION_TYPE>::set_state_of_phase(int phase, POSITION_TYPE position, const category_id& category)
+	void Dummy<POSITION_TYPE>::set_state_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const category_id& category)
 	{
-		set_position_of_phase(phase, position);
+		set_position_of_phase(phase, node_id, position);
 		category_sequence->at(phase) = category;
 	}
 
@@ -39,11 +39,11 @@ namespace Entity
 	/// 指定した時刻に位置とカテゴリを設定する
 	///</summary>
 	template <typename POSITION_TYPE>
-	void Dummy<POSITION_TYPE>::set_state_at(time_t time, POSITION_TYPE position, const category_id& category)
+	void Dummy<POSITION_TYPE>::set_state_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const category_id& category)
 	{
 		int phase = timeslot->find_phase_of_time(time);
 		if (phase != INVALID) {
-			set_state_of_phase(phase, position, category);
+			set_state_of_phase(phase, node_id, position, category);
 		}
 	}
 

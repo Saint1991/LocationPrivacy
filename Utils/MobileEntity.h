@@ -10,6 +10,7 @@
 #include "LatLng.h"
 #include "TimeSlotManager.h"
 #include "Probability.h"
+#include "MapNodeIndicator.h"
 
 namespace Entity
 {
@@ -26,19 +27,22 @@ namespace Entity
 	
 	protected:
 		std::shared_ptr<Time::TimeSlotManager const> timeslot;
+		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> visited_node_ids;
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions;
 		std::shared_ptr<std::vector<bool>> cross_flg;
 		int total_cross_count;
 		
 	public:
+		typedef std::pair<Graph::MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>> node_pos_info;
+
 		MobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		virtual ~MobileEntity();
 
-		void set_position_of_phase(int phase, POSITION_TYPE position);
-		void set_position_at(time_t time, POSITION_TYPE position);
+		void set_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position);
+		void set_position_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position);
 
-		void set_crossing_position_of_phase(int phase, POSITION_TYPE position);
-		void set_crossing_position_at(time_t time, POSITION_TYPE position);
+		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position);
+		void set_crossing_position_at(time_t time, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position);
 
 		void register_as_cross_position(int phase);
 		int get_cross_count() const;
@@ -52,6 +56,9 @@ namespace Entity
 
 		const std::shared_ptr<POSITION_TYPE const> read_position_of_phase(int phase) const;
 		const std::shared_ptr<POSITION_TYPE const> read_position_at(time_t time) const;
+
+		node_pos_info read_node_pos_info_of_phase(int phase) const;
+		node_pos_info read_node_pos_info_at(time_t time) const;
 		
 	};
 

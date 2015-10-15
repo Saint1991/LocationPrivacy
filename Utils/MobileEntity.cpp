@@ -9,7 +9,9 @@ namespace Entity
 	///</summary>
 	template <typename POSITION_TYPE>
 	MobileEntity<POSITION_TYPE>::MobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
-		: Identifiable<entity_id>(id), timeslot(timeslot), positions(std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count(), nullptr)), cross_flg(std::make_shared<std::vector<bool>>(timeslot->phase_count(), false)), total_cross_count(0)
+		: Identifiable<entity_id>(id), timeslot(timeslot), positions(std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count(), nullptr)), 
+		visited_node_ids(std::make_shared<std::vector<Graph::MapNodeIndicator>>(timeslot->phase_count(), Graph::MapNodeIndicator(INVALID, Graph::NodeType::INVALID))), 
+		cross_flg(std::make_shared<std::vector<bool>>(timeslot->phase_count(), false)), total_cross_count(0)
 	{
 	}
 
@@ -27,19 +29,20 @@ namespace Entity
 	/// 指定したPhaseにおける位置を設定する
 	///</summary>
 	template <typename POSITION_TYPE>
-	void MobileEntity<POSITION_TYPE>::set_position_of_phase(int phase, POSITION_TYPE position)
+	void MobileEntity<POSITION_TYPE>::set_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position)
 	{
 		positions->at(phase) = std::make_shared<POSITION_TYPE>(position);
+		visited_node_ids->at(phase) = node_id;
 	}
 
 	///<summary>
 	/// 時刻tにおける位置を設定する
 	///</summary>
 	template <typename POSITION_TYPE>
-	void MobileEntity<POSITION_TYPE>::set_position_at(time_t time, POSITION_TYPE position)
+	void MobileEntity<POSITION_TYPE>::set_position_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position)
 	{
 		int phase = timeslot->find_phase_of_time(time);
-		set_position_of_phase(phase, position);
+		set_position_of_phase(phase, node_id, position);
 	}
 
 
@@ -47,20 +50,20 @@ namespace Entity
 	/// 共有地点の設定をする
 	///</summary>
 	template <typename POSITION_TYPE>
-	void MobileEntity<POSITION_TYPE>::set_crossing_position_of_phase(int phase, POSITION_TYPE position)
+	void MobileEntity<POSITION_TYPE>::set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position)
 	{
 		register_as_cross_position(phase);
-		set_position_of_phase(phase, position);
+		set_position_of_phase(phase, node_id, position);
 	}
 
 	///<summary>
 	/// 共有地点の設定をする
 	///</summary>
 	template <typename POSITION_TYPE>
-	void MobileEntity<POSITION_TYPE>::set_crossing_position_at(time_t time, POSITION_TYPE position)
+	void MobileEntity<POSITION_TYPE>::set_crossing_position_at(time_t time, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position)
 	{
 		int phase = timeslot->find_phase_of_time(time);
-		set_crossing_position_of_phase(phase, position);
+		set_crossing_position_of_phase(phase, node_id, position);
 	}
 
 
@@ -185,6 +188,32 @@ namespace Entity
 		int phase = timeslot->find_phase_of_time(time);
 		if (phase == INVALID) return nullptr;
 		return read_position_of_phase(phase);
+	}
+
+
+	///<summary>
+	/// 指定したPhaseに存在したノードのIDと位置を取得します
+	/// 不正なphaseの場合はノードID-1，タイプINVALID，位置nullptrのpairが返されます
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::pair<Graph::MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>> MobileEntity<POSITION_TYPE>::read_node_pos_info_of_phase(int phase) const
+	{
+		if (positions->size() == 0 || visited_node_ids->size() == 0) return std::make_pair(Graph::MapNodeIndicator(INVALID, Graph::NodeType::INVALID), nullptr);
+		Graph::MapNodeIndicator visited_node = visited_node_ids->at(phase);
+		std::shared_ptr<POSITION_TYPE const> pos = read_position_of_phase(phase);
+		return std::make_pair(visited_node, pos);
+	}
+
+	///<summary>
+	/// 指定したPhaseに存在したノードのIDと位置を取得します
+	/// 不正な時刻の場合はノードID-1，タイプINVALID，位置nullptrのpairが返されます
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::pair<Graph::MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>> MobileEntity<POSITION_TYPE>::read_node_pos_info_at(time_t time) const
+	{
+		int phase = timeslot->find_phase_of_time(time);
+		if (phase == INVALID) return std::make_pair(Graph::MapNodeIndicator(INVALID, Graph::NodeType::INVALID), nullptr);
+		return read_node_pos_info_of_phase(phase);
 	}
 	
 }

@@ -7,6 +7,7 @@
 #pragma once
 #include "MobileEntity.h"
 #include "Sequence.h"
+#include "MapNodeIndicator.h"
 
 namespace Entity
 {
@@ -41,8 +42,8 @@ namespace Entity
 		Dummy(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		virtual ~Dummy();
 
-		void set_state_of_phase(int phase, POSITION_TYPE position, const category_id& category);
-		void set_state_at(time_t time, POSITION_TYPE position, const category_id& category);
+		void set_state_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const category_id& category);
+		void set_state_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const category_id& category);
 
 		void set_category_of_phase(int phase, const category_id& category);
 		void set_category_at(time_t time, const category_id& category);

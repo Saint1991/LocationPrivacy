@@ -160,7 +160,6 @@
     <ClInclude Include="PreferenceTree.h" />
     <ClInclude Include="PreferenceTreeNode.h" />
     <ClInclude Include="ProbabilityEdge.h" />
-    <ClInclude Include="SemanticEntityManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -193,7 +192,6 @@
     <ClCompile Include="PreferenceTree.cpp" />
     <ClCompile Include="PreferenceTreeNode.cpp" />
     <ClCompile Include="ProbabilityEdge.cpp" />
-    <ClCompile Include="SemanticEntityManager.cpp" />
     <ClCompile Include="SimulatorComponents.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
