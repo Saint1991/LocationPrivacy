@@ -228,6 +228,7 @@
     <ClInclude Include="IdentifiableCollection.h" />
     <ClInclude Include="IdentifiableCollection.hpp" />
     <ClInclude Include="IOException.h" />
+    <ClInclude Include="KatoMethodRequirement.h" />
     <ClInclude Include="LatLng.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Map.hpp" />
@@ -290,6 +291,7 @@
     <ClCompile Include="FileExporter.cpp" />
     <ClCompile Include="GeoCalculation.cpp" />
     <ClCompile Include="GraphUtility.cpp" />
+    <ClCompile Include="KatoMethodRequirement.cpp" />
     <ClCompile Include="LatLng.cpp" />
     <ClCompile Include="MapNodeIndicator.cpp" />
     <ClCompile Include="Column.cpp" />

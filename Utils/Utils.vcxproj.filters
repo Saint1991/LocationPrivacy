@@ -354,6 +354,9 @@
     <ClInclude Include="IEvaluationModule.h">
       <Filter>ヘッダー ファイル\Evaluation</Filter>
     </ClInclude>
+    <ClInclude Include="KatoMethodRequirement.h">
+      <Filter>ヘッダー ファイル\Requirement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -451,6 +454,9 @@
     </ClCompile>
     <ClCompile Include="Rectangle.cpp">
       <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="KatoMethodRequirement.cpp">
+      <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
