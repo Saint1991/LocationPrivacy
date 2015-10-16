@@ -138,32 +138,34 @@ namespace Entity
 
 	///<summary>
 	/// 指定したphase直前の確定しているポイントの到達時刻と座標を取得します
-	/// 決定済みの点がない場合は(INVALID, nullptr)のペアを返します．
+	/// 決定済みの点がない場合はPhaseがINVALIDの値を返します
 	///</summary>
 	template <typename POSITION_TYPE>
-	std::pair<int, std::shared_ptr<POSITION_TYPE const>> MobileEntity<POSITION_TYPE>::find_previous_fixed_position(int phase) const
+	std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>>> MobileEntity<POSITION_TYPE>::find_previous_fixed_position(int phase) const
 	{
 		for (int target = phase - 1; 0 <= target; target--) {
+			Graph::MapNodeIndicator node_id = visited_node_ids->at(target);
 			std::shared_ptr<POSITION_TYPE const> position = positions->at(target);
-			if (position != nullptr) return std::make_pair(target, position);
+			if (position != nullptr) return std::make_pair(target, std::make_pair(node_id, position));
 		}
-		return std::make_pair(INVALID, nullptr);
+		return std::make_pair(INVALID, std::make_pair(Graph::MapNodeIndicator(INVALID, Graph::NodeType::INVALID), nullptr));
 	}
 
 
 
 	///<summary>
 	/// 指定したphase直後の確定しているポイントの到達時刻と座標を取得します
-	/// 決定済みの点がない場合は(INVALID, nullptr)のペアを返します．
+	/// 決定済みの点がない場合はPhaseがINVALIDの値を返します
 	///</summary>
 	template <typename POSITION_TYPE>
-	std::pair<int, std::shared_ptr<POSITION_TYPE const>> MobileEntity<POSITION_TYPE>::find_next_fixed_position(int phase) const
+	std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>>> MobileEntity<POSITION_TYPE>::find_next_fixed_position(int phase) const
 	{
 		for (int target = phase + 1; target < positions->size(); target++) {
+			Graph::MapNodeIndicator node_id = visited_node_ids->at(target);
 			std::shared_ptr<POSITION_TYPE const> position = positions->at(target);
-			if (position != nullptr) return std::make_pair(target, position);
+			if (position != nullptr) return std::make_pair(target, std::make_pair(node_id, position));
 		}
-		return std::make_pair(INVALID, nullptr);
+		return std::make_pair(INVALID, std::make_pair(Graph::MapNodeIndicator(INVALID, Graph::NodeType::INVALID), nullptr));
 	}
 
 	///<summary>
