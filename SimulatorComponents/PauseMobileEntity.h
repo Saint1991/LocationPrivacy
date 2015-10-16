@@ -21,9 +21,12 @@ namespace Entity
 	{
 	protected:
 		std::vector<time_t> pause_time_list;
+		double max_pause_time;
+		double min_pause_time;
 
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
+		//PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot, double max_pause_time, double min_pause_time);
 		virtual ~PauseMobileEntity();
 		time_t get_pause_time(int phase) const;
 		void set_pause_time(int phase, time_t pause_time);

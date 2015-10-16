@@ -10,7 +10,7 @@ namespace Entity
 	///</summary>
 	template <typename POSITION_TYPE>
 	PauseMobileEntity<POSITION_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
-		: MobileEntity<POSITION_TYPE>(id, timeslot), pause_time_list(std::vector<time_t>(timeslot->phase_count(),0))
+		: MobileEntity<POSITION_TYPE>(id, timeslot), pause_time_list(std::vector<time_t>(timeslot->phase_count(),0))//,max_pause_time(max_pause_time),min_pause_time(min_pause_time)
 	{
 	}
 
