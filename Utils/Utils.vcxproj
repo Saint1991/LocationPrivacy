@@ -191,6 +191,7 @@
     <ClInclude Include="AngleUtility.h" />
     <ClInclude Include="BaseConstIterator.h" />
     <ClInclude Include="BaseConstIterator.hpp" />
+    <ClInclude Include="BaseEvaluationModule.h" />
     <ClInclude Include="BaseIterator.h" />
     <ClInclude Include="BaseIterator.hpp" />
     <ClInclude Include="BasicEdge.h" />
@@ -213,11 +214,11 @@
     <ClInclude Include="Edge.hpp" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="EntityManager.hpp" />
+    <ClInclude Include="Evaluator.h" />
     <ClInclude Include="FileExportable.h" />
     <ClInclude Include="FileExporter.h" />
     <ClInclude Include="GeoCalculation.h" />
     <ClInclude Include="IEvaluationModule.h" />
-    <ClInclude Include="IEvaluator.h" />
     <ClInclude Include="IProposedMethod.h" />
     <ClInclude Include="IProposedMethod.hpp" />
     <ClInclude Include="GraphUtility.h" />
@@ -288,6 +289,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Evaluator.cpp" />
     <ClCompile Include="FileExporter.cpp" />
     <ClCompile Include="GeoCalculation.cpp" />
     <ClCompile Include="GraphUtility.cpp" />

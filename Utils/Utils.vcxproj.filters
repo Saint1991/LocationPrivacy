@@ -348,14 +348,17 @@
     <ClInclude Include="Rectangle.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="IEvaluator.h">
-      <Filter>ヘッダー ファイル\Evaluation</Filter>
-    </ClInclude>
     <ClInclude Include="IEvaluationModule.h">
       <Filter>ヘッダー ファイル\Evaluation</Filter>
     </ClInclude>
     <ClInclude Include="KatoMethodRequirement.h">
       <Filter>ヘッダー ファイル\Requirement</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseEvaluationModule.h">
+      <Filter>ヘッダー ファイル\Evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="Evaluator.h">
+      <Filter>ヘッダー ファイル\Evaluation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -457,6 +460,9 @@
     </ClCompile>
     <ClCompile Include="KatoMethodRequirement.cpp">
       <Filter>ソース ファイル\Requirement</Filter>
+    </ClCompile>
+    <ClCompile Include="Evaluator.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
