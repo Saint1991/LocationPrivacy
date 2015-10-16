@@ -8,8 +8,8 @@ namespace Method
 	/// コンストラクタ
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
-	KatoMethod_UserChange::KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::BasicRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::BasicRequirement>(map, user, requirement, time_manager),grid_list(std::vector<Grid>(time_manager->phase_count()))
+	KatoMethod_UserChange::KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
+		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>(map, user, requirement, time_manager),grid_list(std::vector<Grid>(time_manager->phase_count()))
 	{
 	}
 
@@ -141,9 +141,10 @@ namespace Method
 		int index = generator.uniform_distribution(0, poi_within_base_point_grid.size() - 1);
 		std::shared_ptr<Map::BasicPoi const> poi = poi_within_base_point_grid.at(index);
 		
+		Graph::node_id base_poi_id = poi->get_id();
 		Geography::LatLng base_point = poi->data->get_position();
 		
-		//entities->get_dummy_by_id(dummy_id)->set_position_of_phase(base_phase,base_point);
+		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(base_phase, Graph::MapNodeIndicator(base_poi_id),base_point);
 		
 	}
 
@@ -155,74 +156,90 @@ namespace Method
 	///</summary>
 	void KatoMethod_UserChange::decide_share_positions_and_arrive_time(int dummy_id)
 	{
-		//ユーザ及び生成済みダミーの平均交差回数よりも，生成中ダミーの交差回数が多くなるまで共有地点を設定する
-		while (entities->get_dummy_by_id(dummy_id)->get_cross_count() > entities->get_all_entities_total_crossing_count()/dummy_id)
+		//交差回数が少ないエンティティを優先的に交差対象にして繰り返す
+		std::list<std::pair<Entity::entity_id, int>> entity_list_order_by_cross = entities->get_entity_id_list_order_by_cross_count();
+		for (std::list<std::pair<Entity::entity_id, int>>::const_iterator iter = entity_list_order_by_cross.begin(); iter != entity_list_order_by_cross.end(); iter++)
 		{
-			//交差回数が少ないエンティティを優先的に交差対象にして繰り返す
-			std::list<std::pair<Entity::entity_id, int>> entity_list_order_by_cross = entities->get_entity_id_list_order_by_cross_count();
-			for (std::list<std::pair<Entity::entity_id, int>>::const_iterator iter = entity_list_order_by_cross.begin(); iter != entity_list_order_by_cross.end(); iter++)
-			{
 
-				//未生成のダミーのものはスキップ
-				if (iter->first > dummy_id) continue;
+			//未生成のダミーのものはスキップ
+			if (iter->first > dummy_id) continue;
 
-				//交差対象のID(交差回数最小)
-				int cross_target = iter->second;//firstではない？
-				int target_phase = INVALID;
+			//交差対象のID(交差回数最小)
+			int cross_target = iter->first;
+			int target_phase = INVALID;
 
-				//BasicUserはDummyを継承しているのでポインタ代入は可能
-				//targetが交差するユーザorダミー
-				//target_phasesは交差が設定されていないphaseの一覧
-				std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> target = cross_target == 0 ? entities->get_user() : entities->get_dummy_by_id(cross_target);
-				std::vector<int> target_phases = target->find_cross_not_set_phases();
+			//BasicUserはDummyを継承しているのでポインタ代入は可能
+			//targetが交差するユーザorダミー
+			//target_phasesは交差が設定されていないphaseの一覧
+			std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> target = cross_target == 0 ? entities->get_user() : entities->get_dummy_by_id(cross_target);
+			std::vector<int> target_phases = target->find_cross_not_set_phases();
 
-				//交差未設定の時刻からランダムに共有地点設定を試みる
-				std::random_device device;
-				std::mt19937_64 generator(device());
-				std::shuffle(target_phases.begin(), target_phases.end(), generator);
+			//交差未設定の時刻からランダムに共有地点設定を試みる
+			std::random_device device;
+			std::mt19937_64 generator(device());
+			std::shuffle(target_phases.begin(), target_phases.end(), generator);
 
-				//フェーズが0でない交差が未設定のフェーズに交差地点を設定する．
-				for (std::vector<int>::const_iterator target_phase = target_phases.begin(); target_phase != target_phases.end(); target_phase++) {
-					if (*target_phase == 0) continue;
-					int share_phase = *target_phase;
-					Geography::LatLng share_position = *entities->read_dummy_by_id(cross_target)->read_position_of_phase(share_phase);
-					
-					//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが大きい場合
-					if (entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase).second  == nullptr)
-					{
-						std::pair<int, std::shared_ptr<Geography::LatLng const>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
-						time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - entities->read_dummy_by_id(dummy_id)->get_pause_time(previous_info.first);
-						if (map->is_reachable(previous_info.second, share_position, requirement->average_speed, previous_time_limit))break;
+			//フェーズが0でない交差が未設定のフェーズに交差地点を設定する．
+			for (std::vector<int>::const_iterator target_phase = target_phases.begin(); target_phase != target_phases.end(); target_phase++) {
+				if (*target_phase == 0) continue;
+				int share_phase = *target_phase;
+				std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>> share_position = target->read_node_pos_info_of_phase(share_phase);
+
+				//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが大きい場合
+				if (entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase).second == nullptr)
+				{
+					std::pair<int, std::shared_ptr<Geography::LatLng const>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
+					time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - entities->read_dummy_by_id(dummy_id)->get_pause_time(previous_info.first);
+					//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
+					if (map->is_reachable(previous_info.second, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)) {
+						break;
+					}else {
+						goto ONCE_AGAIN;
 					}
-					//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが小さい場合
-					else if (entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase).second == nullptr)
-					{
-						std::pair<int, std::shared_ptr<Geography::LatLng const>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase);
-						time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) - entities->read_dummy_by_id(dummy_id)->get_pause_time(share_phase);
-						if (map->is_reachable(share_position, next_info.second, requirement->average_speed, next_time_limit)) break;
+				}
+				//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが小さい場合
+				else if (entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase).second == nullptr)
+				{
+					std::pair<int, std::shared_ptr<Geography::LatLng const>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase);
+					time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) - entities->read_dummy_by_id(dummy_id)->get_pause_time(share_phase);
+					if (map->is_reachable(share_position.first, next_info.second, requirement->average_speed_of_dummy, next_time_limit)) {
+						break;
 					}
-					//生成中ダミーの既に停止位置が決定しているフェーズの間にある場合
-					else
-					{
-						std::pair<int, std::shared_ptr<Geography::LatLng const>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
-						std::pair<int, std::shared_ptr<Geography::LatLng const>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase);
-						//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
-						time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - entities->read_dummy_by_id(dummy_id)->get_pause_time(previous_info.first);
-						time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) -  entities->read_dummy_by_id(dummy_id)->get_pause_time(share_phase);
+					else {
+						goto ONCE_AGAIN;
+					}
+				}
+				//生成中ダミーの既に停止位置が決定しているフェーズの間にある場合
+				else
+				{
+					std::pair<int, std::shared_ptr<Geography::LatLng const>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
+					std::pair<int, std::shared_ptr<Geography::LatLng const>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase);
+					//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
+					time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - entities->read_dummy_by_id(dummy_id)->get_pause_time(previous_info.first);
+					time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) -  entities->read_dummy_by_id(dummy_id)->get_pause_time(share_phase);
 
-						if (map->is_reachable(previous_info.second, share_position, requirement->average_speed, previous_time_limit)
-							&& map->is_reachable(share_position, next_info.second, requirement->average_speed, next_time_limit)) break;
+					if (map->is_reachable(previous_info.second, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)
+						&& map->is_reachable(share_position.first, next_info.second, requirement->average_speed_of_dummy, next_time_limit)) {
+						break;
 					}
-					break;
+					else {
+						goto ONCE_AGAIN;
+					}
 				}
 
 				//Dmincross = += 1;
 				//生成中のダミーの交差回数 += 1;
-				entities->get_dummy_by_id(dummy_id)->set_crossing_position_of_phase(share_phase, share_position);
-				int creating_dummy_cross_count = entities->get_dummy_by_id(cross_target)->get_cross_count();
-				creating_dummy_cross_count++;	
+				entities->get_dummy_by_id(dummy_id)->set_crossing_position_of_phase(share_phase, share_position.first, *share_position.second);
+				int target_dummy_cross_count = target->get_cross_count();
+				target_dummy_cross_count++;//このやり方でtargetの交差回数の合計を数えられる？
+				break;
+					
+				ONCE_AGAIN:
 			}
+			//ユーザ及び生成済みダミーの平均交差回数よりも，生成中ダミーの交差回数が多くなるまで共有地点を設定する
+			if(entities->get_dummy_by_id(dummy_id)->get_cross_count() > entities->get_all_entities_total_crossing_count() / dummy_id) break;
 		}
+		
 	}*/
 
 
