@@ -360,6 +360,12 @@
     <ClInclude Include="Evaluator.h">
       <Filter>ヘッダー ファイル\Evaluation</Filter>
     </ClInclude>
+    <ClInclude Include="ARCountCalculationModule.h">
+      <Filter>ヘッダー ファイル\Evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="ARCountCalculationModule.hpp">
+      <Filter>ソース ファイル\Evaluation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -462,7 +468,7 @@
       <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
     <ClCompile Include="Evaluator.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Evaluation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

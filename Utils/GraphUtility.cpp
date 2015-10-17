@@ -74,7 +74,7 @@ const std::vector<std::shared_ptr<Graph::Coordinate const>> Graph::GraphUtility:
 /// (参照 https://ja.wikipedia.org/wiki/多角形#.E9.9D.A2.E7.A9.8D.E5.85.AC.E5.BC.8F)
 /// 渡したvectorはx座標で昇順にソートされるので注意
 ///</summary>
-double Graph::GraphUtility::calc_convex_hull_size(std::vector<std::shared_ptr<Graph::Coordinate const>> & point_list)
+double Graph::GraphUtility::calc_convex_hull_size(std::vector<std::shared_ptr<Graph::Coordinate const>>& point_list)
 {
 	const std::vector<std::shared_ptr<Graph::Coordinate const>> convex_hull_points = convex_hull(point_list);
 	

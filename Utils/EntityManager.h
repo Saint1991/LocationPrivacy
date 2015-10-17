@@ -40,6 +40,8 @@ namespace Entity
 		void for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY>)>& execute_function);
 		void for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY const>)>& execute_function) const;
 
+		void positions_for_each_phase(const std::function<void(int, time_t, const std::vector<std::shared_ptr<POSITION_TYPE const>>&)>& execute_function) const;
+
 		std::shared_ptr<POSITION_TYPE const> get_average_position_of_phase(int phase) const;
 		std::shared_ptr<POSITION_TYPE const> get_average_position_at(time_t time) const;
 		int get_entity_count_within_boundary(int phase, const Graph::Rectangle<POSITION_TYPE>& boundary) const;

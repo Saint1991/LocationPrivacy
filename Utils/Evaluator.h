@@ -4,8 +4,9 @@
 namespace Evaluation
 {
 
-	typedef std::string metric_name;
-
+	///<summary>
+	/// 評価指標計算のためのクラス
+	///</summary>
 	class Evaluator
 	{
 	protected:		

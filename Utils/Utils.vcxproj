@@ -189,6 +189,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AngleUtility.h" />
+    <ClInclude Include="ARCountCalculationModule.h" />
+    <ClInclude Include="ARCountCalculationModule.hpp" />
     <ClInclude Include="BaseConstIterator.h" />
     <ClInclude Include="BaseConstIterator.hpp" />
     <ClInclude Include="BaseEvaluationModule.h" />

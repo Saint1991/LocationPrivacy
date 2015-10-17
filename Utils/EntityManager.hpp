@@ -158,6 +158,24 @@ namespace Entity
 		}
 	}
 
+
+	///<summary>
+	/// 各Phaseについて全エンティティの位置を引数にして繰り返す
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	void EntityManager<DUMMY, USER, POSITION_TYPE>::positions_for_each_phase(const std::function<void(int, time_t, const std::vector<std::shared_ptr<POSITION_TYPE const>>&)>& execute_function) const
+	{
+		timeslot->for_each_time([&](time_t time, long duration, int phase) {
+			std::vector<std::shared_ptr<POSITION_TYPE const>> positions(dummies->size() + 1);
+			positions->at(0) = user->read_position_of_phase(phase);
+			for (entity_id dummy_id = 1; dummy_id <= dummies->size(); dummy_id++) {
+				std::shared_ptr<DUMMY const> dummy = read_dummy_by_id(dummy_id);
+				positions->at(dummy_id) = dummy->read_position_of_phase(phase);
+			}
+			execute_function(phase, time, positions);
+		});
+	}
+
 	///<summary>
 	/// 指定したPhaseにおける位置確定済みエンティティの平均位置を取得する
 	///</summary>
@@ -212,12 +230,12 @@ namespace Entity
 		int counter = 0;
 
 		//ユーザが領域内に存在するか確認
-		const std::shared_ptr<POSITION_TYPE const> user_position = user->read_position_of_phase(phase);
+		std::shared_ptr<POSITION_TYPE const> user_position = user->read_position_of_phase(phase);
 		if (user_position != nullptr && boundary.contains(*user_position)) counter++;
 
 		//領域内のダミー数の確認
 		for_each_dummy([&boundary, &counter, phase](entity_id id, std::shared_ptr<DUMMY const> dummy) {
-			const std::shared_ptr<POSITION_TYPE const> dummy_position = dummy->read_position_of_phase(phase);
+			std::shared_ptr<POSITION_TYPE const> dummy_position = dummy->read_position_of_phase(phase);
 			if (dummy_position != nullptr && boundary.contains(*dummy_position)) counter++;
 		});
 

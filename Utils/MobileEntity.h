@@ -54,8 +54,8 @@ namespace Entity
 		std::pair<int, node_pos_info> find_previous_fixed_position(int phase) const;
 		std::pair<int, node_pos_info> find_next_fixed_position(int phase) const;
 
-		const std::shared_ptr<POSITION_TYPE const> read_position_of_phase(int phase) const;
-		const std::shared_ptr<POSITION_TYPE const> read_position_at(time_t time) const;
+		std::shared_ptr<POSITION_TYPE const> read_position_of_phase(int phase) const;
+		std::shared_ptr<POSITION_TYPE const> read_position_at(time_t time) const;
 
 		node_pos_info read_node_pos_info_of_phase(int phase) const;
 		node_pos_info read_node_pos_info_at(time_t time) const;

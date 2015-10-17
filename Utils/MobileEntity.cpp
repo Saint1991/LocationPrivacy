@@ -173,7 +173,7 @@ namespace Entity
 	/// ‘¶İ‚µ‚È‚¢ê‡‚Ínullptr‚ª•Ô‚è‚Ü‚·
 	///</summary>
 	template <typename POSITION_TYPE>
-	const std::shared_ptr<POSITION_TYPE const> MobileEntity<POSITION_TYPE>::read_position_of_phase(int phase) const
+	std::shared_ptr<POSITION_TYPE const> MobileEntity<POSITION_TYPE>::read_position_of_phase(int phase) const
 	{
 		if (positions->size() == 0) return nullptr;
 		return positions->at(phase);
@@ -185,7 +185,7 @@ namespace Entity
 	/// ŠY“–‚·‚éƒGƒ“ƒgƒŠ‚ª‚È‚¢ê‡‚Ínullptr‚ğ•Ô‚·
 	///</summary>
 	template <typename POSITION_TYPE>
-	const std::shared_ptr<POSITION_TYPE const> MobileEntity<POSITION_TYPE>::read_position_at(time_t time) const
+	std::shared_ptr<POSITION_TYPE const> MobileEntity<POSITION_TYPE>::read_position_at(time_t time) const
 	{
 		int phase = timeslot->find_phase_of_time(time);
 		if (phase == INVALID) return nullptr;
