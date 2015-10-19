@@ -150,7 +150,7 @@ namespace Method
 
 	
 	
-	/*
+	
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 	///</summary>
@@ -186,23 +186,23 @@ namespace Method
 				std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>> share_position = target->read_node_pos_info_of_phase(share_phase);
 
 				//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが大きい場合
-				if (entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase).second == nullptr)
+				if (entities->read_dummy_by_id(dummy_id)->read_position_of_phase(time_manager->phase_count()) <= share_phase)
 				{
-					std::pair<int, std::shared_ptr<Geography::LatLng const>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
+					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
 					time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - entities->read_dummy_by_id(dummy_id)->get_pause_time(previous_info.first);
 					//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
-					if (map->is_reachable(previous_info.second, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)) {
+					if (map->is_reachable(previous_info.second.first, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)) {
 						break;
 					}else {
 						goto ONCE_AGAIN;
 					}
 				}
 				//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが小さい場合
-				else if (entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase).second == nullptr)
+				else if (entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(0).first >= share_phase)
 				{
-					std::pair<int, std::shared_ptr<Geography::LatLng const>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase);
+					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(0);
 					time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) - entities->read_dummy_by_id(dummy_id)->get_pause_time(share_phase);
-					if (map->is_reachable(share_position.first, next_info.second, requirement->average_speed_of_dummy, next_time_limit)) {
+					if (map->is_reachable(share_position.first, next_info.second.first, requirement->average_speed_of_dummy, next_time_limit)) {
 						break;
 					}
 					else {
@@ -212,14 +212,14 @@ namespace Method
 				//生成中ダミーの既に停止位置が決定しているフェーズの間にある場合
 				else
 				{
-					std::pair<int, std::shared_ptr<Geography::LatLng const>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
-					std::pair<int, std::shared_ptr<Geography::LatLng const>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase);
+					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
+					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase);
 					//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
 					time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - entities->read_dummy_by_id(dummy_id)->get_pause_time(previous_info.first);
 					time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) -  entities->read_dummy_by_id(dummy_id)->get_pause_time(share_phase);
 
-					if (map->is_reachable(previous_info.second, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)
-						&& map->is_reachable(share_position.first, next_info.second, requirement->average_speed_of_dummy, next_time_limit)) {
+					if (map->is_reachable(previous_info.second.first, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)
+						&& map->is_reachable(share_position.first, next_info.second.first, requirement->average_speed_of_dummy, next_time_limit)) {
 						break;
 					}
 					else {
@@ -235,12 +235,12 @@ namespace Method
 				break;
 					
 				ONCE_AGAIN:
+					continue;
 			}
 			//ユーザ及び生成済みダミーの平均交差回数よりも，生成中ダミーの交差回数が多くなるまで共有地点を設定する
 			if(entities->get_dummy_by_id(dummy_id)->get_cross_count() > entities->get_all_entities_total_crossing_count() / dummy_id) break;
 		}
-		
-	}*/
+	}
 
 
 	/*
