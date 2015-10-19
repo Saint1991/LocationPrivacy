@@ -251,21 +251,22 @@ namespace Method
 	{
 		//生成中ダミーの既に決まっている中で最初の地点を取得
 		int dest_phase = entities->get_dummy_by_id(dummy_id)->find_next_fixed_position(0).first;
-		Geography::LatLng dest_position = *entities->get_dummy_by_id(dummy_id)->find_next_fixed_position(0).second.second;
+		std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> dest_position = entities->get_dummy_by_id(dummy_id)->find_next_fixed_position(0);
 
 		//------------------------------------↓初期位置の決定↓------------------------------------------------------//
 		time_t init_pause_time = 0;
-		int init_phase = 0;
-
+		time_t init_arrive_time = time_manager->time_of_phase(0);
+		
+		
 		//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
 		//一旦リストで取得してから，その中からランダムで選ぶ方が良い
 		
-			Geography::LatLng init_position = Geography::LatLng(10.0, 10.0);// getpauseposition;
+		std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> init_position = entities->get_dummy_by_id(dummy_id)->find_next_fixed_position(0);// getpauseposition;
 		
 		
 		
 		//PPoutに<position, start, pauseのinit>を追加;
-		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(0, 1, init_position);
+		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(0, init_position.second.first, *init_position.second.second);
 
 		//------------------------------------↑初期位置の決定↑------------------------------------------------------//
 		
@@ -274,16 +275,29 @@ namespace Method
 		int phase_id = 1;
 		while (phase_id <= time_manager->phase_count())
 		{
-			//phase_id番目の停止時間を決定
-			time_t pause_time = std::rand() % (requirement->min_pause_time + requirement->max_pause_time + 1.0);
-			entities->get_dummy_by_id(dummy_id)->set_pause_time(phase_id, pause_time);
-			
-			//positioni-1からpositioni番目へ到達可能なPOIからひとつランダムで取得
-			Geography::LatLng position = get_pause_position;
+			//連続で停止位置が決まっている場合はskip
+			if (entities->get_dummy_by_id(dummy_id)->find_next_fixed_position((phase_id)-1).first == phase_id) { break; }
+			else {
+				//position(phase_id-1)→position(position_id)に到達可能ならば，phaseにはintersectionを追加し，そうでないなら途中停止位置を設定
+				time_t time_limit = 0;
+				//intersectionを追加
+				if (map->is_reachable(entities->get_dummy_by_id(dummy_id)->find_previous_fixed_position(dest_position.first).second.first, dest_position.second.first, requirement->average_speed_of_dummy, requirement->max_pause_time)) {
+					//mapから最短路のpathを取ってくる！！
+				}
+				//途中停止を設定
+				else {
+					//phase_id番目の停止時間を決定
+					time_t pause_time = std::rand() % (requirement->min_pause_time + requirement->max_pause_time + 1.0);
+					entities->get_dummy_by_id(dummy_id)->set_pause_time(phase_id, pause_time);
 
-			entities->get_dummy_by_id(dummy_id)->set_position_of_phase(phase_id, position);
-			
+					//positioni-1からpositioni番目へ到達可能なPOIからひとつランダムで取得
+					Geography::LatLng position = get_pause_position;
 
+					entities->get_dummy_by_id(dummy_id)->set_position_of_phase(phase_id, position);
+
+
+				}
+			}
 
 			//途中目的地を停止地点として決定
 			
