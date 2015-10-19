@@ -250,35 +250,32 @@ namespace Method
 	void KatoMethod_UserChange::decide_destination_on_the_way(int dummy_id)
 	{
 		//生成中ダミーの既に決まっている中で最初の地点を取得
-		int dest_phase = entities->get_dummy_by_id(dummy_id);
-		Geography::LatLng dest_position = PPinに含まれるdest_phaseに到着する停止地点;
+		int dest_phase = entities->get_dummy_by_id(dummy_id)->find_next_fixed_position(0).first;
+		Geography::LatLng dest_position = *entities->get_dummy_by_id(dummy_id)->find_next_fixed_position(0).second.second;
 
-		//初期位置の決定
+		//------------------------------------↓初期位置の決定↓------------------------------------------------------//
 		time_t init_pause_time = 0;
-		time_t init_arrive_time = 0;
+		int init_phase = 0;
 
 		//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
 		//一旦リストで取得してから，その中からランダムで選ぶ方が良い
-		if (map->) {
-			
-		}
-		do 
-		{
-			Geography::LatLng init_position = getpauseposition;
-		} while (map->is_reachable());
 		
-
-
+			Geography::LatLng init_position = Geography::LatLng(10.0, 10.0);// getpauseposition;
+		
+		
+		
 		//PPoutに<position, start, pauseのinit>を追加;
-		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(0, init_position);
+		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(0, 1, init_position);
 
+		//------------------------------------↑初期位置の決定↑------------------------------------------------------//
 		
+
 		//初期位置以降の停止地点の決定
 		int phase_id = 1;
-		while (startのタイムがPPinに含まれる停止地点到着時間を超えるまで)
+		while (phase_id <= time_manager->phase_count())
 		{
 			//phase_id番目の停止時間を決定
-			time_t pause_time = std::rand(最小停止時間，最大停止時間);
+			time_t pause_time = std::rand() % (requirement->min_pause_time + requirement->max_pause_time + 1.0);
 			entities->get_dummy_by_id(dummy_id)->set_pause_time(phase_id, pause_time);
 			
 			//positioni-1からpositioni番目へ到達可能なPOIからひとつランダムで取得
