@@ -226,7 +226,7 @@ namespace Method
 						goto ONCE_AGAIN;
 					}
 				}
-
+			
 				//Dmincross = += 1;
 				//生成中のダミーの交差回数 += 1;
 				entities->get_dummy_by_id(dummy_id)->set_crossing_position_of_phase(share_phase, share_position.first, *share_position.second);
@@ -249,9 +249,10 @@ namespace Method
 	///</summary>
 	void KatoMethod_UserChange::decide_destination_on_the_way(int dummy_id)
 	{
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> creating_dummy = entities->get_dummy_by_id(dummy_id);
 		//生成中ダミーの既に決まっている中で最初の地点を取得
-		int dest_phase = entities->get_dummy_by_id(dummy_id)->find_next_fixed_position(0).first;
-		std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> dest_position = entities->get_dummy_by_id(dummy_id)->find_next_fixed_position(0);
+		int dest_phase = creating_dummy->find_next_fixed_position(0).first;
+		std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> dest_position = creating_dummy->find_next_fixed_position(0);
 
 		//------------------------------------↓初期位置の決定↓------------------------------------------------------//
 		time_t init_pause_time = 0;
@@ -261,51 +262,82 @@ namespace Method
 		//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
 		//一旦リストで取得してから，その中からランダムで選ぶ方が良い
 		
-		std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> init_position = entities->get_dummy_by_id(dummy_id)->find_next_fixed_position(0);// getpauseposition;
+		std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> init_position = creating_dummy->find_next_fixed_position(0);// getpauseposition;
 		
 		
 		
 		//PPoutに<position, start, pauseのinit>を追加;
-		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(0, init_position.second.first, *init_position.second.second);
+		creating_dummy->set_position_of_phase(0, init_position.second.first, *init_position.second.second);
 
 		//------------------------------------↑初期位置の決定↑------------------------------------------------------//
 		
 
 		//初期位置以降の停止地点の決定
 		int phase_id = 1;
-		while (phase_id <= time_manager->phase_count())
+		while (phase_id <= creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first)
 		{
 			//連続で停止位置が決まっている場合はskip
-			if (entities->get_dummy_by_id(dummy_id)->find_next_fixed_position((phase_id)-1).first == phase_id) { break; }
-			else {
+			if (creating_dummy->find_next_fixed_position((phase_id)-1).first == phase_id) 
+			{
+				phase_id++;
+				break;
+			}else 
+			{
 				//position(phase_id-1)→position(position_id)に到達可能ならば，phaseにはintersectionを追加し，そうでないなら途中停止位置を設定
 				time_t time_limit = 0;
-				//intersectionを追加
-				if (map->is_reachable(entities->get_dummy_by_id(dummy_id)->find_previous_fixed_position(dest_position.first).second.first, dest_position.second.first, requirement->average_speed_of_dummy, requirement->max_pause_time)) {
-					//mapから最短路のpathを取ってくる！！
-				}
-				//途中停止を設定
-				else {
+				std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> already_decided_position = creating_dummy->find_previous_fixed_position(dest_position.first);
+				
+				while (map->is_reachable(already_decided_position.second.first, dest_position.second.first, requirement->average_speed_of_dummy, requirement->max_pause_time) == false) {
+					//途中停止を設定
+
 					//phase_id番目の停止時間を決定
-					time_t pause_time = std::rand() % (requirement->min_pause_time + requirement->max_pause_time + 1.0);
-					entities->get_dummy_by_id(dummy_id)->set_pause_time(phase_id, pause_time);
+					time_t pause_time = std::rand();// % (requirement->min_pause_time + requirement->max_pause_time + 1.0);
+					creating_dummy->set_pause_time(phase_id, pause_time);
 
 					//positioni-1からpositioni番目へ到達可能なPOIからひとつランダムで取得
-					Geography::LatLng position = get_pause_position;
+					std::vector<std::shared_ptr<Map::BasicPoi const>> pois_on_the_way = map->find_pois_within_boundary();
+					Math::Probability generator;
+					int index = generator.uniform_distribution(0, pois_on_the_way.size() - 1);
+					std::shared_ptr<Map::BasicPoi const> poi_on_the_way = pois_on_the_way.at(index);
 
-					entities->get_dummy_by_id(dummy_id)->set_position_of_phase(phase_id, position);
+					creating_dummy->set_position_of_phase(phase_id, poi_on_the_way->get_id(),*poi_on_the_way->data);
 
-
+					phase_id++;
+				}
+				//intersectionを追加
+				//次の停止地点が決まっているところまでintersectionを補完
+				//mapから最短路のpathを取ってくる！intersectionの設定はどうすれば？
+				const std::vector<Graph::MapNodeIndicator> path_list = map->get_shortest_path(already_decided_position.second.first, dest_position.second.first);
+				std::vector<Graph::MapNodeIndicator>::const_iterator iter = path_list.begin();
+				for (; creating_dummy->find_next_fixed_position(phase_id).first != dest_phase + 1; phase_id++,iter++)
+				{
+					creating_dummy->set_position_of_phase(phase_id, iter->id, *map->get_static_node(iter->id)->data);
 				}
 			}
-
 			//途中目的地を停止地点として決定
-			
+			time_t dest_pause_time = 0;//差分で決める
+			creating_dummy->set_pause_time(dest_phase,dest_pause_time);
+			creating_dummy->set_position_of_phase(dest_phase, dest_position.second.first, *dest_position.second.second);
 
+			//途中目的地の更新
+			dest_position = creating_dummy->find_next_fixed_position(phase_id);
+			dest_phase = dest_position.first;
 		}
+		//シュミレーション終了までの残りの停止位置を適当に決める
+		while (phase_id <= time_manager->phase_count())
+		{
+			//phase_id番目の停止時間を決定
+			time_t pause_time = std::rand();// % (requirement->min_pause_time + requirement->max_pause_time + 1.0);
+			creating_dummy->set_pause_time(phase_id, pause_time);
+			//positioni-1からpositioni番目へ到達可能なPOIからひとつランダムで取得
+			std::vector<std::shared_ptr<Map::BasicPoi const>> pois_on_the_way = map->find_pois_within_boundary();
+			Math::Probability generator;
+			int index = generator.uniform_distribution(0, pois_on_the_way.size() - 1);
+			std::shared_ptr<Map::BasicPoi const> poi_on_the_way = pois_on_the_way.at(index);
+			creating_dummy->set_position_of_phase(phase_id, poi_on_the_way->get_id(), *poi_on_the_way->data);
 
-
-
+			phase_id++;
+		}
 
 	}*/
 
