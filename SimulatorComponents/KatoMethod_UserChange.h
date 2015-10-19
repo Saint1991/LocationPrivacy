@@ -8,6 +8,7 @@
 #include "Rectangle.h"
 #include "PauseMobileEntity.h"
 #include "KatoMethodRequirement.h"
+#include "Probability.h"
 
 namespace Method
 {
@@ -26,6 +27,8 @@ namespace Method
 		std::vector<Grid> grid_list;
 
 		typedef unsigned int entity_id;
+
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> creating_dummy;
 
 		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//Grid�̍쐬
 		//std::vector<std::vector<int>> make_table_of_entity_num_in_cell_at_phase(std::vector<Graph::Rectangle<Geography::LatLng>> grid_list, int phase);
