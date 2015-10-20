@@ -88,7 +88,20 @@ namespace Method
 		return total_entity_num_all_phase;
 	}
 
-	
+
+	///<summary>
+	/// Rectangleに含まれるPOIのリストを取得
+	///</summary>
+	std::vector<std::shared_ptr<Map::BasicPoi const>> KatoMethod_UserChange::candidate_pois_list(const Graph::Rectangle<Geography::LatLng>& boundary) {
+		std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = map->find_pois_within_boundary(boundary);
+		std::random_device device;
+		std::mt19937_64 generator(device());
+		std::shuffle(candidate_pois_list.begin(), candidate_pois_list.end(), generator);
+
+		return candidate_pois_list;
+	}
+
+	/*
 	///<summary>
 	/// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 	///</summary>
@@ -145,7 +158,8 @@ namespace Method
 		Geography::LatLng base_point = poi->data->get_position();
 		
 		creating_dummy->set_position_of_phase(base_phase, Graph::MapNodeIndicator(base_poi_id),base_point);
-		
+		creating_dummy->set_random_speed(base_phase);
+		creating_dummy->set_pause_time(base_phase, entities->get_user()->get_pause_time(base_phase));
 	}
 
 	
@@ -230,6 +244,8 @@ namespace Method
 				//Dmincross = += 1;
 				//生成中のダミーの交差回数 += 1;
 				creating_dummy->set_crossing_position_of_phase(share_phase, share_position.first, *share_position.second);
+				creating_dummy->set_random_speed(share_phase);
+				creating_dummy->set_pause_time(share_phase, entities->get_user()->get_pause_time(share_phase));
 				int target_dummy_cross_count = target->get_cross_count();
 				target_dummy_cross_count++;//このやり方でtargetの交差回数の合計を数えられる？
 				break;
@@ -243,119 +259,111 @@ namespace Method
 	}
 
 
-	/*
+	
 	///<summary>
 	/// 生成中ダミー(k番目)の移動経路の決定
 	///</summary>
 	void KatoMethod_UserChange::decide_destination_on_the_way(int dummy_id)
 	{
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> creating_dummy = entities->get_dummy_by_id(dummy_id);
+		Graph::Rectangle<Geography::LatLng> rect(1.0, 1.0, 1.0, 1.0);
+		
 		//生成中ダミーの既に決まっている中で最初の地点を取得
-		int dest_phase = creating_dummy->find_next_fixed_position(0).first;
 		std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> dest_position = creating_dummy->find_next_fixed_position(0);
 
 		//------------------------------------↓初期位置の決定↓------------------------------------------------------//
-		time_t init_pause_time = 0;
-		time_t init_arrive_time = time_manager->time_of_phase(0);
-		
-		//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
-		//一旦リストで取得してから，その中からランダムで選ぶ方が良い
-		std::vector<std::shared_ptr<Map::BasicPoi const>> init_poi_list = map->find_pois_within_boundary();
-		std::random_device device;
-		std::mt19937_64 generator(device());
-		std::shuffle(init_poi_list.begin(), init_poi_list.end(), generator);
-		std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = init_poi_list.begin();
 
-		map->is_reachable(*poi,);
-		std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> init_position = creating_dummy->find_next_fixed_position(0);// getpauseposition;
-		
-		
-		
+		creating_dummy->set_pause_time(0, 0);//初期phaseの停止時間
+		creating_dummy->set_random_speed(0);//初期speedの決定
+
+		//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
+		//一旦リストで取得してから，その中からランダムで選ぶ方が良い		
+		std::vector<std::shared_ptr<Map::BasicPoi const>> init_pois_list = candidate_pois_list(範囲);
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator init_poi = init_pois_list.begin();
+		time_t init_time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(0) - creating_dummy->get_pause_time(0);
+
+		while (map->is_reachable(Graph::MapNodeIndicator((*init_poi)->get_id()), dest_position.second.first, creating_dummy->get_speed(0), init_time_limit)==false) {
+			init_poi++;
+		}
+
 		//PPoutに<position, start, pauseのinit>を追加;
-		creating_dummy->set_position_of_phase(0, init_position.second.first, *init_position.second.second);
+		creating_dummy->set_position_of_phase(0, (*init_poi)->get_id(), (*init_poi)->data->get_position());
 
 		//------------------------------------↑初期位置の決定↑------------------------------------------------------//
 		
 
 		//初期位置以降の停止地点の決定
 		int phase_id = 1;
-		while (phase_id <= creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first)
+		while (phase_id < creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first)
 		{
 			//連続で停止位置が決まっている場合はskip
 			if (creating_dummy->find_next_fixed_position((phase_id)-1).first == phase_id) 
 			{
-				phase_id++;
-				break;
+				goto SKIP;
 			}else 
 			{
-				//position(phase_id-1)→position(position_id)に到達可能ならば，phaseにはintersectionを追加し，そうでないなら途中停止位置を設定
-				time_t time_limit = 0;
 				std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> already_decided_position = creating_dummy->find_previous_fixed_position(dest_position.first);
-				
-				while (map->is_reachable(already_decided_position.second.first, dest_position.second.first, requirement->average_speed_of_dummy, requirement->max_pause_time) == false) {
-					//途中停止を設定
+				time_t time_limit = time_manager->time_of_phase(dest_position.first)-time_manager->time_of_phase(already_decided_position.first)-creating_dummy->get_pause_time(already_decided_position.first);
+				//position(already_deceded)→position(dest_id)に到達可能ならば，phaseにはintersectionを追加し，そうでないなら途中停止位置を設定
+				//途中停止位置を設定
+				while (map->is_reachable(already_decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(already_decided_position.first), time_limit) == false) {
+					//phase_id番目の停止時間と移動速度を決定
+					creating_dummy->set_random_pause_time(phase_id);
+					creating_dummy->set_random_speed(phase_id);
 
-					//phase_id番目の停止時間を決定
-					time_t pause_time = std::rand();// % (requirement->min_pause_time + requirement->max_pause_time + 1.0);
-					creating_dummy->set_pause_time(phase_id, pause_time);
+					//position(phase_id)からposition(dest)番目へ到達可能なPOIからひとつランダムで取得
+					//目的地に近づく方向を考慮しなければならないことに注意
+					std::vector<std::shared_ptr<Map::BasicPoi const>> on_the_way_pois_list = candidate_pois_list(範囲);
+					std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi_on_the_way = on_the_way_pois_list.begin();
+					time_t time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(phase_id) - creating_dummy->get_pause_time(phase_id);
 
-					//positioni-1からpositioni番目へ到達可能なPOIからひとつランダムで取得
-					std::vector<std::shared_ptr<Map::BasicPoi const>> pois_on_the_way = map->find_pois_within_boundary();
-					Math::Probability generator;
-					int index = generator.uniform_distribution(0, pois_on_the_way.size() - 1);
-					std::shared_ptr<Map::BasicPoi const> poi_on_the_way = pois_on_the_way.at(index);
-
-					creating_dummy->set_position_of_phase(phase_id, poi_on_the_way->get_id(),*poi_on_the_way->data);
-
+					while (map->is_reachable(Graph::MapNodeIndicator((*poi_on_the_way)->get_id()), dest_position.second.first, creating_dummy->get_speed(phase_id), time_limit) == false) {
+						poi_on_the_way++;
+					}
+					//停止位置のセット
+					creating_dummy->set_position_of_phase(phase_id, (*poi_on_the_way)->get_id(),(*poi_on_the_way)->data->get_position());
 					phase_id++;
+					//決定点を更新
+					already_decided_position = creating_dummy->find_previous_fixed_position(phase_id);
+					time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(already_decided_position.first) - creating_dummy->get_pause_time(already_decided_position.first);
 				}
 				//intersectionを追加
 				//次の停止地点が決まっているところまでintersectionを補完
 				//mapから最短路のpathを取ってくる！intersectionの設定はどうすれば？
 				const std::vector<Graph::MapNodeIndicator> path = map->get_shortest_path(already_decided_position.second.first, dest_position.second.first);
 				std::vector<Graph::MapNodeIndicator>::const_iterator iter = path.begin();
-				for (; creating_dummy->find_next_fixed_position(phase_id).first != dest_phase + 1; phase_id++,iter++)
+				for (; phase_id != dest_position.first; phase_id++,iter++)
 				{
 					Geography::LatLng position =
-						iter->type == Graph::NodeType::POI ? map->get_static_poi(iter->id)->data->get_position() : *map->get_static_node(iter->id)->data;
+						iter->type = Graph::NodeType::POI ? map->get_static_poi(iter->id)->data->get_position() : *map->get_static_node(iter->id)->data;
 					creating_dummy->set_position_of_phase(phase_id, *iter, position);
+					creating_dummy->set_speed(phase_id,creating_dummy->get_speed(phase_id-1));
+					creating_dummy->set_pause_time(phase_id, 0);
 				}
 			}
-			//途中目的地を停止地点として決定
-			time_t dest_pause_time = 0;//差分で決める
-			creating_dummy->set_pause_time(dest_phase,dest_pause_time);
-			creating_dummy->set_position_of_phase(dest_phase, dest_position.second.first, *dest_position.second.second);
-
+			
+			SKIP:
 			//途中目的地の更新
 			dest_position = creating_dummy->find_next_fixed_position(phase_id);
-			dest_phase = dest_position.first;
+			phase_id++;
 		}
 		//シュミレーション終了までの残りの停止位置を適当に決める
+		phase_id++;//調整のためのインクリメント
 		while (phase_id <= time_manager->phase_count())
 		{
-			Math::Probability generator;
-			time_t pause_time = generator.uniform_distribution((int)requirement->min_pause_time, (int)requirement->max_pause_time);
-
-			//phase_id番目の停止時間を決定
-			// % (requirement->min_pause_time + requirement->max_pause_time + 1.0);
-			creating_dummy->set_pause_time(phase_id, pause_time);
+			creating_dummy->set_random_pause_time(phase_id);
+			creating_dummy->set_random_speed(phase_id);
 			//positioni-1からpositioni番目へ到達可能なPOIからひとつランダムで取得
-			std::vector<std::shared_ptr<Map::BasicPoi const>> pois_on_the_way = map->find_pois_within_boundary(Graph::Rectangle<Geography::LatLng>(1.0,1.0,1.0,1.0));
-			
-			std::random_device device;
-			std::mt19937_64 generator(device());
-			std::shuffle(pois_on_the_way.begin(), pois_on_the_way.end(), generator);
+			std::vector<std::shared_ptr<Map::BasicPoi const>> rest_pois_list = map->find_pois_within_boundary(範囲);
+			std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator rest_poi = rest_pois_list.begin();
+			//time_limitは速度と時間使って距離が必要
+			time_t time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(phase_id) - creating_dummy->get_pause_time(phase_id);
 
-			map->is_reachable();
-			
-			
-			
-			Math::Probability generator;
-			int index = generator.uniform_distribution(0, pois_on_the_way.size() - 1);
-			std::shared_ptr<Map::BasicPoi const> poi_on_the_way = pois_on_the_way.at(index);
-			creating_dummy->set_position_of_phase(phase_id, Graph::MapNodeIndicator(poi_on_the_way->get_id()), poi_on_the_way->data->get_position());
-
+			while (map->is_reachable(Graph::MapNodeIndicator((*rest_poi)->get_id()), dest_position.second.first, creating_dummy->get_speed(phase_id), time_limit) == false) {
+				rest_poi++;
+			}
+			creating_dummy->set_position_of_phase(phase_id, (*rest_poi)->get_id(), (*rest_poi)->data->get_position());
 			phase_id++;
+
 		}
 
 	}*/
@@ -430,15 +438,15 @@ namespace Method
 	void KatoMethod_UserChange::decide_dummy_positions()
 	{
 		
-		/*
 		for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
 		{	
 			creating_dummy = entities->get_dummy_by_id(dummy_id);
+			
 			//decide_base_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 			//decide_share_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 			//decide_dummy_path(dummy_id);// 生成中ダミー(k番目)の移動経路の決定
 			
-		}*/
+		}
 	}
 	
 	
