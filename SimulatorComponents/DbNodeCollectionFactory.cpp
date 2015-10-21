@@ -29,12 +29,12 @@ namespace Map
 	{
 		if (!db->use(db_name)) return;
 		std::stringstream query;
-		query << "SELECT id, latitude, longitude FROM " << node_table << " ORDER BY id ASC;";
+		query << "SELECT node_id, latitude, longitude FROM " << node_table << " ORDER BY node_id ASC;";
 		sql::ResultSet* result = db->raw_query(query.str());
 		
 		result->beforeFirst();
 		while (result->next()) {
-			Graph::node_id id = result->getInt64("id");
+			Graph::node_id id = result->getInt64("node_id");
 			double latitude = result->getDouble("latitude");
 			double longitude = result->getDouble("longitude");
 			add_node(std::make_shared<BasicMapNode>(id, Geography::LatLng(latitude, longitude)));
@@ -50,13 +50,13 @@ namespace Map
 	{
 		if (!db->use(db_name)) return;
 		std::stringstream query;
-		query << "SELECT id1, id2, distance FROM " << connection_table << ";";
+		query << "SELECT node_id1, node_id2, distance FROM " << connection_table << ";";
 		sql::ResultSet* result = db->raw_query(query.str());
 
 		result->beforeFirst();
 		while (result->next()) {
-			Graph::node_id id1 = result->getInt64("id1");
-			Graph::node_id id2 = result->getInt64("id2");
+			Graph::node_id id1 = result->getInt64("node_id1");
+			Graph::node_id id2 = result->getInt64("node_id2");
 			double distance = result->getDouble("distance");
 			connect_each_other(id1, id2, std::make_shared<Graph::BasicPathData>(distance));
 		}
