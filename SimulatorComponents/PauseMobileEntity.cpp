@@ -10,7 +10,7 @@ namespace Entity
 	///</summary>
 	template <typename POSITION_TYPE>
 	PauseMobileEntity<POSITION_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
-		: MobileEntity<POSITION_TYPE>(id, timeslot), pause_time_list(std::vector<time_t>(timeslot->phase_count(),0)), speed_list(std::vector<double>(timeslot->phase_count(), 0))//,max_pause_time(max_pause_time),min_pause_time(min_pause_time)
+		: MobileEntity<POSITION_TYPE>(id, timeslot), pause_time_list(std::vector<time_t>(timeslot->phase_count(),0)), speed_list(std::vector<double>(timeslot->phase_count(), 0)) //kato_requirement(requirement)
 	{
 	}
 
@@ -41,16 +41,14 @@ namespace Entity
 		pause_time_list.at(phase) = pause_time;
 	}
 
-	/*
+	
 	///<summary>
 	/// ランダムな値を停止時間としてsetする
 	///</summary>
 	template <typename POSITION_TYPE>
-	void PauseMobileEntity<POSITION_TYPE>::set_random_pause_time(int phase)
+	void PauseMobileEntity<POSITION_TYPE>::set_random_pause_time(int phase, double min, double max)
 	{
 		Math::Probability generator;
-		double min = (double)requirement->min_pause_time;
-		double max = (double)requirement->max_pause_time;
 		double pause_time = generator.uniform_distribution(min, max);
 
 		pause_time_list.at(phase) = (time_t)pause_time;
@@ -80,15 +78,15 @@ namespace Entity
 	/// ランダムな値の移動速度をsetする
 	///</summary>
 	template <typename POSITION_TYPE>
-	void PauseMobileEntity<POSITION_TYPE>::set_random_speed(int phase)
+	void PauseMobileEntity<POSITION_TYPE>::set_random_speed(int phase, double average_speed, double speed_range)
 	{
 		Math::Probability generator;
-		double min = requirement->average_speed_of_dummy - requirement->speed_range_of_dummy;
-		double max = requirement->average_speed_of_dummy + requirement->speed_range_of_dummy;
+		double min = average_speed -0.5* speed_range;
+		double max = average_speed + 0.5* speed_range;
 		double dummy_speed = generator.uniform_distribution(min, max);
 
 		speed_list.at(phase) = dummy_speed;
 	}
-	*/
+	
 
 }

@@ -7,7 +7,7 @@
 #pragma once
 #include "MobileEntity.h"
 #include "KatoMethodRequirement.h"
-#include "BasicRequirement.h"
+
 namespace Entity
 {
 
@@ -23,6 +23,7 @@ namespace Entity
 	protected:
 		std::vector<time_t> pause_time_list;
 		std::vector<double> speed_list;
+		Requirement::KatoMethodRequirement kato_requirement;
 
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
@@ -31,11 +32,11 @@ namespace Entity
 
 		time_t get_pause_time(int phase) const;
 		void set_pause_time(int phase, time_t pause_time);
-		void set_random_pause_time(int phase);
+		void set_random_pause_time(int phase, double min, double max);
 
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
-		void set_random_speed(int phase);
+		void set_random_speed(int phase, double min, double max);
 
 	};
 
