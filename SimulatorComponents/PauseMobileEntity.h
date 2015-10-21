@@ -6,6 +6,7 @@
 
 #pragma once
 #include "MobileEntity.h"
+#include "KatoMethodRequirement.h"
 
 namespace Entity
 {
@@ -21,15 +22,22 @@ namespace Entity
 	{
 	protected:
 		std::vector<time_t> pause_time_list;
-		double max_pause_time;
-		double min_pause_time;
+		std::vector<double> speed_list;
+		Requirement::KatoMethodRequirement kato_requirement;
 
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		//PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot, double max_pause_time, double min_pause_time);
 		virtual ~PauseMobileEntity();
+
 		time_t get_pause_time(int phase) const;
 		void set_pause_time(int phase, time_t pause_time);
+		void set_random_pause_time(int phase, double min, double max);
+
+		double get_speed(int phase) const;
+		void set_speed(int phase, double speed);
+		void set_random_speed(int phase, double min, double max);
+
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»

@@ -9,7 +9,7 @@ namespace Method
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
 	KatoMethod_UserChange::KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>(map, user, requirement, time_manager),grid_list(std::vector<Grid>(time_manager->phase_count()))
+		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>(map, user, requirement, time_manager),grid_list(std::vector<Grid>(time_manager->phase_count())),creating_dummy(nullptr)
 	{
 	}
 
@@ -88,6 +88,19 @@ namespace Method
 		return total_entity_num_all_phase;
 	}
 
+
+	///<summary>
+	/// Rectangleに含まれるPOIのリストを取得
+	///</summary>
+	std::vector<std::shared_ptr<Map::BasicPoi const>> KatoMethod_UserChange::candidate_pois_list(const Graph::Rectangle<Geography::LatLng>& boundary) {
+		std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = map->find_pois_within_boundary(boundary);
+		std::random_device device;
+		std::mt19937_64 generator(device());
+		std::shuffle(candidate_pois_list.begin(), candidate_pois_list.end(), generator);
+
+		return candidate_pois_list;
+	}
+
 	
 	///<summary>
 	/// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
@@ -144,13 +157,14 @@ namespace Method
 		Graph::node_id base_poi_id = poi->get_id();
 		Geography::LatLng base_point = poi->data->get_position();
 		
-		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(base_phase, Graph::MapNodeIndicator(base_poi_id),base_point);
-		
+		creating_dummy->set_position_of_phase(base_phase, Graph::MapNodeIndicator(base_poi_id),base_point);
+		creating_dummy->set_random_speed(base_phase,requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+		creating_dummy->set_pause_time(base_phase, entities->get_user()->get_pause_time(base_phase));
 	}
 
 	
 	
-	/*
+	
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 	///</summary>
@@ -186,23 +200,23 @@ namespace Method
 				std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>> share_position = target->read_node_pos_info_of_phase(share_phase);
 
 				//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが大きい場合
-				if (entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase).second == nullptr)
+				if (creating_dummy->read_position_of_phase(time_manager->phase_count()) <= share_phase)
 				{
-					std::pair<int, std::shared_ptr<Geography::LatLng const>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
-					time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - entities->read_dummy_by_id(dummy_id)->get_pause_time(previous_info.first);
+					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> previous_info = creating_dummy->find_previous_fixed_position(share_phase);
+					time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - creating_dummy->get_pause_time(previous_info.first);
 					//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
-					if (map->is_reachable(previous_info.second, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)) {
+					if (map->is_reachable(previous_info.second.first, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)) {
 						break;
 					}else {
 						goto ONCE_AGAIN;
 					}
 				}
 				//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが小さい場合
-				else if (entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase).second == nullptr)
+				else if (creating_dummy->find_next_fixed_position(0).first >= share_phase)
 				{
-					std::pair<int, std::shared_ptr<Geography::LatLng const>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase);
-					time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) - entities->read_dummy_by_id(dummy_id)->get_pause_time(share_phase);
-					if (map->is_reachable(share_position.first, next_info.second, requirement->average_speed_of_dummy, next_time_limit)) {
+					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> next_info = creating_dummy->find_next_fixed_position(0);
+					time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) - creating_dummy->get_pause_time(share_phase);
+					if (map->is_reachable(share_position.first, next_info.second.first, requirement->average_speed_of_dummy, next_time_limit)) {
 						break;
 					}
 					else {
@@ -212,35 +226,37 @@ namespace Method
 				//生成中ダミーの既に停止位置が決定しているフェーズの間にある場合
 				else
 				{
-					std::pair<int, std::shared_ptr<Geography::LatLng const>> previous_info = entities->read_dummy_by_id(dummy_id)->find_previous_fixed_position(share_phase);
-					std::pair<int, std::shared_ptr<Geography::LatLng const>> next_info = entities->read_dummy_by_id(dummy_id)->find_next_fixed_position(share_phase);
+					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> previous_info = creating_dummy->find_previous_fixed_position(share_phase);
+					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> next_info = creating_dummy->find_next_fixed_position(share_phase);
 					//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
-					time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - entities->read_dummy_by_id(dummy_id)->get_pause_time(previous_info.first);
-					time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) -  entities->read_dummy_by_id(dummy_id)->get_pause_time(share_phase);
+					time_t previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - creating_dummy->get_pause_time(previous_info.first);
+					time_t next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) -  creating_dummy->get_pause_time(share_phase);
 
-					if (map->is_reachable(previous_info.second, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)
-						&& map->is_reachable(share_position.first, next_info.second, requirement->average_speed_of_dummy, next_time_limit)) {
+					if (map->is_reachable(previous_info.second.first, share_position.first, requirement->average_speed_of_dummy, previous_time_limit)
+						&& map->is_reachable(share_position.first, next_info.second.first, requirement->average_speed_of_dummy, next_time_limit)) {
 						break;
 					}
 					else {
 						goto ONCE_AGAIN;
 					}
 				}
-
+			
 				//Dmincross = += 1;
 				//生成中のダミーの交差回数 += 1;
-				entities->get_dummy_by_id(dummy_id)->set_crossing_position_of_phase(share_phase, share_position.first, *share_position.second);
+				creating_dummy->set_crossing_position_of_phase(share_phase, share_position.first, *share_position.second);
+				creating_dummy->set_random_speed(share_phase, requirement->min_pause_time, requirement->max_pause_time);
+				creating_dummy->set_pause_time(share_phase, entities->get_user()->get_pause_time(share_phase));
 				int target_dummy_cross_count = target->get_cross_count();
 				target_dummy_cross_count++;//このやり方でtargetの交差回数の合計を数えられる？
 				break;
 					
 				ONCE_AGAIN:
+					continue;
 			}
 			//ユーザ及び生成済みダミーの平均交差回数よりも，生成中ダミーの交差回数が多くなるまで共有地点を設定する
-			if(entities->get_dummy_by_id(dummy_id)->get_cross_count() > entities->get_all_entities_total_crossing_count() / dummy_id) break;
+			if(creating_dummy->get_cross_count() > entities->get_all_entities_total_crossing_count() / dummy_id) break;
 		}
-		
-	}*/
+	}
 
 
 	/*
@@ -249,52 +265,113 @@ namespace Method
 	///</summary>
 	void KatoMethod_UserChange::decide_destination_on_the_way(int dummy_id)
 	{
+		Graph::Rectangle<Geography::LatLng> rect(1.0, 1.0, 1.0, 1.0);
+		
 		//生成中ダミーの既に決まっている中で最初の地点を取得
-		int dest_phase = entities->get_dummy_by_id(dummy_id);
-		Geography::LatLng dest_position = PPinに含まれるdest_phaseに到着する停止地点;
+		std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> dest_position = creating_dummy->find_next_fixed_position(0);
 
-		//初期位置の決定
-		time_t init_pause_time = 0;
-		time_t init_arrive_time = 0;
+		//------------------------------------↓初期位置の決定↓------------------------------------------------------//
+
+		creating_dummy->set_pause_time(0, 0);//初期phaseの停止時間
+		creating_dummy->set_random_speed(0, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);//初期speedの決定
 
 		//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
 		//一旦リストで取得してから，その中からランダムで選ぶ方が良い
-		if (map->) {
-			
-		}
-		do 
-		{
-			Geography::LatLng init_position = getpauseposition;
-		} while (map->is_reachable());
-		
+		double distance = creating_dummy->get_speed(0)*(time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(0));
 
+		std::vector<std::shared_ptr<Map::BasicPoi const>> init_pois_list = candidate_pois_list(範囲);
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator init_poi = init_pois_list.begin();
+		time_t init_time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(0) - creating_dummy->get_pause_time(0);
+
+		while (map->is_reachable(Graph::MapNodeIndicator((*init_poi)->get_id()), dest_position.second.first, creating_dummy->get_speed(0), init_time_limit)==false) {
+			init_poi++;
+		}
 
 		//PPoutに<position, start, pauseのinit>を追加;
-		entities->get_dummy_by_id(dummy_id)->set_position_of_phase(0, init_position);
+		creating_dummy->set_position_of_phase(0, (*init_poi)->get_id(), (*init_poi)->data->get_position());
 
+		//------------------------------------↑初期位置の決定↑------------------------------------------------------//
 		
+
 		//初期位置以降の停止地点の決定
 		int phase_id = 1;
-		while (startのタイムがPPinに含まれる停止地点到着時間を超えるまで)
+		while (phase_id < creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first)
 		{
-			//phase_id番目の停止時間を決定
-			time_t pause_time = std::rand(最小停止時間，最大停止時間);
-			entities->get_dummy_by_id(dummy_id)->set_pause_time(phase_id, pause_time);
+			//連続で停止位置が決まっている場合はskip
+			if (creating_dummy->find_next_fixed_position((phase_id)-1).first != phase_id) 
+			{
+				std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> already_decided_position = creating_dummy->find_previous_fixed_position(dest_position.first);
+				time_t time_limit = time_manager->time_of_phase(dest_position.first)-time_manager->time_of_phase(already_decided_position.first)-creating_dummy->get_pause_time(already_decided_position.first);
+				//position(already_deceded)→position(dest_id)に到達可能ならば，phaseにはintersectionを追加し，そうでないなら途中停止位置を設定
+				//途中停止位置を設定
+				while (map->is_reachable(already_decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(already_decided_position.first), time_limit) == false) {
+					//phase_id番目の停止時間と移動速度を決定
+					creating_dummy->set_random_pause_time(phase_id,requirement->min_pause_time,requirement->max_pause_time);
+					creating_dummy->set_random_speed(phase_id,requirement->average_speed_of_dummy,requirement->speed_range_of_dummy);
+
+					//position(phase_id)からposition(dest)番目へ到達可能なPOIからひとつランダムで取得
+					//目的地に近づく方向を考慮しなければならないことに注意
+					double top = std::abs(already_decided_position.second.second->lat() - dest_position.second.second->lat());
+					double left = already_decided_position.second.second->lng();
+					double bottom = already_decided_position.second.second->lat();
+					double right = std::abs(already_decided_position.second.second->lng() - dest_position.second.second->lng());
+					Graph::Rectangle<Geography::LatLng> rect(top, left, bottom, right);
 			
-			//positioni-1からpositioni番目へ到達可能なPOIからひとつランダムで取得
-			Geography::LatLng position = get_pause_position;
+					std::vector<std::shared_ptr<Map::BasicPoi const>> on_the_way_pois_list = candidate_pois_list(rect);
+					std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi_on_the_way = on_the_way_pois_list.begin();
+					time_t time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(phase_id) - creating_dummy->get_pause_time(phase_id);
 
-			entities->get_dummy_by_id(dummy_id)->set_position_of_phase(phase_id, position);
-			
-
-
-			//途中目的地を停止地点として決定
-			
-
+					while (map->is_reachable(Graph::MapNodeIndicator((*poi_on_the_way)->get_id()), dest_position.second.first, creating_dummy->get_speed(phase_id), time_limit) == false) {
+						poi_on_the_way++;
+					}
+					//停止位置のセット
+					creating_dummy->set_position_of_phase(phase_id, (*poi_on_the_way)->get_id(),(*poi_on_the_way)->data->get_position());
+					phase_id++;
+					//決定点を更新
+					already_decided_position = creating_dummy->find_previous_fixed_position(phase_id);
+					time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(already_decided_position.first) - creating_dummy->get_pause_time(already_decided_position.first);
+				}
+				//intersectionを追加
+				//次の停止地点が決まっているところまでintersectionを補完
+				//mapから最短路のpathを取ってくる！intersectionの設定はどうすれば？
+				const std::vector<Graph::MapNodeIndicator> path = map->get_shortest_path(already_decided_position.second.first, dest_position.second.first);
+				std::vector<Graph::MapNodeIndicator>::const_iterator iter = path.begin();
+				for (; phase_id != dest_position.first; phase_id++,iter++)
+				{
+					Geography::LatLng position =
+						iter->type() == Graph::NodeType::POI ? map->get_static_poi(iter->id())->data->get_position() : *map->get_static_node(iter->id())->data;
+					creating_dummy->set_position_of_phase(phase_id, *iter, position);
+					creating_dummy->set_speed(phase_id,creating_dummy->get_speed(phase_id-1));
+					creating_dummy->set_pause_time(phase_id, 0);
+				}
+			}
+						
+			//途中目的地の更新
+			dest_position = creating_dummy->find_next_fixed_position(phase_id);
+			phase_id++;
 		}
+		//シュミレーション終了までの残りの停止位置を適当に決める
+		phase_id++;//調整のためのインクリメント
+		while (phase_id <= time_manager->phase_count())
+		{
+			creating_dummy->set_random_pause_time(phase_id, requirement->min_pause_time, requirement->max_pause_time);
+			creating_dummy->set_random_speed(phase_id, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+			std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> already_decided_position = dest_position;
+			//positioni-1からpositioni番目へ到達可能なPOIからひとつランダムで取得
+			std::vector<std::shared_ptr<Map::BasicPoi const>> rest_pois_list = map->find_pois_within_boundary(範囲);
+			std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator rest_poi = rest_pois_list.begin();
+			//time_limitは速度と時間使って距離が必要
+			double distance = creating_dummy->get_speed(phase_id)*(time_manager->time_of_phase(phase_id + 1) - time_manager->time_of_phase(phase_id));
+			time_t time_limit = ;
 
-
-
+			while (map->is_reachable(already_decided_position.second.first, Graph::MapNodeIndicator((*rest_poi)->get_id()), creating_dummy->get_speed(phase_id), time_limit) == false) {
+				rest_poi++;
+			}
+			creating_dummy->set_position_of_phase(phase_id, (*rest_poi)->get_id(), (*rest_poi)->data->get_position());
+			//決定位置の更新
+			already_decided_position = creating_dummy->find_next_fixed_position(phase_id);
+			phase_id++;
+		}
 
 	}*/
 
@@ -361,20 +438,22 @@ namespace Method
 		//ユーザの動きの変更→新しく作る．
 	}
 
-
+	
 	///<summary>
 	/// ここが提案手法の核になる部分
 	///</summary>
 	void KatoMethod_UserChange::decide_dummy_positions()
 	{
-		/*
+		
 		for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
-		{
+		{	
+			creating_dummy = entities->get_dummy_by_id(dummy_id);
+			
 			//decide_base_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 			//decide_share_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 			//decide_dummy_path(dummy_id);// 生成中ダミー(k番目)の移動経路の決定
 			
-		}*/
+		}
 	}
 	
 	

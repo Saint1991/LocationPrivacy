@@ -14,11 +14,11 @@ namespace Requirement {
 	///</summary>
 	class KATOMETHODREQUIREMENT_API KatoMethodRequirement : public Requirement::BasicRequirement
 	{
-	protected:
-		double max_pause_time;
-		double min_pause_time;
-
 	public:
+		time_t max_pause_time;
+		time_t min_pause_time;
+
+
 		KatoMethodRequirement();
 		KatoMethodRequirement(double max_pause_time, double min_pause_time);
 		virtual ~KatoMethodRequirement();
