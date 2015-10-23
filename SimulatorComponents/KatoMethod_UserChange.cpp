@@ -8,9 +8,15 @@ namespace Method
 	/// コンストラクタ
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
-	KatoMethod_UserChange::KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>(map, user, requirement, time_manager),grid_list(std::vector<Grid>(time_manager->phase_count())),creating_dummy(nullptr)
+	KatoMethod_UserChange::KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager, std::shared_ptr<Time::TimeSlotManager> revise_time_manager)
+		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>(map, user, requirement, time_manager),grid_list(std::vector<Grid>(time_manager->phase_count())),creating_dummy(nullptr),revise_time_manager(revise_time_manager)
 	{
+		/*
+		for (int i = 0; i < revise_time_manager->phase_count(); i++)
+		{
+			std::shared_ptr<std::vector<time_t>> timesslot = revise_time_manager->time_of_phase(i);
+		}
+		*/
 	}
 
 
@@ -297,14 +303,13 @@ namespace Method
 		int phase_id = 1;
 		while (phase_id < creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first)
 		{
-			//連続で停止位置が決まっている場合はskip
 			if (creating_dummy->find_next_fixed_position((phase_id)-1).first != phase_id) 
 			{
 				std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> already_decided_position = creating_dummy->find_previous_fixed_position(dest_position.first);
-				time_t time_limit = time_manager->time_of_phase(dest_position.first)-time_manager->time_of_phase(already_decided_position.first)-creating_dummy->get_pause_time(already_decided_position.first);
+				time_t time_limit = time_manager->time_of_phase(dest_position.first)-time_manager->time_of_phase(already_decided_position.first)-requirement->max_pause_time;
 				//position(already_deceded)→position(dest_id)に到達可能ならば，phaseにはintersectionを追加し，そうでないなら途中停止位置を設定
 				//途中停止位置を設定
-				while (map->is_reachable(already_decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(already_decided_position.first), time_limit) == false) {
+				while (map->is_reachable(already_decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(already_decided_position.first), time_limit)) {
 					//phase_id番目の停止時間と移動速度を決定
 					creating_dummy->set_random_pause_time(phase_id,requirement->min_pause_time,requirement->max_pause_time);
 					creating_dummy->set_random_speed(phase_id,requirement->average_speed_of_dummy,requirement->speed_range_of_dummy);
@@ -345,6 +350,10 @@ namespace Method
 					creating_dummy->set_pause_time(phase_id, 0);
 				}
 			}
+			//連続で停止位置が決まっている場合はskip
+			else {
+				phase_id++;
+			}
 						
 			//途中目的地の更新
 			dest_position = creating_dummy->find_next_fixed_position(phase_id);
@@ -380,33 +389,92 @@ namespace Method
 	///</summary>
 	void KatoMethod_UserChange::revise_dummy_movement_plan()
 	{
-
+		
 	}
 
 
 	///<summary>
 	/// ダミーの停止時間の修正
 	///</summary>
-	void KatoMethod_UserChange::revise_dummy_pause_time()
+	void KatoMethod_UserChange::revise_dummy_pause_time(int phase_id)
 	{
+		//前の値の保持
+		time_t previous_pause_time = creating_dummy->get_pause_time(phase_id);
+		time_t previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
 
+		if (std::abs(time_to_change) > requirement->max_variation_of_pause_time)
+		{
+			time_t new_pause_time = time_to_change > 0 ? previous_pause_time + requirement->max_variation_of_pause_time : previous_pause_time - requirement->max_variation_of_pause_time;
+			creating_dummy->set_pause_time(phase_id, new_pause_time);
+		}
+		else
+		{
+			creating_dummy->set_pause_time(phase_id, previous_pause_time + time_to_change);
+		}
+
+		if (requirement->max_pause_time < time_manager->time_of_phase(phase_id)) creating_dummy->set_pause_time(phase_id, requirement->max_pause_time);
+		if (requirement->min_pause_time > time_manager->time_of_phase(phase_id)) creating_dummy->set_pause_time(phase_id, requirement->min_pause_time);
+		
+		//停止時間の変化量を求める
+		time_t variation_of_pause_time = creating_dummy->get_pause_time(phase_id) - previous_pause_time;
+
+		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)
+		{
+			//revise_time_manager->time_of_phase(i) += variation_of_pause_time;
+		}
+		if (time_manager->time_of_phase(phase_id+1) == previous_arrive_time + time_to_change) return;
+
+		time_to_change -= variation_of_pause_time;//この行は謎笑
 	}
 
-
+	/*
 	///<summary>
 	/// ダミーの移動経路の修正
 	///</summary>
-	void KatoMethod_UserChange::revise_dummy_trajectory()
+	void KatoMethod_UserChange::revise_dummy_trajectory(int phase_id)
 	{
+		time_t previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
+		time_t tempT = 10000000000000000000;
 
-	}
+		while (全てのトラジェクトリをチェックし終えるまで) 
+		{
+			phase_idのときの存在地点;
+			time_manager->time_of_phase(phase_id + 1) = time_manager->time_of_phase(phase_id) + creating_dummy->get_pause_time(phase_id) + distance_of_Tri / creating_dummy->get_speed(phase_id);
+
+		}
+
+	}*/
 
 
 	///<summary>
 	/// ダミーの行動速度の修正
 	///</summary>
-	void KatoMethod_UserChange::revise_dummy_speed()
+	void KatoMethod_UserChange::revise_dummy_speed(int phase_id)
 	{
+		time_t previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
+		double previous_speed = creating_dummy->get_speed(phase_id);
+		double distance = map->shortest_distance(creating_dummy->read_node_pos_info_of_phase(phase_id).first, creating_dummy->read_node_pos_info_of_phase(phase_id).first);
+		time_t time = distance / (time_manager->time_of_phase(phase_id + 1)+time_to_change-time_manager->time_of_phase(phase_id));
+		creating_dummy->set_speed(phase_id, time);
+
+		if (std::abs(creating_dummy->get_speed(phase_id)-previous_speed) > requirement->max_variation_of_speed)
+		{
+			double new_speed = creating_dummy->get_speed(phase_id) - previous_speed > 0 ? previous_speed + requirement->max_variation_of_speed : previous_speed - requirement->max_variation_of_speed;
+			creating_dummy->set_pause_time(phase_id, new_speed);
+		}
+		double max_speed = requirement->average_speed_of_dummy + 0.5* requirement->speed_range_of_dummy;
+		double min_speed = requirement->average_speed_of_dummy - 0.5* requirement->speed_range_of_dummy;
+		if (max_speed < creating_dummy->get_speed(phase_id)) creating_dummy->set_speed(phase_id, max_speed);
+		if (min_speed > creating_dummy->get_speed(phase_id)) creating_dummy->set_speed(phase_id, min_speed);
+
+		//time_manager->time_of_phase(phase_id + 1) = time_manager->time_of_phase(phase_id) + creating_dummy->get_pause_time(phase_id) + (time_t)(distance / creating_dummy->get_speed(phase_id));
+		time_t variation_of_arrive_time = time_manager->time_of_phase(phase_id + 1) - previous_arrive_time;
+		
+		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)
+		{
+			//revise_time_manager->time_of_phase(i) += variation_of_pause_time;
+		}
+		if (time_manager->time_of_phase(phase_id + 1) == previous_arrive_time + time_to_change) return;
 
 	}
 
@@ -414,7 +482,7 @@ namespace Method
 	///<summary>
 	/// ダミーの停止位置の修正
 	///</summary>
-	void KatoMethod_UserChange::revise_dummy_pose_position()
+	void KatoMethod_UserChange::revise_dummy_pose_position(int phase_id)
 	{
 
 	}
@@ -462,6 +530,9 @@ namespace Method
 	///</summary>
 	void KatoMethod_UserChange::revise_dummy_positions()
 	{
+		int phase_id = 1;
+		time_t time_to_change = 0;// (修正後の)time_manager->time_of_phase(phase_id) - (修正前の)time_manager->time_of_phase(phase_id);
+		//revise_dummy_pause_time();
 
 	}
 
