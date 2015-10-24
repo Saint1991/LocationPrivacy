@@ -135,5 +135,19 @@ namespace UtilsTest
 			Logger::WriteMessage(log.c_str());
 			Assert::AreEqual(expected, actual, ANGLE_ACCURACY);
 		}
+
+		TEST_METHOD(GeoCalculation_calc_translated_point)
+		{
+			LatLng nishio_lab(34.818254802266, 135.522127777588);
+			double distance = 100;
+			double azimuth_angle = Math::AngleUtility::convert_to_radian(315.0);
+			
+			LatLng translated = GeoCalculation::calc_translated_point(nishio_lab, distance, azimuth_angle);
+			std::string log = "(Lat, Lng) = (" + std::to_string(translated.lat()) + ", " + std::to_string(translated.lng()) + ")";
+			Logger::WriteMessage(log.c_str());
+
+			Assert::AreEqual(34.818892193240, translated.lat(), 5.0E-4);
+			Assert::AreEqual(135.522900666056, translated.lng(), 5.0E-4);
+		}
 	};
 }

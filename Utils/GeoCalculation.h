@@ -22,6 +22,8 @@ namespace Geography
 		
 		//’n‹…‚Ì”¼Œa
 		static const long R = 6378137L;
+		static const double B;
+		static const double F;
 		
 		GeoCalculation();
 		~GeoCalculation();
@@ -34,6 +36,7 @@ namespace Geography
 
 		GEOGRAPHIC_CALC_API static const std::vector<std::shared_ptr<LatLng const>> convex_hull(const std::vector<std::shared_ptr<LatLng const>>& point_list);
 		GEOGRAPHIC_CALC_API static double calc_convex_hull_size(const std::vector<std::shared_ptr<LatLng const>>& point_list);
+		GEOGRAPHIC_CALC_API static LatLng calc_translated_point(const LatLng& from, double distance, double azimuth_angle);
 	};
 }
 

@@ -178,3 +178,67 @@ double Geography::GeoCalculation::calc_convex_hull_size(const std::vector<std::s
 	std::vector<std::shared_ptr<Graph::Coordinate const>> cartesian_points = convert_to_cartesian(point_list);
 	return Graph::GraphUtility::calc_convex_hull_size(cartesian_points);
 }
+
+
+const double Geography::GeoCalculation::B = 6356752.31414036;
+const double Geography::GeoCalculation::F = 0.0033528106811823;
+
+///<summary>
+/// fromを指定の距離と方位角(rad)で移動した点を計算する
+/// 方位角は東から時計周りの座標系
+/// 計算はおそらくLambert法ではない，下記で利用しているものを登用した．
+/// http://www.mapli.net/direct/
+///</summary>
+Geography::LatLng Geography::GeoCalculation::calc_translated_point(const LatLng& from, double distance, double azimuth_angle)
+{
+	const int ITERATION_MAX = 5;
+
+	azimuth_angle += M_PI_2;
+	if (azimuth_angle < 0) azimuth_angle += 2 * M_PI;
+	if (azimuth_angle > 2 * M_PI) azimuth_angle -= 2 * M_PI;
+
+	double latitude = Math::AngleUtility::convert_to_radian(from.lat());
+	double longitude = Math::AngleUtility::convert_to_radian(from.lng());
+
+	double sin = std::sin(azimuth_angle);
+	double cos = std::cos(azimuth_angle);
+
+	double u1 = std::atan((1.0 - F) * std::tan(latitude));
+	double sigma1 = std::atan2((1.0 - F) * std::tan(latitude), cos);
+
+	double sin_u1 = std::sin(u1);
+	double cos_u1 = std::cos(u1);
+
+	double sin_alpha = cos_u1 * sin;
+	double cos_alpha2 = 1 - sin_alpha * sin_alpha;
+
+	double uu = cos_alpha2 * (R * R - B * B) / (B * B);
+	double a = 1 + (uu / 16384.0) * (4096.0 + uu * (-768.0 + uu * (320.0 - 175.0 * uu)));
+	double b = (uu / 1024.0) * (256.0 + uu * (-128.0 + uu * (74.0 - 47.0 * uu)));
+
+	double sigma = distance / (B * a);
+	double sigma0, sin_sigma, cos_sigma, cos2_sigma_m, d_sigma;
+	for (int i = 0; i < ITERATION_MAX; i++) {
+		cos2_sigma_m = std::cos(2 * sigma1 + sigma);
+		sin_sigma = std::sin(sigma);
+		cos_sigma = std::cos(sigma);
+		d_sigma = b * sin_sigma * (cos2_sigma_m + (b / 4.0) * (cos_sigma * (-1.0 + 2.0 * std::pow(cos2_sigma_m, 2))
+			- (b / 6.0) * cos2_sigma_m * (-3.0 + 4.0 * std::pow(sin_sigma, 2)) * (-3.0 + 4.0 * std::pow(cos2_sigma_m, 2))));
+		sigma0 = sigma;
+		sigma = distance / (B * a) + d_sigma;
+
+		if (std::abs(sigma - sigma0) <= 1.0E-12) break;
+	}
+
+	cos2_sigma_m = std::cos(2.0 * sigma1 + sigma);
+	sin_sigma = std::sin(sigma);
+	cos_sigma = std::cos(sigma);
+	double phi2 = std::atan2(sin_u1 * cos_sigma + cos_u1* sin_sigma * cos, (1 - F) * std::sqrt(sin_alpha * sin_alpha + std::pow(sin_u1 * sin_sigma - cos_u1 * cos_sigma * cos, 2)));
+	double lambda = std::atan2(sin_sigma * sin, cos_u1 * cos_sigma - sin_u1 * sin_sigma * cos);
+	double c = (F / 16.0) * cos_alpha2 * (4.0 + F * (4.0 - 3.0 * cos_alpha2));
+
+	double omega = lambda - (1.0 - c) * F * sin_alpha * (sigma + c * sin_sigma * (cos2_sigma_m + c * cos_sigma * (-1.0 + 2.0 * std::pow(cos2_sigma_m, 2))));
+	double lambda2 = longitude + omega;
+
+	return Geography::LatLng(Math::AngleUtility::convert_to_degree(phi2), Math::AngleUtility::convert_to_degree(lambda2));
+}

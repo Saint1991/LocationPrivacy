@@ -8,6 +8,7 @@
 #include "FileExportable.h"
 #include "GeoCalculation.h"
 #include "Coordinate.h"
+#include "AngleUtility.h"
 
 namespace Geography 
 {
@@ -24,6 +25,9 @@ namespace Geography
 	public:
 		static const std::string LATITUDE;
 		static const std::string LONGITUDE;
+		static const double A;
+		static const double B;
+		static const double F;
 
 		LatLng();
 		LatLng(double latitude, double longitude);
@@ -31,9 +35,11 @@ namespace Geography
 		double lat() const;
 		double lng() const;
 		bool is_valid_point() const;
+		bool translate(double distance, double azimuth_angle);
 		std::unordered_map<std::string, std::string> get_export_data() const;
 
 		LATLNG_API friend double dist(const LatLng& ll1, const LatLng& ll2);
 		LATLNG_API friend double angle(const LatLng& from, const LatLng& to);
+	
 	};
 }

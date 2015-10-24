@@ -74,6 +74,33 @@ namespace Geography
 		return is_valid;
 	}
 
+	const double LatLng::A = 6378137.0;
+	const double LatLng::B = 6356752.31414036;
+	const double LatLng::F = 0.0033528106811823;
+
+	///<summary>
+	/// 距離と方位角(rad)を指定して点を移動する
+	/// 方位角は東から時計周りの座標系
+	/// 計算はおそらくLambert法ではない，下記で利用しているものを登用した．
+	/// http://www.mapli.net/direct/
+	/// 計算結果が不正な値の場合はfalseを返し，移動は行わない
+	///</summary>
+	bool LatLng::translate(double distance, double azimuth_angle)
+	{
+
+		LatLng translated = Geography::GeoCalculation::calc_translated_point(*this, distance, azimuth_angle);
+
+		double lat = translated.lat();
+		double lng = translated.lng();
+
+		if (std::isfinite(lat) && std::isfinite(lng) && validate(lat, lng)) {
+			_y = lat;
+			_x = lng;
+			return true;
+		}
+		return false;
+	}
+
 	#pragma region Export
 	
 	const std::string LatLng::LATITUDE = "latitude";
