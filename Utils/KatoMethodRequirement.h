@@ -21,10 +21,14 @@ namespace Requirement {
 		time_t max_variation_of_pause_time;
 		double max_variation_of_speed;
 
-		int cycle_of_anonymous_area = 3;
+		int phase_interval;//グリッドを計算する周期
+		int cycle_of_anonymous_area;//匿名領域を決定する時の周期
+
+		time_t service_interval;
 		
+
 		KatoMethodRequirement();
-		KatoMethodRequirement(double max_pause_time, double min_pause_time);
+		KatoMethodRequirement(double max_pause_time, double min_pause_time, time_t max_variation_of_pause_time, double max_variation_of_speed, int cycle_of_anonymous_area, time_t service_interval);
 		virtual ~KatoMethodRequirement();
 	};
 }

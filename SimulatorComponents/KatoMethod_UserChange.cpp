@@ -119,7 +119,7 @@ namespace Method
 		//各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
 		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>(time_manager->phase_count(),0));
 		
-
+		
 		while (phase <= time_manager->phase_count())
 		{
 			std::shared_ptr<Geography::LatLng const> center = entities->get_average_position_of_phase(phase);//中心位置を求める
@@ -135,16 +135,16 @@ namespace Method
 				entities_num_table.at((cell_id++) - 1).at(phase) = entities->get_entity_count_within_boundary(phase, *iter);
 			}
 
-			phase++;//サービス利用間隔をtime_managerから逐一求めないといけないかも
+			phase += requirement->phase_interval;//サービス利用間隔をtime_managerから逐一求めないといけないかも
 		}
 
-		//全てのフェーズにおける各セルのエンティティの合計
+		//全てのフェーズ間隔における各セルのエンティティの合計
 		std::vector<int> total_entity_num_all_phase = get_total_num_of_each_cell(entities_num_table);
 		
 		//周期をphaseで設定し，その周期ベースで匿名領域確保のための地点を作成
 		//該当する周期のフェーズにおいて，エンティティが最小になるセルidを取得
 		//ただし，phase0は除外
-		int cycle_id = time_manager->phase_count() / requirement->cycle_of_anonymous_area;
+		int cycle_id = requirement->phase_interval*requirement->cycle_of_anonymous_area;
 		std::vector<int>::iterator start_of_cycle = total_entity_num_all_phase.begin()++;
 		std::vector<int>::iterator end_of_cycle = total_entity_num_all_phase.begin();
 		std::advance(end_of_cycle, cycle_id);
@@ -172,9 +172,10 @@ namespace Method
 
 			//poiの追加．base_phaseでの速度と停止時間はユーザのプランを参照
 			creating_dummy->set_position_of_phase(base_phase, Graph::MapNodeIndicator(base_poi_id), base_point);
-			creating_dummy->set_speed(base_phase,entities->get_user()->get_speed(base_phase));
 			creating_dummy->set_pause_time(base_phase, entities->get_user()->get_pause_time(base_phase));
 
+			creating_dummy->set_speed(base_phase,entities->get_user()->get_speed(base_phase));
+			
 			std::advance(start_of_cycle, cycle_id);
 			std::advance(end_of_cycle, cycle_id);
 		}

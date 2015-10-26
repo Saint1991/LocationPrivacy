@@ -31,6 +31,12 @@ namespace Method
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> creating_dummy;
 		time_t time_to_change;
 
+		double a = 6378137;//赤道半径
+		double b = 6356752.314;//極半径
+
+		
+
+		//メソッド
 		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成
 		//std::vector<std::vector<int>> make_table_of_entity_num_in_cell_at_phase(std::vector<Graph::Rectangle<Geography::LatLng>> grid_list, int phase);
 		std::vector<int> get_total_num_of_each_cell(std::vector<std::vector<int>>& entities_table);//各セルのフェーズトータルのエンティティの数
@@ -44,10 +50,6 @@ namespace Method
 		void revise_dummy_speed(int phase_id);//ダミーの行動速度の修正
 		void revise_dummy_pose_position(int phase_id);//ダミーの停止地点の修正
 		void check_user_plan();//ユーザの行動プラン変更のチェック
-
-
-		double a = 6378137;//赤道半径
-		double b = 6356752.314;//極半径
 		Geography::LatLng position_from_node_with_distance(Geography::LatLng position, double distance);
 
 	protected:
