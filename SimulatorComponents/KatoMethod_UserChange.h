@@ -45,6 +45,11 @@ namespace Method
 		void revise_dummy_pose_position(int phase_id);//ダミーの停止地点の修正
 		void check_user_plan();//ユーザの行動プラン変更のチェック
 
+
+		double a = 6378137;//赤道半径
+		double b = 6356752.314;//極半径
+		Geography::LatLng position_from_node_with_distance(Geography::LatLng position, double distance);
+
 	protected:
 		std::shared_ptr<Time::TimeSlotManager> revise_time_manager;
 		

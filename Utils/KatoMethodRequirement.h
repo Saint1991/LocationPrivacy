@@ -20,8 +20,9 @@ namespace Requirement {
 
 		time_t max_variation_of_pause_time;
 		double max_variation_of_speed;
-		
 
+		int cycle_of_anonymous_area = 3;
+		
 		KatoMethodRequirement();
 		KatoMethodRequirement(double max_pause_time, double min_pause_time);
 		virtual ~KatoMethodRequirement();
