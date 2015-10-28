@@ -21,28 +21,7 @@ namespace Time
 		time_t now;
 		tm tm_now;
 		time(&now);
-		errno_t result = localtime_s(&tm_now, &now);
-		
-		std::stringstream timestamp;
-		int year = tm_now.tm_year + 1900;
-		
-		char month[3];
-		sprintf_s(month, 3, "%02d", tm_now.tm_mon + 1);
-		
-		char day[3];
-		sprintf_s(day, 3, "%02d", tm_now.tm_mday);
-
-		char hour[3];
-		sprintf_s(hour, 3, "%02d", tm_now.tm_hour);
-
-		char min[3];
-		sprintf_s(min, 3, "%02d", tm_now.tm_min);
-
-		char sec[3];
-		sprintf_s(sec, 3, "%02d", tm_now.tm_sec);
-
-		timestamp << year << month << day << hour <<min << sec;
-		return timestamp.str();
+		return timestamp(now);
 	}
 
 
@@ -62,6 +41,59 @@ namespace Time
 		time.tm_sec = std::stoi(timestamp.substr(17, 2));
 		time.tm_isdst = -1;
 		return mktime(&time);
+	}
+
+
+	///<summary>
+	/// UNIX_TIMESTAMP‚ğ•¶š—ñ‚É•ÏŠ·‚·‚é
+	///</summary>
+	std::string TimeUtility::timestamp(time_t time)
+	{
+		tm tm_now;
+		errno_t result = localtime_s(&tm_now, &time);
+
+		std::stringstream timestamp;
+		int year = tm_now.tm_year + 1900;
+
+		char month[3];
+		sprintf_s(month, 3, "%02d", tm_now.tm_mon + 1);
+
+		char day[3];
+		sprintf_s(day, 3, "%02d", tm_now.tm_mday);
+
+		char hour[3];
+		sprintf_s(hour, 3, "%02d", tm_now.tm_hour);
+
+		char min[3];
+		sprintf_s(min, 3, "%02d", tm_now.tm_min);
+
+		char sec[3];
+		sprintf_s(sec, 3, "%02d", tm_now.tm_sec);
+
+		timestamp << year << month << day << hour << min << sec;
+		return timestamp.str();
+	}
+
+
+	///<summary>
+	/// UNIXTIMESTAMP‚©‚ç“ú•t(2015/10/29“™)‚ğæ“¾‚·‚é
+	///</summary>
+	std::string TimeUtility::date(time_t time)
+	{
+		tm tm_now;
+		errno_t result = localtime_s(&tm_now, &time);
+
+		std::stringstream timestamp;
+		int year = tm_now.tm_year + 1900;
+
+		char month[3];
+		sprintf_s(month, 3, "%02d", tm_now.tm_mon + 1);
+
+		char day[3];
+		sprintf_s(day, 3, "%02d", tm_now.tm_mday);
+
+		timestamp << year << month << day;
+		return timestamp.str();
 	}
 }
 

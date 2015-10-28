@@ -25,12 +25,6 @@
     <Filter Include="ソース ファイル\Simulations\Mizuno">
       <UniqueIdentifier>{142f4429-c1ec-4b60-b096-547a04243582}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Simulations\Matsuno">
-      <UniqueIdentifier>{5d1a4701-f622-4c52-a41d-574ee26fadd9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Simulations\Matsuno">
-      <UniqueIdentifier>{0cb4cbae-7e3d-4366-a36f-1ef04e508458}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -46,7 +40,10 @@
       <Filter>ヘッダー ファイル\Simulations</Filter>
     </ClInclude>
     <ClInclude Include="BaseSimulator.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Simulations\Mizuno</Filter>
+    </ClInclude>
+    <ClInclude Include="PaisSimulator.h">
+      <Filter>ヘッダー ファイル\Simulations\Mizuno</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -60,7 +57,10 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="BaseSimulator.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Simulations\Mizuno</Filter>
+    </ClCompile>
+    <ClCompile Include="PaisSimulator.cpp">
+      <Filter>ソース ファイル\Simulations\Mizuno</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

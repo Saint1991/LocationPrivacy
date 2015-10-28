@@ -19,6 +19,8 @@ namespace Time
 	public:
 		TIME_UTILITY_API static const std::string current_timestamp();
 		TIME_UTILITY_API static time_t convert_to_unixtimestamp(std::string timestamp);
+		TIME_UTILITY_API static std::string timestamp(time_t time);
+		TIME_UTILITY_API static std::string date(time_t time);
 	};
 }
 

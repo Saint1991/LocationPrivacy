@@ -34,7 +34,6 @@ namespace Graph
 		class MyPoiAdapter
 		{
 		public:
-			
 			typedef point result_type;
 			point operator()(rtree_value val) const
 			{

@@ -17,7 +17,7 @@ namespace User
 	/// ユーザを表すクラス
 	/// 嗜好の木は更新が適宜必要なのでpublicにしてある
 	///</summary>
-	template <typename POSITION_TYPE>
+	template <typename POSITION_TYPE = Geography::LatLng>
 	class BASIC_USER_API BasicUser : public Entity::Dummy<POSITION_TYPE>
 	{
 	public:
