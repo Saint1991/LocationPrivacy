@@ -154,6 +154,7 @@
     <ClInclude Include="DbNodeCollectionFactory.h" />
     <ClInclude Include="DbPoiCollectionFactory.h" />
     <ClInclude Include="Dummy.h" />
+    <ClInclude Include="HayashidaBachelorMeshod.h" />
     <ClInclude Include="KatoMethod_UserChange.h" />
     <ClInclude Include="MatsunoMethod.h" />
     <ClInclude Include="PauseMobileEntity.h" />
@@ -186,6 +187,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Dummy.cpp" />
+    <ClCompile Include="HayashidaBachelorMeshod.cpp" />
     <ClCompile Include="KatoMethod_UserChange.cpp" />
     <ClCompile Include="MatsunoMethod.cpp" />
     <ClCompile Include="PauseMobileEntity.cpp" />

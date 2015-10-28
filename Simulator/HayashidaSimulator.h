@@ -10,6 +10,8 @@
 #include "PauseMobileEntity.h"
 #include "KatoMethodRequirement.h"
 #include "ISimulator.h"
+#include "KatoMethod_UserChange.h"
+#include "Rectangle.h"
 
 namespace Simulation
 {

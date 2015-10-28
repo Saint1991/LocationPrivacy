@@ -93,5 +93,17 @@ namespace Entity
 		speed_list.at(phase) = dummy_speed;
 	}
 	
+	///<summary>
+	/// start‚©‚çend‚Ü‚Å‚ÌŠÔ‚Årandom‚Éphase‚ðset‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE>
+	int PauseMobileEntity<POSITION_TYPE>::get_random_phase(int start, int end)
+	{
+		Math::Probability generator;
+		int random_phase = generator.uniform_distribution(start, end);
+
+		return random_phase;
+
+	}
 
 }

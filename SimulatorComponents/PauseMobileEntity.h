@@ -39,6 +39,8 @@ namespace Entity
 		void set_speed(int phase, double speed);
 		void set_random_speed(int phase, double min, double max);
 
+		int get_random_phase(int start, int end);
+
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»

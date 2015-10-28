@@ -31,17 +31,12 @@ namespace Method
 
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> creating_dummy;
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predict_user;
-		std::shared_ptr<Time::TimeSlotManager> revise_time_manager;
+		//std::shared_ptr<Time::TimeSlotManager> revise_time_manager;
 
 		time_t time_to_change;//行動の変化分
 
-		double a = 6378137;//赤道半径
-		double b = 6356752.314;//極半径
-
-
 		//メソッド
 		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成
-		//std::vector<std::vector<int>> make_table_of_entity_num_in_cell_at_phase(std::vector<Graph::Rectangle<Geography::LatLng>> grid_list, int phase);
 		std::vector<int> get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_table, int start_phase, int end_phase);//各セルのフェーズトータルのエンティティの数
 		std::vector<int> get_total_num_of_each_cell_at_all_phase(std::vector<std::vector<int>>& entities_table);//各セルのフェーズトータルのエンティティの数
 		std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list(const Graph::Rectangle<Geography::LatLng>& boundary);
@@ -56,10 +51,16 @@ namespace Method
 		void revise_dummy_pose_position(int phase_id);//ダミーの停止地点の修正
 		
 		bool check_going_pause_position_in_plan();//ユーザの行動プランに含まれる停止地点に向かっているかどうかをチェック
-		bool check_user_plan();//ユーザの行動プラン変更のチェック
-		void predict_user_plan();//ユーザの行動を予測する.
-		Geography::LatLng position_from_node_with_distance(Geography::LatLng position, double distance);
-
+		int check_user_plan();//ユーザの行動プラン変更のチェック
+		bool check_user_pause_time();
+		bool check_user_speed();
+		bool check_user_path();
+		bool check_user_position();
+		
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predict_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user_plan);//ユーザの行動を予測する.
+		void predict_user_next_pause_position_time(int check_num);
+		void update_user_plan();
+		
 	protected:
 		
 		void initialize();
@@ -71,7 +72,7 @@ namespace Method
 
 		
 	public:
-		KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager, std::shared_ptr<Time::TimeSlotManager> revise_time_manager);
+		KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
 		~KatoMethod_UserChange();
 
 		void run();
