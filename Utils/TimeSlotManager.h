@@ -18,18 +18,17 @@ namespace Time
 	class TIMESLOT_MANAGER_API TimeSlotManager
 	{
 	protected:
-		std::unique_ptr<std::vector<std::vector<time_t>>> timeslots;
+		std::unique_ptr<std::vector<time_t>> timeslots;
 
 	public:
-		TimeSlotManager(std::unique_ptr<std::vector<time_t>> times, bool relative_to_first = true);
-		TimeSlotManager(std::unique_ptr<std::vector<std::string>> times, bool relative_to_first = true);
+		TimeSlotManager(std::unique_ptr<std::vector<time_t>> timeslots, bool relative_to_first = true);
+		TimeSlotManager(std::unique_ptr<std::vector<std::string>> timeslots, bool relative_to_first = true);
 		~TimeSlotManager();
 
-		void for_each_time(const std::function<void(time_t, long, int)>& execute_function, int date_phase = 0) const;
-		time_t time_of_phase(int phase, int date_phase = 0) const;
-		int find_phase_of_time(time_t time, int date_phase = 0) const;
-		size_t phase_count(int date_phase = 0) const;
-		size_t date_phase_count() const;
+		void for_each_time(const std::function<void(time_t, long, int)>& execute_function) const;
+		time_t time_of_phase(int phase) const;
+		size_t find_phase_of_time(time_t time) const;
+		size_t phase_count() const;
 	};
 }
 

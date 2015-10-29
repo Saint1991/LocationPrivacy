@@ -37,8 +37,8 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::create_user(unsigned int user_id)
 	{
-		//User::DbBasicUserLoader loader("../settings/mydbsettings.xml", "map_tokyo", "checkins", "pois");
-		//user = std::move(loader.load_user(user_id));
+		User::DbBasicUserLoader loader("../settings/mydbsettings.xml", "map_tokyo", "checkins", "pois");
+		user = std::move(loader.load_user(user_id));
 	}
 }
 
