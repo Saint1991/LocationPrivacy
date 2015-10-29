@@ -90,14 +90,20 @@
     <ClInclude Include="MatsunoMethod.h">
       <Filter>ヘッダー ファイル\Method</Filter>
     </ClInclude>
-    <ClInclude Include="KatoMethod_UserChange.h">
-      <Filter>ヘッダー ファイル\Method</Filter>
-    </ClInclude>
     <ClInclude Include="PauseMobileEntity.h">
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
     <ClInclude Include="DbBasicUserLoader.h">
       <Filter>ヘッダー ファイル\User</Filter>
+    </ClInclude>
+    <ClInclude Include="HayashidaBachelorMethod.h">
+      <Filter>ヘッダー ファイル\Method</Filter>
+    </ClInclude>
+    <ClInclude Include="KatoBachelorMethod.h">
+      <Filter>ヘッダー ファイル\Method</Filter>
+    </ClInclude>
+    <ClInclude Include="KatoMasterMethod.h">
+      <Filter>ヘッダー ファイル\Method</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -146,11 +152,17 @@
     <ClCompile Include="MatsunoMethod.cpp">
       <Filter>ソース ファイル\Method</Filter>
     </ClCompile>
-    <ClCompile Include="KatoMethod_UserChange.cpp">
-      <Filter>ソース ファイル\Method</Filter>
-    </ClCompile>
     <ClCompile Include="PauseMobileEntity.cpp">
       <Filter>ソース ファイル\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="HayashidaBachelorMethod.cpp">
+      <Filter>ソース ファイル\Method</Filter>
+    </ClCompile>
+    <ClCompile Include="KatoBachelorMethod.cpp">
+      <Filter>ソース ファイル\Method</Filter>
+    </ClCompile>
+    <ClCompile Include="KatoMasterMethod.cpp">
+      <Filter>ソース ファイル\Method</Filter>
     </ClCompile>
     <ClCompile Include="DbBasicUserLoader.cpp">
       <Filter>ソース ファイル\User</Filter>

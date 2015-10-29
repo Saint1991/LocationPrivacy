@@ -28,8 +28,7 @@ namespace Entity
 
 
 	public:
-		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
-		//PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot, double max_pause_time, double min_pause_time);
+		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);//, Requirement::KatoMethodRequirement kato_requirement);
 		virtual ~PauseMobileEntity();
 
 		time_t get_pause_time(int phase) const;
@@ -39,6 +38,8 @@ namespace Entity
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
 		void set_random_speed(int phase, double min, double max);
+
+		int get_random_phase(int start, int end);
 
 	};
 

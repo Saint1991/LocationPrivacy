@@ -25,6 +25,12 @@
     <Filter Include="ソース ファイル\Simulations\Mizuno">
       <UniqueIdentifier>{142f4429-c1ec-4b60-b096-547a04243582}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Simulations\hayashida">
+      <UniqueIdentifier>{e34dc447-6e1d-4209-961b-b1f5786ba32e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Simulations\Hayashida">
+      <UniqueIdentifier>{09dba984-bb54-4880-9c69-af4cde7e4094}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -45,6 +51,9 @@
     <ClInclude Include="PaisSimulator.h">
       <Filter>ヘッダー ファイル\Simulations\Mizuno</Filter>
     </ClInclude>
+    <ClInclude Include="HayashidaSimulator.h">
+      <Filter>ヘッダー ファイル\Simulations\hayashida</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -61,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="PaisSimulator.cpp">
       <Filter>ソース ファイル\Simulations\Mizuno</Filter>
+    </ClCompile>
+    <ClCompile Include="HayashidaSimulator.cpp">
+      <Filter>ソース ファイル\Simulations\Hayashida</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

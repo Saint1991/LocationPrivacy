@@ -9,9 +9,13 @@ namespace Entity
 	/// コンストラクタ
 	///</summary>
 	template <typename POSITION_TYPE>
-	PauseMobileEntity<POSITION_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
-		: MobileEntity<POSITION_TYPE>(id, timeslot), pause_time_list(std::vector<time_t>(timeslot->phase_count(),0)), speed_list(std::vector<double>(timeslot->phase_count(), 0)) //kato_requirement(requirement)
+	PauseMobileEntity<POSITION_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)//, Requirement::KatoMethodRequirement kato_requirement)
+		: MobileEntity<POSITION_TYPE>(id, timeslot), 
+		  pause_time_list(std::vector<time_t>(timeslot->phase_count(),0)), 
+		  speed_list(std::vector<double>(timeslot->phase_count(), 0))
+		//, kato_requirement(kato_requirement)
 	{
+		
 	}
 
 	///<summary>
@@ -51,6 +55,7 @@ namespace Entity
 		Math::Probability generator;
 		double pause_time = generator.uniform_distribution(min, max);
 
+
 		pause_time_list.at(phase) = (time_t)pause_time;
 	}
 
@@ -88,5 +93,17 @@ namespace Entity
 		speed_list.at(phase) = dummy_speed;
 	}
 	
+	///<summary>
+	/// startからendまでの間でrandomにphaseをsetする
+	///</summary>
+	template <typename POSITION_TYPE>
+	int PauseMobileEntity<POSITION_TYPE>::get_random_phase(int start, int end)
+	{
+		Math::Probability generator;
+		int random_phase = generator.uniform_distribution(start, end);
+
+		return random_phase;
+
+	}
 
 }
