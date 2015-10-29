@@ -262,6 +262,7 @@
     <ClInclude Include="TimeSlotManager.h" />
     <ClInclude Include="TimeUtility.h" />
     <ClInclude Include="tinyxml2.h" />
+    <ClInclude Include="Trajectory.h" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="Vector2dFactory.h" />
     <ClInclude Include="WarshallFloyd.h" />
@@ -317,6 +318,7 @@
     <ClCompile Include="TimeSlotManager.cpp" />
     <ClCompile Include="TimeUtility.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
+    <ClCompile Include="Trajectory.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Vector2d.cpp" />
     <ClCompile Include="Vector2dFactory.cpp" />

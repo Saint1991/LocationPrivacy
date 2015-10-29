@@ -20,7 +20,7 @@ namespace Simulation
 	
 	protected:
 		std::shared_ptr<MAP_TYPE> map;
-		std::shared_ptr<USER_TYPE const> user;
+		std::shared_ptr<USER_TYPE> user;
 		std::list<std::shared_ptr<REQUIREMENT_TYPE const>> requirements;
 		std::list<std::shared_ptr<Framework::IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE>>> comparative_methods;
 		std::shared_ptr<Time::TimeSlotManager> time_manager;
