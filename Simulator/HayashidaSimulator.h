@@ -18,7 +18,8 @@ namespace Simulation
 	///<summary>
 	/// シミュレータ実装
 	///</summary>
-	class HAYASHIDA_SIMULATOR_API HayashidaSimulator : public ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>
+	class HAYASHIDA_SIMULATOR_API HayashidaSimulator 
+		: public ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>
 	{
 	public:
 		HayashidaSimulator();

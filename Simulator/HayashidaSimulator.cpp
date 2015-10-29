@@ -5,7 +5,7 @@ namespace Simulation
 {
 
 	HayashidaSimulator::HayashidaSimulator() 
-		: ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>()
+		: ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>()
 	{
 	}
 
