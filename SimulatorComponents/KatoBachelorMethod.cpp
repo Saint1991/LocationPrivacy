@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "KatoMethod_UserChange.h"
+#include "KatoBachelorMethod.h"
 
 namespace Method
 {
@@ -8,14 +8,10 @@ namespace Method
 	/// コンストラクタ
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
-	KatoMethod_UserChange::KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap, 
-		Entity::PauseMobileEntity<Geography::LatLng>, 
-		Entity::PauseMobileEntity<Geography::LatLng>, 
-		Requirement::KatoMethodRequirement>(map, user, requirement, time_manager),
+	KatoBachelorMethod::KatoBachelorMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
+		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>(map, user, requirement, time_manager),
 		grid_list(std::vector<Grid>(time_manager->phase_count())),
-		creating_dummy(nullptr),
-		predict_user(nullptr)
+		creating_dummy(nullptr)
 	{
 	}
 
@@ -23,7 +19,7 @@ namespace Method
 	///<summary>
 	/// デストラクタ
 	///</summary>
-	KatoMethod_UserChange::~KatoMethod_UserChange()
+	KatoBachelorMethod::~KatoBachelorMethod()
 	{
 	}
 
@@ -32,7 +28,7 @@ namespace Method
 	/// T[s]ごとのグリッド領域を作成
 	/// grid_lengthはグリッド全体の長さ
 	///</summary>
-	std::vector <Graph::Rectangle<Geography::LatLng>> KatoMethod_UserChange::make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side)
+	std::vector <Graph::Rectangle<Geography::LatLng>> KatoBachelorMethod::make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side)
 	{
 		double side_length = grid_length / cell_num_on_side;//セル一つ分の長方形の長さ
 		//centerの四点の座標
@@ -68,7 +64,7 @@ namespace Method
 	///<summary>
 	/// グリッドテーブルのstart_phaseからend_phaseのエンティティの合計を取得
 	///</summary>
-	std::vector<int> KatoMethod_UserChange::get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_table, int start_phase, int end_phase) {
+	std::vector<int> KatoBachelorMethod::get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_table, int start_phase, int end_phase) {
 		std::vector<int> total_entity_num_interval_phase;
 		for (int grid_id = 0; grid_id < CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE; grid_id++)
 		{
@@ -87,7 +83,7 @@ namespace Method
 	///<summary>
 	/// グリッドテーブルの各グリッドごとの全フェーズのエンティティの合計を取得
 	///</summary>
-	std::vector<int> KatoMethod_UserChange::get_total_num_of_each_cell_at_all_phase(std::vector<std::vector<int>>& entities_table) {
+	std::vector<int> KatoBachelorMethod::get_total_num_of_each_cell_at_all_phase(std::vector<std::vector<int>>& entities_table) {
 		std::vector<int> total_entity_num_all_phase;
 		for (int grid_id = 0; grid_id < CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE; grid_id++)
 		{
@@ -105,7 +101,7 @@ namespace Method
 	///<summary>
 	/// Rectangleに含まれるPOIのリストを取得
 	///</summary>
-	std::vector<std::shared_ptr<Map::BasicPoi const>> KatoMethod_UserChange::candidate_pois_list(const Graph::Rectangle<Geography::LatLng>& boundary) {
+	std::vector<std::shared_ptr<Map::BasicPoi const>> KatoBachelorMethod::candidate_pois_list(const Graph::Rectangle<Geography::LatLng>& boundary) {
 		std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = map->find_pois_within_boundary(boundary);
 		std::random_device device;
 		std::mt19937_64 generator(device());
@@ -118,7 +114,7 @@ namespace Method
 	///<summary>
 	/// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 	///</summary>
-	void KatoMethod_UserChange::decide_base_positions_and_arrive_time(int dummy_id)
+	void KatoBachelorMethod::decide_base_positions_and_arrive_time(int dummy_id)
 	{
 		int phase = 0;//phase
 		const int GRID_TOTAL_NUM = CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE;//グリッドの数
@@ -142,7 +138,7 @@ namespace Method
 			{
 				entities_num_table.at((cell_id++) - 1).at(phase) = entities->get_entity_count_within_boundary(phase, *iter);
 			}
-			phase += requirement->phase_interval;
+			phase += requirement->interval_of_base_phase;
 		}
 
 		//周期をphaseで設定し，その周期ベースで匿名領域確保のための地点を作成
@@ -150,7 +146,7 @@ namespace Method
 		//ただし，phase0は除外
 		//int cycle_id = requirement->phase_interval*requirement->cycle_of_anonymous_area;
 		int start_of_cycle = 1;//周期の左端
-		int end_of_cycle = start_of_cycle + requirement->cycle_of_anonymous_area;//周期の右端
+		int end_of_cycle = start_of_cycle + requirement->cycle_of_interval_of_base_phase;//周期の右端
 		
 		//各セルのstart_phaseからend_phaseのエンティティの合計(表の行の和を計算していることに相当)
 		std::vector<int> total_entity_num_interval_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, start_of_cycle, end_of_cycle);
@@ -194,8 +190,8 @@ namespace Method
 				creating_dummy->set_random_speed(base_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 			}
 		
-			start_of_cycle += requirement->cycle_of_anonymous_area;
-			end_of_cycle += requirement->cycle_of_anonymous_area;
+			start_of_cycle += requirement->cycle_of_interval_of_base_phase;
+			end_of_cycle += requirement->cycle_of_interval_of_base_phase;
 		}
 	}
 
@@ -205,7 +201,7 @@ namespace Method
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 	///</summary>
-	void KatoMethod_UserChange::decide_share_positions_and_arrive_time(int dummy_id)
+	void KatoBachelorMethod::decide_share_positions_and_arrive_time(int dummy_id)
 	{
 		//交差回数が少ないエンティティを優先的に交差対象にして繰り返す
 		std::list<std::pair<Entity::entity_id, int>> entity_list_order_by_cross = entities->get_entity_id_list_order_by_cross_count();
@@ -292,7 +288,7 @@ namespace Method
 	///<summary>
 	/// 生成中ダミー(k番目)の移動経路の決定
 	///</summary>
-	void KatoMethod_UserChange::decide_destination_on_the_way(int dummy_id)
+	void KatoBachelorMethod::decide_destination_on_the_way(int dummy_id)
 	{
 		Graph::Rectangle<Geography::LatLng> rect(1.0, 1.0, 1.0, 1.0);
 		
@@ -449,211 +445,19 @@ namespace Method
 		}
 	}
 
-	///<summary>
-	/// ダミーの行動プランを修正する
-	///</summary>
-	void KatoMethod_UserChange::revise_dummy_movement_plan(int phase_id)
-	{
-		
-	}
-
-
-	///<summary>
-	/// ダミーの停止時間の修正
-	///</summary>
-	void KatoMethod_UserChange::revise_dummy_pause_time(int phase_id)
-	{
-		//前の値の保持
-		time_t previous_pause_time = creating_dummy->get_pause_time(phase_id);
-		time_t previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
-
-		if (std::abs(time_to_change) > requirement->max_variation_of_pause_time)
-		{
-			time_t new_pause_time = time_to_change > 0 ? previous_pause_time + requirement->max_variation_of_pause_time : previous_pause_time - requirement->max_variation_of_pause_time;
-			creating_dummy->set_pause_time(phase_id, new_pause_time);
-		}
-		else
-		{
-			creating_dummy->set_pause_time(phase_id, previous_pause_time + time_to_change);
-		}
-
-		if (requirement->max_pause_time < time_manager->time_of_phase(phase_id)) creating_dummy->set_pause_time(phase_id, requirement->max_pause_time);
-		if (requirement->min_pause_time > time_manager->time_of_phase(phase_id)) creating_dummy->set_pause_time(phase_id, requirement->min_pause_time);
-		
-		//停止時間の変化量を求める
-		time_t variation_of_pause_time = creating_dummy->get_pause_time(phase_id) - previous_pause_time;
-
-		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)
-		{
-			//revise_time_manager->time_of_phase(i) += variation_of_pause_time;
-		}
-		if (time_manager->time_of_phase(phase_id+1) == previous_arrive_time + time_to_change) return;
-
-		time_to_change -= variation_of_pause_time;//この行は謎笑
-	}
-
-	/*
-	///<summary>
-	/// ダミーの移動経路の修正
-	///</summary>
-	void KatoMethod_UserChange::revise_dummy_trajectory(int phase_id)
-	{
-		time_t previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
-		time_t tempT = 10000000000000000000;
-
-		while (全てのトラジェクトリをチェックし終えるまで) 
-		{
-			phase_idのときの存在地点;
-			time_manager->time_of_phase(phase_id + 1) = time_manager->time_of_phase(phase_id) + creating_dummy->get_pause_time(phase_id) + distance_of_Tri / creating_dummy->get_speed(phase_id);
-
-		}
-
-	}*/
-
-
-	///<summary>
-	/// ダミーの行動速度の修正
-	///</summary>
-	void KatoMethod_UserChange::revise_dummy_speed(int phase_id)
-	{
-		time_t previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
-		double previous_speed = creating_dummy->get_speed(phase_id);
-		double distance = map->shortest_distance(creating_dummy->read_node_pos_info_of_phase(phase_id).first, creating_dummy->read_node_pos_info_of_phase(phase_id).first);
-		time_t time = distance / (time_manager->time_of_phase(phase_id + 1)+time_to_change-time_manager->time_of_phase(phase_id));
-		creating_dummy->set_speed(phase_id, time);
-
-		if (std::abs(creating_dummy->get_speed(phase_id)-previous_speed) > requirement->max_variation_of_speed)
-		{
-			double new_speed = creating_dummy->get_speed(phase_id) - previous_speed > 0 ? previous_speed + requirement->max_variation_of_speed : previous_speed - requirement->max_variation_of_speed;
-			creating_dummy->set_pause_time(phase_id, new_speed);
-		}
-		double max_speed = requirement->average_speed_of_dummy + 0.5* requirement->speed_range_of_dummy;
-		double min_speed = requirement->average_speed_of_dummy - 0.5* requirement->speed_range_of_dummy;
-		if (max_speed < creating_dummy->get_speed(phase_id)) creating_dummy->set_speed(phase_id, max_speed);
-		if (min_speed > creating_dummy->get_speed(phase_id)) creating_dummy->set_speed(phase_id, min_speed);
-
-		//time_manager->time_of_phase(phase_id + 1) = time_manager->time_of_phase(phase_id) + creating_dummy->get_pause_time(phase_id) + (time_t)(distance / creating_dummy->get_speed(phase_id));
-		time_t variation_of_arrive_time = time_manager->time_of_phase(phase_id + 1) - previous_arrive_time;
-		
-		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)
-		{
-			//revise_time_manager->time_of_phase(i) += variation_of_pause_time;
-		}
-		if (time_manager->time_of_phase(phase_id + 1) == previous_arrive_time + time_to_change) return;
-
-	}
-
-
-	///<summary>
-	/// ダミーの停止位置の修正
-	///</summary>
-	void KatoMethod_UserChange::revise_dummy_pose_position(int phase_id)
-	{
-
-	}
-
-	///<summary>
-	/// ユーザの行動プランに含まれる停止地点に向かっているかどうかをチェック
-	///</summary>
-	bool KatoMethod_UserChange::check_going_pause_position_in_plan()
-	{
-		return true;
-	}
-	
-	///<summary>
-	/// ユーザの行動プラン変更の判断
-	/// real_userとpredict_userの違いで見る
-	/// ユーザがプラン通りに行動している場合は0をリターン
-	///</summary>
-	int KatoMethod_UserChange::check_user_plan()
-	{
-		if (!check_user_pause_time()) { return 1; }
-		else if (!check_user_speed()) { return 2; }
-		else if (!check_user_path()) { return 3; }
-		else if (!check_user_position()) { return 4; }
-		else { return 0; }
-	}
-
-	///<summary>
-	/// ユーザの行動プラン変更の判断
-	/// real_userとpredict_userの違いで見る
-	/// pause_timeのチェック
-	///</summary>
-	bool KatoMethod_UserChange::check_user_pause_time()
-	{
-		return true;
-	}
-
-	///<summary>
-	/// ユーザの行動プラン変更の判断
-	/// real_userとpredict_userの違いで見る
-	/// 速度のチェック
-	///</summary>
-	bool KatoMethod_UserChange::check_user_speed()
-	{
-		return true;
-	}
-
-	///<summary>
-	/// ユーザの行動プラン変更の判断
-	/// real_userとpredict_userの違いで見る
-	/// pathのチェック
-	///</summary>
-	bool KatoMethod_UserChange::check_user_path()
-	{
-		return true;
-	}
-
-
-	///<summary>
-	/// ユーザの行動プラン変更の判断
-	/// real_userとpredict_userの違いで見る
-	/// 停止位置のチェック
-	///</summary>
-	bool KatoMethod_UserChange::check_user_position()
-	{
-		return true;
-	}
-
-	///<summary>
-	/// input_user_planからユーザの行動を予測し，そのユーザを返す．
-	///</summary>
-	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMethod_UserChange::predict_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user_plan)
-	{
-		
-		
-		return nullptr;
-	}
-
-
-	///<summary>
-	/// ユーザの次の停止地点の到着時間を予測する
-	///</summary>
-	void KatoMethod_UserChange::predict_user_next_pause_position_time(int check_num)
-	{
-
-	}
-	///<summary>
-	/// ユーザの行動プランをアップデートする
-	///</summary>
-	void KatoMethod_UserChange::update_user_plan()
-	{
-
-	}
 		
 	///<summary>
 	/// 初期化 (今回は特にやることはない)
 	///</summary>
-	void KatoMethod_UserChange::initialize()
+	void KatoBachelorMethod::initialize()
 	{
-		//ユーザの動きの変更→新しく作る．
 	}
 
 	
 	///<summary>
 	/// ここが提案手法の核になる部分
 	///</summary>
-	void KatoMethod_UserChange::decide_dummy_positions()
+	void KatoBachelorMethod::decide_dummy_positions()
 	{		
 		for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
 		{	
@@ -665,35 +469,11 @@ namespace Method
 		}
 	}
 	
-	
-	///<summary>
-	/// ここが提案手法の核になる部分.ダミーの行動を修正する
-	///</summary>
-	void KatoMethod_UserChange::revise_dummy_positions()
-	{
-		time_t time_to_change = 0;// (修正後の)time_manager->time_of_phase(phase_id) - (修正前の)time_manager->time_of_phase(phase_id);
-		predict_user = predict_user_plan(entities->get_user());
-
-		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
-		{
-			if(check_going_pause_position_in_plan()){
-				if (check_user_plan()!=0) {
-					predict_user_next_pause_position_time(check_user_plan());//次の停止地点の到着時間を予測
-					revise_dummy_movement_plan(phase_id);
-					update_user_plan();
-				}
-			}
-		}
-									  
-
-
-	}
-
 
 	///<summary>
 	/// 決定した位置を基にMTC等各種評価値を算出する
 	///</summary>
-	void KatoMethod_UserChange::evaluate()
+	void KatoBachelorMethod::evaluate()
 	{
 
 	}
@@ -702,7 +482,7 @@ namespace Method
 	///<summary>
 	/// 結果のファイルへのエクスポート
 	///</summary>
-	void KatoMethod_UserChange::export_results()
+	void KatoBachelorMethod::export_results()
 	{
 
 	}
@@ -711,13 +491,13 @@ namespace Method
 	///<summary>
 	/// 終了処理 (今回はスマートポインタを利用しているので，特にやることはない)
 	///</summary>
-	void KatoMethod_UserChange::terminate()
+	void KatoBachelorMethod::terminate()
 	{
 
 	}
 
 
-	void KatoMethod_UserChange::run()
+	void KatoBachelorMethod::run()
 	{
 		//ここで実行時間の計測を開始
 		timer->start();
@@ -727,9 +507,6 @@ namespace Method
 
 		//ここが実行部分(各時刻のダミー位置を計算する)
 		decide_dummy_positions();
-
-		//ここでユーザの行動の予測やダミーの行動を修正する
-		revise_dummy_positions();
 
 		//ここで計測を終了
 		timer->end();

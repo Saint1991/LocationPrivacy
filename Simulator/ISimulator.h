@@ -17,8 +17,8 @@ namespace Simulation
 	static_assert(std::is_base_of<Requirement::BasicRequirement, REQUIREMENT_TYPE>::value, "template type REQUIREMENT_TYPE must be derived from BasicRequirement");
 	
 	protected:
-		std::shared_ptr<MAP_TYPE const> map;
-		std::shared_ptr<USER_TYPE const> user;
+		std::shared_ptr<MAP_TYPE> map;
+		std::shared_ptr<USER_TYPE> user;
 		std::list<std::shared_ptr<REQUIREMENT_TYPE const>> requirements;
 
 	public:

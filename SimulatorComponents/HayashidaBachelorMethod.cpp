@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "HayashidaBachelorMeshod.h"
+#include "HayashidaBachelorMethod.h"
 
 namespace Method
 {
@@ -8,26 +8,23 @@ namespace Method
 	/// コンストラクタ
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
-	HayashidaBachelorMeshod::HayashidaBachelorMeshod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap,
-		Entity::PauseMobileEntity<Geography::LatLng>,
-		Entity::PauseMobileEntity<Geography::LatLng>,
-		Requirement::KatoMethodRequirement>(map, user, requirement, time_manager),
-		predict_user(nullptr)
+	HayashidaBachelorMethod::HayashidaBachelorMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
+		: KatoBachelorMethod(map, user, requirement, time_manager),
+		predicted_user(nullptr)
 	{
 	}
 
 	///<summary>
 	/// デストラクタ
 	///</summary>
-	HayashidaBachelorMeshod::~HayashidaBachelorMeshod()
+	HayashidaBachelorMethod::~HayashidaBachelorMethod()
 	{
 	}
 
 	///<summary>
 	/// 初期化 (今回は特にやることはない)
 	///</summary>
-	void HayashidaBachelorMeshod::initialize()
+	void HayashidaBachelorMethod::initialize()
 	{
 		//ユーザの動きの変更→新しく作る．
 	}
@@ -36,8 +33,9 @@ namespace Method
 	///<summary>
 	/// ここが提案手法の核になる部分
 	///</summary>
-	void HayashidaBachelorMeshod::decide_dummy_positions()
+	void HayashidaBachelorMethod::decide_dummy_positions()
 	{
+		
 		/*
 		for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
 		{
@@ -54,7 +52,7 @@ namespace Method
 	///<summary>
 	/// ここが提案手法の核になる部分.ダミーの行動を修正する
 	///</summary>
-	void HayashidaBachelorMeshod::revise_dummy_positions()
+	void HayashidaBachelorMethod::adjust_dummy_positions()
 	{
 		/*
 		time_t time_to_change = 0;// (修正後の)time_manager->time_of_phase(phase_id) - (修正前の)time_manager->time_of_phase(phase_id);
@@ -78,7 +76,7 @@ namespace Method
 	///<summary>
 	/// 決定した位置を基にMTC等各種評価値を算出する
 	///</summary>
-	void HayashidaBachelorMeshod::evaluate()
+	void HayashidaBachelorMethod::evaluate()
 	{
 
 	}
@@ -87,7 +85,7 @@ namespace Method
 	///<summary>
 	/// 結果のファイルへのエクスポート
 	///</summary>
-	void HayashidaBachelorMeshod::export_results()
+	void HayashidaBachelorMethod::export_results()
 	{
 
 	}
@@ -96,13 +94,13 @@ namespace Method
 	///<summary>
 	/// 終了処理 (今回はスマートポインタを利用しているので，特にやることはない)
 	///</summary>
-	void HayashidaBachelorMeshod::terminate()
+	void HayashidaBachelorMethod::terminate()
 	{
 
 	}
 
 
-	void HayashidaBachelorMeshod::run()
+	void HayashidaBachelorMethod::run()
 	{
 		//ここで実行時間の計測を開始
 		timer->start();
@@ -114,7 +112,7 @@ namespace Method
 		decide_dummy_positions();
 
 		//ここでユーザの行動の予測やダミーの行動を修正する
-		revise_dummy_positions();
+		adjust_dummy_positions();
 
 		//ここで計測を終了
 		timer->end();

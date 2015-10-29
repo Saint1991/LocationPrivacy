@@ -15,9 +15,9 @@ namespace Method
 {
 
 	///<summary>
-	/// 加藤さん提案手法の実装
+	/// 加藤さん学部卒業論文の提案手法の実装
 	///</summary>
-	class KatoMethod_UserChange
+	class KatoBachelorMethod
 		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>
 	{
 	private:
@@ -30,11 +30,7 @@ namespace Method
 		typedef unsigned int entity_id;
 
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> creating_dummy;
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predict_user;
-		//std::shared_ptr<Time::TimeSlotManager> revise_time_manager;
-
-		time_t time_to_change;//行動の変化分
-
+		
 		//メソッド
 		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成
 		std::vector<int> get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_table, int start_phase, int end_phase);//各セルのフェーズトータルのエンティティの数
@@ -43,37 +39,19 @@ namespace Method
 		void decide_base_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 		void decide_share_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 		void decide_destination_on_the_way(int dummy_id);// 生成中ダミー(k番目)の移動経路の決定
-		
-		void revise_dummy_movement_plan(int phase_id);//ダミーの行動プランを修正する
-		void revise_dummy_pause_time(int phase_id);//ダミーの停止時間の修正
-		void revise_dummy_trajectory(int phase_id);//ダミーの移動経路の修正
-		void revise_dummy_speed(int phase_id);//ダミーの行動速度の修正
-		void revise_dummy_pose_position(int phase_id);//ダミーの停止地点の修正
-		
-		bool check_going_pause_position_in_plan();//ユーザの行動プランに含まれる停止地点に向かっているかどうかをチェック
-		int check_user_plan();//ユーザの行動プラン変更のチェック
-		bool check_user_pause_time();
-		bool check_user_speed();
-		bool check_user_path();
-		bool check_user_position();
-		
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predict_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user_plan);//ユーザの行動を予測する.
-		void predict_user_next_pause_position_time(int check_num);
-		void update_user_plan();
-		
+				
 	protected:
 		
 		void initialize();
 		void decide_dummy_positions();
-		void revise_dummy_positions();
 		void evaluate();
 		void export_results();
 		void terminate();
 
 		
 	public:
-		KatoMethod_UserChange(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
-		~KatoMethod_UserChange();
+		KatoBachelorMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
+		~KatoBachelorMethod();
 
 		void run();
 
