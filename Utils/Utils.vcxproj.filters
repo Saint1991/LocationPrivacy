@@ -367,6 +367,9 @@
       <Filter>ソース ファイル\Evaluation</Filter>
     </ClInclude>
     <ClInclude Include="Trajectory.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticTrajectory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -474,6 +477,9 @@
       <Filter>ソース ファイル\Evaluation</Filter>
     </ClCompile>
     <ClCompile Include="Trajectory.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticTrajectory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

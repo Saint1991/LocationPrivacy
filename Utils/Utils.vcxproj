@@ -252,6 +252,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoutingMethod.h" />
     <ClInclude Include="RoutingTable.h" />
+    <ClInclude Include="SemanticTrajectory.h" />
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="Sequence.hpp" />
     <ClInclude Include="Serializable.h" />
@@ -307,6 +308,7 @@
     <ClCompile Include="Probability.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="RoutingTable.cpp" />
+    <ClCompile Include="SemanticTrajectory.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -1,3 +1,9 @@
+#ifdef UTILS_EXPORTS
+#define TRAJECTORY_API __declspec(dllexport)
+#else
+#define TRAJECTORY_API __declspec(dllimport)
+#endif
+
 #pragma once
 #include "TimeSlotManager.h"
 #include "LatLng.h"
@@ -11,7 +17,7 @@ namespace Graph
 	/// ˆÊ’u‚ª–¢İ’è‚Ì‰ÓŠ‚É‚Ínullptr‚ªŠi”[‚³‚ê‚é
 	///</summary>
 	template <typename POSITION_TYPE = Geography::LatLng>
-	class Trajectory
+	class TRAJECTORY_API Trajectory
 	{
 	protected:
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions;
