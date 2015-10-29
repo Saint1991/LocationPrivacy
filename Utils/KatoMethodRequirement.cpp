@@ -24,7 +24,7 @@ namespace Requirement {
 		time_t min_pause_time,
 		double average_speed,
 		double speed_range
-		) : BasicRequirement(required_anonymous_area, dummy_num),
+		) : BasicRequirement(required_anonymous_area, dummy_num, average_speed, speed_range),
 		service_interval(service_interval),
 		interval_of_base_phase(interval_of_base_phase),
 		cycle_of_interval_of_base_phase(cycle_of_interval_of_base_phase),
@@ -48,7 +48,7 @@ namespace Requirement {
 		time_t min_pause_time,
 		double average_speed,
 		double speed_range
-		) :BasicRequirement(required_anonymous_area, dummy_num),
+		) :BasicRequirement(required_anonymous_area, dummy_num, average_speed, speed_range),
 		service_interval(service_interval),
 		max_variation_of_pause_time(max_variation_of_pause_time),
 		max_variation_of_speed(max_variation_of_pause_time),

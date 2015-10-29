@@ -179,6 +179,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SimulatorComponents\SimulatorComponents.vcxproj">
+      <Project>{9e086c5e-a53b-49a0-9be4-e7c5af59e20d}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.vcxproj">
       <Project>{38ac6421-8d7f-44fe-8e47-6ebe726e015e}</Project>
     </ProjectReference>
