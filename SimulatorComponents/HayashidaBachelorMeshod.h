@@ -14,7 +14,7 @@
 namespace Method {
 
 	///<summary>
-	/// 林田学部卒業論文の提案手法の実装
+	/// 林田さん学部卒業論文の提案手法の実装
 	///</summary>
 	class HayashidaBachelorMeshod :
 		public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>

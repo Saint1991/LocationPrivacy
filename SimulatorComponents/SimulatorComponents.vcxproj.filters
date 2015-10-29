@@ -97,7 +97,7 @@
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
     <ClInclude Include="HayashidaBachelorMeshod.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Method</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +153,7 @@
       <Filter>ソース ファイル\Entity</Filter>
     </ClCompile>
     <ClCompile Include="HayashidaBachelorMeshod.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Method</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
