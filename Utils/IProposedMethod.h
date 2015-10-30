@@ -5,6 +5,8 @@
 #include "Timer.h"
 #include "FileExporter.h"
 #include "EntityManager.h"
+#include "SemanticTrajectory.h"
+#include "Trajectory.h"
 
 namespace Framework
 {
@@ -14,7 +16,7 @@ namespace Framework
 	/// 提案手法を実装する際のテンプレート
 	/// これを継承したクラスを作成し，純粋仮想関数を実装する
 	///</summary>
-	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE = Geography::LatLng>
+	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE = Geography::LatLng, typename TRAJECTORY_TYPE = Graph::Trajectory<POSITION_TYPE>>
 	class IProposedMethod
 	{
 	static_assert(std::is_base_of<Requirement::BasicRequirement, REQUIREMENT_TYPE>::value, "template type REQUIREMENT_TYPE must be derived from BasicRequirement");

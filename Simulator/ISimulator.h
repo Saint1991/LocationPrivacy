@@ -24,20 +24,21 @@ namespace Simulation
 		std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>> user_trajectories;
 		std::shared_ptr<USER_TYPE> user;
 		std::list<std::shared_ptr<REQUIREMENT_TYPE const>> requirements;
-		std::list<std::shared_ptr<Framework::IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE>>> comparative_methods;
+		std::list<std::shared_ptr<Framework::IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>>> comparative_methods;
 		std::shared_ptr<Time::TimeSlotManager> time_manager; //‚±‚±‚¢‚ç‚È‚­‚È‚é‚©‚à
+
+		virtual void build_map() = 0;
+		virtual void create_trajectories() = 0;
+		virtual void make_requirement_list() = 0;
 
 	public:
 		ISimulator() {}
 		virtual ~ISimulator() {}
 
-		virtual void build_map() = 0;
-		virtual void create_trajectories(unsigned int user_id) = 0;
-		virtual void set_comparative_methods() = 0;
-		virtual void make_requirement_list() = 0;
+		virtual void prepare() = 0;
 		virtual void run() = 0;
 		virtual void evaluate() = 0;
-		virtual void export_evaluation_result() = 0;
+		virtual void export_evaluation_result(const std::string& export_base_path) = 0;
 	};
 }
 

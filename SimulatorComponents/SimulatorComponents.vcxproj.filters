@@ -105,6 +105,9 @@
     <ClInclude Include="DbTrajectoryLoader.h">
       <Filter>ヘッダー ファイル\User</Filter>
     </ClInclude>
+    <ClInclude Include="MizunoMethod.h">
+      <Filter>ソース ファイル\Method</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -166,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="DbTrajectoryLoader.cpp">
       <Filter>ソース ファイル\User</Filter>
+    </ClCompile>
+    <ClCompile Include="MizunoMethod.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

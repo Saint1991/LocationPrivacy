@@ -159,6 +159,7 @@
     <ClInclude Include="KatoBachelorMethod.h" />
     <ClInclude Include="KatoMasterMethod.h" />
     <ClInclude Include="MatsunoMethod.h" />
+    <ClInclude Include="MizunoMethod.h" />
     <ClInclude Include="PauseMobileEntity.h" />
     <ClInclude Include="PreferenceTree.h" />
     <ClInclude Include="PreferenceTreeNode.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="KatoBachelorMethod.cpp" />
     <ClCompile Include="KatoMasterMethod.cpp" />
     <ClCompile Include="MatsunoMethod.cpp" />
+    <ClCompile Include="MizunoMethod.cpp" />
     <ClCompile Include="PauseMobileEntity.cpp" />
     <ClCompile Include="PreferenceTree.cpp" />
     <ClCompile Include="PreferenceTreeNode.cpp" />
