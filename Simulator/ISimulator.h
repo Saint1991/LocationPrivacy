@@ -21,7 +21,7 @@ namespace Simulation
 	
 	protected:
 		std::shared_ptr<MAP_TYPE> map;
-		std::shared_ptr<std::vector<TRAJECTORY_TYPE>> user_trajectories;
+		std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>> user_trajectories;
 		std::shared_ptr<USER_TYPE> user;
 		std::list<std::shared_ptr<REQUIREMENT_TYPE const>> requirements;
 		std::list<std::shared_ptr<Framework::IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE>>> comparative_methods;
@@ -33,7 +33,6 @@ namespace Simulation
 
 		virtual void build_map() = 0;
 		virtual void create_trajectories(unsigned int user_id) = 0;
-		virtual void create_user() = 0;
 		virtual void set_comparative_methods() = 0;
 		virtual void make_requirement_list() = 0;
 		virtual void run() = 0;

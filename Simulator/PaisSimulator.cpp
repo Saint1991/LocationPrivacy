@@ -4,7 +4,7 @@
 namespace Simulation
 {
 
-	PaisSimulator::PaisSimulator() : BaseSimulator()
+	PaisSimulator::PaisSimulator(double testset_proportion) : BaseSimulator(testset_proportion)
 	{
 	}
 

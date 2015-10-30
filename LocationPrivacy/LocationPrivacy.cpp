@@ -13,16 +13,19 @@
 int _tmain(int argc, _TCHAR* argv[])
 {	
 
-	const int USER_ID = 1;
+	constexpr int USER_ID = 1;
+	constexpr double TESTSET_PROPORTION = 0.3;
 
 	//‚±‚±‚ÅISimulator‚ðŽÀ‘•‚µ‚½ƒNƒ‰ƒX‚ðŽg‚¢•ª‚¯‚é
-	std::unique_ptr<Simulation::ISimulator<Map::BasicDbMap, User::BasicUser<>, Entity::Dummy<>, Requirement::BasicRequirement, Geography::LatLng, Graph::SemanticTrajectory<>>> simulator
-		= std::make_unique<Simulation::PaisSimulator>();
+	std::unique_ptr<Simulation::BaseSimulator> simulator
+		= std::make_unique<Simulation::PaisSimulator>(TESTSET_PROPORTION);
 	simulator->build_map();
 	simulator->create_trajectories(USER_ID);
-	simulator->create_user();
+
 	simulator->make_requirement_list();
 	simulator->run();
+	simulator->evaluate();
+	simulator->export_evaluation_result();
 	return 0;
 }
 

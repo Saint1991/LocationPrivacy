@@ -28,14 +28,16 @@ namespace Simulation
 	protected:
 		std::shared_ptr<User::PreferenceTree> user_preference_tree;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree;
+		double testset_proportion;
+		int first_trajectory_sequence;
 
 	public:
-		BaseSimulator();
+		BaseSimulator(double testset_proportion);
 		virtual ~BaseSimulator();
 
 		void build_map();
 		void create_trajectories(unsigned int user_id);
-		void create_user();
+		void build_user_preference_tree();
 		virtual void set_comparative_methods() = 0;
 		virtual void make_requirement_list() = 0;
 		virtual void run() = 0;

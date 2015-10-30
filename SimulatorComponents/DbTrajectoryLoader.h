@@ -22,7 +22,7 @@ namespace User
 	class DB_TRAJECTORY_LOADER_API DbTrajectoryLoader
 	{
 	private:
-		std::shared_ptr<std::vector<TRAJECTORY_TYPE>> execute_with_query_result(const std::string& query, std::function<std::shared_ptr<std::vector<TRAJECTORY_TYPE>>(sql::ResultSet*)> execute_function);
+		std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>> execute_with_query_result(const std::string& query, std::function<std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>>(sql::ResultSet*)> execute_function);
 
 	protected:
 		std::unique_ptr<Db::MySQLDb> db;
@@ -32,11 +32,11 @@ namespace User
 	public:
 		DbTrajectoryLoader(const std::string& setting_file_path, const std::string& db_name = "map_tokyo", const std::string& user_table_name = "checkins", const std::string& venue_table_name = "pois");
 		~DbTrajectoryLoader();
-		std::shared_ptr<std::vector<TRAJECTORY_TYPE>> load_trajectories(unsigned int user_id);
+		std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>> load_trajectories(unsigned int user_id);
 	};
 
 	template class DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>>;
-	//template class DbTrajectoryLoader<Graph::Trajectory<Geography::LatLng>>;
+	template class DbTrajectoryLoader<Graph::Trajectory<Geography::LatLng>>;
 }
 
 

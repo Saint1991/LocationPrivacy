@@ -26,7 +26,7 @@ namespace User
 	}
 
 	template <typename TRAJECTORY_TYPE>
-	std::shared_ptr<std::vector<TRAJECTORY_TYPE>> DbTrajectoryLoader<TRAJECTORY_TYPE>::execute_with_query_result(const std::string& query, std::function<std::shared_ptr<std::vector<TRAJECTORY_TYPE>>(sql::ResultSet*)> execute_function)
+	std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>> DbTrajectoryLoader<TRAJECTORY_TYPE>::execute_with_query_result(const std::string& query, std::function<std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>>(sql::ResultSet*)> execute_function)
 	{
 		if (!db->use(db_name)) return nullptr;
 		sql::ResultSet* result = db->raw_query(query);
@@ -41,14 +41,14 @@ namespace User
 	/// 読出しに失敗した場合はnullptrが返る
 	///</summary>
 	template <>
-	std::shared_ptr<std::vector<Graph::SemanticTrajectory<Geography::LatLng>>> DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id)
+	std::shared_ptr<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id)
 	{
 		std::stringstream query;
 		query << "SELECT venue_id, timestamp, category_id, latitude, longitude FROM " << user_table_name << " INNER JOIN " << venue_table_name << " ON " << user_table_name << ".venue_id = " << venue_table_name << ".id WHERE user_id = " << user_id << "ORDER BY timestamp ASC;";
 		
 		return execute_with_query_result(query.str(), [](sql::ResultSet* result) {
 			
-			std::shared_ptr<std::vector<Graph::SemanticTrajectory<Geography::LatLng>>> ret;
+			std::shared_ptr<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>> ret;
 			
 			std::unique_ptr<std::vector<std::string>> times;
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>>node_ids;
@@ -67,7 +67,7 @@ namespace User
 
 				std::string date = timestamp.substr(0, 9);
 				if (current_date != date) {
-					Graph::SemanticTrajectory<Geography::LatLng> trajectory(std::move(times), std::move(node_ids), std::move(positions), std::move(category_sequence));
+					std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> trajectory = std::make_shared<Graph::SemanticTrajectory<Geography::LatLng>>(std::move(times), std::move(node_ids), std::move(positions), std::move(category_sequence));
 					ret->push_back(trajectory);
 					current_date = date;
 					times = std::make_unique<std::vector<std::string>>();
@@ -86,19 +86,19 @@ namespace User
 		});
 	}
 
-	/*
+
 	///<summary>
 	/// データベースからTrajectoryを読み出す
 	///</summary>
 	template <>
-	std::shared_ptr<std::vector<Graph::Trajectory<Geography::LatLng>>> DbTrajectoryLoader<Graph::Trajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id)
+	std::shared_ptr<std::vector<std::shared_ptr<Graph::Trajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::Trajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id)
 	{
 		std::stringstream query;
 		query << "SELECT venue_id, timestamp, latitude, longitude FROM " << user_table_name << " INNER JOIN " << venue_table_name << " ON " << user_table_name << ".venue_id = " << venue_table_name << ".id WHERE user_id = " << user_id << "ORDER BY timestamp ASC;";
 
 		return execute_with_query_result(query.str(), [](sql::ResultSet* result) {
 
-			std::shared_ptr<std::vector<Graph::Trajectory<Geography::LatLng>>> ret;
+			std::shared_ptr<std::vector<std::shared_ptr<Graph::Trajectory<Geography::LatLng>>>> ret;
 
 			std::unique_ptr<std::vector<std::string>> times;
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>>node_ids;
@@ -115,20 +115,22 @@ namespace User
 
 				std::string date = timestamp.substr(0, 9);
 				if (current_date != date) {
-					Graph::Trajectory<Geography::LatLng> trajectory(std::move(times), std::move(node_ids), std::move(positions));
+					std::shared_ptr<Graph::Trajectory<Geography::LatLng>> trajectory = std::make_shared<Graph::Trajectory<Geography::LatLng>>(std::move(times), std::move(node_ids), std::move(positions));
 					ret->push_back(trajectory);
 					current_date = date;
 					times = std::make_unique<std::vector<std::string>>();
 					node_ids = std::make_shared<std::vector<Graph::MapNodeIndicator>>();
-					positions = std::make_shared<std::vector<Geography::LatLng>>();
+					positions = std::make_shared<std::vector<std::shared_ptr<Geography::LatLng>>>();
 				}
 
 				times->push_back(timestamp);
 				node_ids->push_back(venue_id);
 				positions->push_back(std::make_shared<Geography::LatLng>(latitude, longitude));
 			}
+
+			return ret;
 		});
 	}
-	*/
+	
 }
 

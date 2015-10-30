@@ -17,7 +17,7 @@ namespace Simulation
 	class PAIS_SIMULATOR_API PaisSimulator : public BaseSimulator
 	{
 	public:
-		PaisSimulator();
+		PaisSimulator(double testset_proportion);
 		~PaisSimulator();
 
 		void set_comparative_methods();
