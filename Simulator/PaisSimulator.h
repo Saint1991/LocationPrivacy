@@ -14,7 +14,7 @@ namespace Simulation
 	///<summary>
 	/// PAIS2016向けに作成したシミュレータ By Mizuno
 	///</summary>
-	class PaisSimulator : public BaseSimulator
+	class PAIS_SIMULATOR_API PaisSimulator : public BaseSimulator
 	{
 	public:
 		PaisSimulator();
@@ -23,6 +23,8 @@ namespace Simulation
 		void set_comparative_methods();
 		void make_requirement_list();
 		void run();
+		void evaluate();
+		void export_evaluation_result();
 	};
 }
 

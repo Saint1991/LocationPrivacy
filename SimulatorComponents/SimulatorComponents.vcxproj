@@ -151,7 +151,7 @@
     <ClInclude Include="BasicPoi.h" />
     <ClInclude Include="BasicRoad.h" />
     <ClInclude Include="BasicUser.h" />
-    <ClInclude Include="DbBasicUserLoader.h" />
+    <ClInclude Include="DbTrajectoryLoader.h" />
     <ClInclude Include="DbNodeCollectionFactory.h" />
     <ClInclude Include="DbPoiCollectionFactory.h" />
     <ClInclude Include="Dummy.h" />
@@ -172,7 +172,7 @@
     <ClCompile Include="BasicPoi.cpp" />
     <ClCompile Include="BasicRoad.cpp" />
     <ClCompile Include="BasicUser.cpp" />
-    <ClCompile Include="DbBasicUserLoader.cpp" />
+    <ClCompile Include="DbTrajectoryLoader.cpp" />
     <ClCompile Include="DbNodeCollectionFactory.cpp" />
     <ClCompile Include="DbPoiCollectionFactory.cpp" />
     <ClCompile Include="dllmain.cpp">

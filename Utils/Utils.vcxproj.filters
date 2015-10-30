@@ -480,7 +480,7 @@
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
     <ClCompile Include="SemanticTrajectory.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

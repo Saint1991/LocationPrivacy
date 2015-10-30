@@ -8,6 +8,7 @@
 #include "TimeSlotManager.h"
 #include "LatLng.h"
 #include "Coordinate.h"
+#include "MapNodeIndicator.h"
 
 namespace Graph
 {
@@ -22,11 +23,13 @@ namespace Graph
 	protected:
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions;
 		std::shared_ptr<Time::TimeSlotManager> timeslot;
-	
+		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids;
+
 	public:
 		Trajectory(std::unique_ptr<std::vector<time_t>> times, bool use_relative_time = true);
 		Trajectory(std::unique_ptr<std::vector<std::string>> times, bool use_relative_time = true);
 		Trajectory(std::shared_ptr<Time::TimeSlotManager> timeslot);
+		Trajectory(std::unique_ptr<std::vector<std::string>> times, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, bool use_relative_time = true);
 		virtual ~Trajectory();
 
 		bool set_position_of_phase(int phase, const POSITION_TYPE& position);

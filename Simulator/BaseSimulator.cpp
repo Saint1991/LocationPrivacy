@@ -8,7 +8,7 @@ namespace Simulation
 	/// コンストラクタ
 	///</summary>
 	BaseSimulator::BaseSimulator() 
-		: ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement>()
+		: ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>()
 	{
 	}
 
@@ -33,12 +33,20 @@ namespace Simulation
 
 
 	///<summary>
+	/// DBからユーザのトラジェクトリリストを作成
+	///</summary>
+	void BaseSimulator::create_trajectories(unsigned int user_id)
+	{
+		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader("../settings/mydbsettings.xml", "map_tokyo", "checkins", "pois");
+		user_trajectories = loader.load_trajectories(user_id);
+	}
+
+	///<summary>
 	/// ユーザの作成
 	///</summary>
-	void BaseSimulator::create_user(unsigned int user_id)
+	void BaseSimulator::create_user()
 	{
-		User::DbBasicUserLoader loader("../settings/mydbsettings.xml", "map_tokyo", "checkins", "pois");
-		user = std::move(loader.load_user(user_id));
+		
 	}
 }
 

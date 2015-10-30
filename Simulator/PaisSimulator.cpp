@@ -3,7 +3,8 @@
 
 namespace Simulation
 {
-	PaisSimulator::PaisSimulator()
+
+	PaisSimulator::PaisSimulator() : BaseSimulator()
 	{
 	}
 
@@ -23,6 +24,16 @@ namespace Simulation
 	}
 
 	void PaisSimulator::run() 
+	{
+
+	}
+
+	void PaisSimulator::evaluate()
+	{
+
+	}
+
+	void PaisSimulator::export_evaluation_result()
 	{
 
 	}

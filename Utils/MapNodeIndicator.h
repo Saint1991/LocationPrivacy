@@ -10,8 +10,7 @@
 namespace Graph
 {
 
-	enum NodeType { INTERSECTION, POI, INVALID };
-
+	enum NodeType { INTERSECTION, POI, OTHERS, INVALID };
 
 	///<summary>
 	/// Mapã‚ÌNode‚ğw‚µ¦‚·‚½‚ß‚ÌƒNƒ‰ƒX

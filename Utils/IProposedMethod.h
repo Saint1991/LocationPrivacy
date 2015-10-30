@@ -25,7 +25,9 @@ namespace Framework
 		std::shared_ptr<Time::TimeSlotManager> time_manager;
 		std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>> entities;
 		std::shared_ptr<Time::Timer> timer;
-		
+
+		//このfunctionに各回が終わった際の処理を記述する
+		std::function<void(std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>>, std::shared_ptr<Time::Timer>)> execution_callback = nullptr;
 
 		///<summary>
 		/// 入力の加工等の初期化処理
@@ -40,27 +42,16 @@ namespace Framework
 
 
 		///<summary>
-		/// 決定したダミーの位置情報に基づいて，MTCや匿名領域の計算を行う
-		///</summary>
-		virtual void evaluate() = 0;
-
-
-		///<summary>
-		/// 計算した評価値のファイルへのエクスポートを行う
-		///</summary>
-		virtual void export_results() = 0;
-
-
-		///<summary>
 		/// 終了処理
-		/// 今回はスマートポインタを用いているので解放するべきリソース等はほぼないはず
+		/// 登録されていれば，execution_callbackを呼び出す
+		/// このコールバックで1トラジェクトリ分の評価やそのエクスポートを行う
 		///</summary>
-		virtual void terminate() = 0;
+		void terminate();
 
 	public:
 		IProposedMethod(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
 		virtual ~IProposedMethod();
-
+		void set_execution_callback(const std::function<void(std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>>, Time::Timer)>& callback);
 		void run();
 	};
 }

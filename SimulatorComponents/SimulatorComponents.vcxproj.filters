@@ -93,9 +93,6 @@
     <ClInclude Include="PauseMobileEntity.h">
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="DbBasicUserLoader.h">
-      <Filter>ヘッダー ファイル\User</Filter>
-    </ClInclude>
     <ClInclude Include="HayashidaBachelorMethod.h">
       <Filter>ヘッダー ファイル\Method</Filter>
     </ClInclude>
@@ -104,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="KatoMasterMethod.h">
       <Filter>ヘッダー ファイル\Method</Filter>
+    </ClInclude>
+    <ClInclude Include="DbTrajectoryLoader.h">
+      <Filter>ヘッダー ファイル\User</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -164,7 +164,7 @@
     <ClCompile Include="KatoMasterMethod.cpp">
       <Filter>ソース ファイル\Method</Filter>
     </ClCompile>
-    <ClCompile Include="DbBasicUserLoader.cpp">
+    <ClCompile Include="DbTrajectoryLoader.cpp">
       <Filter>ソース ファイル\User</Filter>
     </ClCompile>
   </ItemGroup>
