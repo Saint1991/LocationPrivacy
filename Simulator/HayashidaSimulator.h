@@ -12,6 +12,8 @@
 #include "ISimulator.h"
 #include "KatoMasterMethod.h"
 #include "Rectangle.h"
+#include "Probability.h"
+#include "GeoCalculation.h"
 
 namespace Simulation
 {
@@ -24,6 +26,9 @@ namespace Simulation
 	public:
 		HayashidaSimulator();
 		virtual ~HayashidaSimulator();
+
+
+		void random_user();
 
 		void build_map();
 		void create_user();
