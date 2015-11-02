@@ -17,11 +17,11 @@ namespace Requirement {
 	KatoMethodRequirement::KatoMethodRequirement(
 		double required_anonymous_area,
 		size_t dummy_num,
-		time_t service_interval,
+		int service_interval,
 		int interval_of_base_phase,
 		int cycle_of_interval_of_base_phase,
-		time_t max_pause_time,
-		time_t min_pause_time,
+		int max_pause_time,
+		int min_pause_time,
 		double average_speed,
 		double speed_range
 		) : BasicRequirement(required_anonymous_area, dummy_num, average_speed, speed_range),
@@ -39,13 +39,13 @@ namespace Requirement {
 	KatoMethodRequirement::KatoMethodRequirement(
 		double required_anonymous_area,
 		size_t dummy_num,
-		time_t service_interval,
-		time_t max_variation_of_pause_time,
+		int service_interval,
+		int max_variation_of_pause_time,
 		double max_variation_of_speed,
 		int interval_of_base_phase,
 		int cycle_of_interval_of_base_phase,
-		time_t max_pause_time,
-		time_t min_pause_time,
+		int max_pause_time,
+		int min_pause_time,
 		double average_speed,
 		double speed_range
 		) :BasicRequirement(required_anonymous_area, dummy_num, average_speed, speed_range),

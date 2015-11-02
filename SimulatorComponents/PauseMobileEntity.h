@@ -21,7 +21,7 @@ namespace Entity
 	class PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE>
 	{
 	protected:
-		std::vector<time_t> pause_time_list;
+		std::vector<int> pause_time_list;
 		std::vector<double> speed_list;
 		Requirement::KatoMethodRequirement kato_requirement;
 		std::shared_ptr<Time::TimeSlotManager> revise_time_manager;//コンストラクタで初期化処理が必要
@@ -31,13 +31,13 @@ namespace Entity
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);//, Requirement::KatoMethodRequirement kato_requirement);
 		virtual ~PauseMobileEntity();
 
-		time_t get_pause_time(int phase) const;
+		int get_pause_time(int phase) const;
 		void set_pause_time(int phase, time_t pause_time);
-		void set_random_pause_time(int phase, double min, double max);
+		void set_random_pause_time(int phase, int min, int max);
 
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
-		void set_random_speed(int phase, double min, double max);
+		void set_random_speed(int phase, double average_speed, double speed_range);
 
 		int get_random_phase(int start, int end);
 

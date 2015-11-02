@@ -31,9 +31,9 @@ namespace Simulation
 		//-----↓要求パラメータ．requirementと同じ値にすること！↓---------//
 		const double AVERAGE_SPEED = 1.5;
 		const double RANGE_OF_SPEED = 0.5;
-		const time_t MAX_PAUSE_TIME = 0.5;
-		const time_t MIN_PAUSE_TIME = 0.5;
-		const time_t SERVICE_INTERVAL = 180;
+		const int MAX_PAUSE_TIME = 600;
+		const int MIN_PAUSE_TIME = 60;
+		const int SERVICE_INTERVAL = 180;
 		const int POI_NUM = 4;
 		//-----↑要求パラメータ．requirementと同じ値にすること！↑---------//
 
@@ -67,18 +67,19 @@ namespace Simulation
 
 			//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
 			user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
-			time_t moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
+			int moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
 			time_t next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
 
 			//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
 			//intかlongかで値変わってきそうだから，ここは要再検討
-			lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(user->get_pause_time(phase_id), SERVICE_INTERVAL);
+			div_t variable_of_converted_pause_time_to_phase = std::div(user->get_pause_time(phase_id), SERVICE_INTERVAL);
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 
-			//停止時間分，phaseを登録
+			//停止時間分，各phaseに停止場所と移動速度(0)を登録
 			for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 			{
 				user->set_position_of_phase(phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
+				if(i != 0) user->set_speed(phase_id, 0);
 				phase_id++;
 			}
 
@@ -89,8 +90,10 @@ namespace Simulation
 			//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
 			for (std::vector<Graph::MapNodeIndicator>::iterator poi_iter = shortests_path_between_pois.begin(); poi_iter != shortests_path_between_pois.end(); poi_iter++) {
 				//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
-				double distance 
-					= init_flag == 1 ? variable_of_converted_pause_time_to_phase.rem * user->get_speed(phase_id) : SERVICE_INTERVAL * user->get_speed(phase_id);
+				//速度はphaseで埋める前を参照しなければならないことに注意
+				double pause_position_speed = user->get_speed(phase_id - variable_of_converted_pause_time_to_phase.quot);
+				double distance
+					= init_flag == 1 ? variable_of_converted_pause_time_to_phase.rem * pause_position_speed : SERVICE_INTERVAL * pause_position_speed;
 
 				//最初は停止時間をphaseに換算したときの余り分をdistanceとして，最短路の中で一番近いintersectionを探し，線形補間する．
 				Graph::MapNodeIndicator nearest_position  =  user->read_node_pos_info_of_phase(phase_id-1).first;
@@ -150,17 +153,18 @@ namespace Simulation
 	{
 		//加藤さん卒論手法の要求パラメータ
 		//コンストラクタを作成する
-		/*
+		/*-------------↓要求パラメータ---------------
 			double required_anonymous_area,
 			size_t dummy_num,
-			time_t service_interval,
+			int service_interval,
 			int interval_of_base_phase,
 			int cycle_of_interval_of_base_phase,
-			time_t max_pause_time = 600,
-			time_t min_pause_time = 60,
+			int max_pause_time = 600,
+			int min_pause_time = 60,
 			double average_speed = 3.0,
 			double speed_range = 2.0
-		*/
+		---------------------------------------------*/
+
 		requirements = 
 		{
 			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 16, 180, 10, 5),
