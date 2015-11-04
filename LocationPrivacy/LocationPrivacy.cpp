@@ -24,17 +24,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << Time::TimeUtility::current_timestamp() << "/";
 
 	//‚±‚±‚ÅISimulator‚ðŽÀ‘•‚µ‚½ƒNƒ‰ƒX‚ðŽg‚¢•ª‚¯‚é
-	std::unique_ptr<Simulation::BaseSimulator> simulator
-		= std::make_unique<Simulation::PaisSimulator>(USER_ID, TESTSET_PROPORTION);
-	simulator->prepare();
-	simulator->run();
-	simulator->evaluate();
-	simulator->export_evaluation_result(export_path.str());
-	std::unique_ptr<Simulation::ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>> simulator
+	//std::unique_ptr<Simulation::BaseSimulator> simulator
+	//	= std::make_unique<Simulation::PaisSimulator>(USER_ID, TESTSET_PROPORTION);
+	//simulator->prepare();
+	//simulator->run();
+	//simulator->evaluate();
+	//simulator->export_evaluation_result(export_path.str());
+	
+	std::unique_ptr<Simulation::ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>> simulator
 		= std::make_unique<Simulation::HayashidaSimulator>();
-	simulator->build_map();
-	simulator->create_user(0);
-	simulator->make_requirement_list();
+	simulator->prepare();
 	simulator->run();
 	return 0;
 }

@@ -7,7 +7,7 @@ namespace Simulation
 	/// コンストラクタ
 	///</summary>
 	HayashidaSimulator::HayashidaSimulator() 
-		: ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>()
+		: ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>()
 	{
 	}
 
@@ -156,7 +156,7 @@ namespace Simulation
 	///<summary>
 	/// ユーザを生成する
 	///</summary>
-	void HayashidaSimulator::create_user(unsigned int user_id)
+	void HayashidaSimulator::create_trajectories()
 	{
 		random_user();
 	}
@@ -190,25 +190,34 @@ namespace Simulation
 		};
 	}
 
-
-	void HayashidaSimulator::set_comparative_methods() {
-		
+	void HayashidaSimulator::prepare()
+	{
+		build_map();
+		create_trajectories();
+		make_requirement_list();
 	}
-
 
 	///<summary>
 	/// 実行
 	///</summary>
 	void HayashidaSimulator::run()
 	{
-		build_map();
-		create_user(0);
-		make_requirement_list();
+		
 		for (std::list<std::shared_ptr<Requirement::KatoMethodRequirement const>>::iterator requirement = requirements.begin(); requirement != requirements.end(); requirement++)
 		{
 			Method::KatoBachelorMethod kato_bachelor_method(map,user,*requirement,time_manager);
 			kato_bachelor_method.run();
 		}
+	}
+
+	void HayashidaSimulator::evaluate()
+	{
+
+	}
+
+	void HayashidaSimulator::export_evaluation_result(const std::string& export_base_path)
+	{
+
 	}
 
 }

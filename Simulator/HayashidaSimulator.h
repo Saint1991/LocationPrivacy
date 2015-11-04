@@ -14,6 +14,7 @@
 #include "Rectangle.h"
 #include "Probability.h"
 #include "GeoCalculation.h"
+#include "Trajectory.h"
 
 namespace Simulation
 {
@@ -21,20 +22,21 @@ namespace Simulation
 	/// シミュレータ実装
 	///</summary>
 	class HAYASHIDA_SIMULATOR_API HayashidaSimulator 
-		: public ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>
+		: public ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>
 	{
+	protected:
+		void build_map();
+		void create_trajectories();
+		void make_requirement_list();
+		void random_user();
+
 	public:
 		HayashidaSimulator();
 		virtual ~HayashidaSimulator();
-
-
-		void random_user();
-
-		void build_map();
-		void create_user(unsigned int user_id);
-		void make_requirement_list();
-		void set_comparative_methods();
+		void prepare();
 		void run();
+		void evaluate();
+		void export_evaluation_result(const std::string& export_base_path);
 	};
 
 }

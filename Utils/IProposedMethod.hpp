@@ -42,12 +42,6 @@ namespace Framework
 		//ここで計測を終了
 		timer->end();
 
-		//設定したダミー，ユーザの位置を基にMTCなどの評価指標を計算する
-		evaluate();
-
-		//実行時間以外のエクスポート
-		export_results();
-
 		//終了処理
 		terminate();
 	}
@@ -57,7 +51,7 @@ namespace Framework
 	/// 手法の実行終了時のコールバックを登録する
 	///</summary>
 	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>::set_execution_callback(const std::function<void(std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>>, Time::Timer)>& callback)
+	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>::set_execution_callback(const std::function<void(std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>>, std::shared_ptr<Time::Timer>)>& callback)
 	{
 		execution_callback = callback;
 	}

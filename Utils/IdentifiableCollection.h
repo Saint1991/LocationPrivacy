@@ -13,7 +13,7 @@ namespace Collection
 	/// ID_TYPE‚ÍDATA_TYPE‚ª‚Á‚Ä‚¢‚éID‚ÌŒ^‚Æˆê’v‚µ‚Ä‚¢‚È‚­‚Ä‚Í‚È‚ç‚È‚¢‚Ì‚Å’ˆÓ
 	///</summary>
 	template <typename ID_TYPE, typename DATA_TYPE>
-	class IdentifiableCollection : protected std::set<std::shared_ptr<Identifiable<ID_TYPE>>, std::function<bool(const std::shared_ptr<Identifiable<ID_TYPE>>, const std::shared_ptr<Identifiable<ID_TYPE>>)>>
+	class IdentifiableCollection : public std::set<std::shared_ptr<Identifiable<ID_TYPE>>, std::function<bool(const std::shared_ptr<Identifiable<ID_TYPE>>, const std::shared_ptr<Identifiable<ID_TYPE>>)>>
 	{
 
 	static_assert(std::is_integral<ID_TYPE>::value || std::is_same<std::string, ID_TYPE>::value, "Only Integral type and string are allowed for ID_TYPE");
