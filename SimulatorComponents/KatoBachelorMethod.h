@@ -23,7 +23,7 @@ namespace Method
 	/// ‰Á“¡‚³‚ñŠw•”‘²‹Æ˜_•¶‚Ì’ñˆÄè–@‚ÌÀ‘•
 	///</summary>
 	class KATO_BACHELOR_METHOD_API KatoBachelorMethod
-		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>
+		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>
 	{
 	private:
 		//•Ï”
@@ -50,9 +50,7 @@ namespace Method
 		
 		void initialize();
 		void decide_dummy_positions();
-		void evaluate();
-		void export_results();
-		void terminate();
+
 
 		
 	public:

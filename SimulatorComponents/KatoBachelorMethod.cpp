@@ -9,7 +9,7 @@ namespace Method
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
 	KatoBachelorMethod::KatoBachelorMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>(map, user, requirement, time_manager),
+		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>(map, user, requirement, time_manager),
 		grid_list(std::vector<Grid>(time_manager->phase_count())),
 		creating_dummy(nullptr)
 	{
@@ -520,34 +520,6 @@ namespace Method
 		}
 	}
 
-
-	///<summary>
-	/// 決定した位置を基にMTC等各種評価値を算出する
-	///</summary>
-	void KatoBachelorMethod::evaluate()
-	{
-
-	}
-
-
-	///<summary>
-	/// 結果のファイルへのエクスポート
-	///</summary>
-	void KatoBachelorMethod::export_results()
-	{
-
-	}
-
-
-	///<summary>
-	/// 終了処理 (今回はスマートポインタを利用しているので，特にやることはない)
-	///</summary>
-	void KatoBachelorMethod::terminate()
-	{
-
-	}
-
-
 	void KatoBachelorMethod::run()
 	{
 		//ここで実行時間の計測を開始
@@ -561,12 +533,6 @@ namespace Method
 
 		//ここで計測を終了
 		timer->end();
-
-		//設定したダミー，ユーザの位置を基にMTCなどの評価指標を計算する
-		evaluate();
-
-		//実行時間以外のエクスポート
-		export_results();
 
 		//終了処理
 		terminate();
