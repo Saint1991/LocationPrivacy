@@ -12,6 +12,7 @@
 #include "MySQLDb.h"
 #include "IDbSettingsLoader.h"
 #include "DbSettingsFileLoader.h"
+#include "Rectangle.h"
 
 namespace Map
 {
@@ -33,14 +34,14 @@ namespace Map
 		std::string connection_table;
 	
 	protected:
-		void create_nodes();
-		void set_connectivities();
+		void create_nodes(const Graph::Rectangle<Geography::LatLng>& boundary);
+		void set_connectivities(const Graph::Rectangle<Geography::LatLng>& boundary);
 
 	public:
 		DbNodeCollectionFactory(
-			const std::string& setting_file_path, 
-			const std::string& db_name, 
-			const std::string& node_table_name = "nodes", 
+			const std::string& setting_file_path,
+			const std::string& db_name,
+			const std::string& node_table_name = "nodes",
 			const std::string& connection_table_name = "node_connections"
 		);
 		~DbNodeCollectionFactory();

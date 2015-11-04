@@ -32,8 +32,8 @@ namespace Map
 		std::string connection_table;
 
 	protected:
-		void create_nodes();
-		void set_connectivities();
+		void create_nodes(const Graph::Rectangle<Geography::LatLng>& boundary);
+		void set_connectivities(const Graph::Rectangle<Geography::LatLng>& boundary);
 
 	public:
 		DbPoiCollectionFactory(

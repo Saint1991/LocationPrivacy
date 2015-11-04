@@ -6,9 +6,10 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
-	Map<NODE, POI, PATH>::Map()
-		: node_collection(std::make_shared<const Collection::IdentifiableCollection<Graph::node_id, NODE>>()),
-		  poi_collection(std::make_shared<Collection::IdentifiableCollection<Graph::node_id, POI>>())
+	Map<NODE, POI, PATH>::Map(std::unique_ptr<RoutingMethod<NODE, PATH>> routing_method)
+		: node_collection(nullptr),
+		  poi_collection(nullptr),
+		  routing_method(std::move(routing_method))
 	{		
 	}
 
@@ -26,11 +27,23 @@ namespace Graph
 	/// 最初に必ずこれを呼ぶ必要があることに注意
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
-	void Map<NODE, POI, PATH>::initialize(std::unique_ptr<RoutingMethod<NODE, PATH>> routing_method)
+	void Map<NODE, POI, PATH>::load(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		build_map();
+		
+		std::cout << "Boundary: " << std::to_string(boundary.height()) << "m ×" << std::to_string(boundary.width()) << "m" << std::endl;
+
+		node_collection = std::make_shared<const Collection::IdentifiableCollection<Graph::node_id, NODE>>();
+		poi_collection = std::make_shared<const Collection::IdentifiableCollection<Graph::node_id, POI>>();
+
+		std::cout << "Loading Nodes and connectivities"  << std::endl;
+		build_map(boundary);
+		std::cout << "Complete! " << node_collection->size() << " Nodes Loaded." << std::endl;
+		std::cout << "Start Building Routing Table." << std::endl;
 		routing_table = routing_method->create_routing_table(node_collection);
+		std::cout << "Complete!" << std::endl;
+		std::cout << "Start Building R-Tree Index." << std::endl;
 		build_rtree_index();
+		std::cout << "Comlete! Map Loaded." << std::endl;
 	}
 
 	

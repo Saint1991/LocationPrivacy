@@ -2,6 +2,7 @@
 #include "BasicEdge.h"
 #include "Edge.h"
 #include "IdentifiableCollection.h"
+#include "Rectangle.h"
 
 namespace Graph 
 {
@@ -27,8 +28,9 @@ namespace Graph
 	
 	protected:
 		std::shared_ptr<Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection;
-		virtual void create_nodes() = 0;
-		virtual void set_connectivities() = 0;
+		virtual void create_nodes(const Graph::Rectangle<Geography::LatLng>& boundary) = 0;
+		virtual void set_connectivities(const Graph::Rectangle<Geography::LatLng>& boundary) = 0;
+
 
 		//接続関係構成用のメソッド
 		//これらを用いてcreate_nodesとset_connectivitiesを実装する．
@@ -45,8 +47,8 @@ namespace Graph
 
 		//構成後に用途に応じてこれらのいずれかを用いてIdentifiableCollectionを取得する想定
 		//これらのメソッド取得後は，このファクトリが保持するnode_collectionは空に初期化し直される．
-		std::shared_ptr<const Collection::IdentifiableCollection<long, NODE>> create_static_node_collection();
-		std::shared_ptr<Collection::IdentifiableCollection<long, NODE>> create_updateable_node_collection();
+		std::shared_ptr<const Collection::IdentifiableCollection<long, NODE>> create_static_node_collection(const Graph::Rectangle<Geography::LatLng>& boundary);
+		std::shared_ptr<Collection::IdentifiableCollection<long, NODE>> create_updateable_node_collection(const Graph::Rectangle<Geography::LatLng>& boundary);
 	};
 
 	

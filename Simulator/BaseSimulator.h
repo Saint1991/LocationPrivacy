@@ -32,7 +32,7 @@ namespace Simulation
 		int first_trajectory_sequence;
 		int user_id;
 
-		void build_map();
+		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
 		void create_trajectories();
 		void build_user_preference_tree();
 		virtual void make_requirement_list() = 0;

@@ -6,8 +6,8 @@ namespace Simulation
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	HayashidaSimulator::HayashidaSimulator() 
-		: ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>()
+	HayashidaSimulator::HayashidaSimulator(const Graph::Rectangle<Geography::LatLng>& boundary) 
+		: ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>(), map_boundary(boundary)
 	{
 	}
 
@@ -146,10 +146,10 @@ namespace Simulation
 	///<summary>
 	/// map_dataを生成する
 	///</summary>
-	void HayashidaSimulator::build_map()
+	void HayashidaSimulator::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		map = std::make_shared<Map::BasicDbMap>("../settings/mydbsettings.xml", "map_tokyo");
-		map->initialize(std::move(std::make_unique<Graph::WarshallFloyd<Map::BasicMapNode, Map::BasicRoad>>()));
+		map = std::make_shared<Map::BasicDbMap>(std::move(std::make_unique<Graph::WarshallFloyd<Map::BasicMapNode, Map::BasicRoad>>()), "../settings/mydbsettings.xml", "map_tokyo");
+		map->load(boundary);
 	}
 
 
@@ -192,7 +192,7 @@ namespace Simulation
 
 	void HayashidaSimulator::prepare()
 	{
-		build_map();
+		build_map(map_boundary);
 		create_trajectories();
 		make_requirement_list();
 	}

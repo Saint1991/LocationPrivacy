@@ -4,6 +4,7 @@
 #include "BasicRequirement.h"
 #include "LatLng.h"
 #include "IProposedMethod.h"
+#include "Rectangle.h"
 
 namespace Simulation
 {
@@ -27,7 +28,7 @@ namespace Simulation
 		std::list<std::shared_ptr<Framework::IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>>> comparative_methods;
 		std::shared_ptr<Time::TimeSlotManager> time_manager; //‚±‚±‚¢‚ç‚È‚­‚È‚é‚©‚à
 
-		virtual void build_map() = 0;
+		virtual void build_map(const Graph::Rectangle<Geography::LatLng>& boundary) = 0;
 		virtual void create_trajectories() = 0;
 		virtual void make_requirement_list() = 0;
 

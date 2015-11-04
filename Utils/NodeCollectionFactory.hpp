@@ -24,10 +24,10 @@ namespace Graph
 	/// 変更不可の状態にロックしたコレクションを取得する．
 	///</summary>
 	template <typename NODE, typename EDGE, typename EDGE_DATA>
-	std::shared_ptr<const Collection::IdentifiableCollection<long, NODE>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_static_node_collection()
+	std::shared_ptr<const Collection::IdentifiableCollection<long, NODE>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_static_node_collection(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		create_nodes();
-		set_connectivities();
+		create_nodes(boundary);
+		set_connectivities(boundary);
 		return std::move(node_collection);
 	}
 
@@ -36,10 +36,10 @@ namespace Graph
 	/// 更新可能な状態でコレクションを取得する．
 	///</summary>
 	template <typename NODE, typename EDGE, typename EDGE_DATA>
-	std::shared_ptr<Collection::IdentifiableCollection<long, NODE>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_updateable_node_collection()
+	std::shared_ptr<Collection::IdentifiableCollection<long, NODE>> NodeCollectionFactory<NODE, EDGE, EDGE_DATA>::create_updateable_node_collection(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		create_nodes();
-		set_connectivities();
+		create_nodes(boundary);
+		set_connectivities(boundary);
 		return std::move(node_collection);
 	}
 

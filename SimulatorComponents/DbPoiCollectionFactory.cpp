@@ -26,11 +26,15 @@ namespace Map
 	///<summary>
 	/// POI‚Ì“Ç‚İ‚İCì¬
 	///</summary>
-	void DbPoiCollectionFactory::create_nodes()
+	void DbPoiCollectionFactory::create_nodes(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
 		if (!db->use(db_name)) return;
 		std::stringstream query;
-		query << "SELECT id, latitude, longitude, category_id, category_name, venue_name FROM " << poi_table << " ORDER BY id ASC;";
+		std::stringstream sub;
+		std::stringstream in;
+		in << "(SELECT DISTINCT(node_id) FROM nodes WHERE latitude BETWEEN " << boundary.bottom << " AND " << boundary.top << " AND longitude BETWEEN " << boundary.left << " AND " << boundary.right << ")";
+		sub << "(SELECT DISTINCT(id) FROM " << connection_table << " WHERE to1 IN " << in.str() << " AND to2 IN " << in.str() << ")";
+		query << "SELECT id, latitude, longitude, category_id, category_name, venue_name FROM " << poi_table << " WHERE id IN " << sub.str() << " ORDER BY id ASC;";
 		sql::ResultSet* result = db->raw_query(query.str());
 
 		result->beforeFirst();
@@ -49,11 +53,13 @@ namespace Map
 	///<summary>
 	/// POI‚ÌÚ‘±ŠÖŒW‚Ìì¬
 	///</summary>
-	void DbPoiCollectionFactory::set_connectivities()
+	void DbPoiCollectionFactory::set_connectivities(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
 		if (!db->use(db_name)) return;
 		std::stringstream query;
-		query << "SELECT id, to1, to2, distance1, distance2 FROM " << connection_table << ";";
+		std::stringstream in;
+		in << "(SELECT DISTINCT(node_id) FROM nodes WHERE latitude BETWEEN " << boundary.bottom << " AND " << boundary.top << " AND longitude BETWEEN " << boundary.left << " AND " << boundary.right << ")";
+		query << "SELECT id, to1, to2, distance1, distance2 FROM " << connection_table << " WHERE to1 IN " << in.str() << " AND to2 IN " << in.str() << ";";
 		sql::ResultSet* result = db->raw_query(query.str());
 
 		result->beforeFirst();

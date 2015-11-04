@@ -26,10 +26,10 @@ namespace Simulation
 	/// Mapの構成
 	/// map_tokyoのDBからデータを読み出して，WarshallFloyd法でルーティングテーブルを作成する
 	///</summary>
-	void BaseSimulator::build_map()
+	void BaseSimulator::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		map = std::make_shared<Map::BasicDbMap>("../settings/mydbsettings.xml", "map_tokyo");
-		map->initialize(std::move(std::make_unique<Graph::WarshallFloyd<Map::BasicMapNode, Map::BasicRoad>>()));
+		map = std::make_shared<Map::BasicDbMap>(std::move(std::make_unique<Graph::WarshallFloyd<Map::BasicMapNode, Map::BasicRoad>>()), "../settings/mydbsettings.xml", "map_tokyo");
+		map->load(boundary);
 	}
 
 
@@ -59,7 +59,7 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::prepare()
 	{
-		build_map();
+		//build_map();
 		create_trajectories();
 		build_user_preference_tree();
 	}

@@ -13,6 +13,7 @@
 #include "DbPoiCollectionFactory.h"
 #include "WarshallFloyd.h"
 #include "Probability.h"
+#include "Rectangle.h"
 
 namespace Map
 {
@@ -38,10 +39,11 @@ namespace Map
 		std::string poi_table;
 		std::string poi_connection_table;
 
-		void build_map();
+		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
 
 	public:
 		BasicDbMap (
+			std::unique_ptr<Graph::RoutingMethod<BasicMapNode, BasicRoad>> routing_method,
 			const std::string& setting_file_path,
 			const std::string& db_name,
 			const std::string& node_table = "nodes",

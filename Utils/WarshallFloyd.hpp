@@ -34,8 +34,10 @@ namespace Graph
 
 		//距離行列とルーティングテーブルの初期化
 		//距離行列は全ての要素をNO_CONNECTION = DBL_MAXで初期化，ルーティングテーブルは全要素NOWHERE = -1で初期化
-		distance_map = std::make_unique<std::vector<std::shared_ptr<std::vector<double>>>>(node_count, std::make_shared<std::vector<double>>(node_count, NO_CONNECTION));
-		routing_table = std::make_unique<std::vector<std::shared_ptr<std::vector<node_id>>>>(node_count, std::make_shared<std::vector<node_id>>(node_count, NOWHERE));
+		distance_map = std::make_unique<std::vector<std::shared_ptr<std::vector<double>>>>(node_count);
+		for (auto iter = distance_map->begin(); iter != distance_map->end(); iter++) *iter = std::make_shared<std::vector<double>>(node_count, NO_CONNECTION);
+		routing_table = std::make_unique<std::vector<std::shared_ptr<std::vector<node_id>>>>(node_count);
+		for (auto iter = routing_table->begin(); iter != routing_table->end(); iter++) *iter = std::make_shared<std::vector<node_id>>(node_count, NOWHERE);
 
 		//node_collectionを参照してノード間の距離を格納，自身への距離は0にする
 		//自身への遷移はSELF = -2とする，ルーティングテーブルはインデックスでなくノードのIDを格納する
@@ -86,9 +88,10 @@ namespace Graph
 	{
 		//フィールドにnode_collectionへの参照を持たせる (距離計算 distanceメソッドのため)
 		if (node_collection == nullptr) return nullptr;
-
+		
 		//各フィールドを初期化する
 		initialize(node_collection);
+
 
 		//ワーシャルフロイド法で最短路を確定させていく
 		for (long source = 0; source < node_count; source++) {
@@ -104,6 +107,7 @@ namespace Graph
 
 				}
 			}
+			std::cout << std::to_string(source) << " / " << std::to_string(node_count) << std::endl;
 		}
 
 		std::unique_ptr<RoutingTable const> ret = std::make_unique<RoutingTable const>(std::move(routing_table), std::move(distance_map), std::move(conversion_map));

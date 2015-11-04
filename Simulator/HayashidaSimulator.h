@@ -25,13 +25,14 @@ namespace Simulation
 		: public ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>
 	{
 	protected:
-		void build_map();
+		Graph::Rectangle<Geography::LatLng> map_boundary;
+		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
 		void create_trajectories();
 		void make_requirement_list();
 		void random_user();
 
 	public:
-		HayashidaSimulator();
+		HayashidaSimulator(const Graph::Rectangle<Geography::LatLng>& map_boundary);
 		virtual ~HayashidaSimulator();
 		void prepare();
 		void run();

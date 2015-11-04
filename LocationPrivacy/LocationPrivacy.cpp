@@ -10,6 +10,7 @@
 #include "BasicRequirement.h"
 #include "SemanticTrajectory.h"
 #include "TimeUtility.h"
+#include "Rectangle.h"
 
 #include "HayashidaSimulator.h"
 
@@ -19,7 +20,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	constexpr int USER_ID = 1;
 	constexpr double TESTSET_PROPORTION = 0.3;
-
+	const Graph::Rectangle<Geography::LatLng> MAP_BOUNDARY(35.7, 139.6, 35.702, 139.602);
 	std::stringstream export_path;
 	export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << Time::TimeUtility::current_timestamp() << "/";
 
@@ -32,7 +33,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	//simulator->export_evaluation_result(export_path.str());
 	
 	std::unique_ptr<Simulation::ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>> simulator
-		= std::make_unique<Simulation::HayashidaSimulator>();
+		= std::make_unique<Simulation::HayashidaSimulator>(MAP_BOUNDARY);
 	simulator->prepare();
 	simulator->run();
 	return 0;

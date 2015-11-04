@@ -24,6 +24,7 @@ namespace Graph
 	/// NODE, PATHにはそれぞれNode, Edgeを継承したクラスが使える
 	/// PATHにはBasicPathDataを継承しているデータを保持しているEdgeしか使えないので注意
 	/// とりあえずR-Treeの座標は緯度，経度で固定している
+	/// Mapの構築はload(Rectangle boundary)を読んだタイミングで始まる
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
 	class Map
@@ -46,11 +47,12 @@ namespace Graph
 		#pragma endregion
 
 	protected:
+		std::unique_ptr<RoutingMethod<NODE, PATH>> routing_method;
 		std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection;
 		std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, POI>> poi_collection;
 		std::unique_ptr<rtree> rtree_index;
 		
-		virtual void build_map() = 0;
+		virtual void build_map(const Graph::Rectangle<Geography::LatLng>& boundary) = 0;
 		void build_rtree_index();
 
 		///<summary>
@@ -64,10 +66,10 @@ namespace Graph
 		std::pair<node_id, node_id> get_intersection_ends_of_shortest_path(const MapNodeIndicator& from, const MapNodeIndicator& to) const;
 
 	public:
-		Map();
+		Map(std::unique_ptr<RoutingMethod<NODE, PATH>> routing_method);
 		virtual ~Map();
 
-		void initialize(std::unique_ptr<RoutingMethod<NODE, PATH>> routing_method);
+		void load(const Graph::Rectangle<Geography::LatLng>& boundary);
 
 		double shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to) const;
 		const std::vector<MapNodeIndicator> get_shortest_path(const MapNodeIndicator& source, const MapNodeIndicator& destination) const;
