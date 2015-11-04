@@ -11,6 +11,9 @@
 #include "SemanticTrajectory.h"
 #include "TimeUtility.h"
 
+#include "HayashidaSimulator.h"
+
+
 int _tmain(int argc, _TCHAR* argv[])
 {	
 
@@ -27,6 +30,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	simulator->run();
 	simulator->evaluate();
 	simulator->export_evaluation_result(export_path.str());
+	std::unique_ptr<Simulation::ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>> simulator
+		= std::make_unique<Simulation::HayashidaSimulator>();
+	simulator->build_map();
+	simulator->create_user(0);
+	simulator->make_requirement_list();
+	simulator->run();
 	return 0;
 }
 

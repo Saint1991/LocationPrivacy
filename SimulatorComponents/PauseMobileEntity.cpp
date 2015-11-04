@@ -11,9 +11,8 @@ namespace Entity
 	template <typename POSITION_TYPE>
 	PauseMobileEntity<POSITION_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)//, Requirement::KatoMethodRequirement kato_requirement)
 		: MobileEntity<POSITION_TYPE>(id, timeslot), 
-		  pause_time_list(std::vector<time_t>(timeslot->phase_count(),0)), 
+		  pause_time_list(std::vector<int>(timeslot->phase_count(),0)), 
 		  speed_list(std::vector<double>(timeslot->phase_count(), 0))
-		//, kato_requirement(kato_requirement)
 	{
 		
 	}
@@ -31,7 +30,7 @@ namespace Entity
 	/// ’â~ŠÔ‚ğ‹‚ß‚é
 	///</summary>
 	template <typename POSITION_TYPE>
-	time_t PauseMobileEntity<POSITION_TYPE>::get_pause_time(int phase) const
+	int PauseMobileEntity<POSITION_TYPE>::get_pause_time(int phase) const
 	{
 		return pause_time_list.at(phase);
 	}
@@ -50,13 +49,12 @@ namespace Entity
 	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğ’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE>
-	void PauseMobileEntity<POSITION_TYPE>::set_random_pause_time(int phase, double min, double max)
+	void PauseMobileEntity<POSITION_TYPE>::set_random_pause_time(int phase, int min, int max)
 	{
 		Math::Probability generator;
-		double pause_time = generator.uniform_distribution(min, max);
-
-
-		pause_time_list.at(phase) = (time_t)pause_time;
+		int pause_time = generator.uniform_distribution(min, max);
+		
+		pause_time_list.at(phase) = pause_time;
 	}
 
 	///<summary>
