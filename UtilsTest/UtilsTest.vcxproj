@@ -197,6 +197,7 @@
     <ClCompile Include="UniquePtrTest.cpp" />
     <ClCompile Include="Vector2dFactoryTest.cpp" />
     <ClCompile Include="Vector2dTest.cpp" />
+    <ClCompile Include="VectorTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.vcxproj">

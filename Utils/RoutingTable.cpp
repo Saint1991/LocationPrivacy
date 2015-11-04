@@ -11,7 +11,7 @@ namespace Graph
 	/// conversionテーブルは[ノードID] => ノードのインデックス
 	/// が格納されていることを想定している
 	///</summary>
-	RoutingTable::RoutingTable(std::unique_ptr<std::vector<std::vector<node_id>>> routing_table, std::unique_ptr<std::vector<std::vector<double>>> shortest_distance_table, std::unique_ptr<std::unordered_map<node_id, int>> conversion_map)
+	RoutingTable::RoutingTable(std::unique_ptr<std::vector<std::shared_ptr<std::vector<node_id>>>> routing_table, std::unique_ptr<std::vector<std::shared_ptr<std::vector<double>>>> shortest_distance_table, std::unique_ptr<std::unordered_map<node_id, int>> conversion_map)
 		: routing_table(std::move(routing_table)), shortest_distance_table(std::move(shortest_distance_table)), conversion_map(std::move(conversion_map))
 	{
 	}
@@ -33,7 +33,7 @@ namespace Graph
 	{
 		long index_from = conversion_map->at(from);
 		long index_to = conversion_map->at(to);
-		node_id next = routing_table->at(index_from).at(index_to);
+		node_id next = routing_table->at(index_from)->at(index_to);
 		return next;
 	}
 
@@ -63,7 +63,7 @@ namespace Graph
 	{
 		long index_from = conversion_map->at(from);
 		long index_to = conversion_map->at(to);
-		double shortest_distance = shortest_distance_table->at(index_from).at(index_to);
+		double shortest_distance = shortest_distance_table->at(index_from)->at(index_to);
 		return shortest_distance;
 	}
 

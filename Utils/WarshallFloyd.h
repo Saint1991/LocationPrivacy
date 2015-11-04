@@ -17,8 +17,8 @@ namespace Graph
 		long node_count = -1L;
 		std::unique_ptr<std::unordered_map<node_id, int>> conversion_map;
 		std::unique_ptr<std::vector<node_id>> reverse_conversion_map;
-		std::unique_ptr<std::vector<std::vector<double>>> distance_map;
-		std::unique_ptr<std::vector<std::vector<node_id>>> routing_table;
+		std::unique_ptr<std::vector<std::shared_ptr<std::vector<double>>>> distance_map;
+		std::unique_ptr<std::vector<std::shared_ptr<std::vector<node_id>>>> routing_table;
 		
 		void initialize(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection);
 		void 	create_conversion_map(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection);

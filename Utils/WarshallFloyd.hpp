@@ -34,8 +34,8 @@ namespace Graph
 
 		//距離行列とルーティングテーブルの初期化
 		//距離行列は全ての要素をNO_CONNECTION = DBL_MAXで初期化，ルーティングテーブルは全要素NOWHERE = -1で初期化
-		distance_map = std::make_unique<std::vector<std::vector<double>>>(node_count, std::vector<double>(node_count, NO_CONNECTION));
-		routing_table = std::make_unique<std::vector<std::vector<node_id>>>(node_count, std::vector<node_id>(node_count, NOWHERE));
+		distance_map = std::make_unique<std::vector<std::shared_ptr<std::vector<double>>>>(node_count, std::make_shared<std::vector<double>>(node_count, NO_CONNECTION));
+		routing_table = std::make_unique<std::vector<std::shared_ptr<std::vector<node_id>>>>(node_count, std::make_shared<std::vector<node_id>>(node_count, NOWHERE));
 
 		//node_collectionを参照してノード間の距離を格納，自身への距離は0にする
 		//自身への遷移はSELF = -2とする，ルーティングテーブルはインデックスでなくノードのIDを格納する
@@ -46,11 +46,11 @@ namespace Graph
 				node_id id = edge->get_to();
 				long index_to = conversion_map->at(id);
 				double distance = edge->get_static_data()->get_distance();
-				distance_map->at(node_index).at(index_to) = distance;
-				routing_table->at(node_index).at(index_to) = id;
+				distance_map->at(node_index)->at(index_to) = distance;
+				routing_table->at(node_index)->at(index_to) = id;
 			});
-			distance_map->at(node_index).at(node_index) = 0;
-			routing_table->at(node_index).at(node_index) = SELF;
+			distance_map->at(node_index)->at(node_index) = 0;
+			routing_table->at(node_index)->at(node_index) = SELF;
 			node_index++;
 
 		});
@@ -95,11 +95,11 @@ namespace Graph
 			for (long destination = 0; destination < node_count; destination++) {
 				for (long via = 0; via < node_count; via++) {
 					
-					double distance_src_dest = distance_map->at(source).at(destination);
-					double distance_src_via_dest = distance_map->at(source).at(via) + distance_map->at(via).at(destination);
+					double distance_src_dest = distance_map->at(source)->at(destination);
+					double distance_src_via_dest = distance_map->at(source)->at(via) + distance_map->at(via)->at(destination);
 					if (distance_src_via_dest < distance_src_dest) {
-						distance_map->at(source).at(destination) = distance_src_via_dest;
-						routing_table->at(source).at(destination) = reverse_conversion_map->at(via);
+						distance_map->at(source)->at(destination) = distance_src_via_dest;
+						routing_table->at(source)->at(destination) = reverse_conversion_map->at(via);
 					}
 
 				}
