@@ -501,6 +501,7 @@ namespace Method
 	///</summary>
 	void KatoBachelorMethod::initialize()
 	{
+
 	}
 
 

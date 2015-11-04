@@ -1,3 +1,8 @@
+#ifdef SIMULATORCOMPONENTS_EXPORTS
+#define KATO_BACHELOR_METHOD_API __declspec(dllexport)
+#else
+#define KATO_BACHELOR_METHOD_API __declspec(dllimport)
+#endif
 #pragma once
 #include "BasicDbMap.h"
 #include "LatLng.h"
@@ -17,7 +22,7 @@ namespace Method
 	///<summary>
 	/// ‰Á“¡‚³‚ñŠw•”‘²‹Æ˜_•¶‚Ì’ñˆÄŽè–@‚ÌŽÀ‘•
 	///</summary>
-	class KatoBachelorMethod
+	class KATO_BACHELOR_METHOD_API KatoBachelorMethod
 		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>
 	{
 	private:

@@ -34,13 +34,20 @@ namespace Simulation
 		const int MAX_PAUSE_TIME = 600;
 		const int MIN_PAUSE_TIME = 60;
 		const int SERVICE_INTERVAL = 180;
+		const int end_time = 1800;
 		const int POI_NUM = 4;
-		Graph::Rectangle<Geography::LatLng> rect_init_range(1.0, 1.0, 1.0, 1.0);//ここの四角形には始点にしたい範囲をインスタンスで入力
-		double length_of_rect = 0.0005;//ここには適切な範囲内の緯度経度差を書く
-	    //-----↑要求パラメータ．requirementと同じ値にすること！↑---------//
+		double length_of_rect = 0.005;//ここには適切な範囲内の緯度経度差を書く
+		Graph::Rectangle<Geography::LatLng> rect_init_range(35.40527 + 0.5*length_of_rect, 139.45594 - 0.5*length_of_rect, 35.40527 - 0.5*length_of_rect, 139.45594 + 0.5*length_of_rect);//ここの四角形には始点にしたい範囲をインスタンスで入力
+	  //-----↑要求パラメータ．requirementと同じ値にすること！↑---------//
 
 		int phase_id = 0;
+		std::unique_ptr<std::vector<time_t>> timeslots = std::make_unique<std::vector<time_t>>();
+		for (int time = 0; time <= end_time; time += SERVICE_INTERVAL) {
+			timeslots->push_back(time);
+		}
 
+		time_manager = std::make_shared<Time::TimeSlotManager>(std::move(timeslots));
+		
 		//---------------------------最初の点を決定---------------------------------------------
 		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = map->find_pois_within_boundary(rect_init_range);
 		std::random_device device;
@@ -141,14 +148,15 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::build_map()
 	{
-	
+		map = std::make_shared<Map::BasicDbMap>("../settings/mydbsettings.xml", "map_tokyo");
+		map->initialize(std::move(std::make_unique<Graph::WarshallFloyd<Map::BasicMapNode, Map::BasicRoad>>()));
 	}
 
 
 	///<summary>
 	/// ユーザを生成する
 	///</summary>
-	void HayashidaSimulator::create_user()
+	void HayashidaSimulator::create_user(unsigned int user_id)
 	{
 		random_user();
 	}
@@ -183,12 +191,24 @@ namespace Simulation
 	}
 
 
+	void HayashidaSimulator::set_comparative_methods() {
+		
+	}
+
+
 	///<summary>
 	/// 実行
 	///</summary>
 	void HayashidaSimulator::run()
 	{
-
+		build_map();
+		create_user(0);
+		make_requirement_list();
+		for (std::list<std::shared_ptr<Requirement::KatoMethodRequirement const>>::iterator requirement = requirements.begin(); requirement != requirements.end(); requirement++)
+		{
+			Method::KatoBachelorMethod kato_bachelor_method(map,user,*requirement,time_manager);
+			kato_bachelor_method.run();
+		}
 	}
 
 }

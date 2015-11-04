@@ -4,14 +4,18 @@
 #include "stdafx.h"
 #include "ISimulator.h"
 
+#include "HayashidaSimulator.h"
+
+
 int _tmain(int argc, _TCHAR* argv[])
 {	
 	//‚±‚±‚ÅISimulator‚ðŽÀ‘•‚µ‚½ƒNƒ‰ƒX‚ðŽg‚¢•ª‚¯‚é
-	//std::unique_ptr<Simulation::ISimulator<>> simulator = 
-	//simulator->build_map();
-	//simulator->create_user();
-	//simulator->make_requirement_list();
-	//simulator->run();
+	std::unique_ptr<Simulation::ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement>> simulator
+		= std::make_unique<Simulation::HayashidaSimulator>();
+	simulator->build_map();
+	simulator->create_user(0);
+	simulator->make_requirement_list();
+	simulator->run();
 	return 0;
 }
 
