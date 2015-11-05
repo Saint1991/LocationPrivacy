@@ -9,7 +9,7 @@ namespace Map
 	/// Routing‚ÍWarshallFloyd‚ð—p‚¢‚é
 	///</summary>
 	BasicDbMap::BasicDbMap (
-		std::unique_ptr<Graph::RoutingMethod<BasicMapNode, BasicRoad>> routing_method, 
+		std::shared_ptr<Graph::IRoutingModule<BasicMapNode, BasicRoad>> routing_method, 
 		const std::string& setting_file_path,
 		const std::string& db_name,
 		const std::string& node_table,

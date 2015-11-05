@@ -15,6 +15,7 @@
 #include "Probability.h"
 #include "GeoCalculation.h"
 #include "Trajectory.h"
+#include "Dijkstra.h"
 
 namespace Simulation
 {

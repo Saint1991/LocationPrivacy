@@ -38,7 +38,7 @@ namespace Graph
 		for (auto iter = distance_map->begin(); iter != distance_map->end(); iter++) *iter = std::make_shared<std::vector<double>>(node_count, NO_CONNECTION);
 		routing_table = std::make_unique<std::vector<std::shared_ptr<std::vector<node_id>>>>(node_count);
 		for (auto iter = routing_table->begin(); iter != routing_table->end(); iter++) *iter = std::make_shared<std::vector<node_id>>(node_count, NOWHERE);
-
+		
 		//node_collectionを参照してノード間の距離を格納，自身への距離は0にする
 		//自身への遷移はSELF = -2とする，ルーティングテーブルはインデックスでなくノードのIDを格納する
 		int node_index = 0;

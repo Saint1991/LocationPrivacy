@@ -2,11 +2,11 @@
 #include "NodeCollectionFactory.h"
 #include "LatLng.h"
 #include "IdentifiableCollection.h"
-#include "RoutingMethod.h"
-#include "RoutingTable.h"
 #include "MapNodeIndicator.h"
 #include "boost\geometry\index\rtree.hpp"
 #include "Rectangle.h"
+#include "RoutingClient.h"
+#include "IRoutingModule.h"
 
 namespace Graph
 {
@@ -47,26 +47,20 @@ namespace Graph
 		#pragma endregion
 
 	protected:
-		std::unique_ptr<RoutingMethod<NODE, PATH>> routing_method;
 		std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection;
 		std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, POI>> poi_collection;
 		std::unique_ptr<rtree> rtree_index;
-		
+		std::unique_ptr<RoutingClient<NODE, PATH>> routing_client;
+		std::shared_ptr<IRoutingModule<NODE, PATH>> routing_method;
+
 		virtual void build_map(const Graph::Rectangle<Geography::LatLng>& boundary) = 0;
 		void build_rtree_index();
-
-		///<summary>
-		/// 最短路を格納するルーティングテーブル
-		/// SourceからDestinationへ行くのに次にどのノードに行く必要があるかを格納する．
-		/// Mapの構成はinitializeを呼び出した際に行われる
-		///</summary>
-		std::unique_ptr<RoutingTable const> routing_table;
 
 	private:
 		std::pair<node_id, node_id> get_intersection_ends_of_shortest_path(const MapNodeIndicator& from, const MapNodeIndicator& to) const;
 
 	public:
-		Map(std::unique_ptr<RoutingMethod<NODE, PATH>> routing_method);
+		Map(std::shared_ptr<IRoutingModule<NODE, PATH>> routing_method);
 		virtual ~Map();
 
 		void load(const Graph::Rectangle<Geography::LatLng>& boundary);

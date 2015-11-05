@@ -6,7 +6,7 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
-	Map<NODE, POI, PATH>::Map(std::unique_ptr<RoutingMethod<NODE, PATH>> routing_method)
+	Map<NODE, POI, PATH>::Map(std::shared_ptr<IRoutingModule<NODE, PATH>> routing_method)
 		: node_collection(nullptr),
 		  poi_collection(nullptr),
 		  routing_method(std::move(routing_method))
@@ -38,15 +38,16 @@ namespace Graph
 		std::cout << "Loading Nodes and connectivities"  << std::endl;
 		build_map(boundary);
 		std::cout << "Complete! " << node_collection->size() << " Nodes Loaded." << std::endl;
-		std::cout << "Start Building Routing Table." << std::endl;
-		routing_table = routing_method->create_routing_table(node_collection);
+
+		std::cout << "Setup Routing Client" << std::endl;
+		routing_client = std::make_unique<RoutingClient<NODE, PATH>>(node_collection, routing_method);
 		std::cout << "Complete!" << std::endl;
+
 		std::cout << "Start Building R-Tree Index." << std::endl;
 		build_rtree_index();
 		std::cout << "Comlete! Map Loaded." << std::endl;
 	}
 
-	
 	///<summary>
 	/// R-Treeのインデックスを構築する
 	///</summary>
@@ -88,13 +89,13 @@ namespace Graph
 			double distance_poi_to_to_second = poi_to->distance_to(between_to.second);
 
 			double distance_first_first = distance_poi_from_to_first == NO_CONNECTION || distance_poi_to_to_first == NO_CONNECTION ?
-				NO_CONNECTION : distance_poi_from_to_first + distance_poi_to_to_first + routing_table->shortest_distance(between_from.first, between_to.first);
+				NO_CONNECTION : distance_poi_from_to_first + distance_poi_to_to_first + routing_client->shortest_distance(between_from.first, between_to.first);
 			double distance_first_second = distance_poi_from_to_first == NO_CONNECTION || distance_poi_to_to_second == NO_CONNECTION ?
-				NO_CONNECTION : distance_poi_from_to_first + distance_poi_to_to_second + routing_table->shortest_distance(between_from.first, between_to.second);
+				NO_CONNECTION : distance_poi_from_to_first + distance_poi_to_to_second + routing_client->shortest_distance(between_from.first, between_to.second);
 			double distance_second_first = distance_poi_from_to_second == NO_CONNECTION || distance_poi_to_to_first == NO_CONNECTION ?
-				NO_CONNECTION : distance_poi_from_to_second + distance_poi_to_to_first + routing_table->shortest_distance(between_from.second, between_to.first);
+				NO_CONNECTION : distance_poi_from_to_second + distance_poi_to_to_first + routing_client->shortest_distance(between_from.second, between_to.first);
 			double distance_second_second = distance_poi_from_to_second == NO_CONNECTION || distance_poi_to_to_second == NO_CONNECTION ?
-				NO_CONNECTION : distance_poi_from_to_second + distance_poi_to_to_second + routing_table->shortest_distance(between_from.second, between_to.second);
+				NO_CONNECTION : distance_poi_from_to_second + distance_poi_to_to_second + routing_client->shortest_distance(between_from.second, between_to.second);
 			
 			std::pair<node_id, node_id> ret = std::make_pair(NOWHERE, NOWHERE);
 			
@@ -125,8 +126,8 @@ namespace Graph
 			double distance_to_first = poi->distance_to(between.first);
 			double distance_to_second = poi->distance_to(between.second);
 
-			double distance_path_to_first = from.type() == NodeType::POI ? routing_table->shortest_distance(between.first, to.id()) : routing_table->shortest_distance(from.id(), between.first);
-			double distance_path_to_second = from.type() == NodeType::POI ? routing_table->shortest_distance(between.second, to.id()) : routing_table->shortest_distance(from.id(), between.second);
+			double distance_path_to_first = from.type() == NodeType::POI ? routing_client->shortest_distance(between.first, to.id()) : routing_client->shortest_distance(from.id(), between.first);
+			double distance_path_to_second = from.type() == NodeType::POI ? routing_client ->shortest_distance(between.second, to.id()) : routing_client->shortest_distance(from.id(), between.second);
 
 			distance_to_first = distance_to_first == NO_CONNECTION || distance_path_to_first == NO_CONNECTION ?
 				NO_CONNECTION : distance_to_first + distance_path_to_first;
@@ -152,11 +153,11 @@ namespace Graph
 	{
 		//両方INTERSECTIONの場合
 		if (from.type() == NodeType::INTERSECTION && to.type() == NodeType::INTERSECTION) {
-			return routing_table->shortest_distance(from.id(), to.id());
+			return routing_client->shortest_distance(from.id(), to.id());
 		}
 		
 		std::pair<node_id, node_id> intersection_ends = get_intersection_ends_of_shortest_path(from, to);
-		double route_distance = routing_table->shortest_distance(intersection_ends.first, intersection_ends.second);
+		double route_distance = routing_client->shortest_distance(intersection_ends.first, intersection_ends.second);
 		if (route_distance == NO_CONNECTION) return NO_CONNECTION;
 
 		//fromのみPOIの場合
@@ -195,7 +196,7 @@ namespace Graph
 	{
 
 		std::vector<MapNodeIndicator> ret;
-		std::vector<node_id> intersection_path;
+		std::shared_ptr<std::vector<node_id>> intersection_path;
 		
 		std::pair<node_id, node_id> intersection_ends = get_intersection_ends_of_shortest_path(source, destination);
 
@@ -203,8 +204,8 @@ namespace Graph
 			ret.push_back(MapNodeIndicator(intersection_ends.first, NodeType::INTERSECTION));
 		}
 		
-		intersection_path = routing_table->get_shortest_path(intersection_ends.first, intersection_ends.second);
-		for (std::vector<node_id>::const_iterator iter = intersection_path.begin(); iter != intersection_path.end(); iter++) {
+		intersection_path = routing_client->shortest_path(intersection_ends.first, intersection_ends.second);
+		for (std::vector<node_id>::const_iterator iter = intersection_path->begin(); iter != intersection_path->end(); iter++) {
 			ret.push_back(MapNodeIndicator(*iter, NodeType::INTERSECTION));
 		}
 		

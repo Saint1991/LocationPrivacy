@@ -11,9 +11,9 @@
 #include "Dummy.h"
 #include "BasicRequirement.h"
 #include "ISimulator.h"
-#include "WarshallFloyd.h"
 #include "DbTrajectoryLoader.h"
 #include "PreferenceTree.h"
+#include "Dijkstra.h"
 
 namespace Simulation
 {

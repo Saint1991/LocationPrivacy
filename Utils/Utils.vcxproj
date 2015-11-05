@@ -212,6 +212,8 @@
     <ClInclude Include="DepthFirstConstIterator.hpp" />
     <ClInclude Include="DepthFirstIterator.h" />
     <ClInclude Include="DepthFirstIterator.hpp" />
+    <ClInclude Include="Dijkstra.h" />
+    <ClInclude Include="Dijkstra.hpp" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Edge.hpp" />
     <ClInclude Include="EntityManager.h" />
@@ -231,6 +233,7 @@
     <ClInclude Include="IdentifiableCollection.h" />
     <ClInclude Include="IdentifiableCollection.hpp" />
     <ClInclude Include="IOException.h" />
+    <ClInclude Include="IRoutingModule.h" />
     <ClInclude Include="KatoMethodRequirement.h" />
     <ClInclude Include="LatLng.h" />
     <ClInclude Include="Map.h" />
@@ -250,6 +253,10 @@
     <ClInclude Include="Probability.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RouteInfo.h" />
+    <ClInclude Include="RoutingClient.h" />
+    <ClInclude Include="RouteInfo.hpp" />
+    <ClInclude Include="RoutingClient.hpp" />
     <ClInclude Include="RoutingMethod.h" />
     <ClInclude Include="RoutingTable.h" />
     <ClInclude Include="SemanticTrajectory.h" />

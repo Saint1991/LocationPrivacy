@@ -11,9 +11,9 @@
 #include "BasicRoad.h"
 #include "DbNodeCollectionFactory.h"
 #include "DbPoiCollectionFactory.h"
-#include "WarshallFloyd.h"
 #include "Probability.h"
 #include "Rectangle.h"
+#include "IRoutingModule.h"
 
 namespace Map
 {
@@ -43,7 +43,7 @@ namespace Map
 
 	public:
 		BasicDbMap (
-			std::unique_ptr<Graph::RoutingMethod<BasicMapNode, BasicRoad>> routing_method,
+			std::shared_ptr<Graph::IRoutingModule<BasicMapNode, BasicRoad>> routing_method,
 			const std::string& setting_file_path,
 			const std::string& db_name,
 			const std::string& node_table = "nodes",

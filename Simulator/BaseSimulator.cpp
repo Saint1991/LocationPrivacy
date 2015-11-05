@@ -28,7 +28,7 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		map = std::make_shared<Map::BasicDbMap>(std::move(std::make_unique<Graph::WarshallFloyd<Map::BasicMapNode, Map::BasicRoad>>()), "../settings/mydbsettings.xml", "map_tokyo");
+		map = std::make_shared<Map::BasicDbMap>(std::move(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>()), "../settings/mydbsettings.xml", "map_tokyo");
 		map->load(boundary);
 	}
 

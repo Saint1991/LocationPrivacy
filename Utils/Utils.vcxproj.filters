@@ -127,6 +127,12 @@
     <Filter Include="ヘッダー ファイル\Evaluation">
       <UniqueIdentifier>{20094aee-d356-46e2-a2bd-dad75319c09f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Graph\Routing\Modules">
+      <UniqueIdentifier>{2206d76a-5dc5-4853-b6ca-51b7c5fafb77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Graph\Routing\Modules">
+      <UniqueIdentifier>{4e2e74c8-7ada-402d-b29c-3af11ed3a79d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -371,6 +377,27 @@
     </ClInclude>
     <ClInclude Include="SemanticTrajectory.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="RoutingClient.h">
+      <Filter>ヘッダー ファイル\Graph\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="RouteInfo.h">
+      <Filter>ヘッダー ファイル\Graph\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="IRoutingModule.h">
+      <Filter>ヘッダー ファイル\Graph\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="RouteInfo.hpp">
+      <Filter>ソース ファイル\Graph\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="RoutingClient.hpp">
+      <Filter>ソース ファイル\Graph\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="Dijkstra.hpp">
+      <Filter>ソース ファイル\Graph\Routing\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Dijkstra.h">
+      <Filter>ヘッダー ファイル\Graph\Routing\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
