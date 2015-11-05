@@ -41,7 +41,7 @@ namespace Graph
 		node_collection->foreach([&](std::shared_ptr<NODE const> node) {
 			node_id id = node->get_id();
 			index_map->insert(std::make_pair(id, index));
-			reverse_index_map->at(index) = id;
+			reverse_index_map->at(index++) = id;
 		});
 		int index_from = index_map->at(from);
 		distance_map->at(index_from) = 0.0;
@@ -64,8 +64,8 @@ namespace Graph
 				double distance_u = distance_map->at(index_u);
 				if (alt < distance_u) {
 					distance_map->at(index_u) = alt;
-					queue->push(std::make_pair(distance_map->at(index_u), u));
-					previous->at(u) = index_map->at(v);
+					queue->push(std::make_pair(alt, u));
+					previous->at(index_u) = index_map->at(v);
 				}
 			});
 		}
@@ -73,7 +73,7 @@ namespace Graph
 		//previous‚ğ‚½‚Ç‚Á‚ÄŒo˜H‚ğì¬
 		int index_to = index_map->at(to);
 		double total_distance = distance_map->at(index_to);
-		std::shared_ptr<std::vector<node_id>> path;
+		std::shared_ptr<std::vector<node_id>> path = std::make_shared<std::vector<node_id>>();
 		int current_index = index_to;
 		while (current_index != NOWHERE) {
 			path->push_back(reverse_index_map->at(current_index));

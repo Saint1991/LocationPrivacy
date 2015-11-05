@@ -7,7 +7,7 @@ namespace Graph
 	///</summary>
 	template <typename NODE, typename EDGE>
 	RoutingClient<NODE, EDGE>::RoutingClient(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection, std::shared_ptr<IRoutingModule<NODE, EDGE>> routing_method)
-		: node_collection(node_collection)
+		: node_collection(node_collection), routing_method(routing_method)
 	{
 	}
 

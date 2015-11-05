@@ -47,7 +47,7 @@ namespace Simulation
 		}
 
 		time_manager = std::make_shared<Time::TimeSlotManager>(std::move(timeslots));
-		
+
 		//---------------------------Å‰‚Ì“_‚ğŒˆ’è---------------------------------------------
 		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = map->find_pois_within_boundary(rect_init_range);
 		std::random_device device;
@@ -148,7 +148,7 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		map = std::make_shared<Map::BasicDbMap>(std::move(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>()), "../settings/mydbsettings.xml", "map_tokyo");
+		map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", "map_tokyo");
 		map->load(boundary);
 	}
 
