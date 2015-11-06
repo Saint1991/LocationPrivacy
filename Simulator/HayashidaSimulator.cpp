@@ -99,7 +99,7 @@ namespace Simulation
 		
 			//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
 			user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
-			int moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
+			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
 			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
 
 			//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
@@ -238,9 +238,19 @@ namespace Simulation
 
 	}
 
-	void HayashidaSimulator::export_evaluation_result(const std::string& export_base_path)
+	void HayashidaSimulator::export_evaluation_result()
 	{
+		IO::FileExporter exporter({
+			{Geography::LatLng::LATITUDE, "緯度"},
+			{Geography::LatLng::LONGITUDE, "経度"}
+		}, USER_TRAJECTORY_OUT_PATH);
 
+		std::list<std::shared_ptr<IO::FileExportable const>> exportable_positions;
+		time_manager->for_each_time([&](time_t time, long interval, int phase) {
+			exportable_positions.push_back(user->read_position_of_phase(phase));
+		});
+		
+		exporter.export_lines(exportable_positions);
 	}
 
 }

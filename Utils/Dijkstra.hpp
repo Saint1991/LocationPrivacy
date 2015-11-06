@@ -17,9 +17,11 @@ namespace Graph
 	/// Dijkstra法により2点間の最短路を求める
 	/// 不正な値の場合は(nullptr, DBL_MAX)が返る
 	/// 参考(https://ja.wikipedia.org/wiki/ダイクストラ法)
+	/// distance_thresholdを設定すると距離がそれ以上になった場合の探索を打ち切ります
+	/// その場合はfromからtoへの経路が完成していなければ(nullptr, DBL_MAX)が返ります
 	///</summary>
 	template <typename NODE, typename EDGE>
-	RouteInfo<EDGE> Dijkstra<NODE, EDGE>::shortest_path(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection, Graph::node_id from, Graph::node_id to)
+	RouteInfo<EDGE> Dijkstra<NODE, EDGE>::shortest_path(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection, Graph::node_id from, Graph::node_id to, double distance_threshold)
 	{
 
 		if (from == to) return RouteInfo<EDGE>(std::make_shared<std::vector<node_id>>(), 0.0);
@@ -56,6 +58,9 @@ namespace Graph
 			node_id v = target.second;
 			queue->pop();
 
+			//もし最小コストがdistance_thresholdを超えている場合は探索を打ち切る
+			if (d > distance_threshold) break;
+			
 			std::shared_ptr<NODE const> node = node_collection->read_by_id(target.second);
 			node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {
 				node_id u = edge->get_to();
@@ -73,6 +78,8 @@ namespace Graph
 		//previousをたどって経路を作成
 		int index_to = index_map->at(to);
 		double total_distance = distance_map->at(index_to);
+		if (total_distance > distance_threshold) return RouteInfo<EDGE>(nullptr, DBL_MAX);
+
 		std::shared_ptr<std::vector<node_id>> path = std::make_shared<std::vector<node_id>>();
 		int current_index = index_to;
 		while (current_index != NOWHERE) {

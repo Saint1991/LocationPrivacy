@@ -22,23 +22,37 @@ namespace Graph
 
 	///<summary>
 	/// Å’Z˜H‚É‚¨‚¯‚éfrom‚©‚çto‚Ü‚Å‚Ì‹——£‚ğ•Ô‚µ‚Ü‚·
+	/// distance_threshold‚ğİ’è‚µ‚½ê‡‚ÍÅ’Z˜H‚ªdistance_threshold‚ğ’´‚¦‚Ä‚¢‚éê‡DBL_MAX‚ª•Ô‚³‚ê‚Ü‚·
 	///</summary>
 	template <typename NODE, typename EDGE>
-	double RoutingClient<NODE, EDGE>::shortest_distance(Graph::node_id from, Graph::node_id to)
+	double RoutingClient<NODE, EDGE>::shortest_distance(Graph::node_id from, Graph::node_id to, double distance_threshold)
 	{
-		RouteInfo<EDGE> route_info = routing_method->shortest_path(node_collection, from, to);
+		RouteInfo<EDGE> route_info = routing_method->shortest_path(node_collection, from, to, distance_threshold);
 		return route_info.total_distance;
 	}
 
 
 	///<summary>
 	/// Å’Z˜H‚ÌŒğ·“_ID‚ğw‚·ƒGƒbƒW‚ÌƒŠƒXƒg‚ğ•Ô‚µ‚Ü‚·
+	/// distance_threshold‚ğİ’è‚µ‚½ê‡CÅ’Z˜H‚ª‚ÍthresholdˆÈã‚Ìê‡‚Énullptr‚ğ•Ô‚·
 	///</summary>
 	template <typename NODE, typename EDGE>
-	std::shared_ptr<std::vector<node_id>> RoutingClient<NODE, EDGE>::shortest_path(Graph::node_id from, Graph::node_id to)
+	std::shared_ptr<std::vector<node_id>> RoutingClient<NODE, EDGE>::shortest_path(Graph::node_id from, Graph::node_id to, double distance_threshold)
 	{
-		RouteInfo<EDGE> route_info = routing_method->shortest_path(node_collection, from, to);
+		RouteInfo<EDGE> route_info = routing_method->shortest_path(node_collection, from, to, distance_threshold);
 		return route_info.route;
+	}
+
+
+	///<summary>
+	/// Å’Z˜H‚ÌŒğ·“_ID‚ğw‚·ƒGƒbƒW‚ÌƒŠƒXƒg‚Æ
+	/// ‚»‚Ì‹——£‚ğ‚à‚ÂRouteInfo‚ğ•Ô‚·
+	/// distance_threshold‚ğİ’è‚µ‚½ê‡CÅ’Z˜H‚ª‚ÍthresholdˆÈã‚Ìê‡‚É(nullptr, DBL_MAX)‚ğ•Ô‚·
+	///</summary>
+	template <typename NODE, typename EDGE>
+	RouteInfo<EDGE> RoutingClient<NODE, EDGE>::shortest_path_info(Graph::node_id from, Graph::node_id to, double distance_threshold)
+	{
+		return routing_method->shortest_path(node_collection, from, to, distance_threshold);
 	}
 }
 

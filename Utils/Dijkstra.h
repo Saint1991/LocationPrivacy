@@ -14,7 +14,7 @@ namespace Graph
 	public:
 		Dijkstra();
 		~Dijkstra();
-		RouteInfo<EDGE> shortest_path(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection, Graph::node_id from, Graph::node_id to);
+		RouteInfo<EDGE> shortest_path(std::shared_ptr<const Collection::IdentifiableCollection<Graph::node_id, NODE>> node_collection, Graph::node_id from, Graph::node_id to, double distance_threshold = DBL_MAX);
 	};
 }
 

@@ -39,7 +39,7 @@ namespace Simulation
 		virtual void prepare() = 0;
 		virtual void run() = 0;
 		virtual void evaluate() = 0;
-		virtual void export_evaluation_result(const std::string& export_base_path) = 0;
+		virtual void export_evaluation_result() = 0;
 	};
 }
 

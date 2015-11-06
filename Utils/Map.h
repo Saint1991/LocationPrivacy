@@ -56,18 +56,19 @@ namespace Graph
 		virtual void build_map(const Graph::Rectangle<Geography::LatLng>& boundary) = 0;
 		void build_rtree_index();
 
-	private:
-		std::pair<node_id, node_id> get_intersection_ends_of_shortest_path(const MapNodeIndicator& from, const MapNodeIndicator& to) const;
-
 	public:
+		typedef std::pair<std::vector<MapNodeIndicator>, double> shortest_path_info;
+		
 		Map(std::shared_ptr<IRoutingModule<NODE, PATH>> routing_method);
 		virtual ~Map();
 
 		void load(const Graph::Rectangle<Geography::LatLng>& boundary);
 
-		double shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to) const;
-		const std::vector<MapNodeIndicator> get_shortest_path(const MapNodeIndicator& source, const MapNodeIndicator& destination) const;
-		double calc_necessary_time(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed) const;
+
+		shortest_path_info get_shortest_path_info(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
+		double shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
+		std::vector<MapNodeIndicator> get_shortest_path(const MapNodeIndicator& source, const MapNodeIndicator& destination, double distance_threshold = DBL_MAX) const;
+		double calc_necessary_time(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, double distance_threshold = DBL_MAX) const;
 		bool is_reachable(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, const double& time_limit) const;
 		
 		virtual std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const box& boundary) const;

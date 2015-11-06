@@ -16,6 +16,7 @@
 #include "GeoCalculation.h"
 #include "Trajectory.h"
 #include "Dijkstra.h"
+#include "FileExporter.h"
 
 namespace Simulation
 {
@@ -27,11 +28,12 @@ namespace Simulation
 	{
 	private:
 	#pragma region
+		static constexpr auto USER_TRAJECTORY_OUT_PATH = "C:/Users/Mizuno/Desktop/user_trajectory";
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
 		static constexpr int MAX_PAUSE_TIME = 600;
 		static constexpr int MIN_PAUSE_TIME = 60;
-		static constexpr int SERVICE_INTERVAL = 180;
+		static constexpr int SERVICE_INTERVAL = 360;
 		static constexpr int end_time = 18000;
 		static constexpr int POI_NUM = 2;
 		static constexpr double base_lat = 35.677;//出発地の目安の緯度．全POIの平均値
@@ -52,7 +54,7 @@ namespace Simulation
 		void prepare();
 		void run();
 		void evaluate();
-		void export_evaluation_result(const std::string& export_base_path);
+		void export_evaluation_result();
 	};
 
 }

@@ -13,11 +13,10 @@ namespace IO
 	FileExporter::FileExporter(std::list<std::pair<std::string, std::string>> export_name_map, std::string outfile_path, ExportType type)
 		: key_position_map(std::make_unique<std::unordered_map<std::string, int>>()), DELIMITER(type == ExportType::TSV ? "\t" : ",")
 	{
-		if (outfile_path.length() == 0) outfile_path = Time::TimeUtility::current_timestamp();
-
+		if (outfile_path.length() == 0) outfile_path = "./" + Time::TimeUtility::current_timestamp();
 		outfile_path += type == ExportType::TSV ? ".tsv" : ".csv";
 		out_file = std::ofstream(outfile_path);
-
+		std::cout << "Result Export to " << outfile_path << std::endl;
 		int index = 0;
 		std::string header("");
 		for (auto iter = export_name_map.begin(); iter != export_name_map.end(); iter++) {
@@ -80,7 +79,7 @@ namespace IO
 	void  FileExporter::export_lines(std::list<std::shared_ptr< FileExportable const>> data_list)
 	{
 		for (auto iter = data_list.begin(); iter != data_list.end(); iter++) {
-			export_line(*iter);
+			if (*iter != nullptr) export_line(*iter);
 		}
 	}
 

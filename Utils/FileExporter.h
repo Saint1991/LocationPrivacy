@@ -34,7 +34,7 @@ namespace IO
 		const std::string DELIMITER;
 
 	public:
-		FileExporter(std::list<std::pair<std::string, std::string>> export_name_map, std::string outfile_path = "", ExportType type = ExportType::CSV);
+		FileExporter(std::list<std::pair<std::string, std::string>> export_name_map, std::string outfile_path, ExportType type = ExportType::CSV);
 		virtual ~FileExporter();
 
 		void export_line(std::unordered_map<std::string, std::string> name_value_pairs);

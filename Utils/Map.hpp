@@ -62,23 +62,32 @@ namespace Graph
 			rtree_index->insert(poi);
 		});
 	}
-
+	
 
 	///<summary>
-	/// fromからtoまでの最短パスのうち，INTERSECTION系列部分の先頭と末尾を取得する
-	/// first=>先頭, second=>末尾
+	/// fromからtoまでの最短ルートの系列とその距離を返す．
+	/// 不正な値の場合はMapNodeIndicator(INVALID, NodeType::INVALID)の系列とNO_CONNECTIONを返す
+	/// distance_thresholdを設定した場合，最短距離がその値以上とわかった時点で探索を打ち切り上記を返す
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
-	std::pair<node_id, node_id> Map<NODE, POI, PATH>::get_intersection_ends_of_shortest_path(const MapNodeIndicator& from, const MapNodeIndicator& to) const
+	std::pair<std::vector<MapNodeIndicator>, double> Map<NODE, POI, PATH>::get_shortest_path_info(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold) const
 	{
+
+		std::vector<MapNodeIndicator> ret_route;
+		double ret_distance = NO_CONNECTION;
 
 		//両方INTERSECTIONの場合
 		if (from.type() == NodeType::INTERSECTION && to.type() == NodeType::INTERSECTION) {
-			return std::make_pair(from.id(), to.id());
+			RouteInfo<PATH> info = routing_client->shortest_path_info(from.id(), to.id(), distance_threshold);
+			ret_distance = info.total_distance;
+			for (std::vector<node_id>::const_iterator iter = info.route->begin(); iter != info.route->end(); iter++) {
+				ret_route.push_back(MapNodeIndicator(*iter, NodeType::INTERSECTION));
+			}
 		}
 
 		//両方POIの場合
 		else if (from.type() == NodeType::POI && to.type() == NodeType::POI) {
+			
 			std::shared_ptr<POI const> poi_from = poi_collection->read_by_id(from.id());
 			std::shared_ptr<POI const> poi_to = poi_collection->read_by_id(to.id());
 			std::pair<node_id, node_id> between_from = poi_from->between();
@@ -88,32 +97,35 @@ namespace Graph
 			double distance_poi_to_to_first = poi_to->distance_to(between_to.first);
 			double distance_poi_to_to_second = poi_to->distance_to(between_to.second);
 
-			double distance_first_first = distance_poi_from_to_first == NO_CONNECTION || distance_poi_to_to_first == NO_CONNECTION ?
-				NO_CONNECTION : distance_poi_from_to_first + distance_poi_to_to_first + routing_client->shortest_distance(between_from.first, between_to.first);
-			double distance_first_second = distance_poi_from_to_first == NO_CONNECTION || distance_poi_to_to_second == NO_CONNECTION ?
-				NO_CONNECTION : distance_poi_from_to_first + distance_poi_to_to_second + routing_client->shortest_distance(between_from.first, between_to.second);
-			double distance_second_first = distance_poi_from_to_second == NO_CONNECTION || distance_poi_to_to_first == NO_CONNECTION ?
-				NO_CONNECTION : distance_poi_from_to_second + distance_poi_to_to_first + routing_client->shortest_distance(between_from.second, between_to.first);
-			double distance_second_second = distance_poi_from_to_second == NO_CONNECTION || distance_poi_to_to_second == NO_CONNECTION ?
-				NO_CONNECTION : distance_poi_from_to_second + distance_poi_to_to_second + routing_client->shortest_distance(between_from.second, between_to.second);
-			
-			std::pair<node_id, node_id> ret = std::make_pair(NOWHERE, NOWHERE);
-			
-			std::unordered_map<double, std::pair<node_id, node_id>> values = {
-				{ distance_first_first, std::make_pair(between_from.first, between_to.first) },
-				{ distance_first_second, std::make_pair(between_from.first, between_to.second) },
-				{ distance_second_first, std::make_pair(between_from.second, between_to.first) },
-				{ distance_second_second, std::make_pair(between_from.second, between_to.second) }
-			};
+			RouteInfo<PATH> first_first = routing_client->shortest_path_info(between_from.first, between_to.first, distance_threshold);
+			RouteInfo<PATH> first_second = routing_client->shortest_path_info(between_from.first, between_to.second, distance_threshold);
+			RouteInfo<PATH> second_first = routing_client->shortest_path_info(between_from.second, between_to.first, distance_threshold);
+			RouteInfo<PATH> second_second = routing_client->shortest_path_info(between_from.second, between_to.second, distance_threshold);
 
-			double min_distance = DBL_MAX;
-			for (std::unordered_map<double, std::pair<node_id, node_id>>::const_iterator iter = values.begin(); iter != values.end(); iter++) {
-				if (iter->first < min_distance) {
-					min_distance = iter->first;
-					ret = iter->second;
+			first_first.total_distance += first_first.total_distance == DBL_MAX || distance_poi_from_to_first == DBL_MAX || distance_poi_to_to_first == DBL_MAX ? 0 : distance_poi_from_to_first + distance_poi_to_to_first;
+			first_second.total_distance += first_second.total_distance == DBL_MAX || distance_poi_from_to_first == DBL_MAX || distance_poi_to_to_second == DBL_MAX ? 0 : distance_poi_from_to_first + distance_poi_to_to_second;
+			second_first.total_distance += second_first.total_distance == DBL_MAX || distance_poi_from_to_second == DBL_MAX || distance_poi_to_to_first == DBL_MAX ? 0 : distance_poi_from_to_second + distance_poi_to_to_first;
+			second_second.total_distance += second_second.total_distance == DBL_MAX || distance_poi_from_to_second == DBL_MAX || distance_poi_to_to_second == DBL_MAX ? 0 : distance_poi_from_to_second + distance_poi_to_to_second;
+			
+			std::vector<std::pair<node_id, RouteInfo<PATH>>> route_list({
+				{ between_from.first, first_first },
+				{ between_from.first, first_second },
+				{ between_from.second, second_first },
+				{ between_from.second, second_second }
+			});
+
+			std::vector<std::pair<node_id, RouteInfo<PATH>>>::const_iterator min_route = std::min_element(route_list.begin(), route_list.end(), [](const std::pair<node_id, RouteInfo<PATH>>& left, const std::pair<node_id, RouteInfo<PATH>>& right) {
+				return left.second.total_distance < right.second.total_distance;
+			});
+			
+			ret_distance = min_route->second.total_distance;
+			if (min_route->second.route != nullptr) {
+				ret_route.push_back(MapNodeIndicator(min_route->first, NodeType::INTERSECTION));
+				for (std::vector<node_id>::const_iterator iter = min_route->second.route->begin(); iter != min_route->second.route->end(); iter++) {
+					ret_route.push_back(MapNodeIndicator(*iter, NodeType::INTERSECTION));
 				}
+				ret_route.push_back(to);
 			}
-			return ret;
 		}
 
 		//一方のみPOIの場合
@@ -126,62 +138,37 @@ namespace Graph
 			double distance_to_first = poi->distance_to(between.first);
 			double distance_to_second = poi->distance_to(between.second);
 
-			double distance_path_to_first = from.type() == NodeType::POI ? routing_client->shortest_distance(between.first, to.id()) : routing_client->shortest_distance(from.id(), between.first);
-			double distance_path_to_second = from.type() == NodeType::POI ? routing_client ->shortest_distance(between.second, to.id()) : routing_client->shortest_distance(from.id(), between.second);
+			RouteInfo<PATH> route_first = from.type() == NodeType::POI ? routing_client->shortest_path_info(between.first, to.id(), distance_threshold) : routing_client->shortest_path_info(from.id(), between.first, distance_threshold);
+			RouteInfo<PATH> route_second = from.type() == NodeType::POI ? routing_client->shortest_path_info(between.second, to.id(), distance_threshold) : routing_client->shortest_path_info(from.id(), between.second, distance_threshold);
 
-			distance_to_first = distance_to_first == NO_CONNECTION || distance_path_to_first == NO_CONNECTION ?
-				NO_CONNECTION : distance_to_first + distance_path_to_first;
-			distance_to_second = distance_to_second == NO_CONNECTION || distance_path_to_second == NO_CONNECTION ?
-				NO_CONNECTION : distance_to_second + distance_path_to_second;
+			route_first.total_distance += route_first.total_distance == NO_CONNECTION || distance_to_first == NO_CONNECTION ? 0 : distance_to_first;
+			route_second.total_distance += route_second.total_distance == NO_CONNECTION || distance_to_second == NO_CONNECTION ? 0 : distance_to_second;
 
-			if (distance_to_first < distance_to_second) {
-				return from.type() == NodeType::POI ? std::make_pair(between.first, to.id()) : std::make_pair(from.id(), between.first);
-			}
-			else {
-				return from.type() == NodeType::POI ? std::make_pair(between.second, to.id()) : std::make_pair(from.id(), between.second);
+			RouteInfo<PATH> min_route = route_first.total_distance < route_second.total_distance ? route_first : route_second;
+			ret_distance = min_route.total_distance;
+			if (min_route.route != nullptr) {
+				node_id between_which = route_first.total_distance < route_second.total_distance ? between.first : between.second;
+				if (from.type() == NodeType::POI) ret_route.push_back(MapNodeIndicator(between_which, NodeType::INTERSECTION));
+				for (std::vector<node_id>::const_iterator iter = min_route.route->begin(); iter != min_route.route->end(); iter++) {
+					ret_route.push_back(MapNodeIndicator(*iter, NodeType::INTERSECTION));
+				}
+				if (to.type() == NodeType::POI) ret_route.push_back(to);
 			}
 		}
-		return std::make_pair(NOWHERE, NOWHERE);
+
+		if (ret_distance == NO_CONNECTION) ret_route = { MapNodeIndicator(-1, NodeType::INVALID) };
+		return std::make_pair(ret_route, ret_distance);
 	}
 
 	///<summary>
 	/// fromからtoまでの最短距離を求める
 	/// オーバーフロー周りのバグに注意
+	/// distance_thresholdが設定されている場合は最短路がその値を超えている場合探索を打ち切りNO_CONNECTIONを返す
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
-	double Map<NODE, POI, PATH>::shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to) const
+	double Map<NODE, POI, PATH>::shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold) const
 	{
-		//両方INTERSECTIONの場合
-		if (from.type() == NodeType::INTERSECTION && to.type() == NodeType::INTERSECTION) {
-			return routing_client->shortest_distance(from.id(), to.id());
-		}
-		
-		std::pair<node_id, node_id> intersection_ends = get_intersection_ends_of_shortest_path(from, to);
-		double route_distance = routing_client->shortest_distance(intersection_ends.first, intersection_ends.second);
-		if (route_distance == NO_CONNECTION) return NO_CONNECTION;
-
-		//fromのみPOIの場合
-		if (from.type() == NodeType::POI && to.type() == NodeType::INTERSECTION){
-			std::shared_ptr<POI const> poi_from = poi_collection->read_by_id(from.id());
-			double distance_to_first = poi_from->distance_to(intersection_ends.first);
-			return  distance_to_first + route_distance;
-		}
-
-		//toのみPOIの場合
-		else if (from.type() == NodeType::INTERSECTION && to.type() == NodeType::POI) {
-			std::shared_ptr<POI const> poi_to = poi_collection->read_by_id(to.id());
-			double distance_to_last = poi_to->distance_to(intersection_ends.second);
-			return route_distance + distance_to_last;
-		}
-
-		//両方POIの場合
-		else {
-			std::shared_ptr<POI const> poi_from = poi_collection->read_by_id(from.id());
-			std::shared_ptr<POI const> poi_to = poi_collection->read_by_id(to.id());
-			double distance_to_first = poi_from->distance_to(intersection_ends.first);
-			double distance_to_last = poi_to->distance_to(intersection_ends.second);
-			return distance_to_first + route_distance + distance_to_last;
-		}
+		return get_shortest_path_info(from, to, distance_threshold).second;
 	}
 
 	
@@ -189,41 +176,27 @@ namespace Graph
 	///<summary>
 	/// MapNodeIndicatorの系列で経路を返す．
 	/// source == destinationの場合は空のリストが返されます．
-	/// 指定が不正な場合はNOWHEREのみをふくむVectorを返す
+	/// distance_thresholdを設定した場合，最短路の長さがdistance_threshold以上の場合NOWHERE, NodeType::INVALIDのみのVectorを返す
+	/// from, toが不正な値の場合も同様
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
-	const std::vector<MapNodeIndicator> Map<NODE, POI, PATH>::get_shortest_path(const MapNodeIndicator& source, const MapNodeIndicator& destination) const
+	std::vector<MapNodeIndicator> Map<NODE, POI, PATH>::get_shortest_path(const MapNodeIndicator& source, const MapNodeIndicator& destination, double distance_threshold) const
 	{
-
-		std::vector<MapNodeIndicator> ret;
-		std::shared_ptr<std::vector<node_id>> intersection_path;
-		
-		std::pair<node_id, node_id> intersection_ends = get_intersection_ends_of_shortest_path(source, destination);
-
-		if (source.type() == NodeType::POI) {
-			ret.push_back(MapNodeIndicator(intersection_ends.first, NodeType::INTERSECTION));
-		}
-		
-		intersection_path = routing_client->shortest_path(intersection_ends.first, intersection_ends.second);
-		for (std::vector<node_id>::const_iterator iter = intersection_path->begin(); iter != intersection_path->end(); iter++) {
-			ret.push_back(MapNodeIndicator(*iter, NodeType::INTERSECTION));
-		}
-		
-		if (destination.type() == NodeType::POI) ret.push_back(destination);
-		return ret;
+		return get_shortest_path_info(source, destination, distance_threshold).first;
 	}
 
 	
 
 	///<summary>
 	/// fromからtoまで平均速度avg_speed[m/s]で移動した際の所要時間を計算します
-	/// 到達不可能な場合はNO_CONNECTIONを返します．
+	/// 到達不可能な場合および最短路の距離がdistance_thresholdより大きい場合はNO_CONNECTIONを返します．
+	/// 
 	///</summary>
 	template <typename NODE, typename POI, typename PATH>
-	double Map<NODE, POI, PATH>::calc_necessary_time(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed) const
+	double Map<NODE, POI, PATH>::calc_necessary_time(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, double distance_threshold) const
 	{
-		double distance = shortest_distance(from, to);
-		return distance / avg_speed;
+		double distance = shortest_distance(from, to, distance_threshold);
+		return distance == DBL_MAX ? NO_CONNECTION : distance / avg_speed;
 	}
 
 
@@ -233,7 +206,8 @@ namespace Graph
 	template <typename NODE, typename POI, typename PATH>
 	bool Map<NODE, POI, PATH>::is_reachable(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, const double& time_limit) const
 	{
-		return calc_necessary_time(from, to, avg_speed) <= time_limit;
+		double distance_threshold = avg_speed * time_limit;
+		return calc_necessary_time(from, to, avg_speed, distance_threshold) <= time_limit;
 	}
 
 
