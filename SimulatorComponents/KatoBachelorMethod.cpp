@@ -191,7 +191,7 @@ namespace Method
 		int phase = 0;//phase
 		const int GRID_TOTAL_NUM = CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE;//グリッドの数
 
-																	 //各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
+		//各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
 		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>(time_manager->phase_count(), 0));
 
 		//あるphaseにおける各セルに存在するユーザ及び生成済みダミーの移動経路(停止地点)の数
@@ -220,7 +220,7 @@ namespace Method
 		int start_of_cycle = 1;//周期の左端
 		int end_of_cycle = start_of_cycle + requirement->cycle_of_interval_of_base_phase;//周期の右端
 
-																						 //各セルのstart_phaseからend_phaseのエンティティの合計(表の行の和を計算していることに相当)
+		//各セルのstart_phaseからend_phaseのエンティティの合計(表の行の和を計算していることに相当)
 		std::vector<int> total_entity_num_interval_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, start_of_cycle, end_of_cycle);
 
 

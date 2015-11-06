@@ -28,21 +28,10 @@ namespace Simulation
 		//get_userが何かをはっきりさせる．
 		//time_managerのtimeってどこで設定する？
 		
-		//-----↓要求パラメータ．requirementと同じ値にすること！↓---------//
-		const double AVERAGE_SPEED = 1.5;
-		const double RANGE_OF_SPEED = 0.5;
-		const int MAX_PAUSE_TIME = 600;
-		const int MIN_PAUSE_TIME = 60;
-		const int SERVICE_INTERVAL = 180;
-		const int end_time = 1800;
-		const int POI_NUM = 4;
-		double length_of_rect = 0.005;//ここには適切な範囲内の緯度経度差を書く
-		double base_lat = 35.677;//出発地の目安の緯度．全POIの平均値
-		double base_lng = 139.715;//出発地の目安の経度．全POIの平均値
 		//rect_init_langには始点にしたい範囲をインスタンスで入力
 		Graph::Rectangle<Geography::LatLng> rect_init_range(base_lat + 0.5*length_of_rect, base_lng - 0.5*length_of_rect, base_lat - 0.5*length_of_rect, base_lng + 0.5*length_of_rect);
-	  //-----↑要求パラメータ．requirementと同じ値にすること！↑---------//
-
+	 
+		//-----time_managerの生成-------//
 		int phase_id = 0;
 		std::unique_ptr<std::vector<time_t>> timeslots = std::make_unique<std::vector<time_t>>();
 		for (int time = 0; time <= end_time; time += SERVICE_INTERVAL) {
@@ -71,7 +60,7 @@ namespace Simulation
 		std::mt19937_64 generator(device());
 		std::shuffle(random_pois_list.begin(), random_pois_list.end(), generator);
 
-		std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator now_poi = random_pois_list.begin();
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = random_pois_list.begin();
 		user->set_position_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
 		user->set_random_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
 
@@ -105,7 +94,7 @@ namespace Simulation
 			std::random_device device2;
 			std::mt19937_64 generator2(device2());
 			std::shuffle(candidate_pois_list.begin(), candidate_pois_list.end(), generator2);
-			std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator next_poi = candidate_pois_list.begin();
+			std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator next_poi = candidate_pois_list.begin();
 
 		
 			//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
@@ -132,26 +121,27 @@ namespace Simulation
 			//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
 			double distance = variable_of_converted_pause_time_to_phase.rem * pause_position_speed;
 			double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*next_poi)->get_id());
-		
+
+			Graph::MapNodeIndicator nearest_position = (*now_poi)->get_id();
+
 			//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
 			while (distance <= distance_between_now_and_next_poi) {
 				
-				//最短路の中で一番近いintersectionを探し，線形補間する．
-				Graph::MapNodeIndicator nearest_position  =  user->read_node_pos_info_of_phase(phase_id).first;
-								
-				while (distance > map->shortest_distance(user->read_node_pos_info_of_phase(phase_id).first, *path_iter))
+				//最短路の中で一番近いintersectionを探し，線形補間する．		
+				while (distance > map->shortest_distance((*now_poi)->get_id(), *path_iter))
 				{
 					nearest_position = *path_iter;
 					path_iter++;
 				}
 				
-				double distance_between_start_and_nearest_position = map->shortest_distance(user->read_node_pos_info_of_phase(phase_id).first, nearest_position);
+				double distance_between_start_and_nearest_position = map->shortest_distance((*now_poi)->get_id(), nearest_position);
 				
 				double distance_between_nearest_intersection_and_arrive_position = distance - distance_between_start_and_nearest_position;
+				
 				Geography::LatLng nearest_latlng
 					= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
 				Geography::LatLng next_nearest_latlang
-					= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi((*path_iter).id())->data->get_position() : *map->get_static_node((*path_iter).id())->data;
+					= (*path_iter).type() == Graph::NodeType::POI ? map->get_static_poi((*path_iter).id())->data->get_position() : *map->get_static_node((*path_iter).id())->data;
 				double angle = Geography::GeoCalculation::lambert_azimuth_angle(nearest_latlng, next_nearest_latlang);
 
 				Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
@@ -160,16 +150,18 @@ namespace Simulation
 				user->set_position_of_phase(phase_id, Graph::MapNodeIndicator(Graph::NodeType::INVALID, Graph::NodeType::INVALID), arrive_position);
 									
 				distance += SERVICE_INTERVAL * pause_position_speed;
+
 			}
 
 			//destinationのところまで補完できたら，rest_timeを保持しておく！
-			double distance_between_arrive_position_and_dest_position = distance - map->shortest_distance((*now_poi)->get_id(), (*next_poi)->get_id());
+			double distance_between_arrive_position_and_dest_position = distance - distance_between_now_and_next_poi;
 			dest_rest_time = distance_between_arrive_position_and_dest_position / pause_position_speed;
 			//目的地の登録
 			user->set_position_of_phase(phase_id, (*next_poi)->get_id(), map->get_static_poi((*next_poi)->get_id())->data->get_position());
-			
+			user->set_random_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
+
 			//現在位置の更新
-			now_poi = next_poi;
+			*now_poi = *next_poi;
 
 		}
 	}
