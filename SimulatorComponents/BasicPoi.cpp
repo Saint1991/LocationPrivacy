@@ -142,7 +142,7 @@ namespace Map
 	double BasicPoi::distance_to(const Graph::node_id& to) const
 	{
 		std::shared_ptr<BasicRoad const> road = get_static_edge_to(to);
-		if (road == nullptr) return DBL_MAX;
+		if (road == nullptr) return id == to ? 0.0 : DBL_MAX;
 		return road->distance();
 	}
 }

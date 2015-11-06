@@ -9,7 +9,7 @@ namespace Entity
 	///</summary>
 	template <typename POSITION_TYPE>
 	MobileEntity<POSITION_TYPE>::MobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
-		: Identifiable<entity_id>(id), timeslot(timeslot), positions(std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count(), nullptr)), 
+		: Identifiable<entity_id>(id), timeslot(timeslot), positions(std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count(), nullptr)),
 		visited_node_ids(std::make_shared<std::vector<Graph::MapNodeIndicator>>(timeslot->phase_count(), Graph::MapNodeIndicator(INVALID, Graph::NodeType::INVALID))), 
 		cross_flg(std::make_shared<std::vector<bool>>(timeslot->phase_count(), false)), total_cross_count(0)
 	{

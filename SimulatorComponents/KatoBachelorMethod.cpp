@@ -140,13 +140,13 @@ namespace Method
 		double pause_position_speed = creating_dummy->get_speed((*phase_id - 1) - variable_of_converted_pause_time_to_phase.quot);//停止位置の出発速度を保持しておく
 		std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
 
-																									   //sourceからの距離
-																									   //最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
-																									   //速度はphaseで埋める前を参照しなければならないことに注意
+		//sourceからの距離
+		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
+		//速度はphaseで埋める前を参照しなければならないことに注意
 		double distance = variable_of_converted_pause_time_to_phase.rem * pause_position_speed;
 
 		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
-		while (distance >= map->shortest_distance(source, destination))
+		while (distance <= map->shortest_distance(source, destination))
 		{
 			//最初は停止時間をphaseに換算したときの余り分をdistanceとして，最短路の中で一番近いintersectionを探し，線形補間する．
 			Graph::MapNodeIndicator nearest_position = creating_dummy->read_node_pos_info_of_phase(*phase_id - 1).first;
@@ -370,8 +370,8 @@ namespace Method
 		creating_dummy->set_pause_time(0, requirement->max_pause_time);//初期phaseの停止時間
 		creating_dummy->set_random_speed(0, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);//初期phaseのspeedの決定
 
-																													//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
-																													//一旦リストで取得してから，その中からランダムで選択
+		//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
+		//一旦リストで取得してから，その中からランダムで選択
 		double distance = creating_dummy->get_speed(0) * (time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(0));
 		Geography::LatLng candidate_init_latlng = Geography::GeoCalculation::calc_translated_point(*dest_position.second.second, distance, M_PI * 1.5);
 		//POIを探索する長方形を取得．目的地に近づく方向を考慮
