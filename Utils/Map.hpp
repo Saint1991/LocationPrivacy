@@ -185,7 +185,16 @@ namespace Graph
 		return get_shortest_path_info(source, destination, distance_threshold).first;
 	}
 
-	
+
+	///<summary>
+	/// 交差点間の最短ルートのエッジリストと，その距離を返す
+	/// ただし，from, toはINTERSECTIONのみに対応している点に注意
+	///</summary>
+	template <typename NODE, typename POI, typename PATH>
+	RouteInfo<PATH> Map<NODE, POI, PATH>::get_shortest_route_info_between_intersections(const node_id& from, const node_id&to, double distance_threshold) const
+	{
+		return routing_client->shortest_path_info(from, to, distance_threshold);
+	}
 
 	///<summary>
 	/// fromからtoまで平均速度avg_speed[m/s]で移動した際の所要時間を計算します
