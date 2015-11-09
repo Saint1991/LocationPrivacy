@@ -37,7 +37,7 @@ namespace Method
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> creating_dummy;
 		
 		//メソッド
-		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成
+		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_area, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成
 		std::vector<int> get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_table, int start_phase, int end_phase);//各セルのフェーズトータルのエンティティの数
 		std::vector<int> get_total_num_of_each_cell_at_all_phase(std::vector<std::vector<int>>& entities_table);//各セルのフェーズトータルのエンティティの数
 		std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list(const Graph::Rectangle<Geography::LatLng>& boundary);

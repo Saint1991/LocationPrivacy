@@ -28,14 +28,20 @@ namespace Method
 	/// T[s]ごとのグリッド領域を作成
 	/// grid_lengthはグリッド全体の長さ
 	///</summary>
-	std::vector <Graph::Rectangle<Geography::LatLng>> KatoBachelorMethod::make_grid(double grid_length, const Geography::LatLng& center, int cell_num_on_side)
+	std::vector <Graph::Rectangle<Geography::LatLng>> KatoBachelorMethod::make_grid(double grid_area, const Geography::LatLng& center, int cell_num_on_side)
 	{
-		double side_length = grid_length / cell_num_on_side;//セル一つ分の長方形の長さ
-															//centerの四点の座標
-		double top = center.y() + side_length * 1.5;
-		double left = center.x() - side_length * 1.5;
-		double bottom = center.y() + side_length * 0.5;
-		double right = center.x() - side_length * 0.5;
+		double grid_length = std::sqrt(grid_area);//grid全体の一辺の長さ．匿名領域の√
+		double cell_length = grid_length / cell_num_on_side;//セル一つ分の長方形の長さ
+	
+		//長さ(cell_length)を緯度経度の単位に変換
+		double length_translated_lat = Geography::GeoCalculation::calc_translated_point(center, cell_length, M_PI_2 * 3).lat() - center.lat();
+		double length_translated_lng = Geography::GeoCalculation::calc_translated_point(center, cell_length, 0).lng() - center.lng();
+
+		//centerを中心としたgridを生成した時の，一番左上に相当するcellの四点の緯度経度
+		double top = center.lat() + 1.5 * length_translated_lat;
+		double left = center.lng() - 1.5 * length_translated_lng;
+		double bottom = center.lat() + 0.5 * length_translated_lat;
+		double right = center.lng() - 0.5 * length_translated_lng;
 
 		std::vector<Graph::Rectangle<Geography::LatLng>> grid_list;//グリッド全体を管理するリスト
 
@@ -47,12 +53,12 @@ namespace Method
 			for (int j = 0; j < cell_num_on_side; j++)
 			{
 				grid_list.push_back(Graph::Rectangle<Geography::LatLng>(top, left, bottom, right));
-				right += side_length;
-				left += side_length;
+				right += length_translated_lng;
+				left += length_translated_lng;
 			}
 
-			top -= side_length;
-			bottom -= side_length;
+			top -= length_translated_lat;
+			bottom -= length_translated_lat;
 			left = base_left;
 			right = base_right;
 		}
@@ -209,7 +215,7 @@ namespace Method
 			grid_list.at(phase) = grid;//あるphaseのGrid
 
 			int cell_id = 0;//セルのid
-							//あるphaseの全てのセルの，エンティティ数を計算(表の列を計算することに相当)
+			//あるphaseの全てのセルの，エンティティ数を計算(表の列を計算することに相当)
 			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid.begin(); iter != grid.end(); iter++)
 			{
 				entities_num_table.at((cell_id++) - 1).at(phase) = entities->get_entity_count_within_boundary(phase, *iter);
