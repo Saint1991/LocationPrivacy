@@ -205,27 +205,27 @@ namespace Entity
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_of_phase(int phase) const
 	{
-		double x = 0.0;
-		double y = 0.0;
+		double latitude = 0.0;
+		double longitude = 0.0;
 
 		std::shared_ptr<POSITION_TYPE const> position = user->read_position_of_phase(phase);
-		x += position->x();
-		y += position->y();
+		latitude += position->lat();
+		longitude += position->lng();
 		int fixed_count = 1;
 
 		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
 			position = (*iter)->read_position_of_phase(phase);
 			if (position != nullptr) {
 				fixed_count++;
-				x += position->x();
-				y += position->y();
+				latitude += position->lat();
+				longitude += position->lng();
 			}
 		}
 
-		x /= fixed_count;
-		y /= fixed_count;
+		latitude /= fixed_count;
+		longitude /= fixed_count;
 		
-		return std::move(std::make_shared<POSITION_TYPE const>(y, x));
+		return std::move(std::make_shared<POSITION_TYPE const>(latitude, longitude));
 	}
 
 
@@ -291,7 +291,6 @@ namespace Entity
 		
 		return counter;
 	}
-	
 }
 
 

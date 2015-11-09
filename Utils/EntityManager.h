@@ -13,12 +13,15 @@ namespace Entity
 	///<summary>
 	/// ダミーとユーザを管理するクラス
 	/// 交差回数カウントのため，ユーザもconstにしていないが，基本positionsには操作は加えないこと
+	/// 暫定的にPOSITION_TYPEはLatLngから継承したクラスに制限している
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE = Geography::LatLng>
 	class EntityManager
 	{
-	static_assert(std::is_base_of<MobileEntity<Geography::LatLng>, DUMMY>::value || std::is_base_of<MobileEntity<Graph::Coordinate>, DUMMY>::value, "DUMMY must be derived from MobileEntity");
-	static_assert(std::is_base_of<MobileEntity<Geography::LatLng>, USER>::value || std::is_base_of<MobileEntity<Graph::Coordinate>, USER>::value, "USER must be derived from MobileEntity");
+	
+	static_assert(std::is_base_of<Geography::LatLng, POSITION_TYPE>::value, "POSITION_TYPE must be derived from LatLng");
+	static_assert(std::is_base_of<MobileEntity<Geography::LatLng>, DUMMY>::value, "DUMMY must be derived from MobileEntity");
+	static_assert(std::is_base_of<MobileEntity<Geography::LatLng>, USER>::value, "USER must be derived from MobileEntity");
 	
 	protected:
 		std::shared_ptr<std::vector<std::shared_ptr<DUMMY>>> dummies;
@@ -47,7 +50,6 @@ namespace Entity
 		int get_entity_count_within_boundary(int phase, const Graph::Rectangle<POSITION_TYPE>& boundary) const;
 		int get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right) const;
 		int get_all_entities_total_crossing_count() const;
-
 	};
 }
 
