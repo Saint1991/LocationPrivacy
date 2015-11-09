@@ -10,7 +10,7 @@ namespace Method
 	///</summary>
 	KatoBachelorMethod::KatoBachelorMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
 		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>(map, user, requirement, time_manager),
-		grid_list(std::vector<Grid>(time_manager->phase_count())),
+		grid_list(std::vector<Grid>(time_manager->phase_count()/requirement->interval_of_base_phase)),
 		creating_dummy(nullptr)
 	{
 	}
@@ -202,25 +202,31 @@ namespace Method
 		const int GRID_TOTAL_NUM = CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE;//グリッドの数
 
 		//各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
-		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>(time_manager->phase_count(), 0));
+		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>(time_manager->phase_count()/requirement->interval_of_base_phase, 0));
 
 		//あるphaseにおける各セルに存在するユーザ及び生成済みダミーの移動経路(停止地点)の数
 		//横がセルのid，縦がphaseを表す動的２次元配列で記憶
 		//phase_intervalの間隔で記録していく
 		//k-2個目までのtableを作っておいて，k-1個目を＋１して更新すればより効率が良い
+		std::shared_ptr<Geography::LatLng const> center = entities->get_average_position_of_phase(phase);//中心位置を求める
+		Grid grid = make_grid(requirement->required_anonymous_area, *center, CELL_NUM_ON_SIDE);//phaseごとにグリッドを作成
+		int grid_list_id = 0;
+		int cell_id = 0;//セルのid
 		while (phase <= time_manager->phase_count())
 		{
-			std::shared_ptr<Geography::LatLng const> center = entities->get_average_position_of_phase(phase);//中心位置を求める
-			Grid grid = make_grid(requirement->required_anonymous_area, *center, CELL_NUM_ON_SIDE);//phaseごとにグリッドを作成
-			grid_list.at(phase) = grid;//あるphaseのGrid
-
-			int cell_id = 0;//セルのid
+			cell_id = 0;//セルのidのリセット
+			center = entities->get_average_position_of_phase(phase);//中心位置を求める
+			grid = make_grid(requirement->required_anonymous_area, *center, CELL_NUM_ON_SIDE);//phaseごとにグリッドを作成
+			grid_list.at(grid_list_id) = grid;//あるphaseのGrid.grud_list_idで何回目かのgrid生成かを記録する
+						
 			//あるphaseの全てのセルの，エンティティ数を計算(表の列を計算することに相当)
 			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid.begin(); iter != grid.end(); iter++, cell_id++)
+			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid_list.at(grid_list_id).begin(); iter != grid_list.at(grid_list_id).end(); iter++)
 			{
-				entities_num_table.at(cell_id).at(phase) = entities->get_entity_count_within_boundary(phase, *iter);
+				entities_num_table.at(cell_id).at(grid_list_id) = entities->get_entity_count_within_boundary(phase, *iter);
 			}
-			phase += requirement->interval_of_base_phase;
+			phase += requirement->interval_of_base_phase;//phaseの更新
+			grid_list_id++;//grid_list_idのインクリメント
 		}
 
 		//周期をphaseで設定し，その周期ベースで匿名領域確保のための地点を作成

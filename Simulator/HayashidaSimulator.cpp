@@ -229,8 +229,8 @@ namespace Simulation
 
 		requirements = 
 		{
-			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 4, 180, 10, 5),
-			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 16, 180, 10, 5),
+			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 4, 180, 5, 2),
+			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 16, 180, 5, 2)
 		};
 	}
 
