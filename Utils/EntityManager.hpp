@@ -224,7 +224,8 @@ namespace Entity
 
 		x /= fixed_count;
 		y /= fixed_count;
-		return std::move(std::make_shared<POSITION_TYPE const>(x, y));
+		
+		return std::move(std::make_shared<POSITION_TYPE const>(y, x));
 	}
 
 

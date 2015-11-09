@@ -71,7 +71,7 @@ namespace Simulation
 			//ŽŸ‚ÌŒó•â“_‚Ì”ÍˆÍ‚ð‹‚ß‚é
 			Math::Probability generator;
 			double distance_between_positions = generator.uniform_distribution(300.0, 1000.0);
-			double angle_of_positions = generator.uniform_distribution(0.0, M_PI_2);
+			double angle_of_positions = M_PI_4;// generator.uniform_distribution(0.0, M_PI_2);
 			Geography::LatLng next_candidate_poi_position_range
 				= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), distance_between_positions, angle_of_positions);
 
@@ -229,8 +229,8 @@ namespace Simulation
 
 		requirements = 
 		{
+			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 4, 180, 10, 5),
 			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 16, 180, 10, 5),
-			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 25, 180, 10, 5),
 		};
 	}
 

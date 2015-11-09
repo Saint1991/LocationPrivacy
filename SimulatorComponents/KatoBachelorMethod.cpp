@@ -115,6 +115,7 @@ namespace Method
 	///<summary>
 	/// position間のパスを線形補間する．
 	/// sourceには決定点,destinationには目的地，source_phaseには，決定しているphaseを入力すること.
+	/// sourceには既に停止地点は入力されている
 	/// dest_rest_timeをポインタ引数にすることで，複数の返り値を実現.次の到着時間の余りを返す．
 	///</summary>
 	void KatoBachelorMethod::linear_interpolation_of_path_between_positions(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int *phase_id, int *dest_rest_time) {
@@ -145,16 +146,19 @@ namespace Method
 		//速度はphaseで埋める前を参照しなければならないことに注意
 		double distance = variable_of_converted_pause_time_to_phase.rem * pause_position_speed;
 
+		double distance_from_source_to_destination = map->shortest_distance(source, destination);
+		
+		Graph::MapNodeIndicator nearest_position = source;
 		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
-		while (distance <= map->shortest_distance(source, destination))
+		while (distance < distance_from_source_to_destination)
 		{
 			//最初は停止時間をphaseに換算したときの余り分をdistanceとして，最短路の中で一番近いintersectionを探し，線形補間する．
-			Graph::MapNodeIndicator nearest_position = creating_dummy->read_node_pos_info_of_phase(*phase_id - 1).first;
 			while (distance > map->shortest_distance(source, *path_iter))
 			{
 				nearest_position = *path_iter;
 				path_iter++;
 			}
+
 			double distance_between_nearest_intersection_and_arrive_position = distance - map->shortest_distance(source, nearest_position);
 			Geography::LatLng nearest_latlng
 				= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
