@@ -216,9 +216,9 @@ namespace Method
 
 			int cell_id = 0;//セルのid
 			//あるphaseの全てのセルの，エンティティ数を計算(表の列を計算することに相当)
-			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid.begin(); iter != grid.end(); iter++)
+			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid.begin(); iter != grid.end(); iter++, cell_id++)
 			{
-				entities_num_table.at((cell_id++) - 1).at(phase) = entities->get_entity_count_within_boundary(phase, *iter);
+				entities_num_table.at(cell_id).at(phase) = entities->get_entity_count_within_boundary(phase, *iter);
 			}
 			phase += requirement->interval_of_base_phase;
 		}
