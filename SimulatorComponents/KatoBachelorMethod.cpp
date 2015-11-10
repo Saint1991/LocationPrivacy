@@ -290,6 +290,7 @@ namespace Method
 				creating_dummy->set_random_speed(base_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 			}
 
+			end_of_cycle++;
 			//start_of_cycle += requirement->cycle_of_interval_of_base_phase;
 			//end_of_cycle += requirement->cycle_of_interval_of_base_phase;
 		}

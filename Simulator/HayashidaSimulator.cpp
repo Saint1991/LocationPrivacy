@@ -269,9 +269,9 @@ namespace Simulation
 			int interval_of_base_phase,
 			int cycle_of_interval_of_base_phase,
 			int max_pause_time = 600,
-			int min_pause_time = 60,
-			double average_speed = 3.0,
-			double speed_range = 2.0
+			int min_pause_time = 300,
+			double average_speed = 1.5,
+			double speed_range = 0.5
 		---------------------------------------------*/
 
 		requirements = 
