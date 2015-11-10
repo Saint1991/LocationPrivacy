@@ -35,7 +35,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::unique_ptr<Simulation::ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>> simulator
 		= std::make_unique<Simulation::HayashidaSimulator>(MAP_BOUNDARY);
 	simulator->prepare();
-	simulator->run();
+	//simulator->run();
 	simulator->evaluate();
 	simulator->export_evaluation_result();
 
