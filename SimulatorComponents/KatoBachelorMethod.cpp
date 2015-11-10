@@ -70,16 +70,17 @@ namespace Method
 	///<summary>
 	/// グリッドテーブルのstart_phaseからend_phaseのエンティティの合計を取得
 	///</summary>
-	std::vector<int> KatoBachelorMethod::get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_table, int start_phase, int end_phase) {
-		std::vector<int> total_entity_num_interval_phase;
-		for (int grid_id = 0; grid_id < CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE; grid_id++)
+	std::vector<int> KatoBachelorMethod::get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_table, int cycle_num) {
+		std::vector<int> total_entity_num_interval_phase(CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE, 0);
+
+		for (int cell_id = 0; cell_id < CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE; cell_id++)
 		{
 			int temp = 0;
-			for (int phase = start_phase; phase < end_phase; phase++)
+			for (int interval_of_base_phase = 0; interval_of_base_phase < cycle_num; interval_of_base_phase++)
 			{
-				temp += entities_table.at(grid_id).at(phase);
+				temp += entities_table.at(cell_id).at(interval_of_base_phase);
 			}
-			total_entity_num_interval_phase.at(grid_id) = temp;
+			total_entity_num_interval_phase.at(cell_id) = temp;
 		}
 		return total_entity_num_interval_phase;
 	}
@@ -106,9 +107,23 @@ namespace Method
 
 	///<summary>
 	/// Rectangleに含まれるPOIのリストを取得
+	/// boundary内にpoiが見つからない場合は範囲を広げて再探索
 	///</summary>
-	std::vector<std::shared_ptr<Map::BasicPoi const>> KatoBachelorMethod::candidate_pois_list(const Graph::Rectangle<Geography::LatLng>& boundary) {
+	std::vector<std::shared_ptr<Map::BasicPoi const>> KatoBachelorMethod::candidate_pois_list(Graph::Rectangle<Geography::LatLng>& boundary) {
 		std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = map->find_pois_within_boundary(boundary);
+		double length = 0.005;
+		//もし範囲内のPOIが見つからなかったら，範囲を広げて再計算
+		if (candidate_pois_list.size() == 0) {
+			while (candidate_pois_list.size() == 0) {
+				length += 0.001;
+				boundary.top += 0.5 * length;
+				boundary.left -= 0.5 * length;
+				boundary.bottom -= 0.5 * length;
+				boundary.right += 0.5 * length;
+				candidate_pois_list = map->find_pois_within_boundary(boundary);
+			}
+		}
+
 		std::random_device device;
 		std::mt19937_64 generator(device());
 		std::shuffle(candidate_pois_list.begin(), candidate_pois_list.end(), generator);
@@ -140,7 +155,7 @@ namespace Method
 
 			creating_dummy->set_position_of_phase(*phase_id, source, source_latlng);
 			if (i != 0) creating_dummy->set_speed(*phase_id, 0);
-			*phase_id++;
+			(*phase_id)++;
 		}
 
 		int init_flag = 1;//POIを決める最初のフェーズかどうかを示すフラグ
@@ -176,7 +191,7 @@ namespace Method
 
 
 			creating_dummy->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::INVALID, Graph::NodeType::INVALID), arrive_position);
-			*phase_id++;
+			(*phase_id)++;
 
 			distance += requirement->service_interval * pause_position_speed;
 		}
@@ -222,9 +237,9 @@ namespace Method
 			grid_list.at(grid_list_id) = grid;//あるphaseのGrid.grud_list_idで何回目かのgrid生成かを記録する
 						
 			//あるphaseの全てのセルの，エンティティ数を計算(表の列を計算することに相当)
-			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid_list.at(grid_list_id).begin(); iter != grid_list.at(grid_list_id).end(); iter++)
+			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid_list.at(grid_list_id).begin(); iter != grid_list.at(grid_list_id).end(); iter++, cell_id++)
 			{
-				entities_num_table.at((++cell_id) - 1).at(grid_list_id) = entities->get_entity_count_within_boundary(phase, *iter);
+				entities_num_table.at(cell_id).at(grid_list_id) = entities->get_entity_count_within_boundary(phase, *iter);
 			}
 			phase += requirement->interval_of_base_phase;//phaseの更新
 			grid_list_id++;//grid_list_idのインクリメント
@@ -232,15 +247,13 @@ namespace Method
 
 		//周期をphaseで設定し，その周期ベースで匿名領域確保のための地点を作成
 		//該当する周期のフェーズにおいて，エンティティが最小になるセルidを取得
-		//ただし，phase0は除外
-		//int cycle_id = requirement->phase_interval*requirement->cycle_of_anonymous_area;
-		int start_of_cycle = 1;//周期の左端
-		int end_of_cycle = start_of_cycle + requirement->cycle_of_interval_of_base_phase;//周期の右端
-
+		int cycle_id = requirement->cycle_of_interval_of_base_num;//周期の右端
+		int end_of_cycle = 0;
 		//各セルのstart_phaseからend_phaseのエンティティの合計(表の行の和を計算していることに相当)
-		std::vector<int> total_entity_num_interval_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, start_of_cycle, end_of_cycle);
+		std::vector<int> total_entity_num_interval_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, cycle_id);
 
 
+		//終了条件はentities_tableのsizeになるまでだよ！
 		while (end_of_cycle < time_manager->phase_count()) {
 			//start_phaseからend_phaseまでで，エンティティ数が最初となるセルidを求める．
 			std::vector<int>::iterator cell_iter = std::min_element(total_entity_num_interval_phase.begin(), total_entity_num_interval_phase.end());
@@ -252,10 +265,8 @@ namespace Method
 
 			//取得したcell_id,phaseにおける停止地点を取得
 			//一様分布でランダム取得
-			//poiがなかった時の場合分けも考慮が必要かもしれない
+			//見つからなかった場合の広げる大きさは考慮したほうが良いかもしれない
 			Graph::Rectangle<Geography::LatLng> cell = grid_list.at(base_phase).at(min_cell_id);
-
-
 			std::vector<std::shared_ptr<Map::BasicPoi const>> poi_within_base_point_grid = candidate_pois_list(cell);
 			std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_within_base_point_grid.begin();
 			//一番最初のみ到達可能性を考慮せずに停止地点を決定する．
@@ -279,8 +290,8 @@ namespace Method
 				creating_dummy->set_random_speed(base_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 			}
 
-			start_of_cycle += requirement->cycle_of_interval_of_base_phase;
-			end_of_cycle += requirement->cycle_of_interval_of_base_phase;
+			//start_of_cycle += requirement->cycle_of_interval_of_base_phase;
+			//end_of_cycle += requirement->cycle_of_interval_of_base_phase;
 		}
 	}
 

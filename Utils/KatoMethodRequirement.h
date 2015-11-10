@@ -20,7 +20,7 @@ namespace Requirement {
 		int min_pause_time;
 				
 		int interval_of_base_phase;//匿名領域確保のための基準地点を決定する間隔
-		int cycle_of_interval_of_base_phase;//匿名領域確保のための基準地点を決定する間隔の周期
+		int cycle_of_interval_of_base_num;//匿名領域確保のための基準地点を決定する間隔の周期
 
 		int service_interval;
 		

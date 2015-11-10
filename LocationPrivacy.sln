@@ -18,6 +18,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimulatorComponents", "Simu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimulatorComponentsTest", "SimulatorComponentsTest\SimulatorComponentsTest.vcxproj", "{32BED85C-3F95-4FEF-806F-1CDF31EBDC72}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Simulation_Hayashida", "Simulation_Hayashida\Simulation_Hayashida.vcxproj", "{BDD0AB48-9A31-4321-BCDA-5BE651D161F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -76,6 +78,14 @@ Global
 		{32BED85C-3F95-4FEF-806F-1CDF31EBDC72}.Release|Win32.Build.0 = Release|Win32
 		{32BED85C-3F95-4FEF-806F-1CDF31EBDC72}.Release|x64.ActiveCfg = Release|x64
 		{32BED85C-3F95-4FEF-806F-1CDF31EBDC72}.Release|x64.Build.0 = Release|x64
+		{BDD0AB48-9A31-4321-BCDA-5BE651D161F6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BDD0AB48-9A31-4321-BCDA-5BE651D161F6}.Debug|Win32.Build.0 = Debug|Win32
+		{BDD0AB48-9A31-4321-BCDA-5BE651D161F6}.Debug|x64.ActiveCfg = Debug|x64
+		{BDD0AB48-9A31-4321-BCDA-5BE651D161F6}.Debug|x64.Build.0 = Debug|x64
+		{BDD0AB48-9A31-4321-BCDA-5BE651D161F6}.Release|Win32.ActiveCfg = Release|Win32
+		{BDD0AB48-9A31-4321-BCDA-5BE651D161F6}.Release|Win32.Build.0 = Release|Win32
+		{BDD0AB48-9A31-4321-BCDA-5BE651D161F6}.Release|x64.ActiveCfg = Release|x64
+		{BDD0AB48-9A31-4321-BCDA-5BE651D161F6}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

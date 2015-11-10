@@ -23,19 +23,19 @@ namespace Simulation
 	/// rectの範囲内にあるpoi_listを適当にシャッフルした状態で取得
 	/// 一回探索して，見つからなかった場合は，rectの範囲を広げなおして再検索
 	///</summary>
-	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::get_pois_list(Graph::Rectangle<Geography::LatLng>& rect)
+	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::get_pois_list(Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		std::vector<std::shared_ptr<Map::BasicPoi const>> pois_list = map->find_pois_within_boundary(rect);
+		std::vector<std::shared_ptr<Map::BasicPoi const>> pois_list = map->find_pois_within_boundary(boundary);
 		double length = 0.005;
 		//もし範囲内のPOIが見つからなかったら，範囲を広げて再計算
 		if (pois_list.size() == 0) {
 			while (pois_list.size() == 0) {
 				length += 0.001;
-				rect.top += 0.5*length_of_rect;
-				rect.left -= 0.5*length_of_rect;
-				rect.bottom -= 0.5*length_of_rect;
-				rect.right += 0.5*length_of_rect;
-				pois_list = map->find_pois_within_boundary(rect);
+				boundary.top += 0.5 * length;
+				boundary.left -= 0.5 * length;
+				boundary.bottom -= 0.5 * length;
+				boundary.right += 0.5 * length;
+				pois_list = map->find_pois_within_boundary(boundary);
 			}
 		}
 
@@ -120,8 +120,8 @@ namespace Simulation
 		{
 			//次の候補点の範囲を求める
 			Math::Probability generator;
-			double distance_between_positions = generator.uniform_distribution(150.0, 500.0);
-			double angle_of_positions = generator.uniform_distribution(0.0, M_PI_2);
+			double distance_between_positions = generator.uniform_distribution(150.0, 350.0);
+			double angle_of_positions = generator.uniform_distribution(-(M_PI_2), M_PI_2);
 			Geography::LatLng next_candidate_poi_position_range
 				= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), distance_between_positions, angle_of_positions);
 
@@ -185,7 +185,7 @@ namespace Simulation
 
 		//次の候補点の範囲を求める
 		Math::Probability generator;
-		double last_angle = generator.uniform_distribution(0.0, M_PI_2);
+		double last_angle = generator.uniform_distribution(-(M_PI_2), M_PI_2);
 		Geography::LatLng last_candidate_poi_position_range
 			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
 
@@ -276,8 +276,8 @@ namespace Simulation
 
 		requirements = 
 		{
-			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 4, 180, 5, 2),
-			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 16, 180, 5, 2)
+			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 4, 90, 5, 2),
+			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 16, 90, 5, 2)
 		};
 	}
 
