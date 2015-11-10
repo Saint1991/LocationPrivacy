@@ -253,7 +253,7 @@ namespace Method
 		std::vector<int> total_entity_num_interval_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, cycle_id);
 
 
-		//終了条件はentities_tableのsizeになるまでだよ！
+		//終了条件はentities_tableのsizeになるまで!
 		while (end_of_cycle < time_manager->phase_count()) {
 			//start_phaseからend_phaseまでで，エンティティ数が最初となるセルidを求める．
 			std::vector<int>::iterator cell_iter = std::min_element(total_entity_num_interval_phase.begin(), total_entity_num_interval_phase.end());
