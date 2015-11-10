@@ -33,8 +33,8 @@ namespace Simulation
 		static constexpr auto USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/user_trajectory";
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
-		static constexpr int MAX_PAUSE_TIME = 600;
-		static constexpr int MIN_PAUSE_TIME = 300;//SERVICE_INTERVALより大きくする！
+		static constexpr int MAX_PAUSE_TIME = 1000;
+		static constexpr int MIN_PAUSE_TIME = 800;//SERVICE_INTERVALより大きくする！
 		static constexpr int SERVICE_INTERVAL = 90;
 		static constexpr int POI_NUM = 2;
 		static constexpr double base_lat = 35.655;//出発地の目安の緯度．全POIの平均値

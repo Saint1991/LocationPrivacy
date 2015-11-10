@@ -230,6 +230,7 @@ namespace Simulation
 			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
 		}
 
+
 		std::cout << "Success Creating Random User" << std::endl;
 	}
 
