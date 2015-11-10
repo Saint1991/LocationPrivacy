@@ -10,7 +10,7 @@ namespace Method
 	///</summary>
 	KatoBachelorMethod::KatoBachelorMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
 		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>(map, user, requirement, time_manager),
-		grid_list(std::vector<Grid>(time_manager->phase_count()/requirement->interval_of_base_phase)),
+		grid_list(std::vector<Grid>((time_manager->phase_count()/requirement->interval_of_base_phase)+1)),
 		creating_dummy(nullptr)
 	{
 	}
@@ -202,7 +202,7 @@ namespace Method
 		const int GRID_TOTAL_NUM = CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE;//グリッドの数
 
 		//各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
-		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>(time_manager->phase_count()/requirement->interval_of_base_phase, 0));
+		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>((time_manager->phase_count()/requirement->interval_of_base_phase)+1, 0));
 
 		//あるphaseにおける各セルに存在するユーザ及び生成済みダミーの移動経路(停止地点)の数
 		//横がセルのid，縦がphaseを表す動的２次元配列で記憶
@@ -212,7 +212,9 @@ namespace Method
 		Grid grid = make_grid(requirement->required_anonymous_area, *center, CELL_NUM_ON_SIDE);//phaseごとにグリッドを作成
 		int grid_list_id = 0;
 		int cell_id = 0;//セルのid
-		while (phase <= time_manager->phase_count())
+		int end_phase = time_manager->phase_count();
+		
+		while (phase <= end_phase)
 		{
 			cell_id = 0;//セルのidのリセット
 			center = entities->get_average_position_of_phase(phase);//中心位置を求める
