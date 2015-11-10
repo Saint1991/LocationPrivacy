@@ -23,8 +23,8 @@ namespace Entity
 	protected:
 		std::vector<int> pause_time_list;
 		std::vector<double> speed_list;
-		Requirement::KatoMethodRequirement kato_requirement;
-		std::shared_ptr<Time::TimeSlotManager> revise_time_manager;//コンストラクタで初期化処理が必要
+		//Requirement::KatoMethodRequirement kato_requirement;
+		//std::shared_ptr<Time::TimeSlotManager> revise_time_manager;//コンストラクタで初期化処理が必要
 
 
 	public:
