@@ -101,31 +101,8 @@ namespace Entity
 		}
 		return nullptr;
 	}
-
-	/*
-	///<summary>
-	/// 交差回数の小さい順にエンティティIDを格納したリストを返します
-	/// 未生成のダミーも交差回数0として含まれるので注意
-	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::list<std::pair<entity_id, int>> EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_id_list_order_by_cross_count() const
-	{
-		std::list<std::pair<entity_id, int>> ret;
-		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
-			if (*iter == nullptr) continue;
-			entity_id id = (*iter)->get_id();
-			int cross_count = (*iter)->get_cross_count();
-			ret.push_back(std::make_pair(id, cross_count));
-		}
-		ret.push_back(std::make_pair(0U, user->get_cross_count()));
-		ret.sort([](const std::pair<entity_id, int>& pair1, const std::pair<entity_id, int>& pair2) {
-			return pair1.second < pair2.second;
-		});
-		return ret;
-	}
-
-	*/
 	
+		
 	///<summary>
 	/// 交差回数の小さい順にエンティティIDを格納したリストを返します
 	/// 未生成のダミーも交差回数0として含まれるので注意

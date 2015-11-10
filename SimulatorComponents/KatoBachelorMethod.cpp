@@ -68,40 +68,76 @@ namespace Method
 
 
 	///<summary>
-	/// グリッドテーブルのstart_phaseからend_phaseのエンティティの合計を取得
+	/// グリッドテーブルのstartからendまでのエンティティの合計を取得
 	///</summary>
-	std::vector<int> KatoBachelorMethod::get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_table, int cycle_num) {
+	std::vector<int> KatoBachelorMethod::get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_num_table, int start, int end) {
 		std::vector<int> total_entity_num_interval_phase(CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE, 0);
 
 		for (int cell_id = 0; cell_id < CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE; cell_id++)
 		{
 			int temp = 0;
-			for (int interval_of_base_phase = 0; interval_of_base_phase < cycle_num; interval_of_base_phase++)
+			for (int interval_of_base_phase = start; interval_of_base_phase < end; interval_of_base_phase++)
 			{
-				temp += entities_table.at(cell_id).at(interval_of_base_phase);
+				temp += entities_num_table.at(cell_id).at(interval_of_base_phase);
 			}
 			total_entity_num_interval_phase.at(cell_id) = temp;
 		}
 		return total_entity_num_interval_phase;
 	}
 
-
-
 	///<summary>
 	/// グリッドテーブルの各グリッドごとの全フェーズのエンティティの合計を取得
 	///</summary>
-	std::vector<int> KatoBachelorMethod::get_total_num_of_each_cell_at_all_phase(std::vector<std::vector<int>>& entities_table) {
-		std::vector<int> total_entity_num_all_phase;
-		for (int grid_id = 0; grid_id < CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE; grid_id++)
-		{
-			int temp = 0;
-			for (int phase = 0; phase < time_manager->phase_count(); phase++)
-			{
-				temp += entities_table.at(grid_id).at(phase);
-			}
-			total_entity_num_all_phase.at(grid_id) = temp;
-		}
+	std::vector<int> KatoBachelorMethod::get_total_num_of_each_cell_at_all_phase(std::vector<std::vector<int>>& entities_num_table) {
+		std::vector<int> total_entity_num_all_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, 0, entities_num_table.at(0).size());
 		return total_entity_num_all_phase;
+	}
+
+	///<summary>
+	/// start_phaseからend_phaseまでのエンティティ数が小さいcell_idをランダムに並べ替えたvectorで取得します
+	///</summary>
+	std::vector<int>::iterator KatoBachelorMethod::get_min_cell_id_of_entities_num(std::vector<int>& total_entity_num) const
+	{
+		int temp = 1000;
+		int cell_id = 0;
+		std::vector<int> cell_list_of_min_entities_num;
+		for (std::vector<int>::const_iterator iter = total_entity_num.begin(); iter != total_entity_num.end(); iter++, cell_id++) {
+			if (*iter <= temp)
+			{
+				temp = *iter;
+				cell_list_of_min_entities_num.push_back(cell_id);
+			}
+		}
+		std::random_device device;
+		std::mt19937_64 generator(device());
+		std::shuffle(cell_list_of_min_entities_num.begin(), cell_list_of_min_entities_num.end(), generator);
+		
+		std::vector<int>::iterator min_cell_id = cell_list_of_min_entities_num.begin();
+		return min_cell_id;
+	}
+
+
+	///<summary>
+	/// min_cell_idのセルで最小になる最初のphaseを取得
+	///</summary>
+	int KatoBachelorMethod::get_min_phase_of_min_cell_id(std::vector<std::vector<int>>& entities_num_table, int min_cell_id) const
+	{
+		int temp = 1000;
+		int base_phase_id = 0;
+		std::vector<int> base_phase_list_of_min_entities_num;
+		for (std::vector<int>::const_iterator iter = entities_num_table.at(min_cell_id).begin(); iter != entities_num_table.at(min_cell_id).end(); iter++, base_phase_id++) {
+			if (*iter <= temp)
+			{
+				temp = *iter;
+				base_phase_list_of_min_entities_num.push_back(base_phase_id);
+			}
+		}
+		std::random_device device;
+		std::mt19937_64 generator(device());
+		std::shuffle(base_phase_list_of_min_entities_num.begin(), base_phase_list_of_min_entities_num.end(), generator);
+
+		int min_base_phase_id = base_phase_list_of_min_entities_num.front();
+		return min_base_phase_id;
 	}
 
 
@@ -248,25 +284,23 @@ namespace Method
 		//周期をphaseで設定し，その周期ベースで匿名領域確保のための地点を作成
 		//該当する周期のフェーズにおいて，エンティティが最小になるセルidを取得
 		int cycle_id = requirement->cycle_of_interval_of_base_num;//周期の右端
+		//各セルの全phaseのエンティティの合計(表の行の和を計算していることに相当)
+		std::vector<int> total_entity_num_at_all_phase = get_total_num_of_each_cell_at_all_phase(entities_num_table);
+		int start_of_cycle = 0;
 		int end_of_cycle = 0;
-		//各セルのstart_phaseからend_phaseのエンティティの合計(表の行の和を計算していることに相当)
-		std::vector<int> total_entity_num_interval_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, cycle_id);
-
-
+		
 		//終了条件はentities_tableのsizeになるまで!
-		while (end_of_cycle < time_manager->phase_count()) {
-			//start_phaseからend_phaseまでで，エンティティ数が最初となるセルidを求める．
-			std::vector<int>::iterator cell_iter = std::min_element(total_entity_num_interval_phase.begin(), total_entity_num_interval_phase.end());
-			size_t min_cell_id = std::distance(total_entity_num_interval_phase.begin(), cell_iter);
-
-			//min_cell_idのセルで最小になる最初のphaseを取得
-			std::vector<int>::iterator phase_iter = std::min_element(entities_num_table.at(min_cell_id).begin(), entities_num_table.at(min_cell_id).end());
-			int base_phase = std::distance(entities_num_table.at(min_cell_id).begin(), phase_iter);
+		while (end_of_cycle < end_phase) {
+			//start_phaseからend_phaseまでで，エンティティ数が最小となるセルidをランダムで求める．
+			std::vector<int>::iterator min_cell_id = get_min_cell_id_of_entities_num(total_entity_num_at_all_phase);
+			
+			//min_cell_idのセルで最小になbase_phaseをrandomで取得
+			int base_phase = get_min_phase_of_min_cell_id(entities_num_table, *min_cell_id);
 
 			//取得したcell_id,phaseにおける停止地点を取得
 			//一様分布でランダム取得
 			//見つからなかった場合の広げる大きさは考慮したほうが良いかもしれない
-			Graph::Rectangle<Geography::LatLng> cell = grid_list.at(base_phase).at(min_cell_id);
+			Graph::Rectangle<Geography::LatLng> cell = grid_list.at(base_phase).at(*min_cell_id);
 			std::vector<std::shared_ptr<Map::BasicPoi const>> poi_within_base_point_grid = candidate_pois_list(cell);
 			std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_within_base_point_grid.begin();
 			//一番最初のみ到達可能性を考慮せずに停止地点を決定する．
