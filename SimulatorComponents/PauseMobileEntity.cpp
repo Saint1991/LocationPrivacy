@@ -9,7 +9,7 @@ namespace Entity
 	/// コンストラクタ
 	///</summary>
 	template <typename POSITION_TYPE>
-	PauseMobileEntity<POSITION_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)//, Requirement::KatoMethodRequirement kato_requirement)
+	PauseMobileEntity<POSITION_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
 		: MobileEntity<POSITION_TYPE>(id, timeslot), 
 		  pause_time_list(std::vector<int>(timeslot->phase_count(),0)), 
 		  speed_list(std::vector<double>(timeslot->phase_count(), 0))

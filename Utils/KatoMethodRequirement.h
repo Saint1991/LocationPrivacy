@@ -20,7 +20,7 @@ namespace Requirement {
 		int min_pause_time;
 				
 		int interval_of_base_phase;//匿名領域確保のための基準地点を決定する間隔
-		int cycle_of_interval_of_base_phase;//匿名領域確保のための基準地点を決定する間隔の周期
+		int cycle_of_interval_of_base_num;//匿名領域確保のための基準地点を決定する間隔の周期
 
 		int service_interval;
 		
@@ -40,9 +40,9 @@ namespace Requirement {
 			int interval_of_base_phase, 
 			int cycle_of_interval_of_base_phase, 
 			int max_pause_time = 600, 
-			int min_pause_time = 60, 
-			double average_speed = 3.0, 
-			double speed_range = 2.0
+			int min_pause_time = 300,
+			double average_speed = 1.5, 
+			double speed_range = 0.5
 		);
 		
 		//加藤さん修論手法のコンストラクタ
@@ -55,9 +55,9 @@ namespace Requirement {
 			int interval_of_base_phase,
 			int cycle_of_interval_of_base_phase,
 			int max_pause_time = 600,
-			int min_pause_time = 60,
-			double average_speed = 3.0,
-			double speed_range = 2.0
+			int min_pause_time = 300,
+			double average_speed = 1.5,
+			double speed_range = 0.5
 		);
 
 		virtual ~KatoMethodRequirement();
