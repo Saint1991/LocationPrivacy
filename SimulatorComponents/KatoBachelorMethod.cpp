@@ -293,8 +293,9 @@ namespace Method
 			int min_cell_id = get_min_cell_id_of_entities_num(total_entity_num_at_interval_phase);
 			
 			//min_cell_idのセルで最小になbase_phaseをrandomで取得
+			//base_phaseはinterval_of_base_phaseの中の数なので，実際のphaseは別
 			int base_phase = get_min_phase_of_min_cell_id(entities_num_table, min_cell_id, start_of_cycle, end_of_cycle);
-
+			int real_phase = base_phase * requirement->interval_of_base_phase;
 			//取得したcell_id,phaseにおける停止地点を取得
 			//一様分布でランダム取得
 			//見つからなかった場合の広げる大きさは考慮したほうが良いかもしれない
@@ -309,17 +310,19 @@ namespace Method
 			//二箇所目以降の基準地点は，以前の基準地点から到達可能性を調べたのちに決定する．
 			else
 			{
-				std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> previous_base_info = creating_dummy->find_previous_fixed_position(base_phase);
-				int base_time_limit = time_manager->time_of_phase(base_phase) - time_manager->time_of_phase(previous_base_info.first) - requirement->max_pause_time;
+				std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> previous_base_info = creating_dummy->find_previous_fixed_position(real_phase);
+				int base_time_limit = time_manager->time_of_phase(real_phase) - time_manager->time_of_phase(previous_base_info.first) - requirement->min_pause_time;
+				
 				//到達可能でない場合は別のpoiにする．
+				//ここの選び方は考えないといけないかも
 				while (!map->is_reachable(previous_base_info.second.first, Graph::MapNodeIndicator((*poi)->get_id()), creating_dummy->get_speed(previous_base_info.first), base_time_limit)) {
 					poi++;
 				}
-				/*
-				多分ここで，該当するpoiがなかったら，次に数の少ないセルの領域を参照するという例外処理を加える必要がある．
-				*/
-				creating_dummy->set_position_of_phase(base_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
-				creating_dummy->set_random_speed(base_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				
+				//多分ここで，該当するpoiがなかったら，次に数の少ないセルの領域を参照するという例外処理を加える必要がある．
+				
+				creating_dummy->set_position_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
+				creating_dummy->set_random_speed(real_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 			}
 
 			start_of_cycle += requirement->cycle_of_interval_of_base_num;
