@@ -33,13 +33,13 @@ namespace Simulation
 		static constexpr auto USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/user_trajectory";
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
-		static constexpr int MAX_PAUSE_TIME = 1000;
-		static constexpr int MIN_PAUSE_TIME = 800;//SERVICE_INTERVALより大きくする！
+		static constexpr int MAX_PAUSE_TIME = 700;
+		static constexpr int MIN_PAUSE_TIME = 500;//SERVICE_INTERVALより大きくする！
 		static constexpr int SERVICE_INTERVAL = 90;
 		static constexpr int POI_NUM = 2;
 		static constexpr double base_lat = 35.655;//出発地の目安の緯度．全POIの平均値
 		static constexpr double base_lng = 139.700;//出発地の目安の経度．全POIの平均値
-		int end_time = 2250;//目安の終了時間．経路を設定し終えて，時間が余った分は削除．
+		int end_time = 1800;//目安の終了時間．経路を設定し終えて，時間が余った分は削除．
 		double length_of_rect = 0.005;//ここには適切な範囲内の緯度経度差を書く
 	#pragma endregion 要求パラメータ(ダミーのrequirementと同じにすること)
 	

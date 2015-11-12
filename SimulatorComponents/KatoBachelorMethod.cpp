@@ -285,8 +285,9 @@ namespace Method
 			
 			//min_cell_idのセルでエンティティ数が昇順となるbase_phaseをlistで取得
 			Math::Probability generator;
-			int base_phase = generator.uniform_distribution(start_of_cycle, end_of_cycle);
+			int base_phase = generator.uniform_distribution(start_of_cycle, end_of_cycle-1);
 			//base_phaseはinterval_of_base_phaseの中の数なので，実際のphaseは別
+			//grid_listのみbase_phaseを使う！
 			int real_phase = base_phase * requirement->interval_of_base_phase;
 			
 			//取得したcell_id,phaseにおける停止地点を取得
@@ -297,8 +298,8 @@ namespace Method
 						
 			//一番最初のみ到達可能性を考慮せずに停止地点を決定する．
 			if (creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first == INVALID) {
-				creating_dummy->set_position_of_phase(base_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
-				creating_dummy->set_random_speed(base_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				creating_dummy->set_position_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
+				creating_dummy->set_random_speed(real_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 			}
 			//二箇所目以降の基準地点は，以前の基準地点から到達可能性を調べたのちに決定する．
 			else
@@ -307,8 +308,7 @@ namespace Method
 				int base_time_limit = time_manager->time_of_phase(real_phase) - time_manager->time_of_phase(previous_base_info.first) - requirement->min_pause_time;
 				
 				//領域内のPOIを5回まで探索し，到達可能ならその点を採用
-				//違う領域(cell)を探索
-				//phaseを変える
+				//見つからない場合は違う領域(cell)を参照して再探索
 				auto serach_poi = [&](int flag_id = 0) {
 					for (int flag = 0; flag < 5; flag++) {
 						if (map->is_reachable(previous_base_info.second.first, Graph::MapNodeIndicator((*poi)->get_id()), creating_dummy->get_speed(previous_base_info.first), base_time_limit)) {
@@ -362,7 +362,15 @@ namespace Method
 			//targetが交差するユーザorダミー
 			//target_phasesは交差が設定されていないphaseの一覧
 			std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> target = cross_target == 0 ? entities->get_user() : entities->get_dummy_by_id(cross_target);
-			std::vector<int> target_phases = target->find_cross_not_set_phases();
+			std::vector<int> target_phases = target->find_cross_not_set_phases_of_poi();
+			
+			//基準地点に設定されているphaseは削除する．
+			int interval_of_base_phase =requirement->interval_of_base_phase;
+			auto iterNewEnd = std::remove_if(target_phases.begin(), target_phases.end(), [interval_of_base_phase](int phase) {
+				return phase % interval_of_base_phase == 0;
+			});
+			target_phases.erase(iterNewEnd, target_phases.end());
+
 
 			//交差未設定の時刻からランダムに共有地点設定を試みる
 			std::random_device device;
@@ -379,18 +387,22 @@ namespace Method
 				if (creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first <= share_phase)
 				{
 					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> previous_info = creating_dummy->find_previous_fixed_position(time_manager->phase_count());
-					int previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - creating_dummy->get_pause_time(previous_info.first);
+					int previous_time_limit = time_manager->time_of_phase(share_phase) - time_manager->time_of_phase(previous_info.first) - requirement->min_pause_time;
+					
 					//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
+					if (previous_time_limit < 0) goto ONCE_AGAIN;
 					if (!map->is_reachable(previous_info.second.first, share_position.first, creating_dummy->get_speed(previous_info.first), previous_time_limit)) {
 						goto ONCE_AGAIN;
 					}
 				}
 				//生成中ダミーの既に停止位置が決定しているフェーズよりも共有フェーズが小さい場合
 				//※ここは
-				else if (creating_dummy->find_next_fixed_position(0).first >= share_phase)
+				else if (creating_dummy->get_speed(0) == 0 && creating_dummy->find_next_fixed_position(0).first >= share_phase)
 				{
 					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> next_info = creating_dummy->find_next_fixed_position(0);
-					int next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) - creating_dummy->get_pause_time(share_phase);
+					int next_time_limit = time_manager->time_of_phase(next_info.first) - time_manager->time_of_phase(share_phase) - requirement->min_pause_time;
+					
+					if (next_time_limit < 0) goto ONCE_AGAIN;
 					if (!map->is_reachable(share_position.first, next_info.second.first, target->get_speed(share_phase), next_time_limit)) {
 						goto ONCE_AGAIN;
 					}
@@ -401,11 +413,13 @@ namespace Method
 					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> previous_info = creating_dummy->find_previous_fixed_position(share_phase);
 					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> next_info = creating_dummy->find_next_fixed_position(share_phase);
 					//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
-					int previous_time_limit = time_manager->find_phase_of_time(share_phase) - time_manager->find_phase_of_time(previous_info.first) - creating_dummy->get_pause_time(previous_info.first);
-					int next_time_limit = time_manager->find_phase_of_time(next_info.first) - time_manager->find_phase_of_time(share_phase) - creating_dummy->get_pause_time(share_phase);
-
+					int previous_time_limit = time_manager->time_of_phase(share_phase) - time_manager->time_of_phase(previous_info.first) - requirement->min_pause_time;
+					int next_time_limit = time_manager->time_of_phase(next_info.first) - time_manager->time_of_phase(share_phase) - requirement->min_pause_time;
+					
+					if (previous_time_limit < 0 || next_time_limit < 0) goto ONCE_AGAIN;
 					if (!map->is_reachable(previous_info.second.first, share_position.first, creating_dummy->get_speed(previous_info.first), previous_time_limit)
 						&& !map->is_reachable(share_position.first, next_info.second.first, target->get_speed(share_phase), next_time_limit)) {
+						//ここで一旦POIを探しなおすことを行う！
 						goto ONCE_AGAIN;
 					}
 				}
@@ -414,15 +428,20 @@ namespace Method
 				//生成中のダミーの交差回数 += 1;
 				creating_dummy->set_crossing_position_of_phase(share_phase, share_position.first, *share_position.second);
 				creating_dummy->set_speed(share_phase, target->get_speed(share_phase));
-				int target_dummy_cross_count = target->get_cross_count();
-				target_dummy_cross_count++;//このやり方でtargetの交差回数の合計を数えられる？
+				//targetの交差回数+1
+				target->register_as_cross_position(share_phase);
 				break;
 
-			ONCE_AGAIN:
-				continue;
+				ONCE_AGAIN:
+					continue;
 			}
 			//ユーザ及び生成済みダミーの平均交差回数よりも，生成中ダミーの交差回数が多くなるまで共有地点を設定する
-			if (creating_dummy->get_cross_count() > entities->get_all_entities_total_crossing_count() / dummy_id) break;
+			int check_cross_count = creating_dummy->get_cross_count();
+			int check_all_entities_total_cross_count = entities->get_all_entities_total_crossing_count();
+			
+			//最初だけ，もし共有地点が設定できなかったらbreakさせる
+			if (check_cross_count == check_all_entities_total_cross_count) break;
+			if (check_cross_count > check_all_entities_total_cross_count / (requirement->dummy_num + 1)) break;
 		}
 	}
 
