@@ -93,10 +93,11 @@ namespace Method
 		return total_entity_num_all_phase;
 	}
 
+	/*
 	///<summary>
 	/// start_phaseからend_phaseまでのエンティティ数が小さいcell_idをランダムに並べ替えたvectorで取得します
 	///</summary>
-	int KatoBachelorMethod::get_min_cell_id_of_entities_num(std::vector<int>& total_entity_num) const
+	std::vector<int> KatoBachelorMethod::get_min_cell_id_of_entities_num(std::vector<int>& total_entity_num) const
 	{
 		int temp = 1000;
 		int cell_id = 0;
@@ -112,33 +113,67 @@ namespace Method
 		std::mt19937_64 generator(device());
 		std::shuffle(cell_list_of_min_entities_num.begin(), cell_list_of_min_entities_num.end(), generator);
 				
-		return cell_list_of_min_entities_num.front();
+		return cell_list_of_min_entities_num;
 	}
-
-
+	
 	///<summary>
 	/// min_cell_idのセルで最小になるphaseをランダムで取得
 	/// startからendまでを指定
 	///</summary>
-	int KatoBachelorMethod::get_min_phase_of_min_cell_id(std::vector<std::vector<int>>& entities_num_table, int min_cell_id, int start, int end) const
+	std::vector<int> KatoBachelorMethod::get_min_phase_of_min_cell_id(std::vector<std::vector<int>>& entities_num_table, int min_cell_id, int start, int end) const
 	{
-		int temp = 1000;
-		int base_phase_id = start;
-		std::vector<int> base_phase_list_of_min_entities_num;
-		for (int i = start; i < end; i++, base_phase_id++) {
-			if (entities_num_table.at(min_cell_id).at(i) <= temp) {
-				temp = entities_num_table.at(min_cell_id).at(i);
-				base_phase_list_of_min_entities_num.push_back(base_phase_id);
-			}
-		}
-
-		std::random_device device;
-		std::mt19937_64 generator(device());
-		std::shuffle(base_phase_list_of_min_entities_num.begin(), base_phase_list_of_min_entities_num.end(), generator);
-
-		return base_phase_list_of_min_entities_num.front();
+	int temp = 1000;
+	int base_phase_id = start;
+	std::vector<int> base_phase_list_of_min_entities_num;
+	for (int i = start; i < end; i++, base_phase_id++) {
+	if (entities_num_table.at(min_cell_id).at(i) <= temp) {
+	temp = entities_num_table.at(min_cell_id).at(i);
+	base_phase_list_of_min_entities_num.push_back(base_phase_id);
+	}
 	}
 
+	std::random_device device;
+	std::mt19937_64 generator(device());
+	std::shuffle(base_phase_list_of_min_entities_num.begin(), base_phase_list_of_min_entities_num.end(), generator);
+
+	return base_phase_list_of_min_entities_num;
+	}
+	*/
+
+	///<summary>
+	/// start_phaseからend_phaseまでのエンティティ数cell_idを小さい順に並べ替えたlistで取得します
+	///</summary>
+	std::list<int> KatoBachelorMethod::get_cell_id_list_order_by_entities_num(std::vector<int>& total_entity_num) const
+	{
+		int cell_id = 0;
+		std::list<int> cell_list_of_min_entities_num;
+		for (std::vector<int>::const_iterator iter = total_entity_num.begin(); iter != total_entity_num.end(); iter++, cell_id++) {
+			cell_list_of_min_entities_num.push_back(cell_id);
+		}
+		cell_list_of_min_entities_num.sort([](int cell_id1, int cell_id2) {
+			return cell_id1 < cell_id2;
+		});
+
+		return cell_list_of_min_entities_num;
+	}
+
+
+	///<summary>
+	/// start_phaseからend_phaseまでで，エンティティ数が昇順となるセルidをlistで求める．
+	///</summary>
+	std::list<int> KatoBachelorMethod::get_phase_of_min_cell_id_list_ordered_by_entities_num(std::vector<std::vector<int>>& entities_num_table, int min_cell_id, int start, int end) const
+	{
+		int base_phase_id = start;
+		std::list<int> base_phase_list_of_min_entities_num;
+		for (int i = start; i < end; i++, base_phase_id++) {
+			base_phase_list_of_min_entities_num.push_back(base_phase_id);
+		}
+
+		base_phase_list_of_min_entities_num.sort([](int base_phase_id1, int base_phase_id2) {
+			return base_phase_id1 < base_phase_id2;
+		});
+		return base_phase_list_of_min_entities_num;
+	}
 
 	///<summary>
 	/// Rectangleに含まれるPOIのリストを取得
@@ -281,31 +316,32 @@ namespace Method
 		}
 
 		//周期をphaseで設定し，その周期ベースで匿名領域確保のための地点を作成
-		//該当する周期のフェーズにおいて，エンティティが最小になるセルidを取得
-		//各セルの全phaseのエンティティの合計(表の行の和を計算していることに相当)
 		int start_of_cycle = 0;
-		int end_of_cycle = requirement->cycle_of_interval_of_base_num;;
-		std::vector<int> total_entity_num_at_interval_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, start_of_cycle, end_of_cycle);
 				
 		//終了条件はentities_tableのsizeになるまで!
-		while (end_of_cycle <= entities_num_table.at(0).size()) {
-			//start_phaseからend_phaseまでで，エンティティ数が最小となるセルidをランダムで求める．
-			int min_cell_id = get_min_cell_id_of_entities_num(total_entity_num_at_interval_phase);
+		for (int end_of_cycle = requirement->cycle_of_interval_of_base_num; end_of_cycle <= entities_num_table.at(0).size(); 
+			start_of_cycle += requirement->cycle_of_interval_of_base_num, end_of_cycle += requirement->cycle_of_interval_of_base_num)
+		{
+			//各セルのstart~endのエンティティの合計(表の行の和を計算していることに相当)
+			std::vector<int> total_entity_num_at_interval_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, start_of_cycle, end_of_cycle);
+			//start_phaseからend_phaseまでで，エンティティ数が昇順となるセルidをlistで求める．
+			std::list<int> min_cell_id_list = get_cell_id_list_order_by_entities_num(total_entity_num_at_interval_phase);
 			
-			//min_cell_idのセルで最小になbase_phaseをrandomで取得
+			//min_cell_idのセルでエンティティ数が昇順となるbase_phaseをlistで取得
+			std::list<int> base_phase_list = get_phase_of_min_cell_id_list_ordered_by_entities_num(entities_num_table, min_cell_id_list.front(), start_of_cycle, end_of_cycle);
 			//base_phaseはinterval_of_base_phaseの中の数なので，実際のphaseは別
-			int base_phase = get_min_phase_of_min_cell_id(entities_num_table, min_cell_id, start_of_cycle, end_of_cycle);
-			int real_phase = base_phase * requirement->interval_of_base_phase;
+			int real_phase = base_phase_list.front() * requirement->interval_of_base_phase;
+			
 			//取得したcell_id,phaseにおける停止地点を取得
-			//一様分布でランダム取得
-			//見つからなかった場合の広げる大きさは考慮したほうが良いかもしれない
-			Graph::Rectangle<Geography::LatLng> cell = grid_list.at(base_phase).at(min_cell_id);
+			//一様分布でランダム取得(見つからなかった場合の広げる大きさは考慮したほうが良いかもしれない)
+			Graph::Rectangle<Geography::LatLng> cell = grid_list.at(*base_phase_list.begin()).at(*min_cell_id_list.begin());
 			std::vector<std::shared_ptr<Map::BasicPoi const>> poi_within_base_point_grid = candidate_pois_list(cell);
 			std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_within_base_point_grid.begin();
+						
 			//一番最初のみ到達可能性を考慮せずに停止地点を決定する．
 			if (creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first == INVALID) {
-				creating_dummy->set_position_of_phase(base_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
-				creating_dummy->set_random_speed(base_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				creating_dummy->set_position_of_phase(*base_phase_list.begin(), Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
+				creating_dummy->set_random_speed(*base_phase_list.begin(), requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 			}
 			//二箇所目以降の基準地点は，以前の基準地点から到達可能性を調べたのちに決定する．
 			else
@@ -313,20 +349,36 @@ namespace Method
 				std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> previous_base_info = creating_dummy->find_previous_fixed_position(real_phase);
 				int base_time_limit = time_manager->time_of_phase(real_phase) - time_manager->time_of_phase(previous_base_info.first) - requirement->min_pause_time;
 				
-				//到達可能でない場合は別のpoiにする．
-				//ここの選び方は考えないといけないかも
-				while (!map->is_reachable(previous_base_info.second.first, Graph::MapNodeIndicator((*poi)->get_id()), creating_dummy->get_speed(previous_base_info.first), base_time_limit)) {
-					poi++;
+				//領域内のPOIを5回まで探索し，到達可能ならその点を採用
+				//違う領域(cell)を探索
+				//phaseを変える
+				auto serach_poi = [&](int flag_id = 0) {
+					for (int flag = 0; flag < 5; flag++) {
+						if (map->is_reachable(previous_base_info.second.first, Graph::MapNodeIndicator((*poi)->get_id()), creating_dummy->get_speed(previous_base_info.first), base_time_limit)) {
+							return flag_id + 1;
+						}
+						else {
+							poi++;
+						}
+					}
+					return flag_id;
+				};
+
+				for (std::list<int>::iterator min_cell_iter = min_cell_id_list.begin(); min_cell_iter != min_cell_id_list.end(); min_cell_iter++) {
+					if (serach_poi() == 0) {
+						cell = grid_list.at(*base_phase_list.begin()).at(*min_cell_iter);
+						poi_within_base_point_grid = candidate_pois_list(cell);
+						poi = poi_within_base_point_grid.begin();
+					}
+					else {
+						break;
+					}
 				}
-				
-				//多分ここで，該当するpoiがなかったら，次に数の少ないセルの領域を参照するという例外処理を加える必要がある．
-				
+			
 				creating_dummy->set_position_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
 				creating_dummy->set_random_speed(real_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 			}
 
-			start_of_cycle += requirement->cycle_of_interval_of_base_num;
-			end_of_cycle += requirement->cycle_of_interval_of_base_num;
 			total_entity_num_at_interval_phase = get_total_num_of_each_cell_at_interval_phase(entities_num_table, start_of_cycle, end_of_cycle);
 		}
 	}

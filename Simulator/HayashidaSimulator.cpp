@@ -275,6 +275,9 @@ namespace Simulation
 			double speed_range = 0.5
 		---------------------------------------------*/
 
+		//匿名領域決定の周期のパラメータはユーザの総移動時間/周期T個！
+
+
 		requirements = 
 		{
 			std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 4, 90, 5, 2),
