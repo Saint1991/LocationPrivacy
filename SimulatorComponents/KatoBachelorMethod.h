@@ -40,8 +40,8 @@ namespace Method
 		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_area, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成
 		std::vector<int> get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_num_table, int start, int end);//各セルのフェーズトータルのエンティティの数
 		std::vector<int> get_total_num_of_each_cell_at_all_phase(std::vector<std::vector<int>>& entities_num_table);//各セルのフェーズトータルのエンティティの数
-		std::list<int> get_cell_id_list_order_by_entities_num(std::vector<int>& total_entity_num) const;
-		std::list<int> get_phase_of_min_cell_id_list_ordered_by_entities_num(std::vector<std::vector<int>>& entities_num_table, int min_cell_id, int start, int end) const;
+		std::list<std::pair<int, int>> get_cell_id_list_order_by_entities_num(std::vector<int>& total_entity_num) const;
+		std::list<std::pair<int, int>> get_phase_of_min_cell_id_list_ordered_by_entities_num(std::vector<std::vector<int>>& entities_num_table, int min_cell_id, int start, int end) const;
 		std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list(Graph::Rectangle<Geography::LatLng>& boundary);
 		void linear_interpolation_of_path_between_positions(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int *phase_id, int *dest_rest_time);
 		void decide_base_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
