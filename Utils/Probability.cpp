@@ -71,18 +71,5 @@ double Math::Probability::exponential_distribution(double lambda)
 	return ret;
 }
 
-///<summary>
-/// start‚©‚çend‚Ü‚Å‚Ì”š‚ğƒ‰ƒ“ƒ_ƒ€’Šo‚·‚é
-///</summary>
-int Math::Probability::random_extract(int start, int end) {
-	std::vector<int> candidate_list;
-	for (int i = start; i < end; i++) {
-		candidate_list.push_back(i);
-	}
-	
-	std::random_device device;
-	std::mt19937_64 generator(device());
-	std::shuffle(candidate_list.begin(), candidate_list.end(), generator);
 
-	return candidate_list.front();
-}
+

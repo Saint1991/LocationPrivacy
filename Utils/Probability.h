@@ -22,8 +22,6 @@ namespace Math {
 		PROBABILITY_API int uniform_distribution(int lower_limit, int upper_limit);
 		PROBABILITY_API double gaussian_distribution(double mean, double sigma);
 		PROBABILITY_API double exponential_distribution(double lambda);
-		PROBABILITY_API int random_extract(int start, int end);
+	
 	};
 }
-
-

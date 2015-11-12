@@ -93,53 +93,7 @@ namespace Method
 		return total_entity_num_all_phase;
 	}
 
-	/*
-	///<summary>
-	/// start_phaseからend_phaseまでのエンティティ数が小さいcell_idをランダムに並べ替えたvectorで取得します
-	///</summary>
-	std::vector<int> KatoBachelorMethod::get_min_cell_id_of_entities_num(std::vector<int>& total_entity_num) const
-	{
-		int temp = 1000;
-		int cell_id = 0;
-		std::vector<int> cell_list_of_min_entities_num;
-		for (std::vector<int>::const_iterator iter = total_entity_num.begin(); iter != total_entity_num.end(); iter++, cell_id++) {
-			if (*iter <= temp)
-			{
-				temp = *iter;
-				cell_list_of_min_entities_num.push_back(cell_id);
-			}
-		}
-		std::random_device device;
-		std::mt19937_64 generator(device());
-		std::shuffle(cell_list_of_min_entities_num.begin(), cell_list_of_min_entities_num.end(), generator);
-				
-		return cell_list_of_min_entities_num;
-	}
 	
-	///<summary>
-	/// min_cell_idのセルで最小になるphaseをランダムで取得
-	/// startからendまでを指定
-	///</summary>
-	std::vector<int> KatoBachelorMethod::get_min_phase_of_min_cell_id(std::vector<std::vector<int>>& entities_num_table, int min_cell_id, int start, int end) const
-	{
-	int temp = 1000;
-	int base_phase_id = start;
-	std::vector<int> base_phase_list_of_min_entities_num;
-	for (int i = start; i < end; i++, base_phase_id++) {
-	if (entities_num_table.at(min_cell_id).at(i) <= temp) {
-	temp = entities_num_table.at(min_cell_id).at(i);
-	base_phase_list_of_min_entities_num.push_back(base_phase_id);
-	}
-	}
-
-	std::random_device device;
-	std::mt19937_64 generator(device());
-	std::shuffle(base_phase_list_of_min_entities_num.begin(), base_phase_list_of_min_entities_num.end(), generator);
-
-	return base_phase_list_of_min_entities_num;
-	}
-	*/
-
 	///<summary>
 	/// start_phaseからend_phaseまでのcell_idのうち，エンティティ数を昇順に並べ替えたlistで取得します
 	/// pairは(cell_id,enntities_num)
@@ -181,7 +135,7 @@ namespace Method
 	/// Rectangleに含まれるPOIのリストを取得
 	/// boundary内にpoiが見つからない場合は範囲を広げて再探索
 	///</summary>
-	std::vector<std::shared_ptr<Map::BasicPoi const>> KatoBachelorMethod::candidate_pois_list(Graph::Rectangle<Geography::LatLng>& boundary) {
+	std::vector<std::shared_ptr<Map::BasicPoi const>> KatoBachelorMethod::get_candidate_pois_list(Graph::Rectangle<Geography::LatLng>& boundary) {
 		std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = map->find_pois_within_boundary(boundary);
 		double length = 0.005;
 		//もし範囲内のPOIが見つからなかったら，範囲を広げて再計算
@@ -331,14 +285,14 @@ namespace Method
 			
 			//min_cell_idのセルでエンティティ数が昇順となるbase_phaseをlistで取得
 			Math::Probability generator;
-			int base_phase = generator.random_extract(start_of_cycle, end_of_cycle);
+			int base_phase = generator.uniform_distribution(start_of_cycle, end_of_cycle);
 			//base_phaseはinterval_of_base_phaseの中の数なので，実際のphaseは別
 			int real_phase = base_phase * requirement->interval_of_base_phase;
 			
 			//取得したcell_id,phaseにおける停止地点を取得
 			//一様分布でランダム取得(見つからなかった場合の広げる大きさは考慮したほうが良いかもしれない)
 			Graph::Rectangle<Geography::LatLng> cell = grid_list.at(base_phase).at(min_cell_id_list.front().first);
-			std::vector<std::shared_ptr<Map::BasicPoi const>> poi_within_base_point_grid = candidate_pois_list(cell);
+			std::vector<std::shared_ptr<Map::BasicPoi const>> poi_within_base_point_grid = get_candidate_pois_list(cell);
 			std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_within_base_point_grid.begin();
 						
 			//一番最初のみ到達可能性を考慮せずに停止地点を決定する．
@@ -370,7 +324,7 @@ namespace Method
 				for (std::list<std::pair<int,int>>::iterator min_cell_iter = min_cell_id_list.begin(); min_cell_iter != min_cell_id_list.end(); min_cell_iter++) {
 					if (serach_poi() == 0) {
 						cell = grid_list.at(base_phase).at((*min_cell_iter).first);
-						poi_within_base_point_grid = candidate_pois_list(cell);
+						poi_within_base_point_grid = get_candidate_pois_list(cell);
 						poi = poi_within_base_point_grid.begin();
 					}
 					else {
@@ -398,7 +352,7 @@ namespace Method
 		{
 
 			//未生成のダミーのものはスキップ
-			if (iter->first > dummy_id) continue;
+			if (iter->first >= dummy_id) continue;
 
 			//交差対象のID(交差回数最小)
 			int cross_target = iter->first;
@@ -498,7 +452,7 @@ namespace Method
 		double right = dest_position.second.second->lng() - candidate_init_latlng.lng() < 0 ? candidate_init_latlng.lng() : dest_position.second.second->lng();
 		Graph::Rectangle<Geography::LatLng> rect1(top, left, bottom, right);
 
-		std::vector<std::shared_ptr<Map::BasicPoi const>> init_pois_list = candidate_pois_list(rect1);
+		std::vector<std::shared_ptr<Map::BasicPoi const>> init_pois_list = get_candidate_pois_list(rect1);
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator init_poi = init_pois_list.begin();
 		int init_time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(0) - creating_dummy->get_pause_time(0);
 
@@ -533,7 +487,7 @@ namespace Method
 					= decided_position.second.second->lng() >= dest_position.second.second->lng() ? decided_position.second.second->lng() : dest_position.second.second->lng();
 				Graph::Rectangle<Geography::LatLng> rect2(top, left, bottom, right);
 
-				std::vector<std::shared_ptr<Map::BasicPoi const>> on_the_way_pois_list = candidate_pois_list(rect2);
+				std::vector<std::shared_ptr<Map::BasicPoi const>> on_the_way_pois_list = get_candidate_pois_list(rect2);
 				std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi_on_the_way = on_the_way_pois_list.begin();
 
 				//途中目的地の速度を設定する
@@ -593,10 +547,7 @@ namespace Method
 
 			Graph::Rectangle<Geography::LatLng> range(next_candidate_poi_position_range.lat(), next_candidate_poi_position_range.lng() - length_of_rect, next_candidate_poi_position_range.lat() - length_of_rect, next_candidate_poi_position_range.lng());
 			//次のPOIの決定
-			std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = map->find_pois_within_boundary(range);
-			std::random_device device2;
-			std::mt19937_64 generator2(device2());
-			std::shuffle(candidate_pois_list.begin(), candidate_pois_list.end(), generator2);
+			std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = get_candidate_pois_list(range);
 			std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator next_poi = candidate_pois_list.begin();
 
 			//decided_positionの停止時間を決める

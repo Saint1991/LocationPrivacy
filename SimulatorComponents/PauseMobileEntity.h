@@ -36,9 +36,9 @@ namespace Entity
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
 		void set_random_speed(int phase, double average_speed, double speed_range);
-
-		int get_random_phase(int start, int end);
-
+		
+		std::vector<int> find_cross_not_set_phases_of_poi() const;
+		int randomly_pick_cross_not_set_phase_of_poi() const;
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»

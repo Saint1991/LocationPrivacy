@@ -116,7 +116,7 @@ namespace Entity
 	{
 		std::vector<int> ret;
 		for (int phase = 0; phase < cross_flg->size(); phase++) {
-			if (cross_flg->at(phase)) ret.push_back(phase);
+			if (!cross_flg->at(phase)) ret.push_back(phase);
 		}
 		return ret;
 	}

@@ -90,18 +90,36 @@ namespace Entity
 
 		speed_list.at(phase) = dummy_speed;
 	}
+
 	
 	///<summary>
-	/// start‚©‚çend‚Ü‚Å‚ÌŠÔ‚Årandom‚Éphase‚ğset‚·‚é
+	/// Œğ·‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢Phase‚ğ‘S‚Äæ“¾‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE>
-	int PauseMobileEntity<POSITION_TYPE>::get_random_phase(int start, int end)
+	std::vector<int> PauseMobileEntity<POSITION_TYPE>::find_cross_not_set_phases_of_poi() const
+	{
+		std::vector<int> ret;
+		for (int phase = 0; phase < cross_flg->size(); phase++) {
+			if (!cross_flg->at(phase) && visited_node_ids->at(phase).type() == Graph::NodeType::POI) ret.push_back(phase);
+		}
+		return ret;
+	}
+
+
+	///<summary>
+	/// Œğ·‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢‚ğˆê‚Âƒ‰ƒ“ƒ_ƒ€‚Éæ“¾‚·‚é
+	/// İ’è‚³‚ê‚Ä‚¢‚È‚¢phase‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍINVALID‚ğ•Ô‚·
+	///</summary>
+	template <typename POSITION_TYPE>
+	int PauseMobileEntity<POSITION_TYPE>::randomly_pick_cross_not_set_phase_of_poi() const
 	{
 		Math::Probability generator;
-		int random_phase = generator.uniform_distribution(start, end);
-
-		return random_phase;
-
+		std::vector<int> not_set_phases = find_cross_not_set_phases_of_poi();
+		if (not_set_phases.size() == 0) return INVALID;
+		return not_set_phases.at(generator.uniform_distribution(0, not_set_phases.size() - 1));
 	}
+
+	
+	
 
 }
