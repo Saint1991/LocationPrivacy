@@ -190,46 +190,42 @@ namespace Method
 		//速度はphaseで埋める前を参照しなければならないことに注意
 		double distance = variable_of_converted_pause_time_to_phase.rem * pause_position_speed;
 		double distance_from_source_to_destination = map->shortest_distance(source, destination);
-		
 		Graph::MapNodeIndicator nearest_position = source;
 		
-		int init_flag = 1;//POIを決める最初のフェーズかどうかを示すフラグ
+		//int init_flag = 1;//POIを決める最初のフェーズかどうかを示すフラグ
 		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
 		while (distance < distance_from_source_to_destination)
 		{
 			//最初は停止時間をphaseに換算したときの余り分をdistanceとして，最短路の中で一番近いintersectionを探し，線形補間する．
+			//double total_path_length = map->shortest_distance(source, *path_iter);
 			while (distance > map->shortest_distance(source, *path_iter))
 			{
 				nearest_position = *path_iter;
 				path_iter++;
 			}
 
-			if (distance != map->shortest_distance(source, *path_iter)) {
-				double distance_between_nearest_intersection_and_arrive_position = distance - map->shortest_distance(source, nearest_position);
-				Geography::LatLng nearest_latlng
-					= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
-				Geography::LatLng next_nearest_latlang
-					= (*path_iter).type() == Graph::NodeType::POI ? map->get_static_poi((*path_iter).id())->data->get_position() : *map->get_static_node((*path_iter).id())->data;
-				double angle = Geography::GeoCalculation::lambert_azimuth_angle(nearest_latlng, next_nearest_latlang);
+			//if (distance != map->shortest_distance(source, *path_iter)) {
+			double distance_between_nearest_intersection_and_arrive_position = distance - map->shortest_distance(source, nearest_position);
+			Geography::LatLng nearest_latlng
+				= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
+			Geography::LatLng next_nearest_latlang
+				= (*path_iter).type() == Graph::NodeType::POI ? map->get_static_poi((*path_iter).id())->data->get_position() : *map->get_static_node((*path_iter).id())->data;
+			double angle = Geography::GeoCalculation::lambert_azimuth_angle(nearest_latlng, next_nearest_latlang);
 
-				Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
+			Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
 
-				(*phase_id)++;
-				creating_dummy->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
+			(*phase_id)++;
+			creating_dummy->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
 				
-				distance
-					= Geography::GeoCalculation::lambert_distance(map->get_static_poi(source.id())->data->get_position(), nearest_latlng)
-					+ Geography::GeoCalculation::lambert_distance(nearest_latlng, arrive_position);
-				//map->shortest_distance(source, nearest_position) + Geography::GeoCalculation::lambert_distance(nearest_latlng, arrive_position);
+			//distance = map->shortest_distance(source, nearest_position) + Geography::GeoCalculation::lambert_distance(nearest_latlng, arrive_position);
 				//distanceとmap->shortest_distance(source, *path_iter)が等しい時は，丁度交差点orPOIに到着する場合
-			}
-			else {
+			/*}else {
 				(*phase_id)++;
 				(*path_iter).type() == Graph::NodeType::POI ?
 				creating_dummy->set_position_of_phase(*phase_id, (*path_iter).id(), map->get_static_poi((*path_iter).id())->data->get_position()) :
 				creating_dummy->set_position_of_phase(*phase_id, (*path_iter).id(), *map->get_static_node((*path_iter).id())->data);
 
-			}
+			}*/
 			distance += requirement->service_interval * pause_position_speed;
 		}
 
@@ -529,7 +525,7 @@ namespace Method
 				//PauseTimeがまだ決まらないので，セットはしない．
 				double on_the_way_speed = generator.uniform_distribution(requirement->average_speed_of_dummy - 0.5 * requirement->speed_range_of_dummy, requirement->average_speed_of_dummy + 0.5 * requirement->speed_range_of_dummy);
 
-				int total_pause_time_at_decided_and_dest_position
+				double total_pause_time_at_decided_and_dest_position
 					= time_between_decided_and_dest_position
 					- map->calc_necessary_time(decided_position.second.first, (*poi_on_the_way)->get_id(), creating_dummy->get_speed(decided_position.first))
 					- map->calc_necessary_time((*poi_on_the_way)->get_id(), dest_position.second.first, on_the_way_speed);
@@ -563,6 +559,7 @@ namespace Method
 				//停止時間 = Moving_time(From decided_position to dest_position)
 				int pause_time_at_decided_position
 					= time_between_decided_and_dest_position - map->calc_necessary_time(decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(decided_position.first));
+
 				//停止時間のセット
 				creating_dummy->set_pause_time(decided_position.first, pause_time_at_decided_position);
 

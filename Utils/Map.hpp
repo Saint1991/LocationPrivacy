@@ -168,7 +168,7 @@ namespace Graph
 	template <typename NODE, typename POI, typename PATH>
 	double Map<NODE, POI, PATH>::shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold) const
 	{
-		return get_shortest_path_info(from, to, distance_threshold).second;
+		return from.id() != to.id() ? get_shortest_path_info(from, to, distance_threshold).second : 0.0;
 	}
 
 	
