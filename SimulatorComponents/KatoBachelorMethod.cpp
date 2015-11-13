@@ -216,7 +216,12 @@ namespace Method
 
 				(*phase_id)++;
 				creating_dummy->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
-			//distanceとmap->shortest_distance(source, *path_iter)が等しい時は，丁度交差点orPOIに到着する場合
+				
+				distance
+					= Geography::GeoCalculation::lambert_distance(map->get_static_poi(source.id())->data->get_position(), nearest_latlng)
+					+ Geography::GeoCalculation::lambert_distance(nearest_latlng, arrive_position);
+				//map->shortest_distance(source, nearest_position) + Geography::GeoCalculation::lambert_distance(nearest_latlng, arrive_position);
+				//distanceとmap->shortest_distance(source, *path_iter)が等しい時は，丁度交差点orPOIに到着する場合
 			}
 			else {
 				(*phase_id)++;
@@ -229,7 +234,7 @@ namespace Method
 		}
 
 		//destinationのところまで補完できたら，rest_timeを保持しておく！
-		double distance_between_arrive_position_and_dest_position = distance - map->shortest_distance(source, *path_iter);
+		double distance_between_arrive_position_and_dest_position = distance - distance_from_source_to_destination;//map->shortest_distance(source, *path_iter);
 		*dest_rest_time
 			= distance_between_arrive_position_and_dest_position == requirement->service_interval * pause_position_speed ?
 			0 : distance_between_arrive_position_and_dest_position / pause_position_speed;
@@ -501,10 +506,10 @@ namespace Method
 		while (phase_id < creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first)
 		{
 			std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> decided_position = creating_dummy->find_previous_fixed_position(dest_position.first);
-			int time_between_already_and_dest_position = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(decided_position.first);
+			int time_between_decided_and_dest_position = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(decided_position.first);
 			//二点間が非常に近い，かつ，連続で停止地点が決まっていない場合途中停止位置を設定
 			//already→destの到着時間の差>decided→destの移動時間＋MaxPauseTime
-			if (time_between_already_and_dest_position > map->calc_necessary_time(decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(decided_position.first)) + requirement->max_pause_time) {
+			if (time_between_decided_and_dest_position > map->calc_necessary_time(decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(decided_position.first)) + requirement->max_pause_time) {
 				//position(phase_id)からposition(dest)番目へ到達可能なPOIからひとつランダムで取得
 				//alreadyとdestで四角形を作り，その中に存在するPOIを選択することで近づく方向を考慮
 				double top
@@ -525,12 +530,13 @@ namespace Method
 				double on_the_way_speed = generator.uniform_distribution(requirement->average_speed_of_dummy - 0.5 * requirement->speed_range_of_dummy, requirement->average_speed_of_dummy + 0.5 * requirement->speed_range_of_dummy);
 
 				int total_pause_time_at_decided_and_dest_position
-					= time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(decided_position.first)
+					= time_between_decided_and_dest_position
 					- map->calc_necessary_time(decided_position.second.first, (*poi_on_the_way)->get_id(), creating_dummy->get_speed(decided_position.first))
 					- map->calc_necessary_time((*poi_on_the_way)->get_id(), dest_position.second.first, on_the_way_speed);
 
-				double rate_of_spilit_pause_time = generator.uniform_distribution(0.35, 0.65);
-
+				int percentage_of_spilit_pause_time = generator.uniform_distribution(45, 55);
+				double rate_of_spilit_pause_time = percentage_of_spilit_pause_time / 100.0;
+								
 				//決定済みの点の停止時間を設定
 				creating_dummy->set_pause_time(decided_position.first, total_pause_time_at_decided_and_dest_position * rate_of_spilit_pause_time);
 
@@ -556,8 +562,7 @@ namespace Method
 				//decided_positionの停止時間を決める
 				//停止時間 = Moving_time(From decided_position to dest_position)
 				int pause_time_at_decided_position
-					= time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(decided_position.first)
-					- map->calc_necessary_time(decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(decided_position.first));
+					= time_between_decided_and_dest_position - map->calc_necessary_time(decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(decided_position.first));
 				//停止時間のセット
 				creating_dummy->set_pause_time(decided_position.first, pause_time_at_decided_position);
 

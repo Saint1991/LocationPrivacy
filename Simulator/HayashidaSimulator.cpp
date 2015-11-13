@@ -94,7 +94,8 @@ namespace Simulation
 		//randomに経路を設定できるようにしたい！！
 		//input_user_planを作る
 		//get_userが何かをはっきりさせる．
-		
+		Math::Probability generator;
+
 		//rect_init_langには始点にしたい範囲をインスタンスで入力
 		Graph::Rectangle<Geography::LatLng> rect_init_range(base_lat + 0.5*length_of_rect, base_lng - 0.5*length_of_rect, base_lat - 0.5*length_of_rect, base_lng + 0.5*length_of_rect);
 	 
@@ -184,7 +185,6 @@ namespace Simulation
 		double last_distance = 1.3 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_speed(phase_id);
 
 		//次の候補点の範囲を求める
-		Math::Probability generator;
 		double last_angle = generator.uniform_distribution(-(M_PI_2), M_PI_2);
 		Geography::LatLng last_candidate_poi_position_range
 			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
