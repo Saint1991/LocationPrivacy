@@ -23,14 +23,14 @@ namespace Entity
 	protected:
 		std::vector<int> pause_time_list;
 		std::vector<double> speed_list;
-		
+		std::shared_ptr<Requirement::KatoMethodRequirement const> requirement;
 
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		virtual ~PauseMobileEntity();
 
 		int get_pause_time(int phase) const;
-		void set_pause_time(int phase, time_t pause_time);
+		void set_pause_time(int phase, int pause_time);
 		void set_random_pause_time(int phase, int min, int max);
 
 		double get_speed(int phase) const;

@@ -12,7 +12,8 @@ namespace Entity
 	PauseMobileEntity<POSITION_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
 		: MobileEntity<POSITION_TYPE>(id, timeslot), 
 		  pause_time_list(std::vector<int>(timeslot->phase_count(),0)), 
-		  speed_list(std::vector<double>(timeslot->phase_count(), 0))
+		  speed_list(std::vector<double>(timeslot->phase_count(), 0)),
+		  requirement(nullptr)
 	{
 		
 	}
@@ -39,7 +40,7 @@ namespace Entity
 	/// “Á’è‚Ì’l‚ğ’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE>
-	void PauseMobileEntity<POSITION_TYPE>::set_pause_time(int phase, time_t pause_time)
+	void PauseMobileEntity<POSITION_TYPE>::set_pause_time(int phase, int pause_time)
 	{
 		pause_time_list.at(phase) = pause_time;
 	}
