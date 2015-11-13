@@ -72,6 +72,8 @@ namespace Graph
 	template <typename NODE, typename POI, typename PATH>
 	std::pair<std::vector<MapNodeIndicator>, double> Map<NODE, POI, PATH>::get_shortest_path_info(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold) const
 	{
+		
+		if (from == to) return std::make_pair(std::vector<MapNodeIndicator>(), 0.0);
 
 		std::vector<MapNodeIndicator> ret_route;
 		double ret_distance = NO_CONNECTION;
@@ -168,7 +170,7 @@ namespace Graph
 	template <typename NODE, typename POI, typename PATH>
 	double Map<NODE, POI, PATH>::shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold) const
 	{
-		return from.id() != to.id() ? get_shortest_path_info(from, to, distance_threshold).second : 0.0;
+		return get_shortest_path_info(from, to, distance_threshold).second;
 	}
 
 	

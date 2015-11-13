@@ -28,6 +28,9 @@ namespace Graph
 
 		Graph::node_id id() const;
 		NodeType type() const;
+
+		bool operator==(const MapNodeIndicator& id) const;
+		bool operator!=(const MapNodeIndicator& id) const;
 	};
 }
 

@@ -36,5 +36,16 @@ namespace Graph
 	{
 		return _type;
 	}
+
+
+	bool MapNodeIndicator:: operator==(const MapNodeIndicator& id) const
+	{
+		return _id == id.id() && _type == id.type();
+	}
+
+	bool MapNodeIndicator::operator!=(const MapNodeIndicator& id) const
+	{
+		return _id != id.id() || _type != id.type();
+	}
 }
 
