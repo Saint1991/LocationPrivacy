@@ -140,14 +140,13 @@ namespace Simulation
 			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
 			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
 
-			int init_pause_time = SERVICE_INTERVAL - dest_rest_time;
-			int rest_pause_time = user->get_pause_time(phase_id) - init_pause_time;
+			int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
 
 			//’â~ŠÔ‚ğphase‚ÉŠ·Z‚µCpause_time‚ÆÅ’Z˜HŒo˜H‚©‚çpath‚ğŒˆ’è‚µ‚Ä‚¢‚­
 			div_t variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
 			
 			//’â~ŠÔ•ªCŠephase‚É’â~êŠ‚ÆˆÚ“®‘¬“x(0)‚ğ“o˜^
-			for (int i = 0; i < (variable_of_converted_pause_time_to_phase.quot + 1); i++)
+			for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 			{
 				phase_id++;
 				user->set_position_of_phase(phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
@@ -205,8 +204,11 @@ namespace Simulation
 		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), user->get_speed(phase_id));
 		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
 
+		
 		//’â~ŠÔ‚ğphase‚ÉŠ·Z‚µCpause_time‚ÆÅ’Z˜HŒo˜H‚©‚çpath‚ğŒˆ’è‚µ‚Ä‚¢‚­
-		div_t last_variable_of_converted_pause_time_to_phase = std::div(user->get_pause_time(phase_id) - dest_rest_time, SERVICE_INTERVAL);
+		int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
+		div_t last_variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
+
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
 
 		int last_phase = time_manager->find_phase_of_time(end_time);
@@ -224,7 +226,7 @@ namespace Simulation
 		double last_pause_position_speed = user->get_speed(phase_id - last_variable_of_converted_pause_time_to_phase.quot);
 
 		//Å‰‚¾‚¯’â~ŠÔ‚ğphase‚ÉŠ·Z‚µ‚½‚Ì—]‚è‚ğtime‚Æ‚µC‚»‚êˆÈŠO‚Íservice_interval‚ğtime‚Æ‚µ‚ÄCŒ»İ’n‚©‚ç‹‚ß‚½‚¢’n“_‚Ìdistance‚ğŒvZ
-		double distance = last_variable_of_converted_pause_time_to_phase.rem * last_pause_position_speed;
+		double distance = (SERVICE_INTERVAL - last_variable_of_converted_pause_time_to_phase.rem) * last_pause_position_speed;
 		double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*last_poi)->get_id());
 
 		Graph::MapNodeIndicator last_nearest_position = (*now_poi)->get_id();
@@ -238,6 +240,38 @@ namespace Simulation
 
 		std::cout << "Success Creating Random User" << std::endl;
 	}
+
+	void HayashidaSimulator::export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id)
+	{
+		IO::FileExporter dummy_exporter({
+			{ Geography::LatLng::LATITUDE, "ˆÜ“x" },
+			{ Geography::LatLng::LONGITUDE, "Œo“x" }
+		}, DUMMY_TRAHECTIRT_OUT_PATH);
+
+		std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
+		time_manager->for_each_time([&](time_t time, long interval, int phase) {
+			dummy_exportable_positions.push_back(entities->read_dummy_by_id(dummy_id)->read_position_of_phase(phase));
+		});
+
+	}
+
+
+	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer)
+	{
+		IO::FileExporter dummy_exporter({
+			{ Geography::LatLng::LATITUDE, "ˆÜ“x" },
+			{ Geography::LatLng::LONGITUDE, "Œo“x" }
+		}, DUMMY_TRAHECTIRT_OUT_PATH);
+		/*
+		std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
+		time_manager->for_each_time([&](time_t time, long interval, int phase) {
+			entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>>) {
+				dummy_exportable_positions.push_back(entities->read_dummy_by_id(dummy_id)->read_position_of_phase(phase));
+			});
+		});*/
+
+	}
+
 
 
 	///<summary>
@@ -317,17 +351,23 @@ namespace Simulation
 
 	void HayashidaSimulator::export_evaluation_result()
 	{
-		IO::FileExporter exporter({
+		IO::FileExporter user_exporter({
 			{Geography::LatLng::LATITUDE, "ˆÜ“x"},
 			{Geography::LatLng::LONGITUDE, "Œo“x"}
 		}, USER_TRAJECTORY_OUT_PATH);
 
-		std::list<std::shared_ptr<IO::FileExportable const>> exportable_positions;
+	
+
+		std::list<std::shared_ptr<IO::FileExportable const>> user_exportable_positions;
 		time_manager->for_each_time([&](time_t time, long interval, int phase) {
-			exportable_positions.push_back(user->read_position_of_phase(phase));
+			user_exportable_positions.push_back(user->read_position_of_phase(phase));
 		});
 		
-		exporter.export_lines(exportable_positions);
+		
+		
+		user_exporter.export_lines(user_exportable_positions);
+		
+	
 	}
 
 }

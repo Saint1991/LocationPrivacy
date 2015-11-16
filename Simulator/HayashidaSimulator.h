@@ -31,6 +31,7 @@ namespace Simulation
 		//ñ⁄à¿
 		//ãóó£300m~1000mÅCPOI3å¬,service_interval360Ç≈15phaseÇÆÇÁÇ¢
 		static constexpr auto USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/user_trajectory";
+		static constexpr auto DUMMY_TRAHECTIRT_OUT_PATH = "C:/Users/Shuhei/Desktop/dummy_trajectory";
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
 		static constexpr int MAX_PAUSE_TIME = 700;
@@ -54,6 +55,9 @@ namespace Simulation
 		void make_requirement_list();
 		void random_user();
 
+		void export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id);
+		void export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer);
+
 	public:
 		HayashidaSimulator(const Graph::Rectangle<Geography::LatLng>& map_boundary);
 		virtual ~HayashidaSimulator();
@@ -61,6 +65,7 @@ namespace Simulation
 		void run();
 		void evaluate();
 		void export_evaluation_result();
+		
 	};
 
 }

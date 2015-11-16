@@ -166,16 +166,14 @@ namespace Method
 	/// dest_rest_timeをポインタ引数にすることで，複数の返り値を実現.次の到着時間の余りを返す．
 	///</summary>
 	void KatoBachelorMethod::linear_interpolation_of_path_between_positions(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int *phase_id, int *dest_rest_time) {
-		int init_pause_time = requirement->service_interval - *dest_rest_time;
-				
-		//全体の停止時間から，前回の到着分を差し引いた停止時間を引いた時間
-		int rest_pause_time = creating_dummy->get_pause_time(*phase_id) - init_pause_time;
+			//全体の停止時間から，前回の到着分を差し引いた停止時間を引いた時間
+		int rest_pause_time = creating_dummy->get_pause_time(*phase_id) - *dest_rest_time;
 
 		//残りの停止時間をphaseに換算し，phase分埋める．
 		div_t variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, requirement->service_interval);
 
 		//停止時間分，各phaseに停止場所と移動速度(0)を登録
-		for (int i = 0; i < (variable_of_converted_pause_time_to_phase.quot + 1); i++)
+		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 		{
 			(*phase_id)++;
 			creating_dummy->set_position_of_phase(*phase_id, source, map->get_static_poi(source.id())->data->get_position());
@@ -429,6 +427,7 @@ namespace Method
 				//生成中のダミーの交差回数 += 1;
 				creating_dummy->set_crossing_position_of_phase(share_phase, share_position.first, *share_position.second);
 				creating_dummy->set_speed(share_phase, target->get_speed(share_phase));
+				creating_dummy->set_random_speed(share_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 				//targetの交差回数+1
 				target->register_as_cross_position(share_phase);
 				break;
@@ -493,7 +492,7 @@ namespace Method
 			int time_between_decided_and_dest_position = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(decided_position.first);
 			//二点間が非常に近い，かつ，連続で停止地点が決まっていない場合途中停止位置を設定
 			//already→destの到着時間の差>decided→destの移動時間＋MaxPauseTime
-			if (time_between_decided_and_dest_position > 2* requirement->max_pause_time) throw std::invalid_argument("Pause Time will be to long!!");
+			//if (time_between_decided_and_dest_position > 2* requirement->max_pause_time) throw std::invalid_argument("Pause Time will be to long!!");
 			if (time_between_decided_and_dest_position > map->calc_necessary_time(decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(decided_position.first)) + requirement->max_pause_time) {
 				//position(phase_id)からposition(dest)番目へ到達可能なPOIからひとつランダムで取得
 				//alreadyとdestで四角形を作り，その中に存在するPOIを選択することで近づく方向を考慮
@@ -521,9 +520,11 @@ namespace Method
 
 				int percentage_of_spilit_pause_time = generator.uniform_distribution(45, 55);
 				double rate_of_spilit_pause_time = percentage_of_spilit_pause_time / 100.0;
+				int first_pause_time = total_pause_time_at_decided_and_dest_position * rate_of_spilit_pause_time;
+				int second_pause_time = total_pause_time_at_decided_and_dest_position - first_pause_time;
 
 				//決定済みの点の停止時間を設定
-				creating_dummy->set_pause_time(decided_position.first, total_pause_time_at_decided_and_dest_position * rate_of_spilit_pause_time);
+				creating_dummy->set_pause_time(decided_position.first, first_pause_time);
 
 				//途中目的地までのpathを決める
 				linear_interpolation_of_path_between_positions(decided_position.second.first, (*poi_on_the_way)->get_id(), &phase_id, &dest_rest_time);
@@ -532,7 +533,7 @@ namespace Method
 				creating_dummy->set_speed(phase_id, on_the_way_speed);
 
 				//途中目的地の停止時間のセット
-				creating_dummy->set_pause_time(phase_id, total_pause_time_at_decided_and_dest_position * (1 - rate_of_spilit_pause_time));
+				creating_dummy->set_pause_time(phase_id, second_pause_time);
 
 				//decided_positionの更新
 				decided_position = creating_dummy->find_previous_fixed_position(dest_position.first);
@@ -547,10 +548,10 @@ namespace Method
 				//decided_positionの停止時間を決める
 				//停止時間 = Moving_time(From decided_position to dest_position)
 				int pause_time_at_decided_position
-					= time_between_decided_and_dest_position - map->calc_necessary_time(decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(decided_position.first));
+					= time_between_decided_and_dest_position - map->calc_necessary_time(decided_position.second.first, dest_position.second.first, creating_dummy->get_speed(phase_id));
 
 				//停止時間のセット
-				creating_dummy->set_pause_time(decided_position.first, pause_time_at_decided_position);
+				creating_dummy->set_pause_time(phase_id, pause_time_at_decided_position);
 
 				//途中目的地から次の停止地点のpathを決める
 				linear_interpolation_of_path_between_positions(decided_position.second.first, dest_position.second.first, &phase_id, &dest_rest_time);
@@ -563,35 +564,44 @@ namespace Method
 
 		//シュミレーション終了までの残りの停止位置を適当に決める
 		//複数に設定したほうが良いが，とりあえず，最終地点のみ
-		while (phase_id <= time_manager->phase_count())
+		while (phase_id < time_manager->phase_count() - 1)
 		{
-			double length_of_rect = 0.005;//適切な範囲の緯度経度の選択幅を書く
-
 			Entity::MobileEntity<Geography::LatLng>::node_pos_info now_poi = creating_dummy->read_node_pos_info_of_phase(phase_id);
-			int next_arrive_time = time_manager->time_of_phase(time_manager->phase_count()) - time_manager->time_of_phase(phase_id);
 
-			int distance = (next_arrive_time - requirement->max_pause_time) * creating_dummy->get_speed(phase_id);
+			double length_of_rect = 0.005;//適切な範囲の緯度経度の選択幅を書く
+			int next_arrive_time = time_manager->time_of_phase(time_manager->phase_count() - 1) - time_manager->time_of_phase(phase_id);
+			if (next_arrive_time - requirement->min_pause_time < 0) {
+				for (int i = phase_id; i < time_manager->phase_count() - 1; i++)
+				{
+					phase_id++;
+					creating_dummy->set_position_of_phase(phase_id, now_poi.first, *now_poi.second);
+					creating_dummy->set_speed(phase_id, 0);
+				}
+				break;
+			}
+			else{
+				int distance = (next_arrive_time - requirement->min_pause_time) * creating_dummy->get_speed(phase_id);
+				double angle_of_positions = generator.uniform_distribution(-M_PI_2, M_PI_2);
+				Geography::LatLng next_candidate_poi_position_range
+					= Geography::GeoCalculation::calc_translated_point(*now_poi.second, distance, angle_of_positions);
 
-			double angle_of_positions = generator.uniform_distribution(-M_PI_2, 0.0);
+				Graph::Rectangle<Geography::LatLng> range(next_candidate_poi_position_range.lat(), next_candidate_poi_position_range.lng() - length_of_rect, next_candidate_poi_position_range.lat() - length_of_rect, next_candidate_poi_position_range.lng());
+				//次のPOIの決定
+				std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = get_candidate_pois_list(range);
+				std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator next_poi = candidate_pois_list.begin();
 
-			Geography::LatLng next_candidate_poi_position_range
-				= Geography::GeoCalculation::calc_translated_point(*now_poi.second, distance, angle_of_positions);
+				//decided_positionの停止時間を決める
+				//停止時間 = Moving_time(From decided_position to dest_position)
+				int pause_time_at_decided_position
+					= next_arrive_time
+					- map->calc_necessary_time(now_poi.first, (*next_poi)->get_id(), creating_dummy->get_speed(phase_id));
+				//停止時間のセット
+				creating_dummy->set_pause_time(phase_id, pause_time_at_decided_position);
 
-			Graph::Rectangle<Geography::LatLng> range(next_candidate_poi_position_range.lat(), next_candidate_poi_position_range.lng() - length_of_rect, next_candidate_poi_position_range.lat() - length_of_rect, next_candidate_poi_position_range.lng());
-			//次のPOIの決定
-			std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = get_candidate_pois_list(range);
-			std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator next_poi = candidate_pois_list.begin();
-
-			//decided_positionの停止時間を決める
-			//停止時間 = Moving_time(From decided_position to dest_position)
-			int pause_time_at_decided_position
-				= next_arrive_time
-				- map->calc_necessary_time(now_poi.first, (*next_poi)->get_id(), creating_dummy->get_speed(phase_id));
-			//停止時間のセット
-			creating_dummy->set_pause_time(phase_id, pause_time_at_decided_position);
-
-			//途中目的地から次の停止地点のpathを決める
-			linear_interpolation_of_path_between_positions(now_poi.first, (*next_poi)->get_id(), &phase_id, &dest_rest_time);
+				//途中目的地から次の停止地点のpathを決める
+				linear_interpolation_of_path_between_positions(now_poi.first, (*next_poi)->get_id(), &phase_id, &dest_rest_time);
+		
+			}
 		}
 	}
 
