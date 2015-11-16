@@ -608,6 +608,25 @@ namespace Method
 		}
 	}
 
+	
+	void KatoBachelorMethod::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer) const
+	{
+		IO::FileExporter dummies_exporter({
+			{ Geography::LatLng::LATITUDE, "緯度" },
+			{ Geography::LatLng::LONGITUDE, "経度" }
+		}, DUMMY_TRAHECTIRT_OUT_PATH);
+
+
+		std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
+		time_manager->for_each_time([&](time_t time, long interval, int phase) {
+			entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> dummy) {
+				dummy_exportable_positions.push_back(entities->read_dummy_by_id(dummy_id)->read_position_of_phase(phase));
+			});
+		});
+
+		dummies_exporter.export_lines(dummy_exportable_positions);
+	}
+	
 
 	///<summary>
 	/// 初期化 (今回は特にやることはない)
@@ -616,6 +635,8 @@ namespace Method
 	{
 
 	}
+
+	
 
 
 	///<summary>
@@ -631,6 +652,7 @@ namespace Method
 			decide_share_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 			decide_destination_on_the_way(dummy_id);// 生成中ダミー(k番目)の移動経路の決定
 		}
+
 	}
 
 	void KatoBachelorMethod::run()

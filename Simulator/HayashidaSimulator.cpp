@@ -258,18 +258,20 @@ namespace Simulation
 
 	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer)
 	{
-		IO::FileExporter dummy_exporter({
+		IO::FileExporter dummies_exporter({
 			{ Geography::LatLng::LATITUDE, "緯度" },
 			{ Geography::LatLng::LONGITUDE, "経度" }
 		}, DUMMY_TRAHECTIRT_OUT_PATH);
-		/*
+		
+
 		std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
-		time_manager->for_each_time([&](time_t time, long interval, int phase) {
-			entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>>) {
+		entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> dummy) {
+			time_manager->for_each_time([&](time_t time, long interval, int phase) {
 				dummy_exportable_positions.push_back(entities->read_dummy_by_id(dummy_id)->read_position_of_phase(phase));
 			});
-		});*/
+		});
 
+		dummies_exporter.export_lines(dummy_exportable_positions);
 	}
 
 
@@ -324,6 +326,9 @@ namespace Simulation
 		};
 	}
 
+	///<summary>
+	/// map,user,requirementの作成
+	///</summary>
 	void HayashidaSimulator::prepare()
 	{
 		build_map(map_boundary);
@@ -340,15 +345,24 @@ namespace Simulation
 		for (std::list<std::shared_ptr<Requirement::KatoMethodRequirement const>>::iterator requirement = requirements.begin(); requirement != requirements.end(); requirement++)
 		{
 			Method::KatoBachelorMethod kato_bachelor_method(map,user,*requirement,time_manager);
+			//auto func = std::bind(&export_dummies_trajectory,this,std::placeholders::_1, std::placeholders::_2);
+			//func(entities, timer);
+			//kato_bachelor_method.set_execution_callback(func);
 			kato_bachelor_method.run();
 		}
 	}
 
+	///<summary>
+	/// 評価部分実装
+	///</summary>
 	void HayashidaSimulator::evaluate()
 	{
 
 	}
 
+	///<summary>
+	/// userのトラジェクトリファイルエクスポート
+	///</summary>
 	void HayashidaSimulator::export_evaluation_result()
 	{
 		IO::FileExporter user_exporter({
@@ -356,18 +370,13 @@ namespace Simulation
 			{Geography::LatLng::LONGITUDE, "経度"}
 		}, USER_TRAJECTORY_OUT_PATH);
 
-	
-
 		std::list<std::shared_ptr<IO::FileExportable const>> user_exportable_positions;
 		time_manager->for_each_time([&](time_t time, long interval, int phase) {
 			user_exportable_positions.push_back(user->read_position_of_phase(phase));
 		});
-		
-		
-		
+				
 		user_exporter.export_lines(user_exportable_positions);
-		
-	
 	}
 
+	
 }
