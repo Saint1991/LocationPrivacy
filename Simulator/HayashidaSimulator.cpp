@@ -60,7 +60,7 @@ namespace Simulation
 			path_iter++;
 		}
 
-		if (*distance != map->shortest_distance((*now_poi)->get_id(), *path_iter)) {
+		//if (*distance != map->shortest_distance((*now_poi)->get_id(), *path_iter)) {
 			double distance_between_start_and_nearest_position = map->shortest_distance((*now_poi)->get_id(), nearest_position);
 			double distance_between_nearest_intersection_and_arrive_position = *distance - distance_between_start_and_nearest_position;
 
@@ -73,15 +73,17 @@ namespace Simulation
 			Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
 
 			(*phase_id)++;
+			user->set_speed(*phase_id, pause_position_speed);
 			user->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
-		}
+		
+		/*}
 		//distanceとmap->shortest_distance((*now_poi)->get_id(), *path_iter)が等しい時は，丁度交差点orPOIに到着する場合
 		else {
 			(*phase_id)++;
 			(*path_iter).type() == Graph::NodeType::POI ?
 				user->set_position_of_phase(*phase_id, (*path_iter).id(), map->get_static_poi((*path_iter).id())->data->get_position()) :
 				user->set_position_of_phase(*phase_id, (*path_iter).id(), *map->get_static_node((*path_iter).id())->data);
-		}
+		}*/
 
 		*distance += service_interval * pause_position_speed;
 	}
@@ -97,7 +99,7 @@ namespace Simulation
 		Math::Probability generator;
 
 		//rect_init_langには始点にしたい範囲をインスタンスで入力
-		Graph::Rectangle<Geography::LatLng> rect_init_range(base_lat + 0.5*length_of_rect, base_lng - 0.5*length_of_rect, base_lat - 0.5*length_of_rect, base_lng + 0.5*length_of_rect);
+		Graph::Rectangle<Geography::LatLng> rect_init_range(BASE_LAT + 0.5*length_of_rect, BASE_LNG - 0.5*length_of_rect, BASE_LAT - 0.5*length_of_rect, BASE_LNG + 0.5*length_of_rect);
 	 
 		//----------------------------time_managerの生成-------------------------------------//
 		int phase_id = 0;
@@ -138,11 +140,14 @@ namespace Simulation
 			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
 			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
 
+			int init_pause_time = SERVICE_INTERVAL - dest_rest_time;
+			int rest_pause_time = user->get_pause_time(phase_id) - init_pause_time;
+
 			//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
-			div_t variable_of_converted_pause_time_to_phase = std::div(user->get_pause_time(phase_id) - dest_rest_time, SERVICE_INTERVAL);
+			div_t variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
 			
 			//停止時間分，各phaseに停止場所と移動速度(0)を登録
-			for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
+			for (int i = 0; i < (variable_of_converted_pause_time_to_phase.quot + 1); i++)
 			{
 				phase_id++;
 				user->set_position_of_phase(phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
@@ -155,7 +160,7 @@ namespace Simulation
 			double pause_position_speed = user->get_speed(phase_id - variable_of_converted_pause_time_to_phase.quot);
 			
 			//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
-			double distance = variable_of_converted_pause_time_to_phase.rem * pause_position_speed;
+			double distance = (SERVICE_INTERVAL - variable_of_converted_pause_time_to_phase.rem) * pause_position_speed;
 			double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*next_poi)->get_id());
 
 			Graph::MapNodeIndicator nearest_position = (*now_poi)->get_id();

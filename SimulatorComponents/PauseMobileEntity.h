@@ -23,7 +23,6 @@ namespace Entity
 	protected:
 		std::vector<int> pause_time_list;
 		std::vector<double> speed_list;
-		std::shared_ptr<Requirement::KatoMethodRequirement const> requirement;
 
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
