@@ -246,7 +246,7 @@ namespace Simulation
 		IO::FileExporter dummy_exporter({
 			{ Geography::LatLng::LATITUDE, "緯度" },
 			{ Geography::LatLng::LONGITUDE, "経度" }
-		}, DUMMY_TRAHECTIRT_OUT_PATH);
+		}, DUMMY_TRAJECTORT_OUT_PATH);
 
 		std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
 		time_manager->for_each_time([&](time_t time, long interval, int phase) {
@@ -258,20 +258,21 @@ namespace Simulation
 
 	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer)
 	{
-		IO::FileExporter dummies_exporter({
-			{ Geography::LatLng::LATITUDE, "緯度" },
-			{ Geography::LatLng::LONGITUDE, "経度" }
-		}, DUMMY_TRAHECTIRT_OUT_PATH);
 		
-
-		std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
 		entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> dummy) {
+			std::string file_name = DUMMY_TRAJECTORT_OUT_PATH + std::to_string(dummy_id);
+			std::cout << file_name << std::endl;
+			IO::FileExporter dummies_exporter({
+				{ Geography::LatLng::LATITUDE, "緯度" },
+				{ Geography::LatLng::LONGITUDE, "経度" }
+			}, file_name);
+			
+			std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
 			time_manager->for_each_time([&](time_t time, long interval, int phase) {
 				dummy_exportable_positions.push_back(entities->read_dummy_by_id(dummy_id)->read_position_of_phase(phase));
 			});
+			dummies_exporter.export_lines(dummy_exportable_positions);
 		});
-
-		dummies_exporter.export_lines(dummy_exportable_positions);
 	}
 
 
@@ -345,9 +346,9 @@ namespace Simulation
 		for (std::list<std::shared_ptr<Requirement::KatoMethodRequirement const>>::iterator requirement = requirements.begin(); requirement != requirements.end(); requirement++)
 		{
 			Method::KatoBachelorMethod kato_bachelor_method(map,user,*requirement,time_manager);
-			//auto func = std::bind(&export_dummies_trajectory,this,std::placeholders::_1, std::placeholders::_2);
-			//func(entities, timer);
-			//kato_bachelor_method.set_execution_callback(func);
+			kato_bachelor_method.set_execution_callback([&](std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer) {
+				export_dummies_trajectory(entities, timer);
+			});
 			kato_bachelor_method.run();
 		}
 	}

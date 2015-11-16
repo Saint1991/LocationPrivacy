@@ -34,9 +34,8 @@ namespace Method
 
 		typedef unsigned int entity_id;
 
-		static constexpr auto DUMMY_TRAHECTIRT_OUT_PATH = "C:/Users/Shuhei/Desktop/dummy_trajectory";
-
-
+		static constexpr auto DUMMY_TRAJECTORT_OUT_PATH = "C:/Users/Shuhei/Desktop/dummy_trajectory";
+		
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> creating_dummy;
 		
 		//メソッド
@@ -52,7 +51,6 @@ namespace Method
 		void decide_destination_on_the_way(int dummy_id);// 生成中ダミー(k番目)の移動経路の決定
 				
 	protected:
-		void export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer) const;
 		void initialize();
 		void decide_dummy_positions();
 		

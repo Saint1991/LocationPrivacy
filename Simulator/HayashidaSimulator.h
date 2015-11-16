@@ -30,8 +30,8 @@ namespace Simulation
 	#pragma region
 		//ñ⁄à¿
 		//ãóó£300m~1000mÅCPOI3å¬,service_interval360Ç≈15phaseÇÆÇÁÇ¢
-		static constexpr auto USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/user_trajectory";
-		static constexpr auto DUMMY_TRAHECTIRT_OUT_PATH = "C:/Users/Shuhei/Desktop/dummy_trajectory";
+		static constexpr auto USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/user_trajectory";
+		static constexpr auto DUMMY_TRAJECTORT_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/dummy_trajectory";
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
 		static constexpr int MAX_PAUSE_TIME = 700;
