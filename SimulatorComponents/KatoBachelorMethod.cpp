@@ -288,6 +288,8 @@ namespace Method
 			//min_cell_idのセルでエンティティ数が昇順となるbase_phaseをlistで取得
 			Math::Probability generator;
 			int base_phase = generator.uniform_distribution(start_of_cycle, end_of_cycle - 1);
+			if (end_of_cycle == 4) base_phase = 2;
+			
 			//base_phaseはinterval_of_base_phaseの中の数なので，実際のphaseは別
 			//grid_listのみbase_phaseを使う！
 			int real_phase = (base_phase + 1) * requirement->interval_of_base_phase;
@@ -569,8 +571,8 @@ namespace Method
 			Entity::MobileEntity<Geography::LatLng>::node_pos_info now_poi = creating_dummy->read_node_pos_info_of_phase(phase_id);
 
 			double length_of_rect = 0.005;//適切な範囲の緯度経度の選択幅を書く
-			int next_arrive_time = time_manager->time_of_phase(time_manager->phase_count() - 1) - time_manager->time_of_phase(phase_id);
-			if (next_arrive_time - requirement->min_pause_time < 0) {
+			int rest_phase_time = time_manager->time_of_phase(time_manager->phase_count() - 1) - time_manager->time_of_phase(phase_id);
+			if ((rest_phase_time - requirement->min_pause_time) < 0) {
 				for (int i = phase_id; i < time_manager->phase_count() - 1; i++)
 				{
 					phase_id++;
@@ -580,7 +582,8 @@ namespace Method
 				break;
 			}
 			else{
-				int distance = (next_arrive_time - requirement->min_pause_time) * creating_dummy->get_speed(phase_id);
+				//距離は届く範囲で調整
+				int distance = 0.9 * (rest_phase_time - requirement->min_pause_time) * creating_dummy->get_speed(phase_id);
 				double angle_of_positions = generator.uniform_distribution(-M_PI_2, M_PI_2);
 				Geography::LatLng next_candidate_poi_position_range
 					= Geography::GeoCalculation::calc_translated_point(*now_poi.second, distance, angle_of_positions);
@@ -593,7 +596,7 @@ namespace Method
 				//decided_positionの停止時間を決める
 				//停止時間 = Moving_time(From decided_position to dest_position)
 				int pause_time_at_decided_position
-					= next_arrive_time
+					= rest_phase_time
 					- map->calc_necessary_time(now_poi.first, (*next_poi)->get_id(), creating_dummy->get_speed(phase_id));
 				//停止時間のセット
 				creating_dummy->set_pause_time(phase_id, pause_time_at_decided_position);
