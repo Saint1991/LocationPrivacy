@@ -14,6 +14,7 @@
 #include "DbTrajectoryLoader.h"
 #include "PreferenceTree.h"
 #include "Dijkstra.h"
+#include "TimeUtility.h"
 
 namespace Simulation
 {
