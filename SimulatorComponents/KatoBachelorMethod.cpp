@@ -175,6 +175,7 @@ namespace Method
 		//停止時間分，各phaseに停止場所と移動速度(0)を登録
 		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 		{
+			if ((unsigned int)phase_id == ( time_manager->phase_count() - 1)) break;
 			(*phase_id)++;
 			creating_dummy->set_position_of_phase(*phase_id, source, map->get_static_poi(source.id())->data->get_position());
 			creating_dummy->set_speed(*phase_id, 0);
@@ -288,7 +289,6 @@ namespace Method
 			//min_cell_idのセルでエンティティ数が昇順となるbase_phaseをlistで取得
 			Math::Probability generator;
 			int base_phase = generator.uniform_distribution(start_of_cycle, end_of_cycle - 1);
-			if (end_of_cycle == 4) base_phase = 2;
 			
 			//base_phaseはinterval_of_base_phaseの中の数なので，実際のphaseは別
 			//grid_listのみbase_phaseを使う！
