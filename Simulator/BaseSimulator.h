@@ -25,12 +25,14 @@ namespace Simulation
 	class BASE_SIMULATOR_API BaseSimulator
 		: public ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
 	{
+	private:
+		const int TRAJECTORY_LENGTH_THRESHOLD = 3;
+		const double TRAININGSET_PROPORTION;
+		const unsigned int USER_ID;
+	
 	protected:
 		std::shared_ptr<User::PreferenceTree> user_preference_tree;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree;
-		double testset_proportion;
-		int first_trajectory_sequence;
-		int user_id;
 
 		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
 		void create_trajectories();
@@ -38,12 +40,12 @@ namespace Simulation
 		virtual void make_requirement_list() = 0;
 		
 	public:
-		BaseSimulator(int user_id, double testset_proportion);
+		BaseSimulator(unsigned int user_id = 1, double trainingset_proportion = 0.3);
 		virtual ~BaseSimulator();
 		void prepare();
-		virtual void run();
+		virtual void run() = 0;
 		virtual void evaluate() = 0;
-		virtual void export_evaluation_result(const std::string& export_base_path) = 0;
+		virtual void export_evaluation_result() = 0;
 	};
 }
 

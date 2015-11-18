@@ -25,7 +25,6 @@ namespace Simulation
 		std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>> user_trajectories;
 		std::shared_ptr<USER_TYPE> user;
 		std::list<std::shared_ptr<REQUIREMENT_TYPE const>> requirements;
-		std::list<std::shared_ptr<Framework::IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>>> comparative_methods;
 		std::shared_ptr<Time::TimeSlotManager> time_manager; //‚±‚±‚¢‚ç‚È‚­‚È‚é‚©‚à
 
 		virtual void build_map(const Graph::Rectangle<Geography::LatLng>& boundary) = 0;

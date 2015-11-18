@@ -4,7 +4,7 @@
 namespace Simulation
 {
 
-	PaisSimulator::PaisSimulator(int user_id, double testset_proportion) : BaseSimulator(user_id, testset_proportion)
+	PaisSimulator::PaisSimulator() : BaseSimulator(USER_ID, TRAININGSET_PROPORTION)
 	{
 	}
 
@@ -12,7 +12,6 @@ namespace Simulation
 	PaisSimulator::~PaisSimulator()
 	{
 	}
-
 
 	///<summary>
 	/// シミュレーションのパラメータリスト
@@ -35,12 +34,17 @@ namespace Simulation
 		};
 	}
 
+	void PaisSimulator::run()
+	{
+
+	}
+
 	void PaisSimulator::evaluate()
 	{
 
 	}
 
-	void PaisSimulator::export_evaluation_result(const std::string& export_path)
+	void PaisSimulator::export_evaluation_result()
 	{
 
 	}

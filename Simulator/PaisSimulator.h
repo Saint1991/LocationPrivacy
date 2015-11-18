@@ -18,13 +18,20 @@ namespace Simulation
 	///</summary>
 	class PAIS_SIMULATOR_API PaisSimulator : public BaseSimulator
 	{
+	private:
+		static constexpr unsigned int USER_ID = 1251U;
+		static constexpr double TRAININGSET_PROPORTION = 0.3;
+	
+	protected:
+		void make_requirement_list();
+	
 	public:
-		PaisSimulator(int user_id, double testset_proportion);
+		PaisSimulator();
 		~PaisSimulator();
 
-		void make_requirement_list();
+		void run();
 		void evaluate();
-		void export_evaluation_result(const std::string& export_path);
+		void export_evaluation_result();
 	};
 }
 

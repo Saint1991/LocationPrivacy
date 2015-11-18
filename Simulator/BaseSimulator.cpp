@@ -7,9 +7,9 @@ namespace Simulation
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	BaseSimulator::BaseSimulator(int user_id, double testset_proportion) 
+	BaseSimulator::BaseSimulator(unsigned int user_id, double trainingset_proportion) 
 		: ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>(),
-		testset_proportion(testset_proportion), user_id(user_id)
+		TRAININGSET_PROPORTION(trainingset_proportion), USER_ID(user_id)
 	{
 	}
 
@@ -39,8 +39,7 @@ namespace Simulation
 	void BaseSimulator::create_trajectories()
 	{
 		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader("../settings/mydbsettings.xml", "map_tokyo", "checkins", "pois");
-		user_trajectories = loader.load_trajectories(user_id);
-		first_trajectory_sequence = (int)(user_trajectories->size() * testset_proportion) + 1;
+		user_trajectories = loader.load_trajectories(USER_ID);
 	}
 
 	///<summary>
@@ -48,9 +47,6 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::build_user_preference_tree()
 	{
-		for (int trajectory_sequence = 0; trajectory_sequence < first_trajectory_sequence; trajectory_sequence++) {
-			std::shared_ptr<Graph::SemanticTrajectory<>> trajectory = user_trajectories->at(trajectory_sequence);
-		}
 	}
 
 
@@ -59,17 +55,9 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::prepare()
 	{
-		//build_map();
+		make_requirement_list();
 		create_trajectories();
 		build_user_preference_tree();
-	}
-
-	///<summary>
-	/// シミュレータの提案手法実行部分
-	///</summary>
-	void BaseSimulator::run()
-	{
-
 	}
 }
 
