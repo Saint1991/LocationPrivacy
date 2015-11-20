@@ -34,10 +34,10 @@ namespace Simulation
 		static constexpr auto DUMMY_TRAJECTORT_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/dummy_trajectory";
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
-		static constexpr int MAX_PAUSE_TIME = 400;
+		static constexpr int MAX_PAUSE_TIME = 500;//途中目的地設定の関係でmin_pause_timeの2.5倍以上で設定する！
 		static constexpr int MIN_PAUSE_TIME = 200;//SERVICE_INTERVALより大きくする！
 		static constexpr int SERVICE_INTERVAL = 90;
-		static constexpr int POI_NUM = 5;
+		static constexpr int POI_NUM = 6;
 		static constexpr double BASE_LAT = 35.655;//出発地の目安の緯度．全POIの平均値
 		static constexpr double BASE_LNG = 139.700;//出発地の目安の経度．全POIの平均値
 		int end_time = 4500;//目安の終了時間．経路を設定し終えて，時間が余った分は削除．

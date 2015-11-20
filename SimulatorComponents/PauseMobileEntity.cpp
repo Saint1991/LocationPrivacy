@@ -11,7 +11,7 @@ namespace Entity
 	template <typename POSITION_TYPE>
 	PauseMobileEntity<POSITION_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
 		: MobileEntity<POSITION_TYPE>(id, timeslot), 
-		  pause_time_list(std::vector<int>(timeslot->phase_count(),0)), 
+		  pause_time_list(std::vector<double>(timeslot->phase_count(),0)), 
 		  speed_list(std::vector<double>(timeslot->phase_count(), 0))
 	{
 		
@@ -36,7 +36,7 @@ namespace Entity
 	}
 
 	///<summary>
-	/// “Á’è‚Ì’l‚ğ’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
+	/// “Á’è‚Ì’l‚ğintŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE>
 	void PauseMobileEntity<POSITION_TYPE>::set_pause_time(int phase, int pause_time)
@@ -44,9 +44,18 @@ namespace Entity
 		pause_time_list.at(phase) = pause_time;
 	}
 
+	///<summary>
+	/// “Á’è‚Ì’l‚ğdoubleŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE>
+	void PauseMobileEntity<POSITION_TYPE>::set_pause_time(int phase, double pause_time)
+	{
+		pause_time_list.at(phase) = pause_time;
+	}
+
 	
 	///<summary>
-	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğ’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
+	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğintŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE>
 	void PauseMobileEntity<POSITION_TYPE>::set_random_pause_time(int phase, int min, int max)
@@ -56,6 +65,19 @@ namespace Entity
 		
 		pause_time_list.at(phase) = pause_time;
 	}
+
+	///<summary>
+	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğdoubleŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE>
+	void PauseMobileEntity<POSITION_TYPE>::set_random_pause_time(int phase, double min, double max)
+	{
+		Math::Probability generator;
+		double pause_time = generator.uniform_distribution(min, max);
+
+		pause_time_list.at(phase) = pause_time;
+	}
+
 
 	///<summary>
 	/// ˆÚ“®‘¬“x‚ğ‹‚ß‚é

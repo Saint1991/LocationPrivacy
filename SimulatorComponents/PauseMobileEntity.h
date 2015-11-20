@@ -21,7 +21,7 @@ namespace Entity
 	class PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE>
 	{
 	protected:
-		std::vector<int> pause_time_list;
+		std::vector<double> pause_time_list;
 		std::vector<double> speed_list;
 
 	public:
@@ -30,7 +30,9 @@ namespace Entity
 
 		int get_pause_time(int phase) const;
 		void set_pause_time(int phase, int pause_time);
+		void set_pause_time(int phase, double pause_time);
 		void set_random_pause_time(int phase, int min, int max);
+		void set_random_pause_time(int phase, double min, double max);
 
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
