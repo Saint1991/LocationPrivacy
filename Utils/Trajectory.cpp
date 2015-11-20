@@ -4,6 +4,48 @@
 namespace Graph
 {
 
+	#pragma region TrajectoryState
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	template <typename POSITION_TYPE>
+	TrajectoryState<POSITION_TYPE>::TrajectoryState(time_t time, std::shared_ptr<POSITION_TYPE> position) : time(time), position(position)
+	{
+
+	}
+
+
+	///<summary>
+	/// 出力データの取得
+	///</summary>
+	template <>
+	std::unordered_map<std::string, std::string> TrajectoryState<Geography::LatLng>::get_export_data() const
+	{
+		std::unordered_map<std::string, std::string> ret = {
+			{Geography::LatLng::LATITUDE, std::to_string(position->lat())},
+			{Geography::LatLng::LONGITUDE, std::to_string(position->lng())},
+			{TIME, std::to_string(time)}
+		};
+		return ret;
+	}
+
+	///<summary>
+	/// 出力データの取得
+	///</summary>
+	template <>
+	std::unordered_map<std::string, std::string> TrajectoryState<Graph::Coordinate>::get_export_data() const
+	{
+		std::unordered_map<std::string, std::string> ret = {
+			{ Graph::Coordinate::X , std::to_string(position->x()) },
+			{ Graph::Coordinate::Y, std::to_string(position->y()) },
+			{ TIME, std::to_string(time) }
+		};
+		return ret;
+	}
+	
+	#pragma endregion
+
 	///<summary>
 	/// コンストラクタ
 	/// timesはUnixTimeStampの系列
@@ -116,6 +158,22 @@ namespace Graph
 			std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
 			execute_function(phase, time, position);
 		});
+	}
+
+
+	///<summary>
+	/// ファイルエクスポート用トラジェクトリデータを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::list<std::shared_ptr<IO::FileExportable const>> Trajectory<POSITION_TYPE>::get_export_data() const
+	{
+		std::list<std::shared_ptr<IO::FileExportable const>> ret;
+		timeslot->for_each_time([this, &ret](time_t time, long interval, int phase) {
+			std::shared_ptr<POSITION_TYPE> position = positions->at(phase);
+			std::shared_ptr<IO::FileExportable const> data = std::make_shared<TrajectoryState<POSITION_TYPE> const>(time, position);
+			ret.push_back(data);
+		});
+		return ret;
 	}
 }
 

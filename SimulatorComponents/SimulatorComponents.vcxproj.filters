@@ -78,9 +78,6 @@
     <ClInclude Include="PreferenceTreeNode.h">
       <Filter>ヘッダー ファイル\User\Preference</Filter>
     </ClInclude>
-    <ClInclude Include="ProbabilityEdge.h">
-      <Filter>ヘッダー ファイル\User\Preference</Filter>
-    </ClInclude>
     <ClInclude Include="Dummy.h">
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
@@ -141,9 +138,6 @@
       <Filter>ソース ファイル\User\Preference</Filter>
     </ClCompile>
     <ClCompile Include="PreferenceTreeNode.cpp">
-      <Filter>ソース ファイル\User\Preference</Filter>
-    </ClCompile>
-    <ClCompile Include="ProbabilityEdge.cpp">
       <Filter>ソース ファイル\User\Preference</Filter>
     </ClCompile>
     <ClCompile Include="Dummy.cpp">

@@ -23,12 +23,13 @@ namespace Graph
 
 	///<summary>
 	/// ルートノードを設定して木を初期化します
+	/// ルートノードの親ノードはID-1としている
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	void PrefixTree<NODE, NODE_DATA, EDGE>::initialize(std::shared_ptr<NODE_DATA> root_data)
 	{
 		node_id current_id = node_collection->size();
-		std::shared_ptr<NODE> node = std::make_shared<NODE>(current_id, root_data);
+		std::shared_ptr<NODE> node = std::make_shared<NODE>(current_id, -1, root_data);
 		root_node = node;
 		node_collection->add(node);
 	}

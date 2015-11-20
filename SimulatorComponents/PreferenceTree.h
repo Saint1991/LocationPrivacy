@@ -5,7 +5,6 @@
 #endif
 
 #pragma once
-#include "ProbabilityEdge.h"
 #include "PreferenceTreeNode.h"
 #include "PrefixTree.h"
 #include "Sequence.h"
@@ -16,20 +15,19 @@ namespace User
 	///<summary>
 	/// ユーザの嗜好を表す木
 	///</summary>
-	class PreferenceTree : public Graph::PrefixTree<PreferenceTreeNode, std::string, ProbabilityEdge>
+	class PreferenceTree : public Graph::PrefixTree<PreferenceTreeNode, std::string, Graph::BasicEdge>
 	{
 	protected:
-		void increase_prefix_count(std::vector<User::category_id>::iterator head, std::vector<User::category_id>::iterator tail);
-		void increase_prefix_count(std::vector<User::category_id> prefix);
-
+		std::vector<Graph::node_id> get_all_nodes_by_depth(int depth);
 	public:
 		PreferenceTree();
 		~PreferenceTree();
 
-		base_iterator get_iter_by_sequence(std::vector<category_id> category_sequence);
-		void update_tree(std::vector<category_id> category_sequence);
-
-		friend double edit_distance(const User::PreferenceTree& t1, const User::PreferenceTree& t2);
+		void for_each_prefix(unsigned int sequence_length, const std::function<void(const Collection::Sequence<category_id>&, double)>& execute_function);
+		void add_sequence_counter(const std::vector<category_id>& sequence, double add_num = 1.0);
+		double get_support_of(const std::vector<category_id>& sequence) const;
+		friend double distance(const User::PreferenceTree& t1, const User::PreferenceTree& t2);
+		friend double similarity(const User::PreferenceTree& t1, const User::PreferenceTree& t2);
 	};
 }
 

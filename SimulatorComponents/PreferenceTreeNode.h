@@ -1,5 +1,5 @@
 #pragma once
-#include "ProbabilityEdge.h"
+#include "BasicEdge.h"
 #include "Node.h"
 
 namespace User
@@ -10,19 +10,24 @@ namespace User
 	///<summary>
 	/// PreferenceTreeÇ…ópÇ¢ÇÈÉmÅ[Éh
 	///</summary>
-	class PreferenceTreeNode : public Graph::Node<User::category_id, ProbabilityEdge>
+	class PreferenceTreeNode : public Graph::Node<User::category_id, Graph::BasicEdge>
 	{
 	protected:
-		int counter;
+		double counter;
+		Graph::node_id parent;
 
 	public:
-		PreferenceTreeNode(Graph::node_id id, category_id category);
-		PreferenceTreeNode(Graph::node_id id, std::shared_ptr<category_id> category);
+		PreferenceTreeNode(Graph::node_id id, Graph::node_id parent, const category_id& category);
+		PreferenceTreeNode(Graph::node_id id, Graph::node_id parent,  std::shared_ptr<category_id> category);
 		PreferenceTreeNode(const PreferenceTreeNode& node);
 		~PreferenceTreeNode();
+		
 		const User::category_id category_id() const;
-		int visit_count() const;
-		void count_up();
+		int count() const;
+		void count_up(double add_num = 1.0);
+		bool is_leef() const;
+		Graph::node_id get_parent() const;
+		std::vector<Graph::node_id> get_children() const;
 	};
 }
 

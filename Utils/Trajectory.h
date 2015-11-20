@@ -9,9 +9,29 @@
 #include "LatLng.h"
 #include "Coordinate.h"
 #include "MapNodeIndicator.h"
+#include "FileExportable.h"
 
 namespace Graph
 {
+
+	#pragma region TrajectoryState
+	///<summary>
+	/// トラジェクトリの1Phaseに対応するデータ
+	///</summary>
+	template <typename POSITION_TYPE = Geography::LatLng>
+	struct TRAJECTORY_API TrajectoryState : public IO::FileExportable
+	{
+		static constexpr char* TIME = "time";
+		
+		time_t time;
+		std::shared_ptr<POSITION_TYPE> position;
+		
+		TrajectoryState(time_t time, std::shared_ptr<POSITION_TYPE> position);
+		std::unordered_map<std::string, std::string> get_export_data() const;
+	};
+	template struct TrajectoryState<Geography::LatLng>;
+	template struct TrajectoryState<Graph::Coordinate>;
+	#pragma endregion TrajectoryState
 
 	///<summary>
 	/// トラジェクトリを表すクラス
@@ -39,6 +59,8 @@ namespace Graph
 		std::shared_ptr<POSITION_TYPE const> position_at(time_t time) const;
 
 		void foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>)>& execute_function) const;
+
+		std::list<std::shared_ptr<IO::FileExportable const>> get_export_data() const;
 	};
 
 	template class Trajectory<Geography::LatLng>;
