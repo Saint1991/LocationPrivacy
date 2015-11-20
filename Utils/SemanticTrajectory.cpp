@@ -4,6 +4,30 @@
 namespace Graph
 {
 
+	#pragma region SemanticTrajectoryState
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	template <typename POSITION_TYPE>
+	SemanticTrajectoryState<POSITION_TYPE>::SemanticTrajectoryState(time_t time, const category_id& category, std::shared_ptr<POSITION_TYPE> position)
+		: TrajectoryState<POSITION_TYPE>(time, position), category(category)
+	{
+
+	}
+
+	///<summary>
+	/// ファイル出力用データ
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::unordered_map<std::string, std::string> SemanticTrajectoryState<POSITION_TYPE>::SemanticTrajectoryState::get_export_data() const
+	{
+		std::unordered_map<std::string, std::string> ret = TrajectoryState<POSITION_TYPE>::get_export_data();
+		ret.insert(std::make_pair(CATEGORY, category));
+		return ret;
+	}
+
+	#pragma endregion SemanticTrajectoryState
 
 	///<summary>
 	/// コンストラクタ
@@ -109,9 +133,27 @@ namespace Graph
 	/// from_phaseからto_phaseまでのカテゴリシークエンスを取り出す
 	///</summary>
 	template <typename POSITION_TYPE>
-	Collection::Sequence<category_id> get_category_sequence(int from_phase, int to_phase)
+	Collection::Sequence<category_id> SemanticTrajectory<POSITION_TYPE>::get_category_sequence(int from_phase, int to_phase) const
 	{
 		return category_sequence->subsequence(from_phase, to_phase);
+	}
+
+
+
+	///<summary>
+	/// ファイルエクスポート用トラジェクトリデータを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::list<std::shared_ptr<IO::FileExportable const>> SemanticTrajectory<POSITION_TYPE>::get_export_data() const
+	{
+		std::list<std::shared_ptr<IO::FileExportable const>> ret;
+		timeslot->for_each_time([this, &ret](time_t time, long interval, int phase) {
+			std::shared_ptr<POSITION_TYPE> position = positions->at(phase);
+			category_id category = category_sequence->at(phase);
+			std::shared_ptr<IO::FileExportable const> data = std::make_shared<SemanticTrajectoryState<POSITION_TYPE> const>(time, category, position);
+			ret.push_back(data);
+		});
+		return ret;
 	}
 
 }

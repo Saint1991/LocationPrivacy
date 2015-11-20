@@ -59,8 +59,7 @@ namespace Graph
 		std::shared_ptr<POSITION_TYPE const> position_at(time_t time) const;
 
 		void foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>)>& execute_function) const;
-
-		std::list<std::shared_ptr<IO::FileExportable const>> get_export_data() const;
+		virtual std::list<std::shared_ptr<IO::FileExportable const>> get_export_data() const;
 	};
 
 	template class Trajectory<Geography::LatLng>;

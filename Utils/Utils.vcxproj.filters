@@ -375,9 +375,6 @@
     <ClInclude Include="Trajectory.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="SemanticTrajectory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="RoutingClient.h">
       <Filter>ヘッダー ファイル\Graph\Routing</Filter>
     </ClInclude>
@@ -398,6 +395,9 @@
     </ClInclude>
     <ClInclude Include="Dijkstra.h">
       <Filter>ヘッダー ファイル\Graph\Routing\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticTrajectory.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -68,9 +68,6 @@ namespace Graph
 	}
 
 	#pragma region Export
-	const std::string Coordinate::X = "X";
-	const std::string Coordinate::Y = "Y";
-
 	std::unordered_map<std::string, std::string> Coordinate::get_export_data() const
 	{
 		std::unordered_map<std::string, std::string> ret = {

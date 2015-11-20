@@ -23,11 +23,11 @@ namespace Geography
 		bool validate(double latitude, double longitude);
 
 	public:
-		static const std::string LATITUDE;
-		static const std::string LONGITUDE;
-		static const double A;
-		static const double B;
-		static const double F;
+		static constexpr char* LATITUDE = "Latitude";
+		static constexpr char*  LONGITUDE = "Longitude";
+		static constexpr double A = 6378137.0;
+		static constexpr double B = 6356752.31414036;
+		static constexpr double F = 0.0033528106811823;
 
 		LatLng();
 		LatLng(double latitude, double longitude);

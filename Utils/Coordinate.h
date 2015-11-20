@@ -21,8 +21,8 @@ namespace Graph
 		double _y;
 	
 	public:
-		static const std::string X;
-		static const std::string Y;
+		static constexpr char* X = "X";
+		static constexpr char* Y = "Y";
 
 		Coordinate(unsigned int id = 0);
 		Coordinate(double x, double y, unsigned int id = 0);

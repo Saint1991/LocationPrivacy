@@ -1,7 +1,7 @@
 #ifdef UTILS_EXPORTS
-#define SEMANCIT_TRAJECTORY_API __declspec(dllexport)
+#define SEMANTIC_TRAJECTORY_API __declspec(dllexport)
 #else
-#define SEMANCIT_TRAJECTORY_API __declspec(dllimport)
+#define SEMANTIC_TRAJECTORY_API __declspec(dllimport)
 #endif
 
 #pragma once
@@ -15,8 +15,23 @@ namespace Graph
 
 	typedef std::string category_id;
 
+	#pragma region SemanticTrajectoryState
 	template <typename POSITION_TYPE = Geography::LatLng>
-	class  SEMANCIT_TRAJECTORY_API SemanticTrajectory : public Trajectory<POSITION_TYPE>
+	struct SEMANTIC_TRAJECTORY_API SemanticTrajectoryState : TrajectoryState<POSITION_TYPE>
+	{
+		static constexpr char* CATEGORY = "Category";
+		category_id category;
+		
+		SemanticTrajectoryState(time_t time, const category_id& category, std::shared_ptr<POSITION_TYPE> positioin);
+		std::unordered_map<std::string, std::string> get_export_data() const;
+	};
+	template struct SemanticTrajectoryState<Geography::LatLng>;
+	template struct SemanticTrajectoryState<Graph::Coordinate>;
+	#pragma endregion SemanticTrajectoryState
+
+
+	template <typename POSITION_TYPE = Geography::LatLng>
+	class  SEMANTIC_TRAJECTORY_API SemanticTrajectory : public Trajectory<POSITION_TYPE>
 	{
 	protected:
 		std::shared_ptr<Collection::Sequence<category_id>> category_sequence;
@@ -35,6 +50,7 @@ namespace Graph
 		category_id category_at(time_t time) const;
 
 		Collection::Sequence<category_id> get_category_sequence(int phase_from, int phase_end) const;
+		std::list<std::shared_ptr<IO::FileExportable const>> get_export_data() const;
 	};
 
 	template class SemanticTrajectory<Geography::LatLng>;

@@ -74,10 +74,6 @@ namespace Geography
 		return is_valid;
 	}
 
-	const double LatLng::A = 6378137.0;
-	const double LatLng::B = 6356752.31414036;
-	const double LatLng::F = 0.0033528106811823;
-
 	///<summary>
 	/// 距離と方位角(rad)を指定して点を移動する
 	/// 方位角は東から時計周りの座標系
@@ -102,10 +98,6 @@ namespace Geography
 	}
 
 	#pragma region Export
-	
-	const std::string LatLng::LATITUDE = "latitude";
-	const std::string LatLng::LONGITUDE = "longitude";
-
 	///<summary>
 	/// ファイル出力向けのハッシュデータを作成します．
 	///</summary>
