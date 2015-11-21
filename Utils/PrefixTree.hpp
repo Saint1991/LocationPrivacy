@@ -29,7 +29,7 @@ namespace Graph
 	void PrefixTree<NODE, NODE_DATA, EDGE>::initialize(std::shared_ptr<NODE_DATA> root_data)
 	{
 		node_id current_id = node_collection->size();
-		std::shared_ptr<NODE> node = std::make_shared<NODE>(current_id, -1, root_data);
+		std::shared_ptr<NODE> node = std::make_shared<NODE>(current_id, -1, 0, root_data);
 		root_node = node;
 		node_collection->add(node);
 	}
@@ -70,7 +70,7 @@ namespace Graph
 		return ret;
 	}
 
-		
+	/*	
 	///<summary>
 	/// イテレータが指している要素の子要素としてデータがnode_dataのノードを挿入しedgeを張る
 	/// Insertしたノードを返します
@@ -88,4 +88,5 @@ namespace Graph
 		result = node_collection->add(node) && result;
 		return result ? base_iterator(current_id, node_collection) : base_iterator(INVALID, nullptr);
 	}
+	*/
 }

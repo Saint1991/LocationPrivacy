@@ -7,8 +7,8 @@ namespace User
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	PreferenceTreeNode::PreferenceTreeNode(Graph::node_id id, Graph::node_id parent, const User::category_id& category) 
-		: Graph::Node<User::category_id, Graph::BasicEdge>(id, std::make_shared<User::category_id>(category)), counter(0.0), parent(parent)
+	PreferenceTreeNode::PreferenceTreeNode(Graph::node_id id, Graph::node_id parent, unsigned int depth, const User::category_id& category) 
+		: Graph::Node<User::category_id, Graph::BasicEdge>(id, std::make_shared<User::category_id>(category)), counter(0.0), parent(parent), depth(depth)
 	{
 
 	}
@@ -17,8 +17,8 @@ namespace User
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	PreferenceTreeNode::PreferenceTreeNode(Graph::node_id id, Graph::node_id parent, std::shared_ptr<User::category_id> category) 
-		: Graph::Node<User::category_id, Graph::BasicEdge>(id, category), counter(0.0), parent(parent)
+	PreferenceTreeNode::PreferenceTreeNode(Graph::node_id id, Graph::node_id parent, unsigned int depth, std::shared_ptr<User::category_id> category) 
+		: Graph::Node<User::category_id, Graph::BasicEdge>(id, category), counter(0.0), parent(parent), depth(depth)
 	{
 	}
 
@@ -28,7 +28,7 @@ namespace User
 	///</summary>
 	PreferenceTreeNode::PreferenceTreeNode(const PreferenceTreeNode& node) 
 		: Graph::Node<User::category_id, Graph::BasicEdge>(node.get_id(), std::make_shared<User::category_id>(*node.data)),  
-		counter(node.count()), parent(node.get_parent())
+		counter(node.count()), parent(node.get_parent()), depth(node.get_depth())
 	{
 	}
 
@@ -43,9 +43,11 @@ namespace User
 
 	///<summary>
 	/// CategoryIDの取得
+	/// nullの場合は空文字列を返す
 	///</summary>
 	const User::category_id PreferenceTreeNode::category_id() const
 	{
+		if (data == nullptr) return "";
 		return *data;
 	}
 
@@ -53,7 +55,7 @@ namespace User
 	///<summary>
 	/// 訪問回数を取得する
 	///</summary>
-	int PreferenceTreeNode::count() const
+	double PreferenceTreeNode::count() const
 	{
 		return counter;
 	}
@@ -83,6 +85,15 @@ namespace User
 	Graph::node_id PreferenceTreeNode::get_parent() const
 	{
 		return parent;
+	}
+
+
+	///<summary>
+	/// 深さを取得する (ルートノードは深さ0扱い)
+	///</summary>
+	int PreferenceTreeNode::get_depth() const
+	{
+		return depth;
 	}
 
 	///<summary>

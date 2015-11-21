@@ -16,6 +16,7 @@ namespace Graph
 	{
 	static_assert(std::is_base_of<Node<NODE_DATA, EDGE>, NODE>::value, "template type NODE must be derived from Node<NODE_DATA, EDGE>");
 	protected:
+		typedef std::pair<Graph::node_id, unsigned int> depth_info;
 		std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection;
 		std::shared_ptr<NODE> root_node = nullptr;
 		
@@ -44,7 +45,7 @@ namespace Graph
 		template <typename ITER_TYPE> ITER_TYPE root();
 		template <typename ITER_TYPE> ITER_TYPE end();
 		template <typename ITER_TYPE> ITER_TYPE get_iter_by_id(node_id id);
-		base_iterator insert(base_iterator iter, EDGE edge, NODE_DATA node_data);
+		//base_iterator insert(base_iterator iter, EDGE edge, NODE_DATA node_data);
 	};
 }
 

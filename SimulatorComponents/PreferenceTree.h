@@ -17,12 +17,15 @@ namespace User
 	///</summary>
 	class PreferenceTree : public Graph::PrefixTree<PreferenceTreeNode, std::string, Graph::BasicEdge>
 	{
+	private:
+		Collection::Sequence<category_id> make_prefix_by_node(std::shared_ptr<PreferenceTreeNode const> node) const;
 	protected:
 		std::vector<Graph::node_id> get_all_nodes_by_depth(int depth);
 	public:
 		PreferenceTree();
 		~PreferenceTree();
 
+		int max_depth() const;
 		void for_each_prefix(unsigned int sequence_length, const std::function<void(const Collection::Sequence<category_id>&, double)>& execute_function);
 		void add_sequence_counter(const std::vector<category_id>& sequence, double add_num = 1.0);
 		double get_support_of(const std::vector<category_id>& sequence) const;
