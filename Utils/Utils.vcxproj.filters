@@ -399,6 +399,9 @@
     <ClInclude Include="Dijkstra.h">
       <Filter>ヘッダー ファイル\Graph\Routing\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="MTCCalculationModule.h">
+      <Filter>ヘッダー ファイル\Evaluation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -508,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="SemanticTrajectory.cpp">
       <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="MTCCalculationModule.cpp">
+      <Filter>ソース ファイル\Evaluation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

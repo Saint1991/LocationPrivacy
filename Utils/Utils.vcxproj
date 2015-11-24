@@ -241,6 +241,7 @@
     <ClInclude Include="MapNodeIndicator.h" />
     <ClInclude Include="MobileEntity.h" />
     <ClInclude Include="Column.h" />
+    <ClInclude Include="MTCCalculationModule.h" />
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="PoiData.h" />
     <ClInclude Include="PrefixTree.h" />
@@ -309,6 +310,7 @@
     <ClCompile Include="MapNodeIndicator.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="MobileEntity.cpp" />
+    <ClCompile Include="MTCCalculationModule.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
     <ClCompile Include="PoiData.cpp" />
     <ClCompile Include="QueryGenerateUtility.cpp" />
