@@ -27,12 +27,11 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	DepthFirstConstIterator<NODE, NODE_DATA, EDGE> DepthFirstConstIterator<NODE, NODE_DATA, EDGE>::operator++()
 	{
-		if (stack.size() == 0) return DepthFirstIterator<NODE, NODE_DATA, EDGE>(nullptr);
+		if (stack.size() == 0) return DepthFirstIterator<NODE, NODE_DATA, EDGE>(-1, nullptr);
 		node_id id = stack.top();
 		stack.pop();
 
-		std::shared_ptr<NODE const> node = node_collection->read_by_id(id);
-		DepthFirstIterator<NODE, NODE_DATA, EDGE> ret(node);
+		DepthFirstIterator<NODE, NODE_DATA, EDGE> ret(id, node_collection);
 
 		node->rfor_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();

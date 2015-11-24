@@ -29,12 +29,11 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	BreadthFirstIterator<NODE, NODE_DATA, EDGE> BreadthFirstIterator<NODE, NODE_DATA, EDGE>::operator++()
 	{
-		if (queue.size() == 0) return BreadthFirstIterator<NODE, NODE_DATA, EDGE>(nullptr);
+		if (queue.size() == 0) return BreadthFirstIterator<NODE, NODE_DATA, EDGE>(-1, nullptr);
 		node_id id = queue.front();
 		queue.pop();
 
-		std::shared_ptr<NODE> node = node_collection->get_by_id(id);
-		BreadthFirstIterator<NODE, NODE_DATA, EDGE> ret(node);
+		BreadthFirstIterator<NODE, NODE_DATA, EDGE> ret(id, node_collection);
 
 		node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();

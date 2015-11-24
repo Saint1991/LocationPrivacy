@@ -12,6 +12,19 @@ namespace Graph
 
 
 	///<summary>
+	///  コピーコンストラクタ
+	///</summary>
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	PrefixTree<NODE, NODE_DATA, EDGE>::PrefixTree(const PrefixTree& t) : node_collection(std::make_shared<Collection::IdentifiableCollection<node_id, NODE>>())
+	{
+		t.node_collection->foreach([&](std::shared_ptr<NODE const> node) {
+			node_collection->add(std::make_shared<NODE>(*node));
+		});
+		root_node = std::make_shared<NODE>(*t.root_node);
+	}
+
+
+	///<summary>
 	/// デストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
@@ -46,6 +59,17 @@ namespace Graph
 		return ret;
 	}
 
+	///<summary>
+	/// rootノードを指している状態でイテレータを取得する
+	///</summary>
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	template <typename CONST_ITER_TYPE>
+	CONST_ITER_TYPE PrefixTree<NODE, NODE_DATA, EDGE>::const_root() const
+	{
+		CONST_ITER_TYPE ret(root_node->get_id(), node_collection);
+		return ret;
+	}
+
 
 	///<summary>
 	/// 終端ノード(nullptr)を指している状態でイテレータを取得する
@@ -58,6 +82,17 @@ namespace Graph
 		return ret;
 	}
 
+
+	///<summary>
+	/// 終端ノード(nullptr)を指している状態でイテレータを取得する
+	///</summary>
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	template <typename CONST_ITER_TYPE>
+	CONST_ITER_TYPE PrefixTree<NODE, NODE_DATA, EDGE>::const_end() const
+	{
+		CONST_ITER_TYPE ret(INVALID, nullptr);
+		return ret;
+	}
 
 	///<summary>
 	/// 指定したIDを持つノードを指して状態でイテレータを取得する

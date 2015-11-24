@@ -38,14 +38,16 @@ namespace Graph
 		#pragma endregion
 
 		PrefixTree();
+		PrefixTree(const PrefixTree& t);
 		virtual ~PrefixTree();
 
 		void initialize(std::shared_ptr<NODE_DATA> root_data = nullptr);
 
 		template <typename ITER_TYPE> ITER_TYPE root();
+		template <typename CONST_ITER_TYPE> CONST_ITER_TYPE const_root() const;
 		template <typename ITER_TYPE> ITER_TYPE end();
+		template <typename CONST_ITER_TYPE> CONST_ITER_TYPE const_end() const;
 		template <typename ITER_TYPE> ITER_TYPE get_iter_by_id(node_id id);
-		//base_iterator insert(base_iterator iter, EDGE edge, NODE_DATA node_data);
 	};
 }
 

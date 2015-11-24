@@ -48,12 +48,14 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	BaseConstIterator<NODE, NODE_DATA, EDGE> BaseConstIterator<NODE, NODE_DATA, EDGE>::find_child_if(const std::function<bool(std::shared_ptr<NODE const>)>& compare) const
 	{
+		BaseConstIterator<NODE, NODE_DATA, EDGE> ret(-1, nullptr);
+		if (node == nullptr) return ret;
 		node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();
 			std::shared_ptr<NODE const> node = node_collection->read_by_id(to);
-			if (compare(node)) return BaseConstIterator<NODE, NODE_DATA, EDGE>(node);
+			if (compare(node)) ret = BaseConstIterator<NODE, NODE_DATA, EDGE>(to, node_collection);
 		});
-		return BaseConstIterator<NODE, NODE_DATA, EDGE>(nullptr);
+		return ret;
 	}
 
 	///<summary>
@@ -62,6 +64,7 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	bool BaseConstIterator<NODE, NODE_DATA, EDGE>::operator==(const BaseConstIterator<NODE, NODE_DATA, EDGE>& iter) const
 	{
+		if (*iter == nullptr) return false;
 		return **iter == *node;
 	}
 
@@ -71,6 +74,7 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	bool BaseConstIterator<NODE, NODE_DATA, EDGE>::operator!=(const BaseConstIterator<NODE, NODE_DATA, EDGE>& iter) const
 	{
+		if (*iter == nullptr) return false;
 		return **iter != *node;
 	}
 

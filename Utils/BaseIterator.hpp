@@ -12,7 +12,6 @@ namespace Graph
 
 	}
 
-
 	///<summary>
 	/// デストラクタ
 	///</summary>
@@ -47,11 +46,13 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	BaseIterator<NODE, NODE_DATA, EDGE> BaseIterator<NODE, NODE_DATA, EDGE>::find_child_if(const std::function<bool(std::shared_ptr<NODE const>)>& compare)
 	{
+		BaseIterator<NODE, NODE_DATA, EDGE> ret(-1, nullptr);
+		if (node == nullptr) return ret;
 		node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();
-			if (compare(node)) return BaseIterator<NODE, NODE_DATA, EDGE>(to, node_collection);
+			if (compare(node)) ret = BaseIterator<NODE, NODE_DATA, EDGE>(to, node_collection);
 		});
-		return BaseIterator<NODE, NODE_DATA, EDGE>(-1L, nullptr);
+		return ret;
 	}
 
 }
