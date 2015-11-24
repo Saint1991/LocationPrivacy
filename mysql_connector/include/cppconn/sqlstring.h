@@ -139,9 +139,9 @@ namespace sql
 			return realStr.c_str();
 		}
 
-		size_t length() const
+		size_t size() const
 		{
-			return realStr.length();
+			return realStr.size();
 		}
 
 		SQLString & append(const std::string & str)

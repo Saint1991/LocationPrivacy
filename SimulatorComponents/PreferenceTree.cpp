@@ -15,6 +15,14 @@ namespace User
 
 
 	///<summary>
+	///  コピーコンストラクタ
+	///</summary>
+	PreferenceTree::PreferenceTree(const PreferenceTree& t) : Graph::PrefixTree<PreferenceTreeNode, User::category_id, Graph::BasicEdge>(t)
+	{
+		
+	}
+
+	///<summary>
 	/// デストラクタ
 	///</summary>
 	PreferenceTree::~PreferenceTree()
@@ -42,10 +50,36 @@ namespace User
 		return sequence;
 	}
 
+
+	///<summary>
+	/// Prefixをもとに対応するノードを取得する
+	///</summary>
+	std::shared_ptr<PreferenceTreeNode> PreferenceTree::get_node_by_prefix(const Collection::Sequence<category_id>& prefix)
+	{
+		base_iterator current_node = root<base_iterator>();
+		int current_depth = 0;
+
+		for (std::vector<category_id>::const_iterator iter = prefix.begin(); iter != prefix.end(); iter++) {
+			base_iterator next_node = current_node.find_child_if([iter](std::shared_ptr<PreferenceTreeNode const> node) {
+				return node->category_id() == *iter;
+			});
+			current_depth++;
+
+			if (*next_node == nullptr) {
+				Graph::node_id new_id = node_collection->size();
+				current_node->connect_to(std::make_shared<Graph::BasicEdge>(new_id));
+				node_collection->add(std::make_shared<PreferenceTreeNode>(new_id, current_node->get_id(), current_depth, *iter));
+				next_node = base_iterator(new_id, node_collection);
+			}
+			current_node = next_node;
+		}
+		return *current_node;
+	}
+
 	///<summary>
 	/// depthの階層にあるノードのIDを全て取得する
 	///</summary>
-	std::vector<Graph::node_id> PreferenceTree::get_all_nodes_by_depth(int depth)
+	std::vector<Graph::node_id> PreferenceTree::get_all_nodes_by_depth(int depth) const
 	{
 		std::vector<Graph::node_id> ret;
 		node_collection->foreach([depth, &ret](std::shared_ptr<PreferenceTreeNode const> node) {
@@ -71,7 +105,7 @@ namespace User
 	///<summary>
 	/// 木の中に含まれる長さsequence_lengthの各プレフィックスについてexecute_functionを実行する．
 	///</summary>
-	void PreferenceTree::for_each_prefix(unsigned int sequence_length, const std::function<void(const Collection::Sequence<category_id>&, double)>& execute_function)
+	void PreferenceTree::for_each_prefix(unsigned int sequence_length, const std::function<void(const Collection::Sequence<category_id>&, double)>& execute_function) const
 	{
 		double trajectory_count = root_node->count();
 
@@ -93,10 +127,11 @@ namespace User
 	{
 
 		base_iterator current_node = root<base_iterator>();
+		current_node->count_up(add_num);
 		int current_depth = 0;
 
 		for (std::vector<category_id>::const_iterator iter = sequence.begin(); iter != sequence.end(); iter++) {
-			current_node->count_up(add_num);
+			
 			base_iterator next_node = current_node.find_child_if([iter](std::shared_ptr<PreferenceTreeNode const> node) {
 				return node->category_id() == *iter;
 			});
@@ -109,6 +144,7 @@ namespace User
 				next_node = base_iterator(new_id, node_collection);
 			}
 			current_node = next_node;
+			current_node->count_up(add_num);
 		}
 	}
 
@@ -116,31 +152,50 @@ namespace User
 	///<summary>
 	/// 指定されたシーケンスのサポート値を取得する
 	///</summary>
-	double PreferenceTree::get_support_of(const std::vector<category_id>& sequence)
+	double PreferenceTree::get_support_of(const std::vector<category_id>& sequence) const
 	{
 		double support = 0.0;
-		base_iterator current_node = root<base_iterator>();
+		base_const_iterator current_node = const_root<base_const_iterator>();
 		double trajectory_count = current_node->count();
 
 		for (std::vector<category_id>::const_iterator iter = sequence.begin(); iter != sequence.end(); iter++) {
 			current_node = current_node.find_child_if([iter](std::shared_ptr<PreferenceTreeNode const> node) {
 				return node->category_id() == *iter;
 			});
-			if (current_node == end<base_iterator>()) break;
+			if (current_node == const_end<base_const_iterator>()) break;
 		}
 
-		support = current_node == end<base_iterator>() ? 0.0 : current_node->count() / trajectory_count;
+		support = current_node == const_end<base_const_iterator>() ? 0.0 : current_node->count() / trajectory_count;
 		return support;
 	}
 
+
 	///<summary>
 	/// 2つの木の距離を求める
-	/// 同プレフィックス同士の誤差の合計値を返す
+	/// 同プレフィックス同士の誤差のAverageを返す
 	///</summary>
 	double distance(const User::PreferenceTree& t1, const User::PreferenceTree& t2)
 	{
-		std::set<Collection::Sequence<category_id>> checked_sequence;
-		return 0.0;
+		PreferenceTree t = t1;
+		double trajectory_count = t.root_node->count();
+		int max_depth = t2.max_depth();
+		for (int depth = 1; depth <= max_depth; depth++) {
+			t2.for_each_prefix(depth, [&t, trajectory_count](const Collection::Sequence<category_id>& prefix, double support) {
+				std::shared_ptr<PreferenceTreeNode> target_node = t.get_node_by_prefix(prefix);
+				target_node->count_up(-support * trajectory_count);
+			});
+		}
+
+		int prefix_count = 0;
+		double total_error = 0.0;
+		max_depth = t.max_depth();
+		for (int depth = 1; depth <= max_depth; depth++) {
+			t.for_each_prefix(depth, [&prefix_count, &total_error](const Collection::Sequence<category_id>& prefix, double support) {
+				prefix_count++;
+				total_error += std::abs(support);
+			});
+		}
+		return total_error / prefix_count;
 	}
 
 
@@ -149,6 +204,6 @@ namespace User
 	///</summary>
 	double similarity(const User::PreferenceTree& t1, const User::PreferenceTree& t2)
 	{
-		return 0.0;
+		return 1.0 - distance(t1, t2);
 	}
 }

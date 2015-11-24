@@ -52,6 +52,8 @@ namespace Graph
 		Trajectory(std::unique_ptr<std::vector<std::string>> times, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, bool use_relative_time = true);
 		virtual ~Trajectory();
 
+		size_t phase_count() const;
+
 		bool set_position_of_phase(int phase, const POSITION_TYPE& position);
 		bool set_position_at(time_t time, const POSITION_TYPE& position);
 

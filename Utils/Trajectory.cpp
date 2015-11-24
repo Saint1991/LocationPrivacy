@@ -103,6 +103,11 @@ namespace Graph
 	{
 	}
 
+	template <typename POSITION_TYPE>
+	size_t Trajectory<POSITION_TYPE>::phase_count() const
+	{
+		return timeslot->phase_count();
+	}
 
 	///<summary>
 	/// w’è‚µ‚½Phase‚É‚¨‚¯‚éˆÊ’u‚ğİ’è‚·‚é

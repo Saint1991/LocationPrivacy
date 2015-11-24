@@ -9,7 +9,9 @@ namespace Simulation
 	///</summary>
 	BaseSimulator::BaseSimulator(unsigned int user_id, double trainingset_proportion) 
 		: ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>(),
-		TRAININGSET_PROPORTION(trainingset_proportion), USER_ID(user_id)
+		TRAININGSET_PROPORTION(trainingset_proportion), USER_ID(user_id), 
+		user_preference_tree(std::make_shared<User::PreferenceTree>()),
+		observed_preference_tree(std::make_shared<User::PreferenceTree>())
 	{
 	}
 
@@ -55,14 +57,22 @@ namespace Simulation
 	void BaseSimulator::create_trajectories()
 	{
 		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", "map_tokyo", "checkins", "pois");
-		user_trajectories = loader.load_trajectories(USER_ID);
+		user_trajectories = loader.load_trajectories(USER_ID, TRAJECTORY_LENGTH_THRESHOLD);
 	}
 
 	///<summary>
-	/// önçDÇÃñÿÇÃçÏê¨ (ñ¢é¿ëï)
+	/// önçDÇÃñÿÇÃçÏê¨
 	///</summary>
 	void BaseSimulator::build_user_preference_tree()
 	{
+		current_trajectory_id = TRAININGSET_PROPORTION * user_trajectories->size() + 1;
+		for (unsigned int trajectory_id = 0; trajectory_id < current_trajectory_id; trajectory_id++) {
+			std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> trajectory = user_trajectories->at(trajectory_id);
+			int trajectory_length = trajectory->phase_count();
+			Collection::Sequence<std::string> category_sequence = trajectory->get_category_sequence(0, trajectory_length - 1);
+			user_preference_tree->add_sequence_counter(category_sequence);
+			observed_preference_tree->add_sequence_counter(category_sequence);
+		}
 	}
 
 

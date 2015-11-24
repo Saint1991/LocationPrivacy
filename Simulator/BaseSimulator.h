@@ -30,6 +30,7 @@ namespace Simulation
 		const int TRAJECTORY_LENGTH_THRESHOLD = 3;
 		const double TRAININGSET_PROPORTION;
 		const unsigned int USER_ID;
+		unsigned int current_trajectory_id;
 	
 	protected:
 		std::shared_ptr<User::PreferenceTree> user_preference_tree;

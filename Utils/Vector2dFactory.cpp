@@ -24,9 +24,9 @@ Graph::Vector2d Graph::Vector2dFactory::create_by_cartesian(double x, double y)
 ///<summary>
 /// 極座標指定でVector2dのインスタンスを作成する．
 ///</summary>
-Graph::Vector2d Graph::Vector2dFactory::create_by_polar(double length, double angle)
+Graph::Vector2d Graph::Vector2dFactory::create_by_polar(double size, double angle)
 {
-	double x = length * std::cos(angle);
-	double y = length * std::sin(angle);
+	double x = size * std::cos(angle);
+	double y = size * std::sin(angle);
 	return Graph::Vector2d(x, y);
 }

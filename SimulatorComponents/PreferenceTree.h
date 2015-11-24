@@ -15,20 +15,23 @@ namespace User
 	///<summary>
 	/// ユーザの嗜好を表す木
 	///</summary>
-	class PreferenceTree : public Graph::PrefixTree<PreferenceTreeNode, std::string, Graph::BasicEdge>
+	class PREFERENCE_TREE_API PreferenceTree : public Graph::PrefixTree<PreferenceTreeNode, std::string, Graph::BasicEdge>
 	{
 	private:
 		Collection::Sequence<category_id> make_prefix_by_node(std::shared_ptr<PreferenceTreeNode const> node) const;
+		std::shared_ptr<PreferenceTreeNode> get_node_by_prefix(const Collection::Sequence<category_id>& prefix);
 	protected:
-		std::vector<Graph::node_id> get_all_nodes_by_depth(int depth);
+		std::vector<Graph::node_id> get_all_nodes_by_depth(int depth) const;
 	public:
 		PreferenceTree();
+		PreferenceTree(const PreferenceTree& t);
 		~PreferenceTree();
 
 		int max_depth() const;
-		void for_each_prefix(unsigned int sequence_length, const std::function<void(const Collection::Sequence<category_id>&, double)>& execute_function);
+		void for_each_prefix(unsigned int sequence_length, const std::function<void(const Collection::Sequence<category_id>&, double)>& execute_function) const;
 		void add_sequence_counter(const std::vector<category_id>& sequence, double add_num = 1.0);
 		double get_support_of(const std::vector<category_id>& sequence) const;
+		
 		friend double distance(const User::PreferenceTree& t1, const User::PreferenceTree& t2);
 		friend double similarity(const User::PreferenceTree& t1, const User::PreferenceTree& t2);
 	};

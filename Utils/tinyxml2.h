@@ -576,8 +576,8 @@ public:
     static const char* ReadBOM( const char* p, bool* hasBOM );
     // p is the starting location,
     // the UTF-8 value of the entity will be placed in value, and length filled in.
-    static const char* GetCharacterRef( const char* p, char* value, int* length );
-    static void ConvertUTF32ToUTF8( unsigned long input, char* output, int* length );
+    static const char* GetCharacterRef( const char* p, char* value, int* size );
+    static void ConvertUTF32ToUTF8( unsigned long input, char* output, int* size );
 
     // converts primitive types to strings
     static void ToStr( int v, char* buffer, int bufferSize );

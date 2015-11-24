@@ -123,7 +123,7 @@ namespace tinyxml2
 
 struct Entity {
     const char* pattern;
-    int length;
+    int size;
     char value;
 };
 
@@ -194,13 +194,13 @@ char* StrPair::ParseText( char* p, const char* endTag, int strFlags )
 
     char* start = p;
     char  endChar = *endTag;
-    size_t length = strlen( endTag );
+    size_t size = strlen( endTag );
 
     // Inner loop of text parsing.
     while ( *p ) {
-        if ( *p == endChar && strncmp( p, endTag, length ) == 0 ) {
+        if ( *p == endChar && strncmp( p, endTag, size ) == 0 ) {
             Set( start, p, strFlags );
-            return p + length;
+            return p + size;
         }
         ++p;
     }
@@ -319,12 +319,12 @@ const char* StrPair::GetStr()
                         bool entityFound = false;
                         for( int i = 0; i < NUM_ENTITIES; ++i ) {
                             const Entity& entity = entities[i];
-                            if ( strncmp( p + 1, entity.pattern, entity.length ) == 0
-                                    && *( p + entity.length + 1 ) == ';' ) {
+                            if ( strncmp( p + 1, entity.pattern, entity.size ) == 0
+                                    && *( p + entity.size + 1 ) == ';' ) {
                                 // Found an entity - convert.
                                 *q = entity.value;
                                 ++q;
-                                p += entity.length + 2;
+                                p += entity.size + 2;
                                 entityFound = true;
                                 break;
                             }
@@ -378,33 +378,33 @@ const char* XMLUtil::ReadBOM( const char* p, bool* bom )
 }
 
 
-void XMLUtil::ConvertUTF32ToUTF8( unsigned long input, char* output, int* length )
+void XMLUtil::ConvertUTF32ToUTF8( unsigned long input, char* output, int* size )
 {
     const unsigned long BYTE_MASK = 0xBF;
     const unsigned long BYTE_MARK = 0x80;
     const unsigned long FIRST_BYTE_MARK[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
 
     if (input < 0x80) {
-        *length = 1;
+        *size = 1;
     }
     else if ( input < 0x800 ) {
-        *length = 2;
+        *size = 2;
     }
     else if ( input < 0x10000 ) {
-        *length = 3;
+        *size = 3;
     }
     else if ( input < 0x200000 ) {
-        *length = 4;
+        *size = 4;
     }
     else {
-        *length = 0;    // This code won't convert this correctly anyway.
+        *size = 0;    // This code won't convert this correctly anyway.
         return;
     }
 
-    output += *length;
+    output += *size;
 
     // Scary scary fall throughs.
-    switch (*length) {
+    switch (*size) {
         case 4:
             --output;
             *output = (char)((input | BYTE_MARK) & BYTE_MASK);
@@ -419,7 +419,7 @@ void XMLUtil::ConvertUTF32ToUTF8( unsigned long input, char* output, int* length
             input >>= 6;
         case 1:
             --output;
-            *output = (char)(input | FIRST_BYTE_MARK[*length]);
+            *output = (char)(input | FIRST_BYTE_MARK[*size]);
             break;
         default:
             TIXMLASSERT( false );
@@ -427,10 +427,10 @@ void XMLUtil::ConvertUTF32ToUTF8( unsigned long input, char* output, int* length
 }
 
 
-const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
+const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* size )
 {
     // Presume an entity, and pull it out.
-    *length = 0;
+    *size = 0;
 
     if ( *(p+1) == '#' && *(p+2) ) {
         unsigned long ucs = 0;
@@ -516,7 +516,7 @@ const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
             }
         }
         // convert the UCS to UTF-8
-        ConvertUTF32ToUTF8( ucs, value, length );
+        ConvertUTF32ToUTF8( ucs, value, size );
         return p + delta + 1;
     }
     return p+1;
