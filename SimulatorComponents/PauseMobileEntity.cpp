@@ -100,7 +100,8 @@ namespace Entity
 	{
 		std::vector<int> ret;
 		for (int phase = 0; phase < cross_flg->size(); phase++) {
-			if (!cross_flg->at(phase) && visited_node_ids->at(phase).type() == Graph::NodeType::POI) ret.push_back(phase);
+			node_pos_info info = trajectory->read_node_pos_info_of_phase(phase);
+			if (!cross_flg->at(phase) && info.first.type() == Graph::NodeType::POI) ret.push_back(phase);
 		}
 		return ret;
 	}

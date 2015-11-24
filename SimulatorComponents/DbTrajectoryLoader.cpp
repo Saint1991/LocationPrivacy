@@ -67,7 +67,8 @@ namespace User
 
 				if (division_rule(timestamp , previous_time)) {
 					if (times != nullptr && times->size() > trajectory_length_threshold) {
-						std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> trajectory = std::make_shared<Graph::SemanticTrajectory<Geography::LatLng>>(std::move(times), std::move(node_ids), std::move(positions), std::move(category_sequence));
+						std::shared_ptr<Time::TimeSlotManager const> timeslot = std::make_shared<Time::TimeSlotManager const>(std::move(times));
+						std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> trajectory = std::make_shared<Graph::SemanticTrajectory<Geography::LatLng>>(timeslot, std::move(node_ids), std::move(positions), std::move(category_sequence));
 						ret->push_back(trajectory);
 					}
 					previous_time = timestamp;
@@ -101,6 +102,7 @@ namespace User
 
 			std::shared_ptr<std::vector<std::shared_ptr<Graph::Trajectory<Geography::LatLng>>>> ret;
 
+			std::shared_ptr<Time::TimeSlotManager const> timeslot;
 			std::unique_ptr<std::vector<std::string>> times;
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>>node_ids;
 			std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> positions;
@@ -116,7 +118,8 @@ namespace User
 
 				if (division_rule(timestamp, previous_time)) {
 					if (times != nullptr && times->size() > trajectory_length_threshold) {
-						std::shared_ptr<Graph::Trajectory<Geography::LatLng>> trajectory = std::make_shared<Graph::Trajectory<Geography::LatLng>>(std::move(times), std::move(node_ids), std::move(positions));
+						timeslot = std::make_shared<Time::TimeSlotManager const>(std::move(times));
+						std::shared_ptr<Graph::Trajectory<Geography::LatLng>> trajectory = std::make_shared<Graph::Trajectory<Geography::LatLng>>(std::move(timeslot), std::move(node_ids), std::move(positions));
 						ret->push_back(trajectory);
 					}
 					times = std::make_unique<std::vector<std::string>>();

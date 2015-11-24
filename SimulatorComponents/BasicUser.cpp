@@ -15,6 +15,16 @@ namespace User
 
 
 	///<summary>
+	/// コンストラクタ
+	///</summary>
+	template <typename POSITION_TYPE>
+	BasicUser<POSITION_TYPE>::BasicUser(std::shared_ptr<Graph::SemanticTrajectory<POSITION_TYPE>> trajectory, std::shared_ptr<PreferenceTree> preference_tree, Entity::entity_id id)
+		: Entity::Dummy<POSITION_TYPE>(id, trajectory), preference(preference_tree)
+	{
+
+	}
+
+	///<summary>
 	/// デストラクタ
 	///</summary>
 	template <typename POSITION_TYPE>

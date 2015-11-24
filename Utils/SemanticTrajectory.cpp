@@ -29,36 +29,14 @@ namespace Graph
 
 	#pragma endregion SemanticTrajectoryState
 
-	///<summary>
-	/// コンストラクタ
-	///</summary>
-	template <typename POSITION_TYPE>
-	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(std::unique_ptr<std::vector<time_t>> times, bool use_relative_time)
-		: Trajectory<POSITION_TYPE>(std::move(times), use_relative_time)
-	{
-		category_sequence = std::make_shared<Collection::Sequence<category_id>>(timeslot->phase_count());
-	}
-
 
 	///<summary>
 	/// コンストラクタ
 	///</summary>
 	template <typename POSITION_TYPE>
-	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(std::unique_ptr<std::vector<std::string>> times, bool use_relative_time)
-		: Trajectory<POSITION_TYPE>(std::move(times), use_relative_time)
-	{
-		category_sequence = std::make_shared<Collection::Sequence<category_id>>(timeslot->phase_count());
-	}
-
-
-	///<summary>
-	/// コンストラクタ
-	///</summary>
-	template <typename POSITION_TYPE>
-	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(std::shared_ptr<Time::TimeSlotManager> timeslot) 
+	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot) 
 		: Trajectory<POSITION_TYPE>(timeslot), category_sequence(std::make_shared<Collection::Sequence<category_id>>(timeslot->phase_count()))
 	{
-
 	}
 
 
@@ -66,8 +44,8 @@ namespace Graph
 	/// コンストラクタ
  	///</summary>
 	template <typename POSITION_TYPE>
-	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(std::unique_ptr<std::vector<std::string>> times, std::shared_ptr<std::vector<MapNodeIndicator>>node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, std::shared_ptr<Collection::Sequence<category_id>>category_sequence, bool use_relative_time)
-		: Trajectory<POSITION_TYPE>(std::move(times), node_ids, positions, use_relative_time), category_sequence(category_sequence)
+	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, std::shared_ptr<Collection::Sequence<category_id>> category_sequence)
+		: Trajectory<POSITION_TYPE>(timeslot, node_ids, positions), category_sequence(category_sequence)
 	{
 
 	}
@@ -126,6 +104,20 @@ namespace Graph
 	{
 		int phase = timeslot->find_phase_of_time(time);
 		return category_of_phase(phase);
+	}
+
+
+	///<summary>
+	/// 各時刻における状態について繰り返し実行する
+	///</summary>
+	template <typename POSITION_TYPE>
+	void SemanticTrajectory<POSITION_TYPE>::foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>, const category_id&)>& execute_function) const
+	{
+		timeslot->for_each_time([&](time_t time, long interval, int phase) {
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
+			category_id category = category_sequence->at(phase);
+			execute_function(phase, time, position, category);
+		});
 	}
 
 

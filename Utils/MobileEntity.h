@@ -11,6 +11,8 @@
 #include "TimeSlotManager.h"
 #include "Probability.h"
 #include "MapNodeIndicator.h"
+#include "Trajectory.h"
+#include "SemanticTrajectory.h"
 
 namespace Entity
 {
@@ -21,14 +23,12 @@ namespace Entity
 	/// 移動体を表すクラス
 	/// ユーザ，ダミーを表すのに用いるクラス (ここから派生して別個にUser, Dummyクラスを作ってもよい)
 	///</summary>
-	template <typename POSITION_TYPE = Geography::LatLng>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE = Graph::SemanticTrajectory<POSITION_TYPE>>
 	class MOBILE_ENTITY_API MobileEntity : public Identifiable<entity_id>
 	{
 	
 	protected:
-		std::shared_ptr<Time::TimeSlotManager const> timeslot;
-		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> visited_node_ids;
-		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions;
+		std::shared_ptr<TRAJECTORY_TYPE> trajectory;
 		std::shared_ptr<std::vector<bool>> cross_flg;
 		int total_cross_count;
 		
@@ -36,6 +36,7 @@ namespace Entity
 		typedef std::pair<Graph::MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>> node_pos_info;
 
 		MobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
+		MobileEntity(entity_id id, std::shared_ptr<TRAJECTORY_TYPE> trajectory);
 		virtual ~MobileEntity();
 
 		void set_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position);
@@ -60,6 +61,7 @@ namespace Entity
 		node_pos_info read_node_pos_info_of_phase(int phase) const;
 		node_pos_info read_node_pos_info_at(time_t time) const;
 		
+		std::shared_ptr<TRAJECTORY_TYPE const> read_trajectory() const;
 	};
 
 	//明示的特殊化

@@ -43,26 +43,33 @@ namespace Graph
 	{
 	protected:
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions;
-		std::shared_ptr<Time::TimeSlotManager> timeslot;
-		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids;
+		std::shared_ptr<Time::TimeSlotManager const> timeslot;
+		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> visited_node_ids;
 
 	public:
-		Trajectory(std::unique_ptr<std::vector<time_t>> times, bool use_relative_time = true);
-		Trajectory(std::unique_ptr<std::vector<std::string>> times, bool use_relative_time = true);
-		Trajectory(std::shared_ptr<Time::TimeSlotManager> timeslot);
-		Trajectory(std::unique_ptr<std::vector<std::string>> times, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, bool use_relative_time = true);
+		typedef std::pair<Graph::MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>> node_pos_info;
+
+		Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot);
+		Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions);
 		virtual ~Trajectory();
 
 		size_t phase_count() const;
 
-		bool set_position_of_phase(int phase, const POSITION_TYPE& position);
-		bool set_position_at(time_t time, const POSITION_TYPE& position);
+		bool set_position_of_phase(int phase, const MapNodeIndicator& node_id, const POSITION_TYPE& position);
+		bool set_position_at(time_t time, const MapNodeIndicator& node_id, const POSITION_TYPE& position);
 
 		std::shared_ptr<POSITION_TYPE const> position_of_phase(int phase) const;
 		std::shared_ptr<POSITION_TYPE const> position_at(time_t time) const;
 
+		node_pos_info read_node_pos_info_of_phase(int phase) const;
+		node_pos_info  read_node_pos_info_at(time_t time) const;
+		
+		std::shared_ptr<Time::TimeSlotManager const> read_timeslot() const;
+
+		int find_phase_of_time(time_t time) const;
+
 		Rectangle<Geography::LatLng> get_trajectory_boundary() const;
-		void foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>)>& execute_function) const;
+		virtual void foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>)>& execute_function) const;
 		virtual std::list<std::shared_ptr<IO::FileExportable const>> get_export_data() const;
 	};
 

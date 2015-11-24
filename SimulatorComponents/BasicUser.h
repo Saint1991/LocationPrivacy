@@ -9,6 +9,7 @@
 #include "LatLng.h"
 #include "Dummy.h"
 #include "PreferenceTree.h"
+#include "SemanticTrajectory.h"
 
 namespace User
 {
@@ -24,6 +25,7 @@ namespace User
 		const std::shared_ptr<PreferenceTree> preference;
 
 		BasicUser(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<PreferenceTree> preference_tree, Entity::entity_id id = 0);
+		BasicUser(std::shared_ptr<Graph::SemanticTrajectory<POSITION_TYPE>> trajectory, std::shared_ptr<PreferenceTree> preference_tree, Entity::entity_id id = 0);
 		~BasicUser();
 	};
 

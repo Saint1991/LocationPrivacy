@@ -48,37 +48,11 @@ namespace Graph
 
 	///<summary>
 	/// コンストラクタ
-	/// timesはUnixTimeStampの系列
 	///</summary>
 	template <typename POSITION_TYPE>
-	Trajectory<POSITION_TYPE>::Trajectory(std::unique_ptr<std::vector<time_t>> times, bool use_relative_time)
-		: timeslot(std::make_shared<Time::TimeSlotManager>(std::move(times), use_relative_time))
-	{
-		node_ids = std::make_shared<std::vector<MapNodeIndicator>>(timeslot->phase_count(), MapNodeIndicator(INVALID, NodeType::INVALID));
-		positions = std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count(), nullptr);
-	}
-
-
-	///<summary>
-	/// コンストラクタ
-	/// timesはTimeStamp文字列の系列
-	///</summary>
-	template <typename POSITION_TYPE>
-	Trajectory<POSITION_TYPE>::Trajectory(std::unique_ptr<std::vector<std::string>> times, bool use_relative_time)
-		: timeslot(std::make_shared<Time::TimeSlotManager>(std::move(times), use_relative_time))
-	{
-		node_ids = std::make_shared<std::vector<MapNodeIndicator>>(timeslot->phase_count(), MapNodeIndicator(INVALID, NodeType::INVALID));
-		positions = std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count(), nullptr);
-	}
-
-
-	///<summary>
-	/// コンストラクタ
-	///</summary>
-	template <typename POSITION_TYPE>
-	Trajectory<POSITION_TYPE>::Trajectory(std::shared_ptr<Time::TimeSlotManager> timeslot) 
+	Trajectory<POSITION_TYPE>::Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot) 
 		: timeslot(timeslot), positions(std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count(), nullptr)), 
-		node_ids(std::make_shared<std::vector<MapNodeIndicator>>(timeslot->phase_count(), MapNodeIndicator(INVALID, NodeType::INVALID)))
+		visited_node_ids(std::make_shared<std::vector<MapNodeIndicator>>(timeslot->phase_count(), MapNodeIndicator(INVALID, NodeType::INVALID)))
 	{
 
 	}
@@ -88,8 +62,8 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename POSITION_TYPE>
-	Trajectory<POSITION_TYPE>::Trajectory(std::unique_ptr<std::vector<std::string>> times, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, bool use_relative_time = true)
-		: timeslot(std::make_shared<Time::TimeSlotManager>(std::move(times))), node_ids(node_ids), positions(positions)
+	Trajectory<POSITION_TYPE>::Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions)
+		: timeslot(timeslot), visited_node_ids(node_ids), positions(positions)
 	{
 
 	}
@@ -113,9 +87,10 @@ namespace Graph
 	/// 指定したPhaseにおける位置を設定する
 	///</summary>
 	template <typename POSITION_TYPE>
-	bool Trajectory<POSITION_TYPE>::set_position_of_phase(int phase, const POSITION_TYPE& position)
+	bool Trajectory<POSITION_TYPE>::set_position_of_phase(int phase, const MapNodeIndicator& node_id, const POSITION_TYPE& position)
 	{
 		if (phase < 0 || positions->size() <= phase) return false;
+		visited_node_ids->at(phase) = node_id;
 		positions->at(phase) = std::make_shared<POSITION_TYPE>(position);
 		return true;
 	}
@@ -125,10 +100,10 @@ namespace Graph
 	/// 指定した経過時刻における位置を設定する
 	///</summary>
 	template <typename POSITION_TYPE>
-	bool Trajectory<POSITION_TYPE>::set_position_at(time_t time, const POSITION_TYPE& position)
+	bool Trajectory<POSITION_TYPE>::set_position_at(time_t time, const MapNodeIndicator& node_id, const POSITION_TYPE& position)
 	{
 		int phase = timeslot->find_phase_of_time(time);
-		return set_position_of_phase(phase, position);
+		return set_position_of_phase(phase, node_id, position);
 	}
 
 
@@ -152,6 +127,46 @@ namespace Graph
 		return position_of_phase(phase);
 	}
 
+
+	///<summary>
+	/// 指定したPhaseにおける位置とノードのIDを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::pair<MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>> Trajectory<POSITION_TYPE>::read_node_pos_info_of_phase(int phase) const
+	{
+		MapNodeIndicator node_id = visited_node_ids->at(phase);
+		std::shared_ptr<POSITION_TYPE const> pos = position_of_phase(phase);
+		return std::make_pair(node_id, pos);
+	}
+
+	///<summary>
+	/// 指定した経過時刻における位置とノードのIDを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::pair<MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>> Trajectory<POSITION_TYPE>::read_node_pos_info_at(time_t time) const
+	{
+		int phase = timeslot->find_phase_of_time(time);
+		return read_node_pos_info_of_phase(phase);
+	}
+
+
+	///<summary>
+	/// タイムスロットを読み専用で取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::shared_ptr<Time::TimeSlotManager const> Trajectory<POSITION_TYPE>::read_timeslot() const
+	{
+		return timeslot;
+	}
+
+	///<summary>
+	/// 指定した時刻に対応するphaseを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	int Trajectory<POSITION_TYPE>::find_phase_of_time(time_t time) const
+	{
+		return timeslot->find_phase_of_time(time);
+	}
 
 	///<summary>
 	/// トラジェクトリ全体を包含する最小の長方形領域を取得する．
