@@ -4,7 +4,7 @@
 namespace Simulation
 {
 
-	PaisSimulator::PaisSimulator() : BaseSimulator(USER_ID, TRAININGSET_PROPORTION)
+	PaisSimulator::PaisSimulator() : BaseSimulator(USER_ID, TRAININGSET_PROPORTION, DB_NAME)
 	{
 	}
 

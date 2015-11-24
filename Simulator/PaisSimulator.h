@@ -21,7 +21,8 @@ namespace Simulation
 	private:
 		static constexpr unsigned int USER_ID = 1251U;
 		static constexpr double TRAININGSET_PROPORTION = 0.3;
-	
+		static constexpr char* DB_NAME = "map_tokyo_category_top_level";
+		
 	protected:
 		void make_requirement_list();
 	

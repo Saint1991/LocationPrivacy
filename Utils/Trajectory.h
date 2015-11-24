@@ -10,6 +10,7 @@
 #include "Coordinate.h"
 #include "MapNodeIndicator.h"
 #include "FileExportable.h"
+#include "Rectangle.h"
 
 namespace Graph
 {
@@ -60,6 +61,7 @@ namespace Graph
 		std::shared_ptr<POSITION_TYPE const> position_of_phase(int phase) const;
 		std::shared_ptr<POSITION_TYPE const> position_at(time_t time) const;
 
+		Rectangle<Geography::LatLng> get_trajectory_boundary() const;
 		void foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>)>& execute_function) const;
 		virtual std::list<std::shared_ptr<IO::FileExportable const>> get_export_data() const;
 	};

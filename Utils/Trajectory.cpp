@@ -154,6 +154,29 @@ namespace Graph
 
 
 	///<summary>
+	/// トラジェクトリ全体を包含する最小の長方形領域を取得する．
+	///</summary>
+	template <typename POSITION_TYPE>
+	Rectangle<Geography::LatLng> Trajectory<POSITION_TYPE>::get_trajectory_boundary() const
+	{
+		double min_lng = 180.0;
+		double min_lat = 90.0;
+		double max_lng = -180.0;
+		double max_lat = -90.0;
+
+		for (std::vector<std::shared_ptr<POSITION_TYPE>>::const_iterator iter = positions->begin(); iter != positions->end(); iter++) {
+			double lat = (*iter)->y();
+			double lng = (*iter)->x();
+			min_lng = min(min_lng, lng);
+			min_lat = min(min_lat, lat);
+			max_lng = max(max_lng, lng);
+			max_lat = max(max_lat, lat);
+		}
+
+		return Rectangle<Geography::LatLng>(max_lat, min_lng, min_lat, max_lng);
+	}
+
+	///<summary>
 	/// 時系列順にすべてのPhase, 時刻，位置についてexecute_functionを実行する
 	///</summary>
 	template <typename POSITION_TYPE>

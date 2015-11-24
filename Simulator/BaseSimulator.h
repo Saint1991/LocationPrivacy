@@ -29,6 +29,7 @@ namespace Simulation
 	private:
 		const int TRAJECTORY_LENGTH_THRESHOLD = 3;
 		const double TRAININGSET_PROPORTION;
+		const std::string DB_NAME;
 		const unsigned int USER_ID;
 		unsigned int current_trajectory_id;
 	
@@ -42,7 +43,7 @@ namespace Simulation
 		virtual void make_requirement_list() = 0;
 		
 	public:
-		BaseSimulator(unsigned int user_id = 1, double trainingset_proportion = 0.3);
+		BaseSimulator(unsigned int user_id = 1, double trainingset_proportion = 0.3, const std::string& db_name = "map_tokyo_category_top_level");
 		virtual ~BaseSimulator();
 		void prepare();
 		virtual void run() = 0;

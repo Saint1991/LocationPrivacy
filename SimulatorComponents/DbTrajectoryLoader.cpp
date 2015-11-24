@@ -46,8 +46,6 @@ namespace User
 		std::stringstream query;
 		query << "SELECT venue_id, timestamp, category_id, latitude, longitude FROM " << user_table_name << " INNER JOIN " << venue_table_name << " ON " << user_table_name << ".venue_id = " << venue_table_name << ".id WHERE user_id = " << user_id << " ORDER BY timestamp ASC;";
 		
-		std::cout << query.str() << std::endl;
-		
 		return execute_with_query_result(query.str(), [&](sql::ResultSet* result) {
 			
 			std::shared_ptr<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>> ret = std::make_shared<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>>();

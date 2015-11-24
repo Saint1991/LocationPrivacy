@@ -7,9 +7,9 @@ namespace Simulation
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	BaseSimulator::BaseSimulator(unsigned int user_id, double trainingset_proportion) 
+	BaseSimulator::BaseSimulator(unsigned int user_id, double trainingset_proportion, const std::string& db_name) 
 		: ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>(),
-		TRAININGSET_PROPORTION(trainingset_proportion), USER_ID(user_id), 
+		TRAININGSET_PROPORTION(trainingset_proportion), USER_ID(user_id), DB_NAME(db_name),
 		user_preference_tree(std::make_shared<User::PreferenceTree>()),
 		observed_preference_tree(std::make_shared<User::PreferenceTree>())
 	{
@@ -30,7 +30,7 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", "map_tokyo");
+		map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", "map_tokyo_category_top_level");
 		map->load(boundary);
 	}
 
@@ -56,7 +56,7 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::create_trajectories()
 	{
-		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", "map_tokyo", "checkins", "pois");
+		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", "map_tokyo_category_top_level", "checkins", "pois");
 		user_trajectories = loader.load_trajectories(USER_ID, TRAJECTORY_LENGTH_THRESHOLD);
 	}
 
