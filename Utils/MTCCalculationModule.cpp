@@ -47,8 +47,10 @@ namespace Evaluation {
 		double angle2_prev_and_now = Geography::GeoCalculation::lambert_azimuth_angle(mobile_entity2->find_previous_fixed_position(phase), mobile_entity2->read_position_of_phase(phase));
 		double angle1_now_and_next = Geography::GeoCalculation::lambert_azimuth_angle(mobile_entity1->read_position_of_phase(phase), mobile_entity1->find_next_fixed_position(phase));
 
-		double angle_1to2 = std::abs(angle1_prev_and_now - angle2_now_and_next);
-		double angle_2to1 = std::abs(angle2_prev_and_now - angle1_now_and_next);
+		double angle_1to2 = 
+			angle1_prev_and_now != -1.0 && angle2_now_and_next != -1.0 ? std::abs(angle1_prev_and_now - angle2_now_and_next) : 0.0;
+		double angle_2to1 = 
+			angle2_prev_and_now != -1.0 && angle1_now_and_next != -1.0 ? std::abs(angle2_prev_and_now - angle1_now_and_next) : 0.0;
 		
 		//Pi‚æ‚è¬‚³‚­•ÏŠ·
 		if (angle_1to2 > M_PI) angle_1to2 = std::abs(2 * M_PI - angle_1to2);
