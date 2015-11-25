@@ -30,8 +30,8 @@ namespace Graph
 	void Map<NODE, POI, PATH>::load(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
 		
-		std::cout << "Boundary: " << std::to_string(boundary.height()) << "m ~" << std::to_string(boundary.width()) << "m" << std::endl;
-
+		std::cout << "Boundary: (" << boundary.left << ", " << boundary.top << ") - (" << boundary.right << ", " << boundary.bottom << ")" << std::endl;
+		std::cout <<  std::to_string(boundary.height()) << "m ~" << std::to_string(boundary.width()) << "m" << std::endl;
 		node_collection = std::make_shared<const Collection::IdentifiableCollection<Graph::node_id, NODE>>();
 		poi_collection = std::make_shared<const Collection::IdentifiableCollection<Graph::node_id, POI>>();
 

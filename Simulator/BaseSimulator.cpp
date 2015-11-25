@@ -8,7 +8,7 @@ namespace Simulation
 	/// コンストラクタ
 	///</summary>
 	BaseSimulator::BaseSimulator(unsigned int user_id, double trainingset_proportion, const std::string& db_name) 
-		: ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>(),
+		: ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>(),
 		TRAININGSET_PROPORTION(trainingset_proportion), USER_ID(user_id), DB_NAME(db_name),
 		user_preference_tree(std::make_shared<User::PreferenceTree>()),
 		observed_preference_tree(std::make_shared<User::PreferenceTree>())
@@ -23,6 +23,25 @@ namespace Simulation
 	{
 	}
 
+
+	///<summary>
+	/// trajectory_boundaryを基に読み出す地図領域を計算するユーティリティ
+	/// boundary_side_lengthは目安
+	///</summary>
+	Graph::Rectangle<Geography::LatLng> BaseSimulator::calc_map_boundary(const Graph::Rectangle<Geography::LatLng>& boundary, double boundary_side_length)
+	{
+		double width = boundary.width();
+		double height = boundary.height();
+
+		double left_width = width > boundary_side_length ? 3000.0 : boundary_side_length - width ;
+		double left_height = height > boundary_side_length ? 3000.0 : boundary_side_length - height;
+
+		double left_lng = 0.000009 * (left_width / 2.0);
+		double left_lat = 0.000007 * (left_height / 2.0);
+		
+		Graph::Rectangle<Geography::LatLng> ret(boundary.top + left_lat, boundary.left - left_lng, boundary.bottom - left_lat, boundary.right + left_lng);
+		return ret;
+	}
 
 	///<summary>
 	/// Mapの構成
@@ -41,7 +60,7 @@ namespace Simulation
 	///</summary>
 	bool trajectory_division_rule(const std::string& timestamp, const std::string& previous_time)
 	{
-		constexpr time_t DIVISION_THRESHOLD = 7200;
+		constexpr time_t DIVISION_THRESHOLD = 10800;
 
 		time_t current_time_t = Time::TimeUtility::convert_to_unixtimestamp(timestamp);
 		time_t previous_time_t = Time::TimeUtility::convert_to_unixtimestamp(previous_time);

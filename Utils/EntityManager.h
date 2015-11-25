@@ -29,7 +29,7 @@ namespace Entity
 		std::shared_ptr<Time::TimeSlotManager const> timeslot;
 
 	public:
-		EntityManager(std::shared_ptr<USER> user, int num_of_dummy, std::shared_ptr<Time::TimeSlotManager> timeslot);
+		EntityManager(std::shared_ptr<USER> user, int num_of_dummy, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		virtual ~EntityManager();
 
 		entity_id create_dummy();

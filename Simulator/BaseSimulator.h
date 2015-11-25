@@ -9,7 +9,7 @@
 #include "LatLng.h"
 #include "BasicUser.h"
 #include "Dummy.h"
-#include "BasicRequirement.h"
+#include "PreferenceRequirement.h"
 #include "ISimulator.h"
 #include "DbTrajectoryLoader.h"
 #include "PreferenceTree.h"
@@ -24,19 +24,21 @@ namespace Simulation
 	/// user_idÇÕDBè„Ç≈ÇÃÉÜÅ[ÉUÇÃID
 	///</summary>
 	class BASE_SIMULATOR_API BaseSimulator
-		: public ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::BasicRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
+		: public ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
 	{
 	private:
 		const int TRAJECTORY_LENGTH_THRESHOLD = 3;
 		const double TRAININGSET_PROPORTION;
 		const std::string DB_NAME;
 		const unsigned int USER_ID;
-		unsigned int current_trajectory_id;
+		
 	
 	protected:
+		unsigned int current_trajectory_id;
 		std::shared_ptr<User::PreferenceTree> user_preference_tree;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree;
 
+		Graph::Rectangle<Geography::LatLng> calc_map_boundary(const Graph::Rectangle<Geography::LatLng>& trajectory_boundary, double boundary_side_length = 10000.0);
 		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
 		void create_trajectories();
 		void build_user_preference_tree();

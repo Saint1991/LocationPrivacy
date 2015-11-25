@@ -7,7 +7,7 @@ namespace Entity
 	/// コンストラクタ
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	EntityManager<DUMMY, USER, POSITION_TYPE>::EntityManager(std::shared_ptr<USER> user, int num_of_dummy, std::shared_ptr<Time::TimeSlotManager> timeslot)
+	EntityManager<DUMMY, USER, POSITION_TYPE>::EntityManager(std::shared_ptr<USER> user, int num_of_dummy, std::shared_ptr<Time::TimeSlotManager const> timeslot)
 		: timeslot(timeslot), dummies(std::make_shared<std::vector<std::shared_ptr<DUMMY>>>(num_of_dummy)), user(user)
 	{
 		for (int id = 1; id <= num_of_dummy; id++) {

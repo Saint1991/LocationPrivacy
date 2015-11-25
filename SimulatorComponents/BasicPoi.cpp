@@ -101,8 +101,8 @@ namespace Map
 	///</summary>
 	bool BasicPoi::set_relation(Graph::node_id id1, double distance_to1, Graph::node_id id2, double distance_to2)
 	{
-		edge_list->clear();
 		bool is_succeed = true;
+		edge_list->clear();
 		is_succeed = is_succeed && Graph::Node<Geography::PoiData, BasicRoad>::connect_to(std::make_shared<BasicRoad>(id1, distance_to1));
 		is_succeed = is_succeed && Graph::Node<Geography::PoiData, BasicRoad>::connect_to(std::make_shared<BasicRoad>(id2, distance_to2));
 		return is_succeed;

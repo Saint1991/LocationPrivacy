@@ -7,7 +7,7 @@ namespace Framework
 	///</summary>
 	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>::IProposedMethod (
-		std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager
+		std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager const> time_manager
 	) : map(map), requirement(requirement),timer(std::make_shared<Time::Timer>()), time_manager(time_manager)
 	{
 		size_t dummy_num = this->requirement->dummy_num;
@@ -58,7 +58,7 @@ namespace Framework
 
 
 	///<summary>
-	/// コールバックを登録する
+	/// コールバックを実行する
 	///</summary>
 	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>::terminate()

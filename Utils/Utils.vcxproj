@@ -243,6 +243,7 @@
     <ClInclude Include="Column.h" />
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="PoiData.h" />
+    <ClInclude Include="PreferenceRequirement.h" />
     <ClInclude Include="PrefixTree.h" />
     <ClInclude Include="PrefixTree.hpp" />
     <ClInclude Include="QueryGenerateUtility.h" />
@@ -311,6 +312,7 @@
     <ClCompile Include="MobileEntity.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
     <ClCompile Include="PoiData.cpp" />
+    <ClCompile Include="PreferenceRequirement.cpp" />
     <ClCompile Include="QueryGenerateUtility.cpp" />
     <ClCompile Include="Probability.cpp" />
     <ClCompile Include="Rectangle.cpp" />

@@ -399,6 +399,9 @@
     <ClInclude Include="SemanticTrajectory.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
+    <ClInclude Include="PreferenceRequirement.h">
+      <Filter>ヘッダー ファイル\Requirement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -508,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="SemanticTrajectory.cpp">
       <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="PreferenceRequirement.cpp">
+      <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

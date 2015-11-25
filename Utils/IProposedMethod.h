@@ -24,7 +24,7 @@ namespace Framework
 	protected:
 		std::shared_ptr<MAP_TYPE const> map;
 		std::shared_ptr<REQUIREMENT_TYPE const> requirement;
-		std::shared_ptr<Time::TimeSlotManager> time_manager;
+		std::shared_ptr<Time::TimeSlotManager const> time_manager;
 		std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>> entities;
 		std::shared_ptr<Time::Timer> timer;
 
@@ -51,7 +51,7 @@ namespace Framework
 		void terminate();
 
 	public:
-		IProposedMethod(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
+		IProposedMethod(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager const> time_manager);
 		virtual ~IProposedMethod();
 		void set_execution_callback(const std::function<void(std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>>, std::shared_ptr<Time::Timer>)>& callback);
 		void run();
