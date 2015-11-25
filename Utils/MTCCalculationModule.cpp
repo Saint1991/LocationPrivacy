@@ -12,10 +12,6 @@ namespace Evaluation {
 		user_probability(std::vector<double>(requirement->dummy_num + 1, 0.0)), entropy(0.0)
 	{
 		user_probability.at(0) = 1.0;//ユーザのユーザ確率を1にする
-		//entities_id_listの作成
-		for (int i = 0; i <= requirement->dummy_num; i++) {
-			entities_id_list.at(i) = i;
-		}
 	}
 	
 
@@ -41,10 +37,24 @@ namespace Evaluation {
 
 	///<summary>
 	/// ２つのエンティティの交差角度が30°より大きいかどうかを判定
+	/// ２点が同じ場所の場合の対応は要確認
 	///</summary>
 	template <typename MAP_TYPE, typename ENTITY_MANAGER, typename DUMMY, typename REQUIREMENT, typename POSITION_TYPE>
 	bool MTCCalculationModule<MAP_TYPE, ENTITY_MANAGER, DUMMY, REQUIREMENT, POSITION_TYPE>::check_angle_greater_than_30_degrees(std::shared_ptr<DUMMY>& mobile_entity1, std::shared_ptr<DUMMY>& mobile_entity2, int phase) const {
-		return true;
+		double angle1_prev_and_now = Geography::GeoCalculation::lambert_azimuth_angle(mobile_entity1->find_previous_fixed_position(phase), mobile_entity1->read_position_of_phase(phase));
+		double angle2_now_and_next = Geography::GeoCalculation::lambert_azimuth_angle(mobile_entity2->read_position_of_phase(phase), mobile_entity2->find_next_fixed_position(phase));
+		
+		double angle2_prev_and_now = Geography::GeoCalculation::lambert_azimuth_angle(mobile_entity2->find_previous_fixed_position(phase), mobile_entity2->read_position_of_phase(phase));
+		double angle1_now_and_next = Geography::GeoCalculation::lambert_azimuth_angle(mobile_entity1->read_position_of_phase(phase), mobile_entity1->find_next_fixed_position(phase));
+
+		double angle_1to2 = std::abs(angle1_prev_and_now - angle2_now_and_next);
+		double angle_2to1 = std::abs(angle2_prev_and_now - angle1_now_and_next);
+		
+		//Piより小さく変換
+		if (angle_1to2 > M_PI) angle_1to2 = std::abs(2 * M_PI - angle_1to2);
+		if (angle_2to1 > M_PI) angle_2to1 = std::abs(2 * M_PI - angle_2to1);
+
+		return angle_1to2 > M_PI/6 && angle_2to1 > M_PI / 6 ? true : false;
 	}
 
 	///<summary>
@@ -67,11 +77,11 @@ namespace Evaluation {
 	}
 
 	///<summary>
-	/// MTCの計算 (LatLng)
+	/// start_phaseからend_phaseのMTCの計算 (LatLng)
 	/// phaseの直前と直後を見るので，startは１から，endは最後の２つ前からであることに注意
 	///</summary>
 	template <typename MAP_TYPE, typename ENTITY_MANAGER, typename DUMMY, typename REQUIREMENT, typename POSITION_TYPE>
-	double MTCCalculationModule<MAP_TYPE, ENTITY_MANAGER, DUMMY, REQUIREMENT, POSITION_TYPE>::calculate_MTC(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<ENTITY_MANAGER> entities, std::shared_ptr<REQUIREMENT> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager, int start_phase, int end_phase) const
+	double MTCCalculationModule<MAP_TYPE, ENTITY_MANAGER, DUMMY, REQUIREMENT, POSITION_TYPE>::calculate_MTC_from_start_phase_to_end_phase(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<ENTITY_MANAGER> entities, std::shared_ptr<REQUIREMENT> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager, int start_phase, int end_phase) const
 	{
 		for (int phase_id = start_phase; phase_id <= end_phase; phase_id++) {
 			int iter1 = 0;
@@ -87,7 +97,16 @@ namespace Evaluation {
 			if (calculate_entropy(user_probability) >= 1) MTC.push_back(phase_id * requirement->SERVICE_INTERVAL);
 		}
 
-		return std::accumulate(MTC.begin(),MTC.end(),0.0)/ MTC.size();
+		return std::accumulate(MTC.begin(), MTC.end(), 0.0) / MTC.size();
 	}
 
+	///<summary>
+	/// 全phaseのMTCの計算 (LatLng)
+	/// phaseの直前と直後を見るので，startは１から，endは最後の２つ前からであることに注意
+	///</summary>
+	template <typename MAP_TYPE, typename ENTITY_MANAGER, typename DUMMY, typename REQUIREMENT, typename POSITION_TYPE>
+	double MTCCalculationModule<MAP_TYPE, ENTITY_MANAGER, DUMMY, REQUIREMENT, POSITION_TYPE>::calculate_MTC_at_all_phase(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<ENTITY_MANAGER> entities, std::shared_ptr<REQUIREMENT> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager) const
+	{
+		return calculate_MTC_from_start_phase_to_end_phase(map, entities, requirement, 1, requirement->phase_count() - 2);
+	}
 }
