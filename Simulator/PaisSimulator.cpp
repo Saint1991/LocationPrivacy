@@ -35,10 +35,9 @@ namespace Simulation
 
 	void PaisSimulator::run()
 	{
-		for (; current_trajectory_id < user_trajectories->size(); current_trajectory_id++) {
+		for (std::list<std::shared_ptr<Requirement::PreferenceRequirement const>>::const_iterator iter = requirements.begin(); iter != requirements.end(); iter++) {
+			for (; current_trajectory_id < user_trajectories->size(); current_trajectory_id++) {
 			
-			for (std::list<std::shared_ptr<Requirement::PreferenceRequirement const>>::const_iterator iter = requirements.begin(); iter != requirements.end(); iter++) {
-				
 				//対象のユーザトラジェクトリ
 				std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> user_trajectory = user_trajectories->at(current_trajectory_id);
 				std::shared_ptr<Time::TimeSlotManager const> timeslot = user_trajectory->read_timeslot();

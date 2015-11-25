@@ -22,7 +22,17 @@ namespace Method
 	protected:
 		void initialize();
 		void decide_dummy_positions();
+
+		#pragma region GroupA
+		void decide_dummy_positions_of_group_a(int num_of_group_a_dummy);
 		
+		#pragma region GroupAのダミー生成用メソッド
+		
+		#pragma region GroupB
+		void decide_dummy_positions_of_group_b(int num_of_group_b_dummy);
+		
+		#pragma endregion GroupBのダミー生成用メソッド
+	
 	public:
 		MizunoMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<User::BasicUser<Geography::LatLng>> user, std::shared_ptr<Requirement::PreferenceRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager const> time_manager);
 		~MizunoMethod();
