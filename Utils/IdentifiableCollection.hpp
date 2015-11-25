@@ -52,7 +52,8 @@ namespace Collection
 		if (target_iter == end()) {
 			return nullptr;
 		}
-		return std::dynamic_pointer_cast<DATA_TYPE>(*target_iter);
+		std::shared_ptr<DATA_TYPE> ret = std::dynamic_pointer_cast<DATA_TYPE>(*target_iter);
+		return ret;
 	}
 	
 	///<summary>

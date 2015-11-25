@@ -43,6 +43,9 @@ namespace Simulation
 				std::shared_ptr<Time::TimeSlotManager const> timeslot = user_trajectory->read_timeslot();
 				std::shared_ptr<User::BasicUser<Geography::LatLng>> user = std::make_shared<User::BasicUser<Geography::LatLng>>(user_trajectory, user_preference_tree);
 
+				//可観測な嗜好の木のコピー
+				std::shared_ptr<User::PreferenceTree> observed_preference_tree_copy = std::make_shared<User::PreferenceTree>(*observed_preference_tree);
+
 				//読み込む地図の領域
 				Graph::Rectangle<Geography::LatLng> map_boundary = user_trajectory->get_trajectory_boundary();
 				map_boundary = calc_map_boundary(map_boundary);
@@ -54,7 +57,9 @@ namespace Simulation
 				std::shared_ptr<Framework::IProposedMethod<
 					Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>,
 					Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>
-				>> proposed = std::make_shared<Method::MizunoMethod>(map, user, *iter, timeslot);
+				>> proposed = std::make_shared<Method::MizunoMethod>(map, user, observed_preference_tree_copy, *iter, timeslot);
+
+
 
 				//提案手法の起動
 				proposed->run();

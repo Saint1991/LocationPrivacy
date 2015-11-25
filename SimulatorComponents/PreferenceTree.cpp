@@ -133,6 +133,7 @@ namespace User
 		for (std::vector<category_id>::const_iterator iter = sequence.begin(); iter != sequence.end(); iter++) {
 			
 			base_iterator next_node = current_node.find_child_if([iter](std::shared_ptr<PreferenceTreeNode const> node) {
+				User::category_id category = node->category_id();
 				return node->category_id() == *iter;
 			});
 			current_depth++;
@@ -140,7 +141,8 @@ namespace User
 			if (*next_node == nullptr) {
 				Graph::node_id new_id = node_collection->size();
 				current_node->connect_to(std::make_shared<Graph::BasicEdge>(new_id));
-				node_collection->add(std::make_shared<PreferenceTreeNode>(new_id, current_node->get_id(), current_depth, *iter));
+				std::shared_ptr<PreferenceTreeNode> new_node = std::make_shared<PreferenceTreeNode>(new_id, current_node->get_id(), current_depth, *iter);
+				node_collection->add(new_node);
 				next_node = base_iterator(new_id, node_collection);
 			}
 			current_node = next_node;

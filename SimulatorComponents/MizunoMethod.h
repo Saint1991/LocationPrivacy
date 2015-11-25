@@ -20,6 +20,8 @@ namespace Method
 	{
 	private:
 	protected:
+		std::shared_ptr<User::PreferenceTree> observed_preference_tree_copy;
+
 		void initialize();
 		void decide_dummy_positions();
 
@@ -34,7 +36,12 @@ namespace Method
 		#pragma endregion GroupBのダミー生成用メソッド
 	
 	public:
-		MizunoMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<User::BasicUser<Geography::LatLng>> user, std::shared_ptr<Requirement::PreferenceRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager const> time_manager);
+		MizunoMethod(
+			std::shared_ptr<Map::BasicDbMap const> map, 
+			std::shared_ptr<User::BasicUser<Geography::LatLng>> user, 
+			std::shared_ptr<User::PreferenceTree> observed_preference_tree_copy,
+			std::shared_ptr<Requirement::PreferenceRequirement const> requirement, 
+			std::shared_ptr<Time::TimeSlotManager const> time_manager);
 		~MizunoMethod();
 	};
 }

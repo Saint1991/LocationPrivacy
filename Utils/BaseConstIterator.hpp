@@ -52,8 +52,8 @@ namespace Graph
 		if (node == nullptr) return ret;
 		node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();
-			std::shared_ptr<NODE const> node = node_collection->read_by_id(to);
-			if (compare(node)) ret = BaseConstIterator<NODE, NODE_DATA, EDGE>(to, node_collection);
+			std::shared_ptr<NODE const> child_node = node_collection->read_by_id(to);
+			if (compare(child_node)) ret = BaseConstIterator<NODE, NODE_DATA, EDGE>(to, node_collection);
 		});
 		return ret;
 	}

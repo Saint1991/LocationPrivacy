@@ -27,9 +27,10 @@ namespace User
 	/// コンストラクタ
 	///</summary>
 	PreferenceTreeNode::PreferenceTreeNode(const PreferenceTreeNode& node) 
-		: Graph::Node<User::category_id, Graph::BasicEdge>(node.get_id(), std::make_shared<User::category_id>(*node.data)),  
+		: Graph::Node<User::category_id, Graph::BasicEdge>(node.get_id(), nullptr),  
 		counter(node.count()), parent(node.get_parent()), depth(node.get_depth())
 	{
+		if (node.data != nullptr) data = std::make_shared<User::category_id>(*node.data);
 	}
 
 
