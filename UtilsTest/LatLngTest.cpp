@@ -59,7 +59,19 @@ namespace UtilsTest
 			Assert::AreEqual(2.0, latlng.lng(), ACCURACY);
 		}
 
-		
+		TEST_METHOD(LatLng_operators)
+		{
+			Geography::LatLng position1(1.000, 2.000);
+			Geography::LatLng position2(1.001, 2.001);
+			Geography::LatLng position3(1.001, 2.001);
+
+			Assert::IsFalse(position1 == position2);
+			Assert::IsTrue(position2 == position3);
+			Assert::IsTrue(position1 != position2);
+			Assert::IsFalse(position2 != position3);
+		}
+
+
 		TEST_METHOD(LatLng_dist)
 		{
 			Geography::LatLng latlng1(1.0, 2.0); 

@@ -125,7 +125,7 @@ namespace Method
 	///<summary>
 	/// ダミーの停止位置の修正
 	///</summary>
-	void KatoMasterMethod::revise_dummy_pose_position(int phase_id)
+	void KatoMasterMethod::revise_dummy_pause_position(int phase_id)
 	{
 
 	}
@@ -231,25 +231,6 @@ namespace Method
 
 
 	///<summary>
-	/// ここが提案手法の核になる部分
-	///</summary>
-	void KatoMasterMethod::decide_dummy_positions()
-	{
-
-		/*
-		for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
-		{
-		creating_dummy = entities->get_dummy_by_id(dummy_id);
-
-		decide_base_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
-		decide_share_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
-		decide_destination_on_the_way(dummy_id);// 生成中ダミー(k番目)の移動経路の決定
-		}
-		*/
-	}
-
-
-	///<summary>
 	/// ここが提案手法の核になる部分.ダミーの行動を修正する
 	///</summary>
 	void KatoMasterMethod::revise_dummy_positions()
@@ -272,7 +253,7 @@ namespace Method
 
 	}
 
-
+	/*
 	///<summary>
 	/// 決定した位置を基にMTC等各種評価値を算出する
 	///</summary>
@@ -298,7 +279,7 @@ namespace Method
 	{
 
 	}
-
+	*/
 
 	void KatoMasterMethod::run()
 	{
@@ -308,20 +289,14 @@ namespace Method
 		//初期化
 		initialize();
 
-		//ここが実行部分(各時刻のダミー位置を計算する)
+		//ここが実行部分(各時刻のダミー位置を計算する)(加藤さん卒論手法)[Kato 13]
 		decide_dummy_positions();
 
-		//ここでユーザの行動の予測やダミーの行動を修正する
+		//ここでユーザの行動の予測やダミーの行動を修正する(加藤さん修論手法)[Kato 14]
 		revise_dummy_positions();
 
 		//ここで計測を終了
 		timer->end();
-
-		//設定したダミー，ユーザの位置を基にMTCなどの評価指標を計算する
-		evaluate();
-
-		//実行時間以外のエクスポート
-		export_results();
 
 		//終了処理
 		terminate();

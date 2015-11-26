@@ -77,11 +77,11 @@ double Geography::GeoCalculation::lambert_distance(const Geography::LatLng& ll1,
 /// Lambert-Andoyer法に基づく方位角の計算
 /// fromからtoに向かう線分の方位角を計算する．
 /// (東0度，南90度，西180度，北270度，単位はラジアン)
+/// fromとtoが等しい場合は-1.0を出力
 /// 参照(http://www2.nc-toyama.ac.jp/~mkawai/lecture/sailing/geodetic/geosail.html)
 ///</summary>
 double Geography::GeoCalculation::lambert_azimuth_angle(const Geography::LatLng& from, const Geography::LatLng& to)
 {
-
 	//扁平率と極半径
 	static const double F = 1.0 / 298.257222101;
 

@@ -111,6 +111,7 @@ namespace Geography
 	}
 
 	#pragma endregion ExportŠÖŒW
+	
 
 	///<summary>
 	/// Lambert-Andoyer‚ÌŒöŽ®‚ÉŠî‚Ã‚­2“_ŠÔ‚Ì‹——£ŒvŽZ [m]

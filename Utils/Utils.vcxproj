@@ -189,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AngleUtility.h" />
+    <ClInclude Include="ARSizeCalculationModule.h" />
     <ClInclude Include="ARCountCalculationModule.h" />
     <ClInclude Include="ARCountCalculationModule.hpp" />
     <ClInclude Include="BaseConstIterator.h" />
@@ -242,6 +243,7 @@
     <ClInclude Include="MapNodeIndicator.h" />
     <ClInclude Include="MobileEntity.h" />
     <ClInclude Include="Column.h" />
+    <ClInclude Include="MTCCalculationModule.h" />
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="PoiData.h" />
     <ClInclude Include="PreferenceRequirement.h" />
@@ -280,6 +282,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AngleUtility.cpp" />
+    <ClInclude Include="ARSizeCalculationModule.hpp">
+      <FileType>CppHeader</FileType>
+    </ClInclude>
     <ClCompile Include="BasicEdge.cpp" />
     <ClCompile Include="BasicGeoNodeData.cpp" />
     <ClCompile Include="BasicPathData.cpp" />
@@ -312,6 +317,7 @@
     <ClCompile Include="MapNodeIndicator.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="MobileEntity.cpp" />
+    <ClCompile Include="MTCCalculationModule.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
     <ClCompile Include="PoiData.cpp" />
     <ClCompile Include="PreferenceRequirement.cpp" />
