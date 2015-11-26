@@ -59,6 +59,8 @@ namespace Simulation
 					Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>
 				>> proposed = std::make_shared<Method::MizunoMethod>(map, user, observed_preference_tree_copy, *iter, timeslot);
 
+				proposed->set_execution_callback();
+
 				//’ñˆÄŽè–@‚Ì‹N“®
 				proposed->run();
 
@@ -80,6 +82,7 @@ namespace Simulation
 	{
 
 	}
+
 }
 
 
