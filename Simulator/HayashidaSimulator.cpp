@@ -61,20 +61,20 @@ namespace Simulation
 		}
 
 		//if (*distance != map->shortest_distance((*now_poi)->get_id(), *path_iter)) {
-			double distance_between_start_and_nearest_position = map->shortest_distance((*now_poi)->get_id(), nearest_position);
-			double distance_between_nearest_intersection_and_arrive_position = *distance - distance_between_start_and_nearest_position;
+		double distance_between_start_and_nearest_position = map->shortest_distance((*now_poi)->get_id(), nearest_position);
+		double distance_between_nearest_intersection_and_arrive_position = *distance - distance_between_start_and_nearest_position;
 
-			Geography::LatLng nearest_latlng
-				= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
-			Geography::LatLng next_nearest_latlang
-				= (*path_iter).type() == Graph::NodeType::POI ? map->get_static_poi((*path_iter).id())->data->get_position() : *map->get_static_node((*path_iter).id())->data;
-			double angle = Geography::GeoCalculation::lambert_azimuth_angle(nearest_latlng, next_nearest_latlang);
+		Geography::LatLng nearest_latlng
+			= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
+		Geography::LatLng next_nearest_latlang
+			= (*path_iter).type() == Graph::NodeType::POI ? map->get_static_poi((*path_iter).id())->data->get_position() : *map->get_static_node((*path_iter).id())->data;
+		double angle = Geography::GeoCalculation::lambert_azimuth_angle(nearest_latlng, next_nearest_latlang);
 
-			Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
+		Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
 
-			(*phase_id)++;
-			user->set_speed(*phase_id, pause_position_speed);
-			user->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
+		(*phase_id)++;
+		user->set_speed(*phase_id, pause_position_speed);
+		user->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
 		
 		/*}
 		//distanceとmap->shortest_distance((*now_poi)->get_id(), *path_iter)が等しい時は，丁度交差点orPOIに到着する場合
@@ -189,7 +189,7 @@ namespace Simulation
 		double last_distance = 1.3 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_speed(phase_id);
 
 		//次の候補点の範囲を求める
-		double last_angle = generator.uniform_distribution(-(M_PI_2), M_PI_2);
+		double last_angle = generator.uniform_distribution(-(M_PI), M_PI_2);
 		Geography::LatLng last_candidate_poi_position_range
 			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
 
@@ -322,7 +322,7 @@ namespace Simulation
 
 		requirements = 
 		{
-			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 25, 90, 5, 3, 500, 200),
+			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 4, 90, 5, 3, 500, 200),
 			//std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 16, 90, 5, 2)
 		};
 	}
@@ -358,7 +358,7 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::evaluate()
 	{
-
+	
 	}
 
 	///<summary>

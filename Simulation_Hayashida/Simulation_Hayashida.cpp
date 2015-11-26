@@ -11,7 +11,7 @@
 #include "SemanticTrajectory.h"
 #include "TimeUtility.h"
 #include "Rectangle.h"
-
+#include "PauseMobileEntity.h"
 #include "HayashidaSimulator.h"
 
 

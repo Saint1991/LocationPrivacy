@@ -37,7 +37,7 @@ namespace Evaluation {
 
 	///<summary>
 	/// ２つのエンティティの交差角度が30°より大きいかどうかを判定
-	/// ２点が同じ場所の場合の対応は要確認
+	/// ２点が同じ場所の場合(停止)の対応は要確認
 	///</summary>
 	template <typename MAP_TYPE, typename ENTITY_MANAGER, typename DUMMY, typename REQUIREMENT, typename POSITION_TYPE>
 	bool MTCCalculationModule<MAP_TYPE, ENTITY_MANAGER, DUMMY, REQUIREMENT, POSITION_TYPE>::check_angle_greater_than_30_degrees(std::shared_ptr<DUMMY>& mobile_entity1, std::shared_ptr<DUMMY>& mobile_entity2, int phase) const {
@@ -85,6 +85,7 @@ namespace Evaluation {
 	template <typename MAP_TYPE, typename ENTITY_MANAGER, typename DUMMY, typename REQUIREMENT, typename POSITION_TYPE>
 	double MTCCalculationModule<MAP_TYPE, ENTITY_MANAGER, DUMMY, REQUIREMENT, POSITION_TYPE>::calculate_MTC_from_start_phase_to_end_phase(std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<ENTITY_MANAGER> entities, std::shared_ptr<REQUIREMENT> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager, int start_phase, int end_phase) const
 	{
+		int base_mtc_phase = 0;
 		for (int phase_id = start_phase; phase_id <= end_phase; phase_id++) {
 			int iter1 = 0;
 			int iter2 = 1;
@@ -94,11 +95,13 @@ namespace Evaluation {
 				for (std::shared_ptr<DUMMY> target2 = entities->get_dummy_by_id(iter1 + 1); iter2 <= requirement->dummy_num; iter2++) {
 					if (contains_in_moveable_range(target1, target2, requirement, phase_id)
 						&& check_angle_greater_than_30_degrees(target1, target2, phase_id)) calculate_user_probability();
-				}	
+				}
 			}
-			if (calculate_entropy(user_probability) >= 1) MTC.push_back(phase_id * requirement->SERVICE_INTERVAL);
+			if (calculate_entropy(user_probability) >= 1) {
+				MTC.push_back((phase_id - base_mtc_phase) * requirement->SERVICE_INTERVAL);
+				base_mtc_phase = phase_id;
+			}
 		}
-
 		return std::accumulate(MTC.begin(), MTC.end(), 0.0) / MTC.size();
 	}
 

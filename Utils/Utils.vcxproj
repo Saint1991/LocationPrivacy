@@ -189,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AngleUtility.h" />
+    <ClInclude Include="ARCalculationModule.h" />
     <ClInclude Include="ARCountCalculationModule.h" />
     <ClInclude Include="ARCountCalculationModule.hpp" />
     <ClInclude Include="BaseConstIterator.h" />
@@ -279,6 +280,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AngleUtility.cpp" />
+    <ClCompile Include="ARCalculationModule.cpp" />
     <ClCompile Include="BasicEdge.cpp" />
     <ClCompile Include="BasicGeoNodeData.cpp" />
     <ClCompile Include="BasicPathData.cpp" />
