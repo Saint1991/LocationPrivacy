@@ -36,16 +36,16 @@ namespace Simulation
 		static constexpr auto DUMMY_TRAJECTORT_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/dummy_trajectory";
 		std::stringstream export_path;
 		//export_path << "C:/Users/Shuhei/Desktop/EvaluationResults/" << Time::TimeUtility::current_timestamp() << "/";
-				
+		
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
 		static constexpr int MAX_PAUSE_TIME = 600;//途中目的地設定の関係でmin_pause_timeの2.5倍以上で設定する！
 		static constexpr int MIN_PAUSE_TIME = 200;//SERVICE_INTERVALより大きくする！
 		static constexpr int SERVICE_INTERVAL = 90;
-		static constexpr int POI_NUM = 15;
+		static constexpr int POI_NUM = 7;
 		static constexpr double BASE_LAT = 35.655;//出発地の目安の緯度．全POIの平均値
 		static constexpr double BASE_LNG = 139.700;//出発地の目安の経度．全POIの平均値
-		int end_time = 18000;//目安の終了時間．経路を設定し終えて，時間が余った分は削除．
+		int end_time = 9000;//目安の終了時間．経路を設定し終えて，時間が余った分は削除．
 		double length_of_rect = 0.005;//ここには適切な範囲内の緯度経度差を書く
 	#pragma endregion 要求パラメータ(ダミーのrequirementと同じにすること)
 	

@@ -20,7 +20,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	constexpr int USER_ID = 1;
 	constexpr double TESTSET_PROPORTION = 0.3;
-	const Graph::Rectangle<Geography::LatLng> MAP_BOUNDARY(35.615, 139.660, 35.695, 139.740);//(35.635, 139.675, 35.680, 139.720)
+	const Graph::Rectangle<Geography::LatLng> MAP_BOUNDARY(35.600, 139.645, 35.710, 139.755);//(35.635, 139.675, 35.680, 139.720)
 	std::stringstream export_path;
 	export_path << "C:/Users/Shuhei/Desktop/EvaluationResults/" << Time::TimeUtility::current_timestamp() << "/";
 

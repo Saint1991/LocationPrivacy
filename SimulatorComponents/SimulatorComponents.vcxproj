@@ -157,6 +157,7 @@
     <ClInclude Include="DbPoiCollectionFactory.h" />
     <ClInclude Include="Dummy.h" />
     <ClInclude Include="HayashidaBachelorMethod.h" />
+    <ClInclude Include="HayashidaDbMap.h" />
     <ClInclude Include="KatoBachelorMethod.h" />
     <ClInclude Include="KatoMasterMethod.h" />
     <ClInclude Include="MatsunoMethod.h" />
@@ -192,6 +193,7 @@
     </ClCompile>
     <ClCompile Include="Dummy.cpp" />
     <ClCompile Include="HayashidaBachelorMethod.cpp" />
+    <ClCompile Include="HayashidaDbMap.cpp" />
     <ClCompile Include="KatoBachelorMethod.cpp" />
     <ClCompile Include="KatoMasterMethod.cpp" />
     <ClCompile Include="MatsunoMethod.cpp" />
