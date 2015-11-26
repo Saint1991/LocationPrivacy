@@ -57,6 +57,16 @@ namespace Graph
 		return Coordinate(c1._x - c2._x, c1._y - c2._y);
 	}
 
+	bool operator==(const Coordinate& c1, const Coordinate& c2)
+	{
+		return c1._x == c2._x && c1._y == c2._y;
+	}
+
+	bool operator!=(const Coordinate& c1, const Coordinate& c2)
+	{
+		return !(c1._x == c2._x && c1._y == c2._y);
+	}
+
 	///<summary>
 	/// 2“_ŠÔ‚Ì‹——£‚ðŒvŽZ‚·‚é
 	///</summary>

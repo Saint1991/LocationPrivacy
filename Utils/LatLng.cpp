@@ -119,25 +119,7 @@ namespace Geography
 	}
 
 	#pragma endregion ExportŠÖŒW
-
-	///<summary>
-	/// LatLng‚Ìoperator==
-	///</summary>
-	bool Geography::operator==(const Geography::LatLng& position1, const Geography::LatLng& position2)
-	{
-		return position1.lat() == position2.lat() && position1.lng() == position2.lng();
-	}
-
-	///<summary>
-	/// LatLng‚Ìoperator!=
-	///</summary>
-	bool Geography::operator!=(const Geography::LatLng& position1, const Geography::LatLng& position2)
-	{
-		return !(position1.lat() == position2.lat() && position1.lng() == position2.lng());
-	}
-
-
-
+	
 
 	///<summary>
 	/// Lambert-Andoyer‚ÌŒöŽ®‚ÉŠî‚Ã‚­2“_ŠÔ‚Ì‹——£ŒvŽZ [m]

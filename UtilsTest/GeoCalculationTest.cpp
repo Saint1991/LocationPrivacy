@@ -141,12 +141,9 @@ namespace UtilsTest
 		{
 			LatLng nishio_lab(34.818292, 135.522105);
 			double actual = Math::AngleUtility::convert_to_degree(GeoCalculation::lambert_azimuth_angle(nishio_lab, nishio_lab));
-			double expected = -57.2958279088;
+			double expected = std::isnan(actual);
 
-			double error = expected - actual;
-			std::string log = "Error angle is " + std::to_string(error) + "[Åã]\n";
-			Logger::WriteMessage(log.c_str());
-			Assert::AreEqual(expected, actual, ANGLE_ACCURACY);
+			Assert::IsTrue(expected);
 		}
 
 		TEST_METHOD(GeoCalculation_calc_translated_point)

@@ -82,9 +82,6 @@ double Geography::GeoCalculation::lambert_distance(const Geography::LatLng& ll1,
 ///</summary>
 double Geography::GeoCalculation::lambert_azimuth_angle(const Geography::LatLng& from, const Geography::LatLng& to)
 {
-	//from == to‚Ìê‡‚Í-1.0‚ğo—Í
-	if (from == to) return -1.0;
-
 	//G•½—¦‚Æ‹É”¼Œa
 	static const double F = 1.0 / 298.257222101;
 

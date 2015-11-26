@@ -37,10 +37,7 @@ namespace Geography
 		bool is_valid_point() const;
 		bool translate(double distance, double azimuth_angle);
 		std::unordered_map<std::string, std::string> get_export_data() const;
-
-		LATLNG_API friend bool operator==(const Geography::LatLng& position1, const Geography::LatLng& position2);
-		LATLNG_API friend bool operator!=(const Geography::LatLng& position1, const Geography::LatLng& position2);
-
+				
 		LATLNG_API friend double dist(const LatLng& ll1, const LatLng& ll2);
 		LATLNG_API friend double angle(const LatLng& from, const LatLng& to);
 	

@@ -402,8 +402,11 @@
     <ClInclude Include="MTCCalculationModule.h">
       <Filter>ヘッダー ファイル\Evaluation</Filter>
     </ClInclude>
-    <ClInclude Include="ARCalculationModule.h">
+    <ClInclude Include="ARSizeCalculationModule.h">
       <Filter>ヘッダー ファイル\Evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="ARSizeCalculationModule.hpp">
+      <Filter>ソース ファイル\Evaluation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -516,9 +519,6 @@
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
     <ClCompile Include="MTCCalculationModule.cpp">
-      <Filter>ソース ファイル\Evaluation</Filter>
-    </ClCompile>
-    <ClCompile Include="ARCalculationModule.cpp">
       <Filter>ソース ファイル\Evaluation</Filter>
     </ClCompile>
   </ItemGroup>

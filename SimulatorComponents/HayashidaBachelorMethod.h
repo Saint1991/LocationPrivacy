@@ -10,7 +10,7 @@
 #include "KatoMethodRequirement.h"
 #include "Probability.h"
 #include "GeoCalculation.h"
-#include "KatoBachelorMethod.h"
+#include "KatoMasterMethod.h"
 
 namespace Method {
 
@@ -18,13 +18,12 @@ namespace Method {
 	/// 林田さん学部卒業論文の提案手法の実装
 	///</summary>
 	class HayashidaBachelorMethod :
-		public KatoBachelorMethod
+		public KatoMasterMethod
 	{
 	protected:
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user;
 
 		void initialize();
-		void decide_dummy_positions();
 		void adjust_dummy_positions();
 		void evaluate();
 		void export_results();
