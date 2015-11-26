@@ -133,6 +133,18 @@
     <Filter Include="ヘッダー ファイル\Graph\Routing\Modules">
       <UniqueIdentifier>{4e2e74c8-7ada-402d-b29c-3af11ed3a79d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Evaluation\AR">
+      <UniqueIdentifier>{aaf84ca8-1fe7-4bc6-a1e8-5a2683ad5818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Evaluation\MTC">
+      <UniqueIdentifier>{5e86c6ec-83cf-4df5-8756-f350053d3e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Evaluation\AR">
+      <UniqueIdentifier>{f123f82c-2d22-41d1-8a99-a0df702d006c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Evaluation\MTC">
+      <UniqueIdentifier>{8869deb9-e272-4517-908f-1bbca2b23252}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -366,12 +378,6 @@
     <ClInclude Include="Evaluator.h">
       <Filter>ヘッダー ファイル\Evaluation</Filter>
     </ClInclude>
-    <ClInclude Include="ARCountCalculationModule.h">
-      <Filter>ヘッダー ファイル\Evaluation</Filter>
-    </ClInclude>
-    <ClInclude Include="ARCountCalculationModule.hpp">
-      <Filter>ソース ファイル\Evaluation</Filter>
-    </ClInclude>
     <ClInclude Include="Trajectory.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
@@ -401,6 +407,15 @@
     </ClInclude>
     <ClInclude Include="PreferenceRequirement.h">
       <Filter>ヘッダー ファイル\Requirement</Filter>
+    </ClInclude>
+    <ClInclude Include="ARCountCalculationModule.hpp">
+      <Filter>ソース ファイル\Evaluation\AR</Filter>
+    </ClInclude>
+    <ClInclude Include="ARCountCalculationModule.h">
+      <Filter>ヘッダー ファイル\Evaluation\AR</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossInfo.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -514,6 +529,9 @@
     </ClCompile>
     <ClCompile Include="PreferenceRequirement.cpp">
       <Filter>ソース ファイル\Requirement</Filter>
+    </ClCompile>
+    <ClCompile Include="CrossInfo.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

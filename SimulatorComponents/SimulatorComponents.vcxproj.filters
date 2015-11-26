@@ -103,7 +103,7 @@
       <Filter>ヘッダー ファイル\User</Filter>
     </ClInclude>
     <ClInclude Include="MizunoMethod.h">
-      <Filter>ソース ファイル\Method</Filter>
+      <Filter>ヘッダー ファイル\Method</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -165,7 +165,7 @@
       <Filter>ソース ファイル\User</Filter>
     </ClCompile>
     <ClCompile Include="MizunoMethod.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Method</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

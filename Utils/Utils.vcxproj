@@ -206,6 +206,7 @@
     <ClInclude Include="BreadthFirstIterator.h" />
     <ClInclude Include="BreadthFirstIterator.hpp" />
     <ClInclude Include="Coordinate.h" />
+    <ClInclude Include="CrossInfo.h" />
     <ClInclude Include="DbSettings.h" />
     <ClInclude Include="DbSettingsFileLoader.h" />
     <ClInclude Include="DepthFirstConstIterator.h" />
@@ -285,6 +286,7 @@
     <ClCompile Include="BasicPoiData.cpp" />
     <ClCompile Include="BasicRequirement.cpp" />
     <ClCompile Include="Coordinate.cpp" />
+    <ClCompile Include="CrossInfo.cpp" />
     <ClCompile Include="DbSettings.cpp" />
     <ClCompile Include="DbSettingsFileLoader.cpp" />
     <ClCompile Include="dllmain.cpp">

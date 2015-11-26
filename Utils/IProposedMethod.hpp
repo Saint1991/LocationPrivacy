@@ -51,7 +51,7 @@ namespace Framework
 	/// 手法の実行終了時のコールバックを登録する
 	///</summary>
 	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>::set_execution_callback(const std::function<void(std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>>, std::shared_ptr<Time::Timer>)>& callback)
+	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>::set_execution_callback(const std::function<void(std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>>, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::Timer>)>& callback)
 	{
 		execution_callback = callback;
 	}
@@ -63,7 +63,7 @@ namespace Framework
 	template <typename MAP_TYPE, typename USER_TYPE, typename DUMMY_TYPE, typename REQUIREMENT_TYPE, typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>::terminate()
 	{
-		if (execution_callback != nullptr) execution_callback(entities, timer);
+		if (execution_callback != nullptr) execution_callback(entities, requirement, timer);
 	}
 
 }

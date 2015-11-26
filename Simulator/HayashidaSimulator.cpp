@@ -346,7 +346,7 @@ namespace Simulation
 		for (std::list<std::shared_ptr<Requirement::KatoMethodRequirement const>>::iterator requirement = requirements.begin(); requirement != requirements.end(); requirement++)
 		{
 			Method::KatoBachelorMethod kato_bachelor_method(map,user,*requirement,time_manager);
-			kato_bachelor_method.set_execution_callback([&](std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer) {
+			kato_bachelor_method.set_execution_callback([&](std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer) {
 				export_dummies_trajectory(entities, timer);
 			});
 			kato_bachelor_method.run();
