@@ -17,7 +17,7 @@ namespace Graph
 	static_assert(std::is_base_of<BasicEdge, EDGE>::value, "Template type EDGE must be derived from BasicEdge");
 	
 	protected:
-		std::shared_ptr<	std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>> > edge_list;
+		std::shared_ptr<std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>> > edge_list;
 
 	public:
 		std::shared_ptr<NODE_DATA> data;

@@ -5,7 +5,7 @@
 #endif
 
 #pragma once
-#include "Map.h"
+#include "BasicDbMap.h"
 #include "BasicMapNode.h"
 #include "BasicPoi.h"
 #include "BasicRoad.h"
@@ -14,23 +14,17 @@
 #include "Probability.h"
 #include "Rectangle.h"
 #include "IRoutingModule.h"
+#include "LatLng.h"
 
 namespace Map
 {
 
-	class HAYASHIDA_DB_MAP_API HayashidaDbMap : public Graph::Map<BasicMapNode, BasicPoi, BasicRoad>
+	class HAYASHIDA_DB_MAP_API HayashidaDbMap : public BasicDbMap
 	{
-	protected:
-		std::string setting_file_path;
-		std::string db_name;
-		std::string node_table;
-		std::string node_connection_table;
-		std::string poi_table;
-		std::string poi_connection_table;
-
-		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
-
+	
 	public:
+		typedef std::pair<std::vector<Graph::MapNodeIndicator>, double> path_info;
+		
 		HayashidaDbMap(std::shared_ptr<Graph::IRoutingModule<BasicMapNode, BasicRoad>> routing_method,
 			const std::string& setting_file_path,
 			const std::string& db_name,
@@ -40,9 +34,9 @@ namespace Map
 			const std::string& poi_connection_table = "poi_connections"
 			);
 		virtual ~HayashidaDbMap();
-
-
-
+		
+		path_info search_random_path(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold);
+		path_info get_random_path_info(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
 	};
 
 }
