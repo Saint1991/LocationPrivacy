@@ -6,6 +6,7 @@ namespace User
 {
 
 	typedef std::string category_id;
+	constexpr char* ANY = "ANY";
 
 	///<summary>
 	/// PreferenceTree‚É—p‚¢‚éƒm[ƒh

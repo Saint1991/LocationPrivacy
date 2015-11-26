@@ -19,7 +19,11 @@ namespace Method
 		: public Framework::IProposedMethod<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
 	{
 	private:
+		static constexpr double B = 0.5;
+
 	protected:
+		typedef std::pair<Collection::Sequence<User::category_id>, double> sequence_score_set;
+
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree_copy;
 
 		void initialize();
@@ -28,6 +32,9 @@ namespace Method
 		#pragma region GroupA
 		void decide_dummy_positions_of_group_a(int num_of_group_a_dummy);
 		
+		std::vector<sequence_score_set> calc_sequence_score_set();
+		double preference_based_score(double sup_u, double sup_o);
+		double cross_based_score();
 		#pragma region GroupAのダミー生成用メソッド
 		
 		#pragma region GroupB

@@ -49,18 +49,18 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", "map_tokyo_category_top_level");
+		map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
 		map->load(boundary);
 	}
 
 
 	///<summary>
 	/// トラジェクトリ分割のルール
-	/// 経過時刻が2時間以上のところでトラジェクトリを分割する
+	/// 経過時刻が2時間半以上のところでトラジェクトリを分割する
 	///</summary>
 	bool trajectory_division_rule(const std::string& timestamp, const std::string& previous_time)
 	{
-		constexpr time_t DIVISION_THRESHOLD = 10800;
+		constexpr time_t DIVISION_THRESHOLD = 7200;
 
 		time_t current_time_t = Time::TimeUtility::convert_to_unixtimestamp(timestamp);
 		time_t previous_time_t = Time::TimeUtility::convert_to_unixtimestamp(previous_time);
@@ -75,8 +75,11 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::create_trajectories()
 	{
-		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", "map_tokyo_category_top_level", "checkins", "pois");
+		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins", "pois");
 		user_trajectories = loader.load_trajectories(USER_ID, TRAJECTORY_LENGTH_THRESHOLD);
+
+		size_t trajectory_size = user_trajectories->size();
+		std::cout << "Create " << trajectory_size << " Trajectories." << std::endl;
 	}
 
 	///<summary>
