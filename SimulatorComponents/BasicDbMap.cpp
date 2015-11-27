@@ -64,7 +64,7 @@ namespace Map
 	///<summary>
 	/// 指定した区間内に存在するカテゴリIDがcategory_idのPOI一覧を取得する
 	///</summary>
-	std::vector<std::shared_ptr<BasicPoi const>> BasicDbMap::find_pois_of_category_within_boundary(const Graph::Rectangle<>& boundary, const std::string& category_id) const
+	std::vector<std::shared_ptr<BasicPoi const>> BasicDbMap::find_pois_of_category_within_boundary(const Graph::Rectangle<Geography::LatLng>& boundary, const std::string& category_id) const
 	{
 		Graph::box query_box(Graph::point(boundary.left, boundary.bottom), Graph::point(boundary.right, boundary.top));
 		return find_pois_of_category_within_boundary(query_box, category_id);
@@ -78,6 +78,7 @@ namespace Map
 	{
 		std::vector<std::shared_ptr<BasicPoi const>> within_boundary = find_pois_of_category_within_boundary(boundary, category_id);
 		Math::Probability generator;
+		if (within_boundary.size() == 0) return nullptr;
 		int index = generator.uniform_distribution(0, within_boundary.size() - 1);
 		return within_boundary.at(index);
 	}
@@ -85,7 +86,7 @@ namespace Map
 	///<summary>
 	/// 指定した領域内に存在し，カテゴリがcategory_idのPOIからランダムに一つ選択して取得する
 	///</summary>
-	std::shared_ptr<BasicPoi const> BasicDbMap::find_random_poi_within_boundary(const Graph::Rectangle<>& boundary, const std::string& category_id) const
+	std::shared_ptr<BasicPoi const> BasicDbMap::find_random_poi_within_boundary(const Graph::Rectangle<Geography::LatLng>& boundary, const std::string& category_id) const
 	{
 		Graph::box query_box(Graph::point(boundary.left, boundary.bottom), Graph::point(boundary.right, boundary.top));
 		return find_random_poi_within_boundary(query_box, category_id);

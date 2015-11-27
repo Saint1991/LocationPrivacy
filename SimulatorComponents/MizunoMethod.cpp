@@ -206,11 +206,43 @@ namespace Method
 			double score = iter->second;
 			Collection::Sequence<User::category_id> category_sequence = iter->first.first;
 			Entity::cross_target cross = iter->first.second;
+			
+			int phase_basis = cross.first;
+			Graph::MapNodeIndicator point_basis(INVALID, Graph::NodeType::INVALID);
 
 			//共有地点が設定できなかった場合
-			//グリッド領域を生成し，エンティティが最小の地点から一点決定する
+			//9×9のグリッド領域を生成し，エンティティが最小の地点から一点決定する
 			if (cross == Entity::NOTHING) {
 
+				//phase 0における決定済みエンティティの位置のリスト
+				phase_basis = 0;
+				std::vector<std::shared_ptr<Geography::LatLng const>> fixed_positions = entities->get_all_fixed_positions_of_phase(phase_basis);
+				
+				//グリッドの生成
+				std::shared_ptr<Geography::LatLng const> center = entities->get_average_position_of_phase(phase_basis);
+				int cell_num_on_side = 3;
+				double grid_side_length = std::sqrt(requirement->required_anonymous_area);
+				std::unique_ptr<Graph::Grid<Geography::LatLng>> grid = std::make_unique<Graph::Grid<Geography::LatLng>>(*center, cell_num_on_side, grid_side_length);
+				
+				//グリッドに地点を登録し，エンティティ数最小のセルをランダムに一つ選択する
+				//ここはセル中の点が少ない順に取得に直す
+				std::shared_ptr<Map::BasicPoi const> visit_target = nullptr;
+				grid->add_points(fixed_positions);
+				std::vector<Graph::cell_id> min_cells = grid->get_all_cell_id_with_min_point_count();
+
+				std::random_device rd;
+				std::mt19937_64 generator(rd());
+				std::shuffle(min_cells.begin(), min_cells.end(), generator);
+				for (std::vector<Graph::cell_id>::const_iterator iter = min_cells.begin(); iter != min_cells.end(); iter++) {
+					std::shared_ptr<Graph::Rectangle<Geography::LatLng> const> boundary = grid->read_cell_by_id(*iter);
+					User::category_id target_category = category_sequence.at(phase_basis);
+					visit_target = map->find_random_poi_within_boundary(*boundary, target_category);
+					if (visit_target != nullptr) break;
+				}
+
+				//該当するカテゴリの点が見つからなかった場合
+				if (visit_target == nullptr) throw Framework::TrajectoryNotFoundException("Trajectory Can't Created");
+				
 			}
 
 

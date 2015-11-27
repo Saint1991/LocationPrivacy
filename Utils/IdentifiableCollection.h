@@ -21,6 +21,7 @@ namespace Collection
 	
 	public:
 		IdentifiableCollection();
+		IdentifiableCollection(size_t n);
 		virtual ~IdentifiableCollection();
 
 		std::shared_ptr<DATA_TYPE const> read_by_id(const ID_TYPE& id) const;

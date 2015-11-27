@@ -13,7 +13,6 @@ namespace Collection
 		}
 	){}
 
-
 	///<summary>
 	/// デストラクタ
 	///</summary>

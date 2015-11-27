@@ -12,6 +12,7 @@
 #include "PreferenceRequirement.h"
 #include "IProposedMethod.h"
 #include "SemanticTrajectory.h"
+#include "Grid.h"
 
 namespace Method
 {
