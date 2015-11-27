@@ -22,7 +22,7 @@ namespace Graph
 	///</summary>
 	template <typename NODE_DATA, typename EDGE>
 	Node<NODE_DATA, EDGE>::Node(const Node<NODE_DATA, EDGE> &node) 
-		: Identifiable<node_id>(node), data(std::make_shared<NODE_DATA>(*node.data)), 
+		: Identifiable<node_id>(node), data(node.data == nullptr ? nullptr : std::make_shared<NODE_DATA>(*node.data)), 
 		edge_list(std::make_shared< std::set<std::shared_ptr<BasicEdge>, std::function<bool(std::shared_ptr<BasicEdge>, std::shared_ptr<BasicEdge>)>	>>([](std::shared_ptr<BasicEdge> edge1, std::shared_ptr<BasicEdge> edge2) {
 		return edge1->get_to() < edge2->get_to();
 	}))

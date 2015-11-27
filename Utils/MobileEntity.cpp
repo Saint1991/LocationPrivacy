@@ -20,7 +20,7 @@ namespace Entity
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::MobileEntity(entity_id id, std::shared_ptr<TRAJECTORY_TYPE> trajectory)
-		: Identifiable<entity_id>(id), trajectory(trajectory)
+		: Identifiable<entity_id>(id), trajectory(trajectory), cross_flg(std::make_shared<std::vector<bool>>(trajectory->phase_count(), false)), total_cross_count(0)
 	{
 
 	}

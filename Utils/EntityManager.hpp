@@ -126,6 +126,52 @@ namespace Entity
 		return ret;
 	}
 
+
+	///<summary>
+	/// IDがidのエンティティと共有地点が設定されているエンティティのID集合を返す．
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	std::vector<Entity::entity_id> EntityManager<DUMMY, USER, POSITION_TYPE>::get_entities_cross_with(entity_id id) const
+	{
+
+		std::vector<Entity::entity_id> ret;
+
+		// 指定されたIDがユーザのものの場合
+		if (id == 0) {
+			for (int phase = 0; phase < timeslot->phase_count(); phase++) {
+				if (user->is_cross_set_at_phase(phase)) {
+					Graph::MapNodeIndicator user_pos = user->read_trajectory()->read_node_pos_info_of_phase(phase).first;
+					for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
+						Graph::MapNodeIndicator dummy_pos = (*iter)->read_trajectory()->read_node_pos_info_of_phase(phase).first;
+						if ((*iter)->is_cross_set_at_phase(phase) && user_pos == dummy_pos) ret.push_back((*iter)->get_id());
+					}
+				}
+			}
+		}
+
+		// 指定されたIDがダミーのものである場合
+		else {
+			std::shared_ptr<DUMMY const> dummy = read_dummy_by_id(id);
+			for (int phase = 0; phase < timeslot->phase_count(); phase++) {
+				if (dummy->is_cross_set_at_phase(phase)) {
+					Graph::MapNodeIndicator dummy_pos = dummy->read_trajectory()->read_node_pos_info_of_phase(phase).first;
+					
+					Graph::MapNodeIndicator user_pos = user->read_trajectory()->read_node_pos_info_of_phase(phase).first;
+					if (dummy_pos == user_pos && user->is_cross_set_at_phase(phase)) ret.push_back(0);
+					
+					for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
+						entity_id cross_dummy_id = (*iter)->get_id();
+						if (cross_dummy_id == id) continue;
+						Graph::MapNodeIndicator dummy_pos2 = (*iter)->read_trajectory()->read_node_pos_info_of_phase(phase).first;
+						if ((*iter)->is_cross_set_at_phase(phase) && dummy_pos == dummy_pos2) ret.push_back(cross_dummy_id);
+					}
+				}
+			}
+		}
+
+		return ret;
+	}
+
 	///<summary>
 	/// ダミーの総数を取得
 	///</summary>
@@ -133,6 +179,21 @@ namespace Entity
 	size_t EntityManager<DUMMY, USER, POSITION_TYPE>::get_dummy_count() const
 	{
 		return dummies->size();
+	}
+
+
+	///<summary>
+	/// phaseにおいてすでに共有地点を設定されているエンティティ数を取得する
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	size_t EntityManager<DUMMY, USER, POSITION_TYPE>::get_total_cross_count_of_phase(int phase) const
+	{
+		size_t ret = 0;
+		if (user->is_cross_set_at_phase(phase)) ret++;
+		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator dummy = dummies->begin(); dummy != dummies->end(); dummy++) {
+			if ((*dummy)->is_cross_set_at_phase(phase)) ret++;
+		}
+		return ret;
 	}
 
 	///<summary>
@@ -162,6 +223,43 @@ namespace Entity
 
 
 	///<summary>
+	/// phaseにおける経路確定済みエンティティの位置を全て取得する
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	std::vector<std::shared_ptr<POSITION_TYPE const>> EntityManager<DUMMY, USER, POSITION_TYPE>::get_all_fixed_positions_of_phase(int phase) const
+	{
+		std::vector<std::shared_ptr<POSITION_TYPE const>> ret(1, user->read_position_of_phase(phase));
+		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator dummy = dummies->begin(); dummy != dummies->end(); dummy++) {
+			std::shared_ptr<POSITION_TYPE const> dummy_pos = (*dummy)->read_position_of_phase(phase);
+			if (dummy_pos != nullptr) ret.push_back(dummy_pos);
+		}
+		return ret;
+	}
+
+
+	///<summary>
+	/// phaseにおける経路確定済みエンティティからなる凸包領域の面積を計算します
+	/// ただしエンティティが1つの場合は0を，2つの場合は距離を返します．
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	double EntityManager<DUMMY, USER, POSITION_TYPE>::calc_convex_hull_size_of_fixed_entities_of_phase(int phase) const
+	{
+		double size = 0.0;
+		std::vector<std::shared_ptr<POSITION_TYPE const>> positions = get_all_fixed_positions_of_phase(phase);
+		if (positions.size() <= 1) return size;
+		
+		//LatLngの派生クラスの場合
+		if (size = std::is_base_of<Geography::LatLng, POSITION_TYPE>::value) {
+			size = positions.size() == 2 ? Geography::dist(*positions->at(0), *positions->at(1)) : Geography::GeoCalculation::calc_convex_hull_size(positions);
+		}
+		//Coordinateの場合
+		else if (std::is_same<Graph::Coordinate, POSITION_TYPE>::value) {
+			size = positions.size() == 2 ? Graph::dist(*positions->at(0), *positions->at(1)) : Graph::GraphUtility::calc_convex_hull_size(positions);
+		}
+		return size;
+	}
+
+	///<summary>
 	/// 各Phaseについて全エンティティの位置を引数にして繰り返す
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
@@ -184,27 +282,28 @@ namespace Entity
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_of_phase(int phase) const
 	{
-		double latitude = 0.0;
-		double longitude = 0.0;
+		double x = 0.0;
+		double y = 0.0;
 
 		std::shared_ptr<POSITION_TYPE const> position = user->read_position_of_phase(phase);
-		latitude += position->lat();
-		longitude += position->lng();
+		x += position->x();
+		y += position->y();
 		int fixed_count = 1;
 
 		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
 			position = (*iter)->read_position_of_phase(phase);
 			if (position != nullptr) {
 				fixed_count++;
-				latitude += position->lat();
-				longitude += position->lng();
+				x += position->x();
+				y += position->y();
 			}
 		}
 
-		latitude /= fixed_count;
-		longitude /= fixed_count;
+		x /= fixed_count;
+		y /= fixed_count;
 		
-		return std::move(std::make_shared<POSITION_TYPE const>(latitude, longitude));
+		std::shared_ptr<POSITION_TYPE const> ret = std::is_same<Graph::Coordinate, POSITION_TYPE>::value ? std::make_shared<POSITION_TYPE const>(x, y) : std::make_shared<POSITION_TYPE const>(y, x);
+		return ret;
 	}
 
 

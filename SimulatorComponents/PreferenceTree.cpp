@@ -164,10 +164,10 @@ namespace User
 			current_node = current_node.find_child_if([iter](std::shared_ptr<PreferenceTreeNode const> node) {
 				return node->category_id() == *iter;
 			});
-			if (current_node == const_end<base_const_iterator>()) break;
+			if (*current_node == nullptr) break;
 		}
 
-		support = current_node == const_end<base_const_iterator>() ? 0.0 : current_node->count() / trajectory_count;
+		support = *current_node == nullptr ? 0.0 : current_node->count() / trajectory_count;
 		return support;
 	}
 

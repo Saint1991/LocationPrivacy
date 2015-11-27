@@ -49,7 +49,7 @@ namespace Graph
 
 		virtual void foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>, const category_id&)>& execute_function) const;
 
-		Collection::Sequence<category_id> get_category_sequence(int phase_from, int phase_end) const;
+		Collection::Sequence<category_id> get_category_sequence(int phase_from = 0, int phase_end = -1) const;
 		std::list<std::shared_ptr<IO::FileExportable const>> get_export_data() const;
 	};
 

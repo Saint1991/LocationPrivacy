@@ -11,7 +11,6 @@
 namespace Framework
 {
 
-
 	///<summary>
 	/// 提案手法を実装する際のテンプレート
 	/// これを継承したクラスを作成し，純粋仮想関数を実装する
@@ -55,6 +54,13 @@ namespace Framework
 		virtual ~IProposedMethod();
 		void set_execution_callback(const std::function<void(std::shared_ptr<Entity::EntityManager<DUMMY_TYPE, USER_TYPE, POSITION_TYPE>>, std::shared_ptr<REQUIREMENT_TYPE const>, std::shared_ptr<Time::Timer>)>& callback);
 		void run();
+	};
+
+
+	class TrajectoryNotFoundException : public std::runtime_error
+	{
+	public:
+		TrajectoryNotFoundException(const std::string& what) : std::runtime_error(what){	}
 	};
 }
 

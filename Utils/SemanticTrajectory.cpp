@@ -127,6 +127,7 @@ namespace Graph
 	template <typename POSITION_TYPE>
 	Collection::Sequence<category_id> SemanticTrajectory<POSITION_TYPE>::get_category_sequence(int from_phase, int to_phase) const
 	{
+		if (to_phase == -1) to_phase = phase_count() - 1;
 		return category_sequence->subsequence(from_phase, to_phase);
 	}
 
