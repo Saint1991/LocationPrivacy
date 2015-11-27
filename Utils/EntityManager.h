@@ -12,7 +12,7 @@ namespace Entity
 {
 
 	typedef std::pair<int, entity_id> cross_target;
-	constexpr cross_target NOTHING = std::pair<int, entity_id>(-1, -1);
+	constexpr cross_target NOTHING = std::pair<int, entity_id>(-1, UINT_MAX);
 
 	///<summary>
 	/// ダミーとユーザを管理するクラス

@@ -206,6 +206,15 @@ namespace Method
 			double score = iter->second;
 			Collection::Sequence<User::category_id> category_sequence = iter->first.first;
 			Entity::cross_target cross = iter->first.second;
+
+			//共有地点が設定できなかった場合
+			//グリッド領域を生成し，エンティティが最小の地点から一点決定する
+			if (cross == Entity::NOTHING) {
+
+			}
+
+
+			
 		}
 
 		return ret;

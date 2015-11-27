@@ -145,6 +145,24 @@
     <Filter Include="ヘッダー ファイル\Evaluation\MTC">
       <UniqueIdentifier>{8869deb9-e272-4517-908f-1bbca2b23252}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Graph\Trajectory">
+      <UniqueIdentifier>{b8136283-4daf-4caf-8a30-219cd960689a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Graph\Trajectory">
+      <UniqueIdentifier>{cc885af3-6411-447e-8334-d1d138a0bf61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Graph\Shape">
+      <UniqueIdentifier>{a15e3175-df3e-4df2-b586-a2fde0207902}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Graph\Shape">
+      <UniqueIdentifier>{b97d8c09-01df-45f1-87f1-c22757ad5523}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Graph\Utility">
+      <UniqueIdentifier>{b9591b72-97ac-4cba-bf86-dc6761d470be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Graph\Utility">
+      <UniqueIdentifier>{e66123e2-a5ca-49b6-8b73-ed9f83a89917}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -168,9 +186,6 @@
     <ClInclude Include="IdentifiableCollection.h">
       <Filter>ヘッダー ファイル\Collection</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2d.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
-    </ClInclude>
     <ClInclude Include="LatLng.h">
       <Filter>ヘッダー ファイル\Geography</Filter>
     </ClInclude>
@@ -186,13 +201,7 @@
     <ClInclude Include="MobileEntity.h">
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2dFactory.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
-    </ClInclude>
     <ClInclude Include="Coordinate.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphUtility.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
     <ClInclude Include="IdentifiableCollection.hpp">
@@ -363,9 +372,6 @@
     <ClInclude Include="EntityManager.hpp">
       <Filter>ソース ファイル\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Rectangle.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
-    </ClInclude>
     <ClInclude Include="IEvaluationModule.h">
       <Filter>ヘッダー ファイル\Evaluation</Filter>
     </ClInclude>
@@ -377,9 +383,6 @@
     </ClInclude>
     <ClInclude Include="Evaluator.h">
       <Filter>ヘッダー ファイル\Evaluation</Filter>
-    </ClInclude>
-    <ClInclude Include="Trajectory.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
     </ClInclude>
     <ClInclude Include="RoutingClient.h">
       <Filter>ヘッダー ファイル\Graph\Routing</Filter>
@@ -402,9 +405,6 @@
     <ClInclude Include="Dijkstra.h">
       <Filter>ヘッダー ファイル\Graph\Routing\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="SemanticTrajectory.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
-    </ClInclude>
     <ClInclude Include="PreferenceRequirement.h">
       <Filter>ヘッダー ファイル\Requirement</Filter>
     </ClInclude>
@@ -426,6 +426,27 @@
     <ClInclude Include="MTCCalculationModule.h">
       <Filter>ヘッダー ファイル\Evaluation\MTC</Filter>
     </ClInclude>
+    <ClInclude Include="SemanticTrajectory.h">
+      <Filter>ヘッダー ファイル\Graph\Trajectory</Filter>
+    </ClInclude>
+    <ClInclude Include="Trajectory.h">
+      <Filter>ヘッダー ファイル\Graph\Trajectory</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>ヘッダー ファイル\Graph\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2d.h">
+      <Filter>ヘッダー ファイル\Graph\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2dFactory.h">
+      <Filter>ヘッダー ファイル\Graph\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphUtility.h">
+      <Filter>ヘッダー ファイル\Graph\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -443,20 +464,11 @@
     <ClCompile Include="AngleUtility.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Vector2d.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
     <ClCompile Include="LatLng.cpp">
       <Filter>ソース ファイル\Geography</Filter>
     </ClCompile>
     <ClCompile Include="FileExporter.cpp">
       <Filter>ソース ファイル\IO</Filter>
-    </ClCompile>
-    <ClCompile Include="Coordinate.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphUtility.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
     <ClCompile Include="GeoCalculation.cpp">
       <Filter>ソース ファイル\Geography</Filter>
@@ -503,9 +515,6 @@
     <ClCompile Include="BasicPoiData.cpp">
       <Filter>ソース ファイル\Geography\Data</Filter>
     </ClCompile>
-    <ClCompile Include="Vector2dFactory.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
     <ClCompile Include="BasicRequirement.cpp">
       <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
@@ -521,20 +530,11 @@
     <ClCompile Include="MobileEntity.cpp">
       <Filter>ソース ファイル\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Rectangle.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
     <ClCompile Include="KatoMethodRequirement.cpp">
       <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
     <ClCompile Include="Evaluator.cpp">
       <Filter>ソース ファイル\Evaluation</Filter>
-    </ClCompile>
-    <ClCompile Include="Trajectory.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="SemanticTrajectory.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
     <ClCompile Include="PreferenceRequirement.cpp">
       <Filter>ソース ファイル\Requirement</Filter>
@@ -544,6 +544,30 @@
     </ClCompile>
     <ClCompile Include="MTCCalculationModule.cpp">
       <Filter>ソース ファイル\Evaluation\MTC</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Coordinate.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Trajectory.cpp">
+      <Filter>ソース ファイル\Graph\Trajectory</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticTrajectory.cpp">
+      <Filter>ソース ファイル\Graph\Trajectory</Filter>
+    </ClCompile>
+    <ClCompile Include="Rectangle.cpp">
+      <Filter>ソース ファイル\Graph\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2d.cpp">
+      <Filter>ソース ファイル\Graph\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2dFactory.cpp">
+      <Filter>ソース ファイル\Graph\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphUtility.cpp">
+      <Filter>ソース ファイル\Graph\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

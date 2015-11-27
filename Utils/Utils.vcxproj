@@ -224,6 +224,7 @@
     <ClInclude Include="FileExportable.h" />
     <ClInclude Include="FileExporter.h" />
     <ClInclude Include="GeoCalculation.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="IEvaluationModule.h" />
     <ClInclude Include="IProposedMethod.h" />
     <ClInclude Include="IProposedMethod.hpp" />
@@ -312,6 +313,7 @@
     <ClCompile Include="FileExporter.cpp" />
     <ClCompile Include="GeoCalculation.cpp" />
     <ClCompile Include="GraphUtility.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="KatoMethodRequirement.cpp" />
     <ClCompile Include="LatLng.cpp" />
     <ClCompile Include="MapNodeIndicator.cpp" />
