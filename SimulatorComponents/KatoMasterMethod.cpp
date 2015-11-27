@@ -72,7 +72,7 @@ namespace Method
 	///<summary>
 	/// ダミーの移動経路の修正
 	///</summary>
-	void KatoMasterMethod::revise_dummy_trajectory(int phase_id)
+	void KatoMasterMethod::revise_dummy_path(int phase_id)
 	{
 	/*
 		time_t previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
@@ -143,15 +143,15 @@ namespace Method
 	/// real_userとpredict_userの違いで見る
 	/// ユーザがプラン通りに行動している場合は0をリターン
 	///</summary>
-	int KatoMasterMethod::check_user_plan()
+	KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_plan()
 	{
-		if (!check_user_pause_time()) { return 1; }
-		else if (!check_user_speed()) { return 2; }
-		else if (!check_user_path()) { return 3; }
-		else if (!check_user_position()) { return 4; }
-		else { return 0; }
+		if (!check_user_pause_time()) { return PAUSE_TIME; }
+		else if (!check_user_speed()) { return PATH; }
+		else if (!check_user_path()) { return SPEED; }
+		else if (!check_user_position()) { return POSITION; }
+		else { return NO_CHANGE; }
 	}
-
+	
 	///<summary>
 	/// ユーザの行動プラン変更の判断
 	/// real_userとpredict_userの違いで見る
@@ -164,7 +164,7 @@ namespace Method
 
 	///<summary>
 	/// ユーザの行動プラン変更の判断
-	/// real_userとpredict_userの違いで見る
+	/// real_userとpredicted_userの違いで見る
 	/// 速度のチェック
 	///</summary>
 	bool KatoMasterMethod::check_user_speed()
@@ -174,7 +174,7 @@ namespace Method
 
 	///<summary>
 	/// ユーザの行動プラン変更の判断
-	/// real_userとpredict_userの違いで見る
+	/// real_userとpredicted_userの違いで見る
 	/// pathのチェック
 	///</summary>
 	bool KatoMasterMethod::check_user_path()
@@ -185,7 +185,7 @@ namespace Method
 
 	///<summary>
 	/// ユーザの行動プラン変更の判断
-	/// real_userとpredict_userの違いで見る
+	/// real_userとpredicted_userの違いで見る
 	/// 停止位置のチェック
 	///</summary>
 	bool KatoMasterMethod::check_user_position()
@@ -195,22 +195,56 @@ namespace Method
 
 	///<summary>
 	/// input_user_planからユーザの行動を予測し，そのユーザを返す．
+	/// 加藤さん手法の場合は，各要素の生成確率によって割合を決める．
 	///</summary>
 	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMasterMethod::predict_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user_plan)
 	{
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user_plan;
 
-
-		return nullptr;
+		return predicted_user_plan;
 	}
 
 
 	///<summary>
 	/// ユーザの次の停止地点の到着時間を予測する
 	///</summary>
-	void KatoMasterMethod::predict_user_next_pause_position_time(int check_num)
+	void KatoMasterMethod::revise_user_movement_plan(ChangeParameter check_parameter)
 	{
 
 	}
+
+	///<summary>
+	/// ユーザの停止時間の修正
+	///</summary>
+	void KatoMasterMethod::revise_user_pause_time(int phase_id)
+	{
+
+	}
+
+	///<summary>
+	/// ユーザのパスの修正
+	///</summary>
+	void KatoMasterMethod::revise_user_path(int phase_id)
+	{
+
+	}
+
+	///<summary>
+	/// ユーザの移動速度の修正
+	///</summary>
+	void KatoMasterMethod::revise_user_speed(int phase_id)
+	{
+
+	}
+
+	///<summary>
+	/// ユーザの停止位置の修正
+	///</summary>
+	void KatoMasterMethod::revise_user_pause_position(int phase_id)
+	{
+
+	}
+
 	///<summary>
 	/// ユーザの行動プランをアップデートする
 	///</summary>
@@ -222,11 +256,12 @@ namespace Method
 
 
 	///<summary>
-	/// 初期化 (今回は特にやることはない)
+	/// 初期化
 	///</summary>
 	void KatoMasterMethod::initialize()
 	{
 		//ユーザの動きの変更→新しく作る．
+		predicted_user = predict_user_plan(entities->get_user());
 	}
 
 
@@ -235,21 +270,17 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_dummy_positions()
 	{
-		/*
-		time_t time_to_change = 0;// (修正後の)time_manager->time_of_phase(phase_id) - (修正前の)time_manager->time_of_phase(phase_id);
-		predict_user = predict_user_plan(entities->get_user());
-
 		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
 		{
-		if (check_going_pause_position_in_plan()) {
-		if (check_user_plan() != 0) {
-		predict_user_next_pause_position_time(check_user_plan());//次の停止地点の到着時間を予測
-		revise_dummy_movement_plan(phase_id);
-		update_user_plan();
+			if (check_going_pause_position_in_plan()) {
+				if (check_user_plan() != NO_CHANGE) {
+					revise_user_movement_plan(check_user_plan());//次の停止地点の到着時間を予測
+					revise_dummy_movement_plan(phase_id);//dummyの行動プランの更新
+					//update_user_plan();//ユーザの行動プランを更新
+				}
+			}
 		}
-		}
-		}
-		*/
+		
 
 	}
 
@@ -286,7 +317,7 @@ namespace Method
 		//ここで実行時間の計測を開始
 		timer->start();
 
-		//初期化
+		//初期化.行動変更後のユーザの生成
 		initialize();
 
 		//ここが実行部分(各時刻のダミー位置を計算する)(加藤さん卒論手法)[Kato 13]

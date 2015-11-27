@@ -14,7 +14,6 @@ namespace Entity
 		  pause_time_list(std::vector<double>(timeslot->phase_count(),0)), 
 		  speed_list(std::vector<double>(timeslot->phase_count(), 0))
 	{
-		
 	}
 
 	///<summary>

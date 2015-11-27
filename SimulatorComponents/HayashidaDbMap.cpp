@@ -27,51 +27,79 @@ namespace Map {
 	HayashidaDbMap::~HayashidaDbMap()
 	{
 	}
-
+	
+	
 	///<summary>
-	/// なぜtypedefしたはずのpath_infoが使えない．．．
+	/// randomパスを一つ生成
 	///</summary>
-	std::pair<std::vector<Graph::MapNodeIndicator>, double> HayashidaDbMap::search_random_path(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold) {
+	HayashidaDbMap::path_info HayashidaDbMap::search_random_path(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold) {
 
 		double theta = M_PI_2;//近づく判定を行う際の角度[rad]
-
+		
 		//fromとtoが等しい時は距離0.0を返す
 		if (from == to) return std::make_pair(std::vector<Graph::MapNodeIndicator>(), 0.0);
 		
+		//閉路や遠回りの経路を設定しないようにするための閾値設定
+		double upper_lat = get_static_node(from.id())->lat();
+		double lower_lat = get_static_node(from.id())->lat();
+		if (upper_lat < lower_lat) std::swap(upper_lat, lower_lat);
+		
+		auto check_limit_angle = [=](Geography::LatLng node_position) 
+		{
+			return node_position.lat() < upper_lat && node_position > lower_lat ? true : false;
+		};
+
 		std::vector<Graph::MapNodeIndicator> ret_route;
 		double ret_distance = Graph::NO_CONNECTION;
-
+		
 		
 		//両方INTERSECTIONの場合
 		if (from.type() == Graph::NodeType::INTERSECTION && to.type() == Graph::NodeType::INTERSECTION) {
-			//fromとtoのNodeを取得
-			std::shared_ptr<BasicMapNode const> intersection_info_of_from= get_static_node(from.id());
-			std::shared_ptr<BasicMapNode const> intersection_info_of_to = get_static_node(to.id());
-			
-			//fromの接続先ノードを取得
-			//これってpoiも含まれる？
-			std::vector<Graph::node_id> connecting_node_list_of_from = intersection_info_of_from->get_connecting_node_list();
-			
-			std::vector<Graph::node_id> candidate_node_list;
-			for (std::vector<Graph::node_id>::iterator iter = candidate_node_list.begin(); iter != candidate_node_list.end(); iter++) {
-				double angle_of_iter_to_from = Geography::GeoCalculation::lambert_azimuth_angle(*get_static_node(*iter)->data, *intersection_info_of_from->data);
-				double angle_of_iter_to_to = Geography::GeoCalculation::lambert_azimuth_angle(*get_static_node(*iter)->data, *intersection_info_of_to->data);
-				double check_angle = std::abs(angle_of_iter_to_from - angle_of_iter_to_to);
-				if (check_angle > M_PI) check_angle = std::abs(2*M_PI - check_angle);
-				if (check_angle > theta) {
-					candidate_node_list.push_back(*iter);
+			while(ret_route.back() != to.id()) {
+				//fromとtoのNodeを取得
+				std::shared_ptr<BasicMapNode const> intersection_info_of_from = get_static_node(from.id());
+				std::shared_ptr<BasicMapNode const> intersection_info_of_to = get_static_node(to.id());
+
+				//fromの接続先ノードを取得
+				//これってpoiも含まれる？
+				std::vector<Graph::node_id> connecting_node_list = intersection_info_of_from->get_connecting_node_list();
+
+				std::vector<Graph::node_id> candidate_node_list;
+				for (std::vector<Graph::node_id>::iterator iter = connecting_node_list.begin(); iter != connecting_node_list.end(); iter++) {
+					//近づいていく方向を考慮でもいいかもしれん
+					double angle_of_iter_to_from = Geography::GeoCalculation::lambert_azimuth_angle(*get_static_node(*iter)->data, *intersection_info_of_from->data);
+					double angle_of_iter_to_to = Geography::GeoCalculation::lambert_azimuth_angle(*get_static_node(*iter)->data, *intersection_info_of_to->data);
+					double check_angle = std::abs(angle_of_iter_to_from - angle_of_iter_to_to);
+					if (check_angle > M_PI) check_angle = std::abs(2 * M_PI - check_angle);
+					if (check_angle > theta) {
+						candidate_node_list.push_back(*iter);
+					}
 				}
+				if (candidate_node_list.empty()) throw std::invalid_argument("candidate_node_list is empty!!");
+
+				//candidate_node_listをシャッフルして，適当に１つ選択
+				std::random_device device;
+				std::mt19937_64 generator(device());
+				std::shuffle(candidate_node_list.begin(), candidate_node_list.end(), generator);
+
+				check_limit_angle(*get_static_node(candidate_node_list.front())->data) ?
+					ret_route.push_back(candidate_node_list.front()) : ret_route.push_back(to.id());
 			}
-			if(candidate_node_list.empty()) throw std::invalid_argument("candidate_node_list is empty!!");
-
-			//candidate_node_listをシャッフルして，適当に１つ選択
-			//同じことをtoに到着するまで繰り返す
-			//終了
-
-		
-
 		}
 		
+		//両方POIの場合
+		else if (from.type() == Graph::NodeType::POI && to.type() == Graph::NodeType::POI) {
+		
+		
+		}
+
+
+		//あとはdistanceをカバーする部分を記述する．
+		if (ret_distance == Graph::NO_CONNECTION) ret_route = { Graph::MapNodeIndicator(-1, Graph::NodeType::INVALID) };
+		
+
+
+		return std::make_pair(ret_route, ret_distance);		
 	}
 
 	///<summary>
@@ -86,6 +114,7 @@ namespace Map {
 		std::vector<Graph::MapNodeIndicator> ret_route;
 		double ret_distance = Graph::NO_CONNECTION;
 
+		
 		//両方INTERSECTIONの場合
 		if (from.type() == Graph::NodeType::INTERSECTION && to.type() == Graph::NodeType::INTERSECTION) {
 			Graph::RouteInfo<BasicRoad> info = routing_client->shortest_path_info(from.id(), to.id(), distance_threshold);
@@ -168,6 +197,7 @@ namespace Map {
 		}
 
 		if (ret_distance == Graph::NO_CONNECTION) ret_route = { Graph::MapNodeIndicator(-1, Graph::NodeType::INVALID) };
+		
 		return std::make_pair(ret_route, ret_distance);
 	}
 }

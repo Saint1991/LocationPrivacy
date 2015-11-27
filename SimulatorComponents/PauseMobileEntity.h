@@ -23,6 +23,8 @@ namespace Entity
 	protected:
 		std::vector<double> pause_time_list;
 		std::vector<double> speed_list;
+		std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> pause_poi_info;//<poi_info,position>
+		std::vector<std::pair<int,double>> pause_time_info;//<phase,rest_pause_time>
 
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
@@ -38,6 +40,9 @@ namespace Entity
 		void set_speed(int phase, double speed);
 		void set_random_speed(int phase, double average_speed, double speed_range);
 		
+		//poi_info‚ğget‚âset‚·‚éƒƒ\ƒbƒh‚ğì¬‚·‚é
+
+
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;
 	};

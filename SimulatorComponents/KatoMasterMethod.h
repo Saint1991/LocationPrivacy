@@ -21,22 +21,29 @@ namespace Method {
 	{
 	private:
 		int time_to_change;//行動の変化分
-
-		void revise_dummy_movement_plan(int phase_id);//ダミーの行動プランを修正する
-		void revise_dummy_pause_time(int phase_id);//ダミーの停止時間の修正
-		void revise_dummy_trajectory(int phase_id);//ダミーの移動経路の修正
-		void revise_dummy_speed(int phase_id);//ダミーの行動速度の修正
-		void revise_dummy_pause_position(int phase_id);//ダミーの停止地点の修正
-
-		bool check_going_pause_position_in_plan();//ユーザの行動プランに含まれる停止地点に向かっているかどうかをチェック
-		int check_user_plan();//ユーザの行動プラン変更のチェック
-		bool check_user_pause_time();
-		bool check_user_speed();
-		bool check_user_path();
-		bool check_user_position();
+		enum ChangeParameter { PAUSE_TIME, PATH, SPEED, POSITION, NO_CHANGE };
 
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predict_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user_plan);//ユーザの行動を予測する.
-		void predict_user_next_pause_position_time(int check_num);
+		
+		void revise_dummy_movement_plan(int phase_id);//ダミーの行動プランを修正する
+			void revise_dummy_pause_time(int phase_id);//ダミーの停止時間の修正
+			void revise_dummy_path(int phase_id);//ダミーの移動経路の修正
+			void revise_dummy_speed(int phase_id);//ダミーの行動速度の修正
+			void revise_dummy_pause_position(int phase_id);//ダミーの停止地点の修正
+
+		bool check_going_pause_position_in_plan();//ユーザの行動プランに含まれる停止地点に向かっているかどうかをチェック
+		ChangeParameter check_user_plan();//ユーザの行動プラン変更のチェック
+			bool check_user_pause_time();
+			bool check_user_speed();
+			bool check_user_path();
+			bool check_user_position();
+
+		void revise_user_movement_plan(ChangeParameter check_parameter);
+			void revise_user_pause_time(int phase_id);//ダミーの停止時間の修正
+			void revise_user_path(int phase_id);//ダミーの移動経路の修正
+			void revise_user_speed(int phase_id);//ダミーの行動速度の修正
+			void revise_user_pause_position(int phase_id);//ダミーの停止地点の修正
+
 		void update_user_plan();
 
 	protected:
