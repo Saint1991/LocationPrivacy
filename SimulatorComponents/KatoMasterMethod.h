@@ -48,6 +48,7 @@ namespace Method {
 
 	protected:
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user;//—\‘ª‚³‚ê‚½ƒ†[ƒU
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> revising_dummy;
 
 		void initialize();
 		void revise_dummy_positions();

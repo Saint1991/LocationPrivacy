@@ -112,7 +112,17 @@ namespace Entity
 		speed_list.at(phase) = dummy_speed;
 	}
 
-	
+	///<summary>
+	/// ’â~poiî•ñ‚ğæ“¾
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> PauseMobileEntity<POSITION_TYPE>::get_pause_poi_info() {
+		return pause_poi_info;
+	}
+
+
+
+
 	///<summary>
 	/// Œğ·‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢Phase‚ğ‘S‚Äæ“¾‚·‚é
 	///</summary>

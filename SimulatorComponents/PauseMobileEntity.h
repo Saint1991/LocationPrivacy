@@ -41,7 +41,7 @@ namespace Entity
 		void set_random_speed(int phase, double average_speed, double speed_range);
 		
 		//poi_info‚ğget‚âset‚·‚éƒƒ\ƒbƒh‚ğì¬‚·‚é
-
+		std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> get_pause_poi_info();
 
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;

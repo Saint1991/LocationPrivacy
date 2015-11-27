@@ -36,26 +36,26 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_dummy_pause_time(int phase_id)
 	{
-		/*
+		
 		//前の値の保持
-		time_t previous_pause_time = creating_dummy->get_pause_time(phase_id);
-		time_t previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
+		int previous_pause_time = revising_dummy->get_pause_time(phase_id);
+		int previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
 
 		if (std::abs(time_to_change) > requirement->max_variation_of_pause_time)
 		{
-			time_t new_pause_time = time_to_change > 0 ? previous_pause_time + requirement->max_variation_of_pause_time : previous_pause_time - requirement->max_variation_of_pause_time;
-			creating_dummy->set_pause_time(phase_id, new_pause_time);
+			int new_pause_time = time_to_change > 0 ? previous_pause_time + requirement->max_variation_of_pause_time : previous_pause_time - requirement->max_variation_of_pause_time;
+			revising_dummy->set_pause_time(phase_id, new_pause_time);
 		}
 		else
 		{
-			creating_dummy->set_pause_time(phase_id, previous_pause_time + time_to_change);
+			revising_dummy->set_pause_time(phase_id, previous_pause_time + time_to_change);
 		}
 
-		if (requirement->max_pause_time < time_manager->time_of_phase(phase_id)) creating_dummy->set_pause_time(phase_id, requirement->max_pause_time);
-		if (requirement->min_pause_time > time_manager->time_of_phase(phase_id)) creating_dummy->set_pause_time(phase_id, requirement->min_pause_time);
+		if (requirement->max_pause_time < time_manager->time_of_phase(phase_id)) revising_dummy->set_pause_time(phase_id, requirement->max_pause_time);
+		if (requirement->min_pause_time > time_manager->time_of_phase(phase_id)) revising_dummy->set_pause_time(phase_id, requirement->min_pause_time);
 
 		//停止時間の変化量を求める
-		time_t variation_of_pause_time = creating_dummy->get_pause_time(phase_id) - previous_pause_time;
+		int variation_of_pause_time = revising_dummy->get_pause_time(phase_id) - previous_pause_time;
 
 		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)
 		{
@@ -65,7 +65,7 @@ namespace Method
 
 		time_to_change -= variation_of_pause_time;
 
-		*/
+		
 	}
 
 	
@@ -81,7 +81,7 @@ namespace Method
 		while (全てのトラジェクトリをチェックし終えるまで)
 		{
 		phase_idのときの存在地点;
-		time_manager->time_of_phase(phase_id + 1) = time_manager->time_of_phase(phase_id) + creating_dummy->get_pause_time(phase_id) + distance_of_Tri / creating_dummy->get_speed(phase_id);
+		time_manager->time_of_phase(phase_id + 1) = time_manager->time_of_phase(phase_id) + revising_dummy->get_pause_time(phase_id) + distance_of_Tri / revising_dummy->get_speed(phase_id);
 
 		}
 	*/
@@ -93,24 +93,24 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_dummy_speed(int phase_id)
 	{
-		/*
-		time_t previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
-		double previous_speed = creating_dummy->get_speed(phase_id);
-		double distance = map->shortest_distance(creating_dummy->read_node_pos_info_of_phase(phase_id).first, creating_dummy->read_node_pos_info_of_phase(phase_id).first);
-		time_t time = distance / (time_manager->time_of_phase(phase_id + 1) + time_to_change - time_manager->time_of_phase(phase_id));
-		creating_dummy->set_speed(phase_id, time);
+		
+		int previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
+		double previous_speed = revising_dummy->get_speed(phase_id);
+		double distance = map->shortest_distance(revising_dummy->read_node_pos_info_of_phase(phase_id).first, revising_dummy->read_node_pos_info_of_phase(phase_id).first);
+		int time = distance / (time_manager->time_of_phase(phase_id + 1) + time_to_change - time_manager->time_of_phase(phase_id));
+		revising_dummy->set_speed(phase_id, time);
 
-		if (std::abs(creating_dummy->get_speed(phase_id) - previous_speed) > requirement->max_variation_of_speed)
+		if (std::abs(revising_dummy->get_speed(phase_id) - previous_speed) > requirement->max_variation_of_speed)
 		{
-			double new_speed = creating_dummy->get_speed(phase_id) - previous_speed > 0 ? previous_speed + requirement->max_variation_of_speed : previous_speed - requirement->max_variation_of_speed;
-			creating_dummy->set_pause_time(phase_id, new_speed);
+			double new_speed = revising_dummy->get_speed(phase_id) - previous_speed > 0 ? previous_speed + requirement->max_variation_of_speed : previous_speed - requirement->max_variation_of_speed;
+			revising_dummy->set_pause_time(phase_id, new_speed);
 		}
 		double max_speed = requirement->average_speed_of_dummy + 0.5* requirement->speed_range_of_dummy;
 		double min_speed = requirement->average_speed_of_dummy - 0.5* requirement->speed_range_of_dummy;
-		if (max_speed < creating_dummy->get_speed(phase_id)) creating_dummy->set_speed(phase_id, max_speed);
-		if (min_speed > creating_dummy->get_speed(phase_id)) creating_dummy->set_speed(phase_id, min_speed);
+		if (max_speed < revising_dummy->get_speed(phase_id)) revising_dummy->set_speed(phase_id, max_speed);
+		if (min_speed > revising_dummy->get_speed(phase_id)) revising_dummy->set_speed(phase_id, min_speed);
 
-		//time_manager->time_of_phase(phase_id + 1) = time_manager->time_of_phase(phase_id) + creating_dummy->get_pause_time(phase_id) + (time_t)(distance / creating_dummy->get_speed(phase_id));
+		//time_manager->time_of_phase(phase_id + 1) = time_manager->time_of_phase(phase_id) + revising_dummy->get_pause_time(phase_id) + (time_t)(distance / revising_dummy->get_speed(phase_id));
 		time_t variation_of_arrive_time = time_manager->time_of_phase(phase_id + 1) - previous_arrive_time;
 
 		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)
@@ -118,7 +118,7 @@ namespace Method
 			//revise_time_manager->time_of_phase(i) += variation_of_pause_time;
 		}
 		if (time_manager->time_of_phase(phase_id + 1) == previous_arrive_time + time_to_change) return;
-		*/
+		
 	}
 
 
@@ -270,16 +270,20 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_dummy_positions()
 	{
-		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
+		for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
 		{
-			if (check_going_pause_position_in_plan()) {
-				if (check_user_plan() != NO_CHANGE) {
-					revise_user_movement_plan(check_user_plan());//次の停止地点の到着時間を予測
-					revise_dummy_movement_plan(phase_id);//dummyの行動プランの更新
-					//update_user_plan();//ユーザの行動プランを更新
+			revising_dummy = entities->get_dummy_by_id(dummy_id);
+			for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
+			{
+				if (check_going_pause_position_in_plan()) {
+					if (check_user_plan() != NO_CHANGE) {
+						revise_user_movement_plan(check_user_plan());//次の停止地点の到着時間を予測
+						revise_dummy_movement_plan(phase_id);//dummyの行動プランの更新
+						//update_user_plan();//ユーザの行動プランを更新
+					}
 				}
 			}
-		}
+	}
 		
 
 	}
