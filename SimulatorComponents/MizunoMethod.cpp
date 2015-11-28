@@ -235,8 +235,12 @@ namespace Method
 				std::shuffle(min_cells.begin(), min_cells.end(), generator);
 				for (std::vector<Graph::cell_id>::const_iterator iter = min_cells.begin(); iter != min_cells.end(); iter++) {
 					std::shared_ptr<Graph::Rectangle<Geography::LatLng> const> boundary = grid->read_cell_by_id(*iter);
-					User::category_id target_category = category_sequence.at(phase_basis);
-					visit_target = map->find_random_poi_within_boundary(*boundary, target_category);
+					User::category_id target_category = category_sequence.size() <= phase_basis ? User::ANY : category_sequence.at(phase_basis);
+					std::vector<std::shared_ptr<Map::BasicPoi const>> poi_candidates = target_category == User::ANY ? map->find_pois_within_boundary(*boundary) : map->find_pois_of_category_within_boundary(*boundary, target_category);
+					std::shuffle(poi_candidates.begin(), poi_candidates.end(), generator);
+					for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator iter = poi_candidates.begin(); iter != poi_candidates.end(); iter++) {
+
+					}
 					if (visit_target != nullptr) break;
 				}
 
