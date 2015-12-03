@@ -196,6 +196,19 @@ namespace Graph
 
 
 	///<summary>
+	/// 含まれる点の数が少ないものから順にセルIDを返す
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::vector<std::pair<cell_id, size_t>> Grid<POSITION_TYPE>::get_cell_ids_order_by_point_count() const
+	{
+		std::vector<std::pair<cell_id, size_t>> cell_point_counts = get_point_count_of_all_cells();
+		std::sort(cell_point_counts.begin(), cell_point_counts.end(), [](const std::pair<cell_id, size_t>& left, const std::pair<cell_id, size_t>& right) {
+			return left.second < right.second;
+		});
+		return cell_point_counts;
+	}
+
+	///<summary>
 	/// 地点数が最小のセルIDのリストを返す
 	///</summary>
 	template <typename POSITION_TYPE>

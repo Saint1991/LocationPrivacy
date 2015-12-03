@@ -6,6 +6,7 @@
 
 #pragma once
 #include "Map.h"
+#include "PreferenceTreeNode.h"
 #include "BasicMapNode.h"
 #include "BasicPoi.h"
 #include "BasicRoad.h"
@@ -14,6 +15,7 @@
 #include "Probability.h"
 #include "Rectangle.h"
 #include "IRoutingModule.h"
+#include "Sequence.h"
 
 namespace Map
 {
@@ -30,7 +32,7 @@ namespace Map
 	///</summary>
 	class BASIC_DB_MAP_API BasicDbMap : public Graph::Map<BasicMapNode, BasicPoi, BasicRoad>
 	{
-
+		
 	protected:
 		std::string setting_file_path;
 		std::string db_name;
@@ -58,6 +60,8 @@ namespace Map
 
 		std::shared_ptr<BasicPoi const> find_random_poi_within_boundary(const Graph::box& boundary, const std::string& category_id) const;
 		std::shared_ptr<BasicPoi const> find_random_poi_within_boundary(const Graph::Rectangle<Geography::LatLng>& boundary, const std::string& category_id) const;
+
+		std::shared_ptr<std::vector<std::vector<Graph::MapNodeIndicator>>> find_reachable_trajectory(const Graph::MapNodeIndicator& point_basis, const Collection::Sequence<User::category_id> category_sequence, const std::vector<double> reachable_distance_list) const;
 	};
 
 }

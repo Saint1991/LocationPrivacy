@@ -248,8 +248,11 @@
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="PoiData.h" />
     <ClInclude Include="PreferenceRequirement.h" />
-    <ClInclude Include="PrefixTree.h" />
-    <ClInclude Include="PrefixTree.hpp" />
+    <ClInclude Include="SequentialTree.h" />
+    <ClInclude Include="SequentialTree.hpp" />
+    <ClInclude Include="SequentialTreeNode.h" />
+    <ClInclude Include="Tree.h" />
+    <ClInclude Include="Tree.hpp" />
     <ClInclude Include="QueryGenerateUtility.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Node.hpp" />

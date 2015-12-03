@@ -1,6 +1,6 @@
 #pragma once
 #include "BasicEdge.h"
-#include "Node.h"
+#include "SequentialTreeNode.h"
 
 namespace User
 {
@@ -11,12 +11,10 @@ namespace User
 	///<summary>
 	/// PreferenceTreeÇ…ópÇ¢ÇÈÉmÅ[Éh
 	///</summary>
-	class PreferenceTreeNode : public Graph::Node<User::category_id, Graph::BasicEdge>
+	class PreferenceTreeNode : public Graph::SequentialTreeNode<User::category_id>
 	{
 	protected:
 		double counter;
-		Graph::node_id parent;
-		int depth;
 
 	public:
 		PreferenceTreeNode(Graph::node_id id, Graph::node_id parent, unsigned int depth, const category_id& category);
@@ -27,10 +25,6 @@ namespace User
 		const User::category_id category_id() const;
 		double count() const;
 		void count_up(double add_num = 1.0);
-		bool is_leef() const;
-		Graph::node_id get_parent() const;
-		int get_depth() const;
-		std::vector<Graph::node_id> get_children() const;
 	};
 }
 

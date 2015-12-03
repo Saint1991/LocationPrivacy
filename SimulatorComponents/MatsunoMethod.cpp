@@ -36,8 +36,8 @@ namespace Method
 	{
 		
 		//交差回数が少ないエンティティを優先的に交差対象にして繰り返す
-		std::list<std::pair<Entity::entity_id, int>> entity_list_order_by_cross = entities->get_entity_id_list_order_by_cross_count();
-		for (std::list<std::pair<Entity::entity_id, int>>::const_iterator iter = entity_list_order_by_cross.begin(); iter != entity_list_order_by_cross.end(); iter++) {
+		std::vector<std::pair<Entity::entity_id, int>> entity_list_order_by_cross = entities->get_entity_id_list_order_by_cross_count();
+		for (std::vector<std::pair<Entity::entity_id, int>>::const_iterator iter = entity_list_order_by_cross.begin(); iter != entity_list_order_by_cross.end(); iter++) {
 			
 			//未生成のダミーのものはスキップ
 			if (iter->first > id) continue;

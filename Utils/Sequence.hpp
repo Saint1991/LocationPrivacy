@@ -20,6 +20,16 @@ namespace Collection
 
 	}
 
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	template <typename T>
+	Sequence<T>::Sequence(size_t n, const T& init_element) : std::vector<T>(n, init_element)
+	{
+
+	}
+
 	///<summary>
 	/// コンストラクタ
 	///</summary>

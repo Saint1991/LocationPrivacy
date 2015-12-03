@@ -6,7 +6,7 @@
 
 #pragma once
 #include "PreferenceTreeNode.h"
-#include "PrefixTree.h"
+#include "SequentialTree.h"
 #include "Sequence.h"
 
 namespace User
@@ -15,13 +15,11 @@ namespace User
 	///<summary>
 	/// ユーザの嗜好を表す木
 	///</summary>
-	class PREFERENCE_TREE_API PreferenceTree : public Graph::PrefixTree<PreferenceTreeNode, std::string, Graph::BasicEdge>
+	class PREFERENCE_TREE_API PreferenceTree : public Graph::SequentialTree<PreferenceTreeNode, std::string>
 	{
 	private:
 		Collection::Sequence<category_id> make_prefix_by_node(std::shared_ptr<PreferenceTreeNode const> node) const;
 		std::shared_ptr<PreferenceTreeNode> get_node_by_prefix(const Collection::Sequence<category_id>& prefix);
-	protected:
-		std::vector<Graph::node_id> get_all_nodes_by_depth(int depth) const;
 	public:
 		PreferenceTree();
 		PreferenceTree(const PreferenceTree& t);

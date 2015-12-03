@@ -17,13 +17,13 @@ namespace Entity
 	///<summary>
 	/// ダミーとユーザを管理するクラス
 	/// 交差回数カウントのため，ユーザもconstにしていないが，基本positionsには操作は加えないこと
-	/// POSITION_TYPEはCoordinateもしくはLatLngの派生クラス
+	/// POSITION_TYPEは暫定的にLatLngの派生クラスに制限
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE = Geography::LatLng>
 	class EntityManager
 	{
 	
-	static_assert(std::is_base_of<Geography::LatLng, POSITION_TYPE>::value || std::is_same<Graph::Coordinate, POSITION_TYPE>::value, "POSITION_TYPE must be Coordinate or the class derived from LatLng");
+	static_assert(std::is_base_of<Geography::LatLng, POSITION_TYPE>::value, "POSITION_TYPE must be Coordinate or the class derived from LatLng");
 	static_assert(std::is_base_of<MobileEntity<Geography::LatLng>, DUMMY>::value, "DUMMY must be derived from MobileEntity");
 	static_assert(std::is_base_of<MobileEntity<Geography::LatLng>, USER>::value, "USER must be derived from MobileEntity");
 	
@@ -42,10 +42,11 @@ namespace Entity
 		std::shared_ptr<DUMMY> find_dummy_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::vector<std::shared_ptr<DUMMY>> find_all_dummies_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::shared_ptr<DUMMY const> read_dummy_by_id(entity_id id) const;
-		std::list<std::pair<entity_id, int>> get_entity_id_list_order_by_cross_count() const;
+		std::vector<std::pair<entity_id, int>> get_entity_id_list_order_by_cross_count() const;
 		std::vector<entity_id> get_entities_cross_with(entity_id id) const;
 		size_t get_dummy_count() const;
 		size_t get_total_cross_count_of_phase(int phase) const;
+		int get_phase_with_min_total_cross_count() const;
 		
 		void for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY>)>& execute_function);
 		void for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY const>)>& execute_function) const;

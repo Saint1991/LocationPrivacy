@@ -108,9 +108,9 @@ namespace Entity
 	/// 未生成のダミーも交差回数0として含まれるので注意
 	///</summary>
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::list<std::pair<entity_id, int>> EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_id_list_order_by_cross_count() const
+	std::vector<std::pair<entity_id, int>> EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_id_list_order_by_cross_count() const
 	{
-		std::list<std::pair<entity_id, int>> ret;
+		std::vector<std::pair<entity_id, int>> ret;
 		ret.push_back(std::make_pair(0U, user->get_cross_count()));
 
 		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
@@ -120,7 +120,7 @@ namespace Entity
 			ret.push_back(std::make_pair(id, cross_count));
 		}
 
-		ret.sort([](const std::pair<entity_id, int>& pair1, const std::pair<entity_id, int>& pair2) {
+		std::sort(ret.begin(), ret.end(), [](const std::pair<entity_id, int>& pair1, const std::pair<entity_id, int>& pair2) {
 			return pair1.second < pair2.second || (pair1.second == pair2.second && pair1.first < pair2.first);
 		});
 		return ret;
@@ -196,6 +196,25 @@ namespace Entity
 		return ret;
 	}
 
+	
+	///<summary>
+	/// 共有地点を設定されているエンティティ数が最小のphaseを取得する
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_phase_with_min_total_cross_count() const
+	{
+		int min_phase = -1;
+		int min_cross_count = INT_MAX;
+		for (int phase = 0; phase < timeslot->phase_count(); phase++) {
+			size_t cross_count = get_total_cross_count_of_phase(phase);
+			if (cross_count < min_cross_count) {
+				min_cross_count = cross_count;
+				min_phase = phase;
+			}
+		}
+		return min_phase;
+	}
+
 	///<summary>
 	/// 各ダミーについてexecute_functionを実行
 	///</summary>
@@ -236,7 +255,6 @@ namespace Entity
 		return ret;
 	}
 
-
 	///<summary>
 	/// phaseにおける経路確定済みエンティティからなる凸包領域の面積を計算します
 	/// ただしエンティティが1つの場合は0を，2つの場合は距離を返します．
@@ -244,19 +262,9 @@ namespace Entity
 	template <typename DUMMY, typename USER, typename POSITION_TYPE>
 	double EntityManager<DUMMY, USER, POSITION_TYPE>::calc_convex_hull_size_of_fixed_entities_of_phase(int phase) const
 	{
-		double size = 0.0;
 		std::vector<std::shared_ptr<POSITION_TYPE const>> positions = get_all_fixed_positions_of_phase(phase);
-		if (positions.size() <= 1) return size;
-		
-		//LatLngの派生クラスの場合
-		if (size = std::is_base_of<Geography::LatLng, POSITION_TYPE>::value) {
-			size = positions.size() == 2 ? Geography::dist(*positions->at(0), *positions->at(1)) : Geography::GeoCalculation::calc_convex_hull_size(positions);
-		}
-		//Coordinateの場合
-		else if (std::is_same<Graph::Coordinate, POSITION_TYPE>::value) {
-			size = positions.size() == 2 ? Graph::dist(*positions->at(0), *positions->at(1)) : Graph::GraphUtility::calc_convex_hull_size(positions);
-		}
-		return size;
+		if (positions.size() <= 1) return 0.0;
+		return positions.size() == 2 ? Geography::dist(*positions.at(0), *positions.at(1)) : Geography::GeoCalculation::calc_convex_hull_size(positions);
 	}
 
 	///<summary>

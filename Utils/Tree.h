@@ -12,7 +12,7 @@
 namespace Graph
 {
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	class PrefixTree
+	class Tree
 	{
 	static_assert(std::is_base_of<Node<NODE_DATA, EDGE>, NODE>::value, "template type NODE must be derived from Node<NODE_DATA, EDGE>");
 	protected:
@@ -37,20 +37,18 @@ namespace Graph
 		friend class breadth_first_const_iterator;
 		#pragma endregion
 
-		PrefixTree();
-		PrefixTree(const PrefixTree& t);
-		virtual ~PrefixTree();
+		Tree();
+		Tree(const Tree& t);
+		virtual ~Tree();
 
 		void initialize(std::shared_ptr<NODE_DATA> root_data = nullptr);
 
 		template <typename ITER_TYPE> ITER_TYPE root();
 		template <typename CONST_ITER_TYPE> CONST_ITER_TYPE const_root() const;
-		template <typename ITER_TYPE> ITER_TYPE end();
-		template <typename CONST_ITER_TYPE> CONST_ITER_TYPE const_end() const;
 		template <typename ITER_TYPE> ITER_TYPE get_iter_by_id(node_id id);
 	};
 }
 
-#include "PrefixTree.hpp"
+#include "Tree.hpp"
 
 

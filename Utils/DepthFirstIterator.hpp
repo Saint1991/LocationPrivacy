@@ -28,11 +28,11 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	DepthFirstIterator<NODE, NODE_DATA, EDGE> DepthFirstIterator<NODE, NODE_DATA, EDGE>::operator++()
 	{
-		if (stack.size() == 0) return PrefixTree<NODE, NODE_DATA, EDGE>::DepthFirstIterator(-1, nullptr);
+		if (stack.size() == 0) return Tree<NODE, NODE_DATA, EDGE>::DepthFirstIterator(-1, nullptr);
 		node_id id = stack.top();
 		stack.pop();
 
-		PrefixTree<NODE, NODE_DATA, EDGE>::DepthFirstIterator ret(id, node_collection);
+		Tree<NODE, NODE_DATA, EDGE>::DepthFirstIterator ret(id, node_collection);
 
 		node->rfor_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();

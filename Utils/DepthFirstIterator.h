@@ -1,6 +1,6 @@
 #pragma once
 #include "stdafx.h"
-#include "PrefixTree.h"
+#include "Tree.h"
 #include "BaseIterator.h"
 
 namespace Graph

@@ -34,6 +34,7 @@ namespace Map
 		const std::string name() const;
 		double lat() const;
 		double lng() const;
+		Geography::LatLng get_point() const;
 
 		bool set_relation(Graph::node_id id1, double distance_to1, Graph::node_id id2, double distance_to2);
 		bool set_relation(std::pair<Graph::node_id, double> relation1, std::pair<Graph::node_id, double> relation2);

@@ -95,6 +95,14 @@ namespace Map
 
 
 	///<summary>
+	/// LatLng‚ÌŽæ“¾
+	///</summary>
+	Geography::LatLng BasicPoi::get_point() const
+	{
+		return data->get_position();
+	}
+
+	///<summary>
 	/// Ú‘±ŠÖŒW‚ðÝ’è‚µ‚Ü‚·
 	/// Šù‘¶‚ÌÚ‘±ŠÖŒW‚ª‚ ‚Á‚½ê‡‚Í‚»‚ê‚ðíœ‚µ‚ÄV‚µ‚¢’l‚ðÝ’è‚µ‚Ü‚·
 	/// •Ð•û‚Å‚àÚ‘±‚ª‚¤‚Ü‚­‚¢‚©‚È‚©‚Á‚½ê‡‚Ífalse‚ð•Ô‚µ‚Ü‚·

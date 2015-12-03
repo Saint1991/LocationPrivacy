@@ -354,12 +354,6 @@
     <ClInclude Include="BreadthFirstConstIterator.h">
       <Filter>ヘッダー ファイル\Graph\Tree</Filter>
     </ClInclude>
-    <ClInclude Include="PrefixTree.h">
-      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="PrefixTree.hpp">
-      <Filter>ソース ファイル\Graph\Tree</Filter>
-    </ClInclude>
     <ClInclude Include="Sequence.h">
       <Filter>ヘッダー ファイル\Collection</Filter>
     </ClInclude>
@@ -414,9 +408,6 @@
     <ClInclude Include="ARCountCalculationModule.h">
       <Filter>ヘッダー ファイル\Evaluation\AR</Filter>
     </ClInclude>
-    <ClInclude Include="CrossInfo.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="ARSizeCalculationModule.h">
       <Filter>ヘッダー ファイル\Evaluation\AR</Filter>
     </ClInclude>
@@ -446,6 +437,24 @@
     </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="SequentialTree.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="SequentialTreeNode.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossInfo.h">
+      <Filter>ヘッダー ファイル\Evaluation\MTC</Filter>
+    </ClInclude>
+    <ClInclude Include="SequentialTree.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -539,9 +548,6 @@
     <ClCompile Include="PreferenceRequirement.cpp">
       <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
-    <ClCompile Include="CrossInfo.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="MTCCalculationModule.cpp">
       <Filter>ソース ファイル\Evaluation\MTC</Filter>
     </ClCompile>
@@ -568,6 +574,9 @@
     </ClCompile>
     <ClCompile Include="GraphUtility.cpp">
       <Filter>ソース ファイル\Graph\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="CrossInfo.cpp">
+      <Filter>ソース ファイル\Evaluation\MTC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

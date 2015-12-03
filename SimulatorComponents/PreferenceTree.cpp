@@ -8,7 +8,7 @@ namespace User
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	PreferenceTree::PreferenceTree() : Graph::PrefixTree<PreferenceTreeNode, User::category_id, Graph::BasicEdge>()
+	PreferenceTree::PreferenceTree() : Graph::SequentialTree<PreferenceTreeNode, User::category_id>()
 	{
 		initialize();
 	}
@@ -17,7 +17,7 @@ namespace User
 	///<summary>
 	///  コピーコンストラクタ
 	///</summary>
-	PreferenceTree::PreferenceTree(const PreferenceTree& t) : Graph::PrefixTree<PreferenceTreeNode, User::category_id, Graph::BasicEdge>(t)
+	PreferenceTree::PreferenceTree(const PreferenceTree& t) : Graph::SequentialTree<PreferenceTreeNode, User::category_id>(t)
 	{
 		
 	}
@@ -35,19 +35,12 @@ namespace User
 	///</summary>
 	Collection::Sequence<category_id> PreferenceTree::make_prefix_by_node(std::shared_ptr<PreferenceTreeNode const> node) const
 	{
-		
-		Graph::node_id current_node_id = node->get_id();
-		std::shared_ptr<PreferenceTreeNode const> current_node = node;
-		
-		Collection::Sequence<category_id> sequence;
-		while (current_node != nullptr && current_node_id != 0 && current_node_id != -1) {
-			sequence.push_back(current_node->category_id());
-			current_node_id = current_node->get_parent();
-			current_node = node_collection->read_by_id(current_node_id);
+		Collection::Sequence<std::shared_ptr<PreferenceTreeNode const>> sequence = get_sequence_by_node(node);
+		Collection::Sequence<category_id> ret(sequence.size());
+		for (Collection::Sequence<std::shared_ptr<PreferenceTreeNode const>>::const_iterator iter = sequence.begin(); iter != sequence.end(); iter++) {
+			ret.push_back((*iter)->category_id());
 		}
-
-		std::reverse(sequence.begin(), sequence.end());
-		return sequence;
+		return ret;
 	}
 
 
@@ -76,18 +69,6 @@ namespace User
 		return *current_node;
 	}
 
-	///<summary>
-	/// depthの階層にあるノードのIDを全て取得する
-	///</summary>
-	std::vector<Graph::node_id> PreferenceTree::get_all_nodes_by_depth(int depth) const
-	{
-		std::vector<Graph::node_id> ret;
-		node_collection->foreach([depth, &ret](std::shared_ptr<PreferenceTreeNode const> node) {
-			if (node->get_depth() == depth) ret.push_back(node->get_id());
-		});
-		return ret;
-	}
-
 
 	///<summary>
 	/// 木に含まれるプレフィックスの最大長を取得する
@@ -109,11 +90,10 @@ namespace User
 	{
 		double trajectory_count = root_node->count();
 
-		std::vector<Graph::node_id> node_ids = get_all_nodes_by_depth(sequence_length);
-		for (std::vector<Graph::node_id>::const_iterator target = node_ids.begin(); target != node_ids.end(); target++) {
-			std::shared_ptr<PreferenceTreeNode const> node = node_collection->read_by_id(*target);
-			Collection::Sequence<category_id> sequence = make_prefix_by_node(node);
-			double visit_count = node->count();
+		std::vector<std::shared_ptr<PreferenceTreeNode const>> nodes = get_all_nodes_in_depth(sequence_length);
+		for (std::vector<std::shared_ptr<PreferenceTreeNode const>>::const_iterator target = nodes.begin(); target != nodes.end(); target++) {
+			Collection::Sequence<category_id> sequence = make_prefix_by_node(*target);
+			double visit_count = (*target)->count();
 			double support = visit_count / trajectory_count;
 			execute_function(sequence, support);
 		}

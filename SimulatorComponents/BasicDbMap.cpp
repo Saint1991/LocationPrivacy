@@ -54,6 +54,8 @@ namespace Map
 	std::vector<std::shared_ptr<BasicPoi const>> BasicDbMap::find_pois_of_category_within_boundary(const Graph::box& boundary, const std::string& category_id) const
 	{
 		std::vector<std::shared_ptr<BasicPoi const>> within_boundary = Graph::Map<BasicMapNode, BasicPoi, BasicRoad>::find_pois_within_boundary(boundary);
+		if (category_id == User::ANY) return within_boundary;
+		
 		std::vector<std::shared_ptr<BasicPoi const>> ret;
 		for (std::vector<std::shared_ptr<BasicPoi const>>::iterator iter = within_boundary.begin(); iter != within_boundary.end(); iter++) {
 			if (*iter != nullptr && (*iter)->category_id() == category_id) ret.push_back(*iter);
@@ -91,6 +93,43 @@ namespace Map
 		Graph::box query_box(Graph::point(boundary.left, boundary.bottom), Graph::point(boundary.right, boundary.top));
 		return find_random_poi_within_boundary(query_box, category_id);
 	}
+
+
+	///<summary>
+	/// 基準点と移動可能な距離から，探索範囲を作成する
+	///</summary>
+	Graph::Rectangle<Geography::LatLng> create_reachable_rect(const Geography::LatLng& center, double reachable_distance)
+	{
+		double top = center.lat() + 0.000007 * reachable_distance;
+		double left = center.lng() - 0.000009 * reachable_distance;
+		double bottom = center.lat() - 0.000007 * reachable_distance;
+		double right = center.lng() + 0.000009 * reachable_distance;
+		return Graph::Rectangle<Geography::LatLng>(top, left, bottom, right);
+	}
+
+	///<summary>
+	/// point_basisを基準にcategory_sequenceとmove_distance_listの制約を満たす経路を全て取得する
+	/// 経路の長さはcategory_sequenceの長さに依存
+	///</summary>
+	std::shared_ptr<std::vector<std::vector<Graph::MapNodeIndicator>>> BasicDbMap::find_reachable_trajectory(const Graph::MapNodeIndicator& point_basis, const Collection::Sequence<User::category_id> category_sequence, const std::vector<double> reachable_distance_list) const
+	{
+		std::shared_ptr<std::vector<std::vector<Graph::MapNodeIndicator>>> ret = nullptr;
+
+		std::vector<double>::const_iterator reachable_distance = reachable_distance_list.begin();
+		std::shared_ptr<BasicPoi const> current_poi = get_static_poi(point_basis.id());
+		Geography::LatLng current_position = current_poi->get_point();
+		
+		for (Collection::Sequence<User::category_id>::const_iterator category = category_sequence.begin(); category != category_sequence.end() && reachable_distance != reachable_distance_list.end(); category++, reachable_distance++) {
+			Graph::Rectangle<Geography::LatLng> search_boundary = create_reachable_rect(current_position, *reachable_distance);
+			std::vector<std::shared_ptr<BasicPoi const>> pois = find_pois_of_category_within_boundary(search_boundary, *category);
+		}
+
+		return ret;
+	}
+
+	
+
+	
 }
 
 

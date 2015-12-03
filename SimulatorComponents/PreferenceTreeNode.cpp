@@ -8,7 +8,7 @@ namespace User
 	/// コンストラクタ
 	///</summary>
 	PreferenceTreeNode::PreferenceTreeNode(Graph::node_id id, Graph::node_id parent, unsigned int depth, const User::category_id& category) 
-		: Graph::Node<User::category_id, Graph::BasicEdge>(id, std::make_shared<User::category_id>(category)), counter(0.0), parent(parent), depth(depth)
+		: Graph::SequentialTreeNode<User::category_id>(id, parent, depth, std::make_shared<User::category_id>(category)), counter(0.0)
 	{
 
 	}
@@ -18,7 +18,7 @@ namespace User
 	/// コンストラクタ
 	///</summary>
 	PreferenceTreeNode::PreferenceTreeNode(Graph::node_id id, Graph::node_id parent, unsigned int depth, std::shared_ptr<User::category_id> category) 
-		: Graph::Node<User::category_id, Graph::BasicEdge>(id, category), counter(0.0), parent(parent), depth(depth)
+		: Graph::SequentialTreeNode<User::category_id>(id, parent, depth, category), counter(0.0)
 	{
 	}
 
@@ -27,8 +27,7 @@ namespace User
 	/// コンストラクタ
 	///</summary>
 	PreferenceTreeNode::PreferenceTreeNode(const PreferenceTreeNode& node) 
-		: Graph::Node<User::category_id, Graph::BasicEdge>(node),  
-		counter(node.count()), parent(node.get_parent()), depth(node.get_depth())
+		: Graph::SequentialTreeNode<User::category_id>(node), counter(node.count())
 	{
 	}
 
@@ -69,39 +68,5 @@ namespace User
 		counter += add_num;
 	}
 
-
-	///<summary>
-	/// 葉ノードか判定
-	///</summary>
-	bool PreferenceTreeNode::is_leef() const
-	{
-		return edge_list->size() == 0;
-	}
-
-
-	///<summary>
-	/// 親ノードを取得
-	///</summary>
-	Graph::node_id PreferenceTreeNode::get_parent() const
-	{
-		return parent;
-	}
-
-
-	///<summary>
-	/// 深さを取得する (ルートノードは深さ0扱い)
-	///</summary>
-	int PreferenceTreeNode::get_depth() const
-	{
-		return depth;
-	}
-
-	///<summary>
-	/// 子ノードのIDリストを取得する
-	///</summary>
-	std::vector<Graph::node_id> PreferenceTreeNode::get_children() const
-	{
-		return get_connecting_node_list();
-	}
 }
 

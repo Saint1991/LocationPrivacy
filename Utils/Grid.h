@@ -46,6 +46,7 @@ namespace Graph
 		void for_each_cell(const std::function<void(std::shared_ptr<Cell<POSITION_TYPE> const>)>& execute_function) const;
 		size_t get_point_count_within_cell(cell_id id) const;
 		std::vector<std::pair<cell_id, size_t>> get_point_count_of_all_cells() const;
+		std::vector<std::pair<cell_id, size_t>> get_cell_ids_order_by_point_count() const;
 
 		std::vector<cell_id> get_all_cell_id_with_min_point_count() const;
 		std::shared_ptr<Cell<POSITION_TYPE> const> read_cell_by_id(cell_id id) const;

@@ -9,6 +9,7 @@ namespace Collection
 	public:
 		Sequence();
 		Sequence(size_t n);
+		Sequence(size_t n, const T& init_element);
 		Sequence(const std::vector<T>& sequence);
 		~Sequence();
 
