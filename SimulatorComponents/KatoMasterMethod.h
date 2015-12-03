@@ -47,6 +47,7 @@ namespace Method {
 		void update_user_plan();
 
 	protected:
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> real_user;//実際のユーザ
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user;//予測されたユーザ
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> revising_dummy;
 

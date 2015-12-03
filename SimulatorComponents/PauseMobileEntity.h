@@ -23,7 +23,7 @@ namespace Entity
 	protected:
 		std::vector<double> pause_time_list;
 		std::vector<double> speed_list;
-		std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> pause_poi_info;//<poi_info,position>
+		std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> visited_poi_info;//<poi_info,position>
 		std::vector<std::pair<int,double>> pause_time_info;//<phase,rest_pause_time>
 
 	public:
@@ -41,10 +41,14 @@ namespace Entity
 		void set_random_speed(int phase, double average_speed, double speed_range);
 		
 		//poi_infoをgetやsetするメソッドを作成する
-		std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> get_pause_poi_info();
+		std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> get_visited_poi_info();
+		std::vector<std::pair<int, double>> get_pause_time_info();
 
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;
+
+		//std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
+
 	};
 
 	//明示的特殊化

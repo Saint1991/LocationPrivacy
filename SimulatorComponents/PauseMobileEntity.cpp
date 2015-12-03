@@ -116,10 +116,17 @@ namespace Entity
 	/// 停止poi情報を取得
 	///</summary>
 	template <typename POSITION_TYPE>
-	std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> PauseMobileEntity<POSITION_TYPE>::get_pause_poi_info() {
-		return pause_poi_info;
+	std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> PauseMobileEntity<POSITION_TYPE>::get_visited_poi_info() {
+		return visited_poi_info;
 	}
 
+	///<summary>
+	/// 停止情報を取得
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::vector<std::pair<int, double>> PauseMobileEntity<POSITION_TYPE>::get_pause_time_info() {
+		return pause_time_info;
+	}
 
 
 
@@ -151,7 +158,16 @@ namespace Entity
 		return not_set_phases.at(generator.uniform_distribution(0, not_set_phases.size() - 1));
 	}
 
-	
+	/*
+	///<summary>
+	/// トラジェクトリデータを変更可能な状態で取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::shared_ptr<TRAJECTORY_TYPE> MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_trajectory()
+	{
+		return trajectory;
+	}
+	*/
 	
 
 }

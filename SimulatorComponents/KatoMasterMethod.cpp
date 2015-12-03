@@ -12,6 +12,7 @@ namespace Method
 		:KatoBachelorMethod(map, user, requirement, time_manager),
 		predicted_user(nullptr)
 	{
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> real_user = entities->get_user();
 	}
 
 	///<summary>
@@ -127,7 +128,7 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_dummy_pause_position(int phase_id)
 	{
-
+		
 	}
 
 	///<summary>
@@ -154,12 +155,32 @@ namespace Method
 	
 	///<summary>
 	/// ユーザの行動プラン変更の判断
-	/// real_userとpredict_userの違いで見る
+	/// real_userとpredicted_userの違いで見る
 	/// pause_timeのチェック
 	///</summary>
 	bool KatoMasterMethod::check_user_pause_time()
 	{
-		return true;
+		int now_phase = 0;
+		
+		Geography::LatLng previous_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase - 1).second;
+		Geography::LatLng previous_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase - 1).second;
+		Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase).second;
+		Geography::LatLng now_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase).second;
+
+		//そもそも停止してなかったら判定の意味なし
+		if(previous_real_user_position != previous_predicted_user_position) {
+			return true;
+		}
+		else{
+			//両方のnow_phaseの位置が等しい場合は，プラン通り行動していると判定
+			if (now_real_user_position == now_predicted_user_position) {
+				return true;
+			}
+			//違う場合は，プランより行動が早いか遅いかをチェック
+			else {
+				return false;
+			}
+		}
 	}
 
 	///<summary>
@@ -218,7 +239,21 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_user_pause_time(int phase_id)
 	{
+		Geography::LatLng previous_real_user_position = *real_user->read_node_pos_info_of_phase(phase_id - 1).second;
+		Geography::LatLng previous_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(phase_id - 1).second;
+		Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(phase_id).second;
+		Geography::LatLng now_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(phase_id).second;
 
+		//userがプランより長く止まっている場合
+		//→predicted_userも現在phaseまで停止しているとする
+		if (previous_real_user_position == previous_predicted_user_position) {
+			//predicted_user->get_trajectory();
+
+		}
+		else {
+			
+		}
+	
 	}
 
 	///<summary>
