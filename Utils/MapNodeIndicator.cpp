@@ -4,6 +4,15 @@
 namespace Graph
 {
 
+	
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	MapNodeIndicator::MapNodeIndicator() : _id(INVALID), _type(NodeType::INVALID)
+	{
+
+	}
+
 	///<summary>
 	/// コンストラクタ
 	///</summary>

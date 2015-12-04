@@ -1,9 +1,25 @@
 
 namespace Graph
 {
+
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
 	template <typename NODE, typename DATA>
 	SequentialTree<NODE, DATA>::SequentialTree()
 	{
+		initialize();
+	}
+
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	template <typename NODE, typename DATA>
+	SequentialTree<NODE, DATA>::SequentialTree(std::shared_ptr<DATA> root_data)
+	{
+		initialize(root_data);
 	}
 
 	template <typename NODE, typename DATA>

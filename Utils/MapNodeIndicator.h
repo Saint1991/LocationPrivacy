@@ -23,6 +23,7 @@ namespace Graph
 		NodeType _type;
 
 	public:
+		MapNodeIndicator();
 		MapNodeIndicator(Graph::node_id id, NodeType type = POI);
 		~MapNodeIndicator();
 

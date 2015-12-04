@@ -15,6 +15,7 @@ namespace Graph
 		std::shared_ptr<NODE> operator*();
 		std::shared_ptr<NODE> operator->();
 		BaseIterator<NODE, NODE_DATA, EDGE> find_child_if(const std::function<bool(std::shared_ptr<NODE const>)>& compare);
+		void add_child(std::shared_ptr<NODE> child);
 	};
 }
 

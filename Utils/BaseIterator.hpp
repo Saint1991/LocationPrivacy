@@ -56,5 +56,15 @@ namespace Graph
 		return ret;
 	}
 
+
+	///<summary>
+	/// イテレータが指している要素の子要素に対して，childを追加する
+	///</summary>
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	void BaseIterator<NODE, NODE_DATA, EDGE>::add_child(std::shared_ptr<NODE> child)
+	{
+		node_collection->add(child);
+		node->connect_to(std::make_shared<Graph::BasicEdge>(child->get_id()));
+	}
 }
 

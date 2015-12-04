@@ -12,6 +12,7 @@ namespace Graph
 	static_assert(std::is_base_of<SequentialTreeNode<DATA>, NODE>::value, "Template type NODE must be derived from SequentialTreeNode");
 	public:
 		SequentialTree();
+		SequentialTree(std::shared_ptr<DATA> root_data);
 		~SequentialTree();
 
 		std::vector<std::shared_ptr<NODE const>> get_all_leaves() const;
