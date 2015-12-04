@@ -10,9 +10,9 @@ namespace Method
 	///</summary>
 	KatoMasterMethod::KatoMasterMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
 		:KatoBachelorMethod(map, user, requirement, time_manager),
-		predicted_user(nullptr)
+		real_user(nullptr), predicted_user(nullptr)
 	{
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> real_user = entities->get_user();
+		input_user = entities->get_user();
 	}
 
 	///<summary>
@@ -22,6 +22,24 @@ namespace Method
 	{
 	}
 	
+	///<summary>
+	/// input_user_planからユーザの行動を予測し，そのユーザを返す．
+	/// 加藤さん手法の場合は，各要素の生成確率によって割合を決める．
+	/// その割合に従って，実際のユーザを作成する
+	///</summary>
+	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMasterMethod::make_real_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user)
+	{
+		return real_user;
+	}
+
+	///<summary>
+	/// input_user_planからユーザの行動を予測し，そのユーザを返す．
+	/// POIのみ，順番を確率的に入れ替えるようにして，あとは適当
+	///</summary>
+	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMasterMethod::make_real_user_plan_for_comparing_hayashida_method(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user) {
+		return real_user;
+	}
+
 
 	
 	///<summary>
@@ -37,101 +55,140 @@ namespace Method
 	/// real_userとpredict_userの違いで見る
 	/// ユーザがプラン通りに行動している場合はNO_CHANGEをリターン
 	///</summary>
-	KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_plan()
+	std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_plan(int now_phase)
 	{
-		if (!check_user_pause_time()) { return PAUSE_TIME; }
-		else if (!check_user_speed()) { return PATH; }
-		else if (!check_user_path()) { return SPEED; }
-		else if (!check_user_position()) { return POSITION; }
-		else { return NO_CHANGE; }
+		//止まっている→停止時間の変更or停止地点の変更
+		if (/*もし片方でも停止していたら→停止時間変更の判断*/true) {
+			return check_user_pause_time(now_phase);
+		}
+		//動いていたら，
+		else {
+			if (/*もし線形補間した線の上に位置していたら，*/true) {
+				return check_user_speed(now_phase);
+			}
+			else {
+				return check_user_path(now_phase);
+			}
+		}
 	}
 	
-	///<summary>
-	/// ユーザの行動プラン変更の判断
-	/// real_userとpredicted_userの違いで見る
-	/// pause_timeのチェック
-	///</summary>
-	bool KatoMasterMethod::check_user_pause_time()
-	{
-		int now_phase = 0;
-		
-		Geography::LatLng previous_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase - 1).second;
-		Geography::LatLng previous_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase - 1).second;
-		Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase).second;
-		Geography::LatLng now_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase).second;
-
-		//そもそも停止してなかったら判定の意味なし
-		if(previous_real_user_position != previous_predicted_user_position) {
-			return true;
-		}
-		else{
-			//両方のnow_phaseの位置が等しい場合は，プラン通り行動していると判定
-			if (now_real_user_position == now_predicted_user_position) {
-				return true;
+		///<summary>
+		/// ユーザの行動プラン変更の判断
+		/// real_userとpredicted_userの違いで見る
+		/// pause_timeのチェック
+		///</summary>
+		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_pause_time(int now_phase)
+		{
+			//停止しているかどうかのフラグを作る？
+			Geography::LatLng previous_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase - 1).second;
+			Geography::LatLng previous_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase - 1).second;
+			Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase).second;
+			Geography::LatLng now_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase).second;
+			
+			double change_time = 0.0;
+			//もしプラン通り停止していたら，NO_CHANGE
+			if (/*もし両者の停止フラグが１なら，*/true) {
+				return std::make_pair(NO_CHANGE, change_time);
 			}
-			//違う場合は，プランより行動が早いか遅いかをチェック
+			else if(/*もし片方でも停止フラグが1なら*/true){
+				if (/*もしrealのほうが停止フラグが0で(出発していて)，predictが1なら*/true) {
+					//change_timeの差分を求める
+					return std::make_pair(SHORTER_PAUSE_TIME, change_time);
+				}
+				else {
+					//change_timeの差分を求める
+					return std::make_pair(LONGER_PAUSE_TIME, change_time);
+				}
+			}
+			//両方フラグが0なら，速度変更でなく，rest_time分をずれを検知
 			else {
-				return false;
+				if (/*移動距離がrealのほうが大きいなら*/true) {
+					//change_timeの差分を求める
+					return std::make_pair(SHORTER_PAUSE_TIME, change_time);
+				}
+				else {
+					//change_timeの差分を求める
+					return std::make_pair(LONGER_PAUSE_TIME, change_time);
+				}
 			}
 		}
-	}
+	
 
-	///<summary>
-	/// ユーザの行動プラン変更の判断
-	/// real_userとpredicted_userの違いで見る
-	/// 速度のチェック
-	///</summary>
-	bool KatoMasterMethod::check_user_speed()
-	{
-		return true;
-	}
+		///<summary>
+		/// ユーザの行動プラン変更の判断
+		/// real_userとpredicted_userの違いで見る
+		/// 速度のチェック
+		///</summary>
+		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_speed(int now_phase)
+		{
+			double change_time = 0.0;
 
-	///<summary>
-	/// ユーザの行動プラン変更の判断
-	/// real_userとpredicted_userの違いで見る
-	/// pathのチェック
-	///</summary>
-	bool KatoMasterMethod::check_user_path()
-	{
-		return true;
-	}
+			if (/*もし同じ場所にいいたら*/true) {
+				return std::make_pair(NO_CHANGE, change_time);
+			}
+			else {
+				if (/*もしrest_time分を考慮して，逆算して，速度が同じなら*/true) {
+					return check_user_pause_time(now_phase);
+				}
+				else {
+					if (/*移動距離がrealのほうが大きいなら*/true) {
+						//change_timeの差分を求める
+						return std::make_pair(SLOER_SPEED, change_time);
+					}
+					else {
+						//change_timeの差分を求める
+						return std::make_pair(FASTER_SPEED, change_time);
+					}
+				}
+			}
+		}
+
+		///<summary>
+		/// ユーザの行動プラン変更の判断
+		/// real_userとpredicted_userの違いで見る
+		/// pathのチェック
+		///</summary>
+		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_path(int now_phase)
+		{
+			double change_time = 0.0;
+			//change_timeを求める
+			return std::make_pair(PATH, change_time);
+		}
 
 
-	///<summary>
-	/// ユーザの行動プラン変更の判断
-	/// real_userとpredicted_userの違いで見る
-	/// 停止位置のチェック
-	///</summary>
-	bool KatoMasterMethod::check_user_position()
-	{
-		return true;
-	}
+		///<summary>
+		/// ユーザの行動プラン変更の判断
+		/// real_userとpredicted_userの違いで見る
+		/// 停止位置のチェック
+		///</summary>
+		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_position(int now_phase)
+		{
+			return std::make_pair(POSITION, 0.0);
+		}
 
-	///<summary>
-	/// input_user_planからユーザの行動を予測し，そのユーザを返す．
-	/// 加藤さん手法の場合は，各要素の生成確率によって割合を決める．
-	///</summary>
-	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMasterMethod::predict_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user_plan)
-	{
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user_plan;
-
-		return predicted_user_plan;
-	}
-
+		
 
 	///<summary>
 	/// ユーザの次の停止地点の到着時間を予測する
 	///</summary>
-	void KatoMasterMethod::revise_user_movement_plan(ChangeParameter check_parameter)
+	void KatoMasterMethod::update_user_plan(std::pair<ChangeParameter, double> check_parameter, int phase_id)
 	{
-
+		
 	}
 
 	///<summary>
 	/// ユーザの停止時間の修正
 	///</summary>
-	int KatoMasterMethod::revise_user_pause_time(int phase_id)
+	void KatoMasterMethod::update_user_pause_time(std::pair<ChangeParameter, double> check_parameter, int phase_id)
 	{
+		/*
+		if (check_parameter.first == SHORTER_PAUSE_TIME) {
+			//直前まで停止していた停止地点から，
+			//実際のユーザの位置まで，行動プラン通りの移動速度と移動経路で移動したものとみなし，移動時間を求め，実際の停止時間を逆算して求める．
+		}
+		else() {
+
+		}
 		Geography::LatLng previous_real_user_position = *real_user->read_node_pos_info_of_phase(phase_id - 1).second;
 		Geography::LatLng previous_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(phase_id - 1).second;
 		Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(phase_id).second;
@@ -147,15 +204,13 @@ namespace Method
 		else {
 			
 		}
-
-		return changes_in_arrival_time;
-	
+		*/
 	}
 
 	///<summary>
 	/// ユーザのパスの修正
 	///</summary>
-	void KatoMasterMethod::revise_user_path(int phase_id)
+	void KatoMasterMethod::update_user_path(std::pair<ChangeParameter, double> check_parameter, int phase_id)
 	{
 
 	}
@@ -163,7 +218,7 @@ namespace Method
 	///<summary>
 	/// ユーザの移動速度の修正
 	///</summary>
-	void KatoMasterMethod::revise_user_speed(int phase_id)
+	void KatoMasterMethod::update_user_speed(std::pair<ChangeParameter, double> check_parameter, int phase_id)
 	{
 
 	}
@@ -171,18 +226,12 @@ namespace Method
 	///<summary>
 	/// ユーザの停止位置の修正
 	///</summary>
-	void KatoMasterMethod::revise_user_pause_position(int phase_id)
+	void KatoMasterMethod::update_user_pause_position(std::pair<ChangeParameter, double> check_parameter, int phase_id)
 	{
 
 	}
 
-	///<summary>
-	/// ユーザの行動プランをアップデートする
-	///</summary>
-	void KatoMasterMethod::update_user_plan()
-	{
 
-	}
 
 	///<summary>
 	/// ダミーの行動プランを修正する
@@ -200,12 +249,12 @@ namespace Method
 	{
 
 		//前の値の保持
-		int previous_pause_time = revising_dummy->get_pause_time(phase_id);
-		int previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
+		double previous_pause_time = revising_dummy->get_pause_time(phase_id);
+		double previous_arrive_time = time_manager->time_of_phase(phase_id + 1);
 
 		if (std::abs(changes_in_arrival_time) > requirement->max_variation_of_pause_time)
 		{
-			int new_pause_time = changes_in_arrival_time > 0 ? previous_pause_time + requirement->max_variation_of_pause_time : previous_pause_time - requirement->max_variation_of_pause_time;
+			double new_pause_time = changes_in_arrival_time > 0 ? previous_pause_time + requirement->max_variation_of_pause_time : previous_pause_time - requirement->max_variation_of_pause_time;
 			revising_dummy->set_pause_time(phase_id, new_pause_time);
 		}
 		else
@@ -301,7 +350,7 @@ namespace Method
 	void KatoMasterMethod::initialize()
 	{
 		//ユーザの動きの変更→新しく作る．
-		predicted_user = predict_user_plan(entities->get_user());
+		predicted_user = make_real_user_plan(entities->get_user());
 	}
 
 
@@ -316,8 +365,8 @@ namespace Method
 			for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
 			{
 				if (check_going_pause_position_in_plan()) {
-					if (check_user_plan() != NO_CHANGE) {
-						revise_user_movement_plan(check_user_plan());//次の停止地点の到着時間を予測
+					if (check_user_plan(phase_id).second != 0.0) {
+						update_user_plan(check_user_plan(phase_id), phase_id);//次の停止地点の到着時間を予測
 						revise_dummy_movement_plan(phase_id);//dummyの行動プランの更新
 						//update_user_plan();//ユーザの行動プランを更新
 					}

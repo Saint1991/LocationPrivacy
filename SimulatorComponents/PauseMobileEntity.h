@@ -23,8 +23,14 @@ namespace Entity
 	protected:
 		std::vector<double> pause_time_list;
 		std::vector<double> speed_list;
-		std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> visited_poi_info;//<poi_info,position>
-		std::vector<std::pair<int,double>> pause_time_info;//<phase,rest_pause_time>
+		struct VisitedPoiInfo
+		{
+			std::pair<Graph::MapNodeIndicator, Geography::LatLng> visited_poi;//–K–âPOI
+			std::pair<std::pair<Graph::MapNodeIndicator, Geography::LatLng>, double/*trajectory*/> next_visited_poi_info;//Ÿ‚É–K–â—\’è‚ÌPOI‚Æ‚»‚ÌŒo˜H
+			std::vector<int> pause_phase;//–K–âPOI‚É‚¨‚¯‚é’â~phase
+			double starting_speed;//–K–âPOI‚Ìo”­‘¬“x
+			double rest_pause_time_when_departing;//o”­‚µ‚½‚Ì—]‚Á‚½’â~ŠÔ
+		};
 
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
@@ -40,10 +46,6 @@ namespace Entity
 		void set_speed(int phase, double speed);
 		void set_random_speed(int phase, double average_speed, double speed_range);
 		
-		//poi_info‚ğget‚âset‚·‚éƒƒ\ƒbƒh‚ğì¬‚·‚é
-		std::vector<std::pair<std::vector<int>, std::pair<Graph::MapNodeIndicator, Geography::LatLng>>> get_visited_poi_info();
-		std::vector<std::pair<int, double>> get_pause_time_info();
-
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;
 

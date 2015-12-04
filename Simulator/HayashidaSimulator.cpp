@@ -89,13 +89,11 @@ namespace Simulation
 	}
 
 	///<summary>
-	/// ランダムでユーザを生成する
+	/// ランダムでinputしたユーザを生成する
+	/// ただし，現在は最短経路で移動
 	///</summary>
-	void HayashidaSimulator::random_user()
+	void HayashidaSimulator::random_user_moving_shortest_path()
 	{
-		//randomに経路を設定できるようにしたい！！
-		//input_user_planを作る
-		//get_userが何かをはっきりさせる．
 		Math::Probability generator;
 
 		//rect_init_langには始点にしたい範囲をインスタンスで入力
@@ -241,6 +239,45 @@ namespace Simulation
 		std::cout << "Success Creating Random User" << std::endl;
 	}
 
+	///<summary>
+	/// POIのみの入力で，ユーザを作成する．
+	///</summary>
+	void HayashidaSimulator::make_input_user_using_input_POI() {
+		
+		//----------------------------time_managerの生成-------------------------------------//
+		int phase_id = 0;
+		std::unique_ptr<std::vector<time_t>> timeslots = std::make_unique<std::vector<time_t>>();
+		for (int time = 0; time <= end_time; time += SERVICE_INTERVAL) {
+			timeslots->push_back(time);
+		}
+		time_manager = std::make_shared<Time::TimeSlotManager>(std::move(timeslots));
+		user = std::make_shared<Entity::PauseMobileEntity<Geography::LatLng>>(0, time_manager);
+
+		//---------------------------POIのの訪問順序を決定---------------------------------------------
+		//poi_rangには，POIを選択したい範囲をインスタンスで入力
+		Graph::Rectangle<Geography::LatLng> poi_range(BASE_LAT + 0.5*length_of_all_POI_rect, BASE_LNG - 0.5*length_of_all_POI_rect, BASE_LAT - 0.5*length_of_all_POI_rect, BASE_LNG + 0.5*length_of_all_POI_rect);
+				
+		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = get_pois_list(poi_range);
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = random_pois_list.begin();
+
+		std::vector<std::shared_ptr<Map::BasicPoi const>> visited_pois;
+		for (int i = 0; i < POI_NUM; i++,now_poi++) {
+			visited_pois.push_back(*now_poi);
+		}
+
+		std::shared_ptr<Map::BasicPoi const> start_poi = visited_pois.at(0);//始点を決める
+														
+		//visited_poisを用いて，始点がstart_poiの巡回セールスマン問題を解く
+
+
+		Math::Probability generator;
+		int dest_rest_time = 0;//phaseの到着時間と実際の到着時間の差分.最初だけ0
+	}
+
+
+	///<summary>
+	/// ダミーのtrajectoryを出力する
+	///</summary>
 	void HayashidaSimulator::export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id)
 	{
 		IO::FileExporter dummy_exporter({
@@ -256,6 +293,9 @@ namespace Simulation
 	}
 
 
+	///<summary>
+	/// ダミーのtrajectoryを出力する
+	///</summary>
 	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer)
 	{
 		
@@ -292,7 +332,7 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::create_trajectories()
 	{
-		random_user();
+		random_user_moving_shortest_path();
 	}
 
 
