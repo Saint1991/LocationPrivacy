@@ -426,6 +426,9 @@
     <ClInclude Include="ARSizeCalculationModule.hpp">
       <Filter>ソース ファイル\Evaluation</Filter>
     </ClInclude>
+    <ClInclude Include="RevisableTrajectory.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -544,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="MTCCalculationModule.cpp">
       <Filter>ソース ファイル\Evaluation</Filter>
+    </ClCompile>
+    <ClCompile Include="RevisableTrajectory.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
