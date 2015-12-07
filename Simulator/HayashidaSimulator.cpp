@@ -295,7 +295,7 @@ namespace Simulation
 		user->set_random_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
 		user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
      	//--------------二個目以降の点を決定．forで，確保したいpoiの個数分をループさせる-------------------
-		for (int i = 0; i < POI_NUM; i++)
+		for (int i = 1; i < POI_NUM; i++)
 		{
 			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
 			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
@@ -331,9 +331,9 @@ namespace Simulation
 			
 			//目的地の登録
 			phase_id++;
-			user->set_position_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
 			user->set_position_of_phase(phase_id, (*next_poi)->get_id(), map->get_static_poi((*next_poi)->get_id())->data->get_position());
 			user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+			user->set_random_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
 
 			now_poi++;
 			next_poi++;
@@ -411,7 +411,7 @@ namespace Simulation
 	///<summary>
 	/// ダミーのtrajectoryを出力する
 	///</summary>
-	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer)
+	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
 	{
 		
 		entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> dummy) {
@@ -429,8 +429,6 @@ namespace Simulation
 			dummies_exporter.export_lines(dummy_exportable_positions);
 		});
 	}
-
-
 
 	///<summary>
 	/// map_dataを生成する
@@ -502,9 +500,7 @@ namespace Simulation
 		for (std::list<std::shared_ptr<Requirement::KatoMethodRequirement const>>::iterator requirement = requirements.begin(); requirement != requirements.end(); requirement++)
 		{
 			Method::KatoBachelorMethod kato_bachelor_method(map,user,*requirement,time_manager);
-			kato_bachelor_method.set_execution_callback([&](std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer) {
-				export_dummies_trajectory(entities, timer);
-			});
+			kato_bachelor_method.set_execution_callback(std::bind(&HayashidaSimulator::export_dummies_trajectory,this,std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			kato_bachelor_method.run();
 		}
 	}

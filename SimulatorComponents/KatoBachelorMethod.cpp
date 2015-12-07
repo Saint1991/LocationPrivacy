@@ -651,7 +651,7 @@ namespace Method
 		initialize();
 
 		//ここが実行部分(各時刻のダミー位置を計算する)
-		decide_dummy_positions();
+		//decide_dummy_positions();
 
 		//ここで計測を終了
 		timer->end();

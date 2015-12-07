@@ -45,7 +45,7 @@ namespace Simulation
 		static constexpr int POI_NUM = 4;
 		static constexpr double BASE_LAT = 35.655;//出発地の目安の緯度．全POIの平均値
 		static constexpr double BASE_LNG = 139.700;//出発地の目安の経度．全POIの平均値
-		int end_time = 5000;//目安の終了時間．経路を設定し終えて，時間が余った分は削除．
+		int end_time = 8100;//目安の終了時間．経路を設定し終えて，時間が余った分は削除．
 		double length_of_rect = 0.005;//ひとつ分のPOIを選ぶ時の範囲．適切な範囲内の緯度経度差を書く.
 		double length_of_all_POI_rect = 0.05;
 	#pragma endregion 要求パラメータ(ダミーのrequirementと同じにすること)
@@ -67,7 +67,7 @@ namespace Simulation
 		std::vector<std::shared_ptr<Map::BasicPoi const>> traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois);
 		
 		void export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id);
-		void export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer);
+		void export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
 		void export_MTC();
 
 
