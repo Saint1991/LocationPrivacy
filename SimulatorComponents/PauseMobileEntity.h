@@ -49,6 +49,8 @@ namespace Entity
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;
 
+		void set_visit_POI_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position);
+
 		//std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
 
 	};

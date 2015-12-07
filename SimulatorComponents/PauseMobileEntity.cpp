@@ -140,6 +140,15 @@ namespace Entity
 		return not_set_phases.at(generator.uniform_distribution(0, not_set_phases.size() - 1));
 	}
 
+	///<summary>
+	/// 交差が設定されていない時刻を一つランダムに取得する
+	/// 設定されていないphaseが存在しない場合はINVALIDを返す
+	///</summary>
+	template <typename POSITION_TYPE>
+	void PauseMobileEntity<POSITION_TYPE>::set_visit_POI_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position)
+	{
+
+	}
 	/*
 	///<summary>
 	/// トラジェクトリデータを変更可能な状態で取得する

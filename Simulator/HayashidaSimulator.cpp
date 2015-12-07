@@ -88,6 +88,31 @@ namespace Simulation
 		*distance += service_interval * pause_position_speed;
 	}
 
+
+	///<summary>
+	/// time_managerの生成
+	///</summary>
+	std::shared_ptr<Time::TimeSlotManager> HayashidaSimulator::create_time_manager() {
+		std::unique_ptr<std::vector<time_t>> timeslots = std::make_unique<std::vector<time_t>>();
+		for (int time = 0; time <= end_time; time += SERVICE_INTERVAL) {
+			timeslots->push_back(time);
+		}
+
+		return std::make_shared<Time::TimeSlotManager>(std::move(timeslots));
+	}
+
+	///<summary>
+	/// 停止時間とその速度のセット
+	///</summary>
+	void HayashidaSimulator::set_pause_time_and_speed_of_visit_POI(int phase_id, div_t variable_of_converted_pause_time_to_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi) {
+		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot, phase_id < time_manager->phase_count(); i++)
+		{
+			phase_id++;
+			user->set_position_of_phase(phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
+			user->set_speed(phase_id, 0);
+		}
+	}
+
 	///<summary>
 	/// ランダムでinputしたユーザを生成する
 	/// ただし，現在は最短経路で移動
@@ -99,16 +124,12 @@ namespace Simulation
 		//rect_init_langには始点にしたい範囲をインスタンスで入力
 		Graph::Rectangle<Geography::LatLng> rect_init_range(BASE_LAT + 0.5*length_of_rect, BASE_LNG - 0.5*length_of_rect, BASE_LAT - 0.5*length_of_rect, BASE_LNG + 0.5*length_of_rect);
 	 
-		//----------------------------time_managerの生成-------------------------------------//
-		int phase_id = 0;
-		std::unique_ptr<std::vector<time_t>> timeslots = std::make_unique<std::vector<time_t>>();
-		for (int time = 0; time <= end_time; time += SERVICE_INTERVAL) {
-			timeslots->push_back(time);
-		}
-		time_manager = std::make_shared<Time::TimeSlotManager>(std::move(timeslots));
+		//----------------------------time_managerとuserの生成-------------------------------------//
+		time_manager = create_time_manager();
 		user = std::make_shared<Entity::PauseMobileEntity<Geography::LatLng>>(0, time_manager);
 		
 		//---------------------------最初の点を決定---------------------------------------------
+		int phase_id = 0;
 		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = get_pois_list(rect_init_range);
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = random_pois_list.begin();
 		user->set_position_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
@@ -120,7 +141,6 @@ namespace Simulation
 		for (int i = 1; i < POI_NUM; i++)
 		{
 			//次の候補点の範囲を求める
-			Math::Probability generator;
 			double distance_between_positions = generator.uniform_distribution(150.0, 350.0);
 			double angle_of_positions = generator.uniform_distribution(-(M_PI), M_PI_4);
 			Geography::LatLng next_candidate_poi_position_range
@@ -144,13 +164,8 @@ namespace Simulation
 			div_t variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
 			
 			//停止時間分，各phaseに停止場所と移動速度(0)を登録
-			for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
-			{
-				phase_id++;
-				user->set_position_of_phase(phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
-				user->set_speed(phase_id, 0);
-			}
-
+			set_pause_time_and_speed_of_visit_POI(phase_id, variable_of_converted_pause_time_to_phase, now_poi);
+			
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
 			//速度はphaseで埋める前を参照しなければならないことに注意
@@ -210,14 +225,9 @@ namespace Simulation
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
 
 		int last_phase = time_manager->find_phase_of_time(end_time);
+		
 		//停止時間分，各phaseに停止場所と移動速度(0)を登録
-		for (int i = 0; i < last_variable_of_converted_pause_time_to_phase.quot; i++)
-		{
-			if (phase_id == last_phase) break;
-			phase_id++;
-			user->set_position_of_phase(phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
-			user->set_speed(phase_id, 0);
-		}
+		set_pause_time_and_speed_of_visit_POI(phase_id, last_variable_of_converted_pause_time_to_phase, now_poi);
 
 		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
 		//速度はphaseで埋める前を参照しなければならないことに注意
@@ -235,9 +245,9 @@ namespace Simulation
 			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
 		}
 
-
 		std::cout << "Success Creating Random User" << std::endl;
 	}
+
 
 	///<summary>
 	/// POIのみの入力で，ユーザを作成する．
@@ -245,16 +255,12 @@ namespace Simulation
 	void HayashidaSimulator::make_input_user_using_input_POI() {
 		
 		//----------------------------time_managerの生成-------------------------------------//
-		int phase_id = 0;
-		std::unique_ptr<std::vector<time_t>> timeslots = std::make_unique<std::vector<time_t>>();
-		for (int time = 0; time <= end_time; time += SERVICE_INTERVAL) {
-			timeslots->push_back(time);
-		}
-		time_manager = std::make_shared<Time::TimeSlotManager>(std::move(timeslots));
+		time_manager = create_time_manager();
 		user = std::make_shared<Entity::PauseMobileEntity<Geography::LatLng>>(0, time_manager);
 
 		//---------------------------POIのの訪問順序を決定---------------------------------------------
 		//poi_rangには，POIを選択したい範囲をインスタンスで入力
+		int phase_id = 0;
 		Graph::Rectangle<Geography::LatLng> poi_range(BASE_LAT + 0.5*length_of_all_POI_rect, BASE_LNG - 0.5*length_of_all_POI_rect, BASE_LAT - 0.5*length_of_all_POI_rect, BASE_LNG + 0.5*length_of_all_POI_rect);
 				
 		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = get_pois_list(poi_range);
