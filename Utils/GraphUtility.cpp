@@ -40,7 +40,7 @@ const std::vector<std::shared_ptr<Graph::Coordinate const>> Graph::GraphUtility:
 	});
 
 	std::vector<std::shared_ptr<Graph::Coordinate const>> lower_list;
-	std::unique_ptr<std::vector<std::shared_ptr<Graph::Coordinate const>>> upper_list;
+	std::unique_ptr<std::vector<std::shared_ptr<Graph::Coordinate const>>> upper_list = std::make_unique<std::vector<std::shared_ptr<Graph::Coordinate const>>>();
 
 	//Lower Hull‚ÌŒvŽZ
 	for (std::vector<std::shared_ptr<Graph::Coordinate const>>::const_iterator iter = point_list.begin(); iter != point_list.end(); iter++) {		

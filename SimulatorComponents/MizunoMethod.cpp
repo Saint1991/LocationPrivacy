@@ -87,7 +87,9 @@ namespace Method
 			std::vector<trajectory_score_set> trajectory_scores = calc_trajectory_score_set(current_dummy_id, sequence_scores);
 			
 			//経路が生成できなかった場合は例外を投げて終了 (暫定的処置)
-			if (trajectory_scores.size() == 0) throw Framework::TrajectoryNotFoundException("Cannot found valid trajectory following preference tree");
+			if (trajectory_scores.size() == 0) {
+				throw Framework::TrajectoryNotFoundException("trajectory_scores is empty");
+			}
 			std::sort(trajectory_scores.begin(), trajectory_scores.end(), [](const trajectory_score_set& left, const trajectory_score_set& right) {
 				return left.second > right.second;
 			});
@@ -108,6 +110,8 @@ namespace Method
 			std::shared_ptr<Entity::Dummy<Geography::LatLng>> current_dummy = entities->get_dummy_by_id(current_dummy_id);
 			std::vector<Graph::MapNodeIndicator> route = trajectory.first;
 			int cross_phase = trajectory.second.first;
+
+			std::cout << "Dummy" << current_dummy_id << ": " << std::endl;
 			for (int phase = 0; phase < route.size(); phase++) {
 				Graph::MapNodeIndicator node_id = route.at(phase);
 				std::shared_ptr<Map::BasicPoi const> visit_poi = map->get_static_poi(node_id.id());
@@ -125,6 +129,7 @@ namespace Method
 
 	///<summary>
 	/// シーケンスと共有地点の候補の組<S, SP>に対するスコアの計算
+	/// 負になる場合への対応が必要
 	///</summary>
 	std::vector<std::pair<std::pair<Collection::Sequence<User::category_id>, Entity::cross_target>, double>> MizunoMethod::calc_sequence_score_set(Entity::entity_id current_dummy_id)
 	{
@@ -183,7 +188,7 @@ namespace Method
 						
 						//負のものの対応は保留で一旦正のもののみ採用
 						double score = total_sequence_score(score_pref, score_cross);
-						if (score >= 0) ret.push_back(std::make_pair(std::make_pair(prefix, cross), score));
+						ret.push_back(std::make_pair(std::make_pair(prefix, cross), score));
 					}
 				}
 			});
@@ -222,14 +227,19 @@ namespace Method
 	
 	///<summary>
 	/// 計算したカテゴリシーケンスに基づいて実際の移動経路を生成する
+	/// sequence_scoreが負の場合の対応が必要なのでここは改善の余地アリ
 	///</summary>
 	std::vector<std::pair<std::pair<std::vector<Graph::MapNodeIndicator>, Entity::cross_target>, double>> MizunoMethod::calc_trajectory_score_set(Entity::entity_id current_dummy_id, const std::vector<sequence_score_set>& sequence_scores)
 	{
 		std::vector<trajectory_score_set> ret;
-		std::vector<Graph::MapNodeIndicator> ret_trajectory(time_manager->phase_count(), Graph::MapNodeIndicator(INVALID, Graph::NodeType::INVALID));
 
 		std::random_device rd;
 		std::mt19937_64 generator(rd());
+
+		auto max_score_element = std::max_element(sequence_scores.begin(), sequence_scores.end(), [](const sequence_score_set& largest, const sequence_score_set& target) {
+			return largest.second < target.second;
+		});
+		bool is_all_sequence_score_negative = max_score_element->second < 0;
 
 		//実際の経路の生成
 		for (std::vector<sequence_score_set>::const_iterator iter = sequence_scores.begin(); iter != sequence_scores.end(); iter++) {
@@ -246,13 +256,28 @@ namespace Method
 
 			//基準の点を基にトラジェクトリ生成の嗜好を繰り返す
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>> trajectory = nullptr;
-			for (int i = 0; i <= MAX_TRAJECTORY_CREATION_TRIAL; i++) {
+			for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL; i++) {
 				trajectory = create_trajectory(current_dummy_id, basis, category_sequence);
+				if (trajectory != nullptr) break;
+			}
+			if (trajectory == nullptr) {
+				continue;
 			}
 			
-			if (trajectory == nullptr) continue;
-			
 			//ここでトラジェクトリに対してスコアを計算してretに追加する
+			double trajectory_score = 0.0;
+			int achive_count = 0;
+			double setting_anonymous_area = setting_anonymous_areas->at(current_dummy_id - 1);
+			for (int phase = 0; phase < time_manager->phase_count(); phase++) {
+				std::vector<std::shared_ptr<Geography::LatLng const>> positions = entities->get_all_fixed_positions_of_phase(phase);
+				std::shared_ptr<Geography::LatLng const> new_pos = std::make_shared<Geography::LatLng const>(map->get_static_poi(trajectory->at(phase).id())->get_point());
+				positions.push_back(new_pos);
+				double ar_size = positions.size() > 2 ? Geography::GeoCalculation::calc_convex_hull_size(positions) : Geography::GeoCalculation::lambert_distance(*positions.at(0), *positions.at(1));
+				if (ar_size >= setting_anonymous_area) achive_count++;
+			}
+			trajectory_score = (double)achive_count / time_manager->phase_count() * score;
+			if (is_all_sequence_score_negative) trajectory_score *= score;
+			ret.push_back(std::make_pair(std::make_pair(*trajectory, cross), trajectory_score));
 		}
 
 		return ret;
@@ -319,7 +344,7 @@ namespace Method
 			}
 
 			//該当するカテゴリの点が見つからなかった場合
-			if (visit_target == nullptr) throw Framework::TrajectoryNotFoundException("Trajectory Can't Created");
+			if (visit_target == nullptr) throw Framework::TrajectoryNotFoundException("There is no POI with the certain category");
 		}
 
 		return std::make_pair(phase_basis, point_basis);
@@ -366,8 +391,11 @@ namespace Method
 
 			//基準点を基に経路を決定
 			Collection::Sequence<User::category_id> any_category_sequence(time_manager->phase_count(), User::ANY);
-			std::shared_ptr<std::vector<Graph::MapNodeIndicator>> trajectory = create_trajectory(current_dummy_id, std::make_pair(target_phase, point_basis), any_category_sequence);
-
+			std::shared_ptr<std::vector<Graph::MapNodeIndicator>> trajectory = nullptr;
+			for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL; i++) {
+				trajectory = create_trajectory(current_dummy_id, std::make_pair(target_phase, point_basis), any_category_sequence);
+				if (trajectory != nullptr) break;
+			}
 			if (trajectory == nullptr) throw Framework::TrajectoryNotFoundException("Can't found reachable Trajectory");
 
 			//経路の登録
@@ -383,6 +411,17 @@ namespace Method
 		}
 	}
 
+	///<summary>
+	/// 基準点と移動可能な距離から，探索範囲を作成する
+	///</summary>
+	Graph::Rectangle<Geography::LatLng> create_reachable_rect(const Geography::LatLng& center, double reachable_distance)
+	{
+		double top = center.lat() + 0.000009 * reachable_distance;
+		double left = center.lng() - 0.000011 * reachable_distance;
+		double bottom = center.lat() - 0.000009 * reachable_distance;
+		double right = center.lng() + 0.000011 * reachable_distance;
+		return Graph::Rectangle<Geography::LatLng>(top, left, bottom, right);
+	}
 
 	///<summary>
 	/// 基準の点を基に到達可能性を満たす経路生成を試行する
@@ -396,90 +435,154 @@ namespace Method
 		std::mt19937_64 generator(rd());
 
 		//ここにトラジェクトリを作成する
-		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> ret = nullptr;
+		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> ret = std::make_shared<std::vector<Graph::MapNodeIndicator>>(time_manager->phase_count(), Graph::MapNodeIndicator(INVALID, Graph::NodeType::INVALID));
+		ret->at(basis.first) = basis.second;
 
-		//初期状態は決定した基準の点
-		int previous_phase = basis.first;
-		std::shared_ptr<Map::BasicPoi const> previous_poi = map->get_static_poi(basis.second.id());
-		Geography::LatLng previous_latlng(previous_poi->lat(), previous_poi->lng());
+		////前半部分の決定
+		Graph::MapNodeIndicator point_basis = basis.second;
+		std::vector<double> reachable_distance_list(basis.first);
+		for (int phase = basis.first - 1; 0 <= phase; phase--) {
+			double speed = prob.gaussian_distribution(requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+			time_t next_time = time_manager->time_of_phase(phase + 1);
+			time_t current_time = time_manager->time_of_phase(phase);
+			int interval = next_time - current_time;
+			reachable_distance_list.at(basis.first - 1 - phase) = max(0.0, speed * 1000.0 * (interval - MIN_PAUSE_TIME) / 3600.0);
+		}
+		Collection::Sequence<User::category_id> sequence = category_sequence.subsequence(0, basis.first - 1);
+		
+		//手法に基づき経路を決定
+		std::shared_ptr<Map::BasicPoi const> current_poi = map->get_static_poi(point_basis.id());
+		for (int phase = basis.first - 1; 0 <= phase; phase--) {
+			//制約
+			double reachable_distance = reachable_distance_list.at(phase);
+			User::category_id category = sequence.at(phase);
+			double setting_anonymous_area = setting_anonymous_areas->at(current_dummy_id - 1);
 
-		//前半部分の決定
-		for (int phase = previous_phase - 1; 0 <= phase; phase--) {
+			//探索範囲
+			Graph::Rectangle<Geography::LatLng> search_boundary = create_reachable_rect(current_poi->get_point(), reachable_distance);
+			std::vector<std::shared_ptr<Map::BasicPoi const>> poi_candidates = map->find_pois_of_category_within_boundary(search_boundary, category);
+			if (poi_candidates.size() == 0) return nullptr;
+			std::shuffle(poi_candidates.begin(), poi_candidates.end(), generator);
 
-			//正規分布にもとづいてダミーの速度を決定する
-			double current_dummy_speed = prob.gaussian_distribution(requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
-
-			//各種制約
-			User::category_id target_category = category_sequence.at(phase);
-			double setting_anonymous_area = setting_anonymous_areas->at(current_dummy_id);
-			time_t interval = std::abs(time_manager->time_of_phase(phase) - time_manager->time_of_phase(previous_phase));
-
-			//前の地点を基準として一辺の長さが到達可能な距離の2倍となる領域を計算し，探索領域とする
-			double boundary_side_length = current_dummy_speed * interval * 2;
-			double boundary_side_length_lng = 0.000009 * boundary_side_length;
-			double boundary_side_length_lat = 0.000007 * boundary_side_length;
-			double boundary_top = previous_latlng.lat() + boundary_side_length_lat / 2.0;
-			double boundary_bottom = boundary_top - boundary_side_length_lat;
-			double boundary_left = previous_latlng.lng() - boundary_side_length_lng / 2.0;
-			double boundary_right = previous_latlng.lng() + boundary_side_length_lng;
-			Graph::Rectangle<Geography::LatLng> search_boundary(boundary_top, boundary_left, boundary_bottom, boundary_right);
-
-			//探索領域を基に該当するカテゴリのPOIを全て取得する
-			std::vector<std::shared_ptr<Map::BasicPoi const>> pois = map->find_pois_of_category_within_boundary(search_boundary, target_category);
-			if (pois.size() == 0) throw Framework::TrajectoryNotFoundException("Any POIs with the corresponding category were not found");
-			std::shuffle(pois.begin(), pois.end(), generator);
-
-			double current_anonymous_area = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase) >= setting_anonymous_area;
-
-			//ユーザの進行方向
-			std::shared_ptr<User::BasicUser<Geography::LatLng> const> user = entities->get_user();
-			double user_direction = Geography::GeoCalculation::lambert_azimuth_angle(*user->read_position_of_phase(previous_phase), *user->read_position_of_phase(phase));
-
-			for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = pois.begin(); poi != pois.end(); poi++) {
-
-				//到達不可能な点はスキップ
-				if (!map->is_reachable(Graph::MapNodeIndicator(previous_poi->get_id(), Graph::NodeType::POI), Graph::MapNodeIndicator((*poi)->get_id(), Graph::NodeType::POI), current_dummy_speed, interval)) continue;
-
-				//既に設定匿名領域を達成できている場合
-				//ユーザの進行方向に動かす
-				if (current_anonymous_area >= setting_anonymous_area) {
-					Geography::LatLng current_latlng = Geography::LatLng((*poi)->lat(), (*poi)->lng());
-					double dummy_direction = Geography::GeoCalculation::lambert_azimuth_angle(previous_latlng, current_latlng);
-					if (std::abs(user_direction - dummy_direction) <= THETA) {
-						//ret_trajectory.at(phase) = Graph::MapNodeIndicator((*poi)->get_id(), Graph::NodeType::POI);
-						previous_poi = *poi;
-						previous_latlng = current_latlng;
+			//ユーザの進行方向に動く点を一つ定める
+			std::shared_ptr<Map::BasicPoi const> next_poi = nullptr;
+			if (entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase) > setting_anonymous_area) {
+				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
+					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
+					double user_direction = entities->get_user_direction_of_phase(phase + 1, phase);
+					double poi_direction = Geography::GeoCalculation::lambert_azimuth_angle(current_poi->get_point(), (*poi)->get_point());
+					if (std::abs(user_direction - poi_direction) <= THETA) {
+						next_poi = *poi;
 						break;
 					}
 				}
-
-				//達成できていない場合
-				//設定匿名領域が満たせる点から探す
-				else {
-					std::vector<std::shared_ptr<Geography::LatLng const>> fixed_positions = entities->get_all_fixed_positions_of_phase(phase);
-					std::shared_ptr<Geography::LatLng const> current_latlng = std::make_shared<Geography::LatLng const>((*poi)->lat(), (*poi)->lng());
-					fixed_positions.push_back(current_latlng);
-					double anonymous_area = Geography::GeoCalculation::calc_convex_hull_size(fixed_positions);
-					if (anonymous_area >= setting_anonymous_area) {
-
-					}
-				}
-				previous_phase = phase;
 			}
 
+			//設定匿名領域に最も近くなる点を探索
+			else {
+				std::vector<std::pair<std::shared_ptr<Map::BasicPoi const>, double>> poi_dif_map;
+				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
+					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
+					std::vector<std::shared_ptr<Geography::LatLng const>> positions = entities->get_all_fixed_positions_of_phase(phase);
+					positions.push_back(std::make_shared<Geography::LatLng>((*poi)->get_point()));
+					double ar_size = positions.size() > 2 ? Geography::GeoCalculation::calc_convex_hull_size(positions) : Geography::GeoCalculation::lambert_distance(*positions.at(0), *positions.at(1));
+					poi_dif_map.push_back(std::make_pair(*poi, ar_size - setting_anonymous_area));
+				}
+				//昇順にソート
+				std::sort(poi_dif_map.begin(), poi_dif_map.end(), [](const std::pair<std::shared_ptr<Map::BasicPoi const>, double>& left, const std::pair<std::shared_ptr<Map::BasicPoi const>, double>& right) {
+					return left.second < right.second;
+				});
+				
+				//POIの選択
+				if (poi_dif_map.back().second < 0) next_poi = poi_dif_map.back().first;
+				else {
+					auto target = std::find_if(poi_dif_map.begin(), poi_dif_map.end(), [](const std::pair<std::shared_ptr<Map::BasicPoi const>, double>& element) {
+						return element.second >= 0;
+					});
+					next_poi = target->first;
+				}
+			}
 
-
-
-
+			if (next_poi == nullptr) return nullptr;
+			current_poi = next_poi;
+			ret->at(phase) = Graph::MapNodeIndicator(current_poi->get_id(), Graph::NodeType::POI);
 		}
 
-		//後半部分の決定
-		previous_poi = map->get_static_poi(basis.second.id());
-		previous_phase = basis.first;
-		for (int phase = previous_phase + 1; phase < time_manager->phase_count(); phase++) {
+		
+		
+		////後半部分の決定
+		reachable_distance_list = std::vector<double>(time_manager->phase_count() - basis.first - 1);
+		for (int phase = basis.first + 1; phase < time_manager->phase_count(); phase++) {
+			double speed = prob.gaussian_distribution(requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+			time_t previous_time = time_manager->time_of_phase(phase - 1);
+			time_t current_time = time_manager->time_of_phase(phase);
+			int interval = current_time - previous_time;
+			reachable_distance_list.at(phase - basis.first - 1) = max(0.0, speed * 1000.0 * (interval - MIN_PAUSE_TIME) / 3600.0);
+		}
+		
+		sequence = category_sequence.subsequence(basis.first + 1, category_sequence.size() - 1);
+		current_poi = map->get_static_poi(point_basis.id());
+		for (int phase = basis.first + 1; phase < time_manager->phase_count(); phase++) {
+			
+			//制約
+			int index = phase - basis.first - 1;
+			double reachable_distance = reachable_distance_list.at(index);
+			User::category_id category = sequence.at(index);
+			double setting_anonymous_area = setting_anonymous_areas->at(current_dummy_id - 1);
 
+			//探索範囲
+			Graph::Rectangle<Geography::LatLng> search_boundary = create_reachable_rect(current_poi->get_point(), reachable_distance);
+			std::vector<std::shared_ptr<Map::BasicPoi const>> poi_candidates = map->find_pois_of_category_within_boundary(search_boundary, category);
+			if (poi_candidates.size() == 0) return nullptr;
+			std::shuffle(poi_candidates.begin(), poi_candidates.end(), generator);
+
+			std::shared_ptr<Map::BasicPoi const> next_poi = nullptr;
+
+			//ユーザの進行方向に動かす
+			if (entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase) > setting_anonymous_area) {
+				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
+					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
+					double user_direction = entities->get_user_direction_of_phase(phase - 1, phase);
+					double poi_direction = Geography::GeoCalculation::lambert_azimuth_angle(current_poi->get_point(), (*poi)->get_point());
+					if (std::abs(user_direction - poi_direction) <= THETA) {
+						next_poi = *poi;
+						break;
+					}
+				}
+			}
+
+			//設定匿名領域に最も近くなる点を探索
+			else {
+				std::vector<std::pair<std::shared_ptr<Map::BasicPoi const>, double>> poi_dif_map;
+				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
+					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
+					std::vector<std::shared_ptr<Geography::LatLng const>> positions = entities->get_all_fixed_positions_of_phase(phase);
+					positions.push_back(std::make_shared<Geography::LatLng>((*poi)->get_point()));
+					double ar_size = positions.size() > 2 ? Geography::GeoCalculation::calc_convex_hull_size(positions) : Geography::GeoCalculation::lambert_distance(*positions.at(0), *positions.at(1));
+					poi_dif_map.push_back(std::make_pair(*poi, ar_size - setting_anonymous_area));
+				}
+				//昇順にソート
+				std::sort(poi_dif_map.begin(), poi_dif_map.end(), [](const std::pair<std::shared_ptr<Map::BasicPoi const>, double>& left, const std::pair<std::shared_ptr<Map::BasicPoi const>, double>& right) {
+					return left.second < right.second;
+				});
+
+				//POIの選択
+				if (poi_dif_map.back().second < 0) next_poi = poi_dif_map.back().first;
+				else {
+					auto target = std::find_if(poi_dif_map.begin(), poi_dif_map.end(), [](const std::pair<std::shared_ptr<Map::BasicPoi const>, double>& element) {
+						return element.second >= 0;
+					});
+					next_poi = target->first;
+				}
+			}
+
+			if (next_poi == nullptr) return nullptr;
+			current_poi = next_poi;
+			ret->at(phase) = Graph::MapNodeIndicator(next_poi->get_id(), Graph::NodeType::POI);
 		}
 
+		return ret;
 	}
+
 }
 

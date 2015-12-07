@@ -41,6 +41,9 @@
     <ClCompile Include="BasicRoadTest.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
+    <ClCompile Include="PreferenceTreeTest.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

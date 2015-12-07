@@ -76,7 +76,7 @@ namespace Simulation
 	void BaseSimulator::create_trajectories()
 	{
 		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins", "pois");
-		user_trajectories = loader.load_trajectories(USER_ID, TRAJECTORY_LENGTH_THRESHOLD);
+		user_trajectories = loader.load_trajectories(USER_ID, TRAJECTORY_LENGTH_THRESHOLD, MIN_SERVICE_INTERVAL);
 
 		size_t trajectory_size = user_trajectories->size();
 		std::cout << "Create " << trajectory_size << " Trajectories." << std::endl;

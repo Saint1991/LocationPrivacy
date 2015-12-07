@@ -105,5 +105,20 @@ namespace Graph
 			}
 		});
 	}
+
+
+	///<summary>
+	/// 長さlengthの全てのシーケンスに対してexecute_functionを実行する
+	///</summary>
+	template <typename NODE, typename DATA>
+	void SequentialTree<NODE, DATA>::for_each_sequence(size_t length, const std::function<void(const Collection::Sequence<std::shared_ptr<NODE const>>)>& execute_function) const
+	{
+		node_collection->foreach([&](std::shared_ptr<NODE const> node) {
+			if (node->get_depth() == length) {
+				Collection::Sequence<std::shared_ptr<NODE const>> sequence = get_sequence_by_node(node);
+				execute_function(sequence);
+			}
+		});
+	}
 }
 

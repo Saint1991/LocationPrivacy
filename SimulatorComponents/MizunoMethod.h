@@ -25,7 +25,10 @@ namespace Method
 		//進行方向に沿わせる制限の角度θ
 		static constexpr double THETA = M_PI_2;
 		//経路生成の試行回数の上限
-		static constexpr int MAX_TRAJECTORY_CREATION_TRIAL = 100;
+		static constexpr int MAX_TRAJECTORY_CREATION_TRIAL = 10000;
+		
+		//最小停止時間(2分)
+		static constexpr int MIN_PAUSE_TIME = 15;
 
 		
 		//設定匿名領域

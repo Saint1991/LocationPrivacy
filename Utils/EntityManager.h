@@ -60,6 +60,8 @@ namespace Entity
 		int get_entity_count_within_boundary(int phase, const Graph::Rectangle<POSITION_TYPE>& boundary) const;
 		int get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right) const;
 		int get_all_entities_total_crossing_count() const;
+
+		double get_user_direction_of_phase(int from_phase, int to_phase) const;
 	};
 }
 

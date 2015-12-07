@@ -41,7 +41,7 @@ namespace User
 	/// “Ço‚µ‚É¸”s‚µ‚½ê‡‚Ínullptr‚ª•Ô‚é
 	///</summary>
 	template <>
-	std::shared_ptr<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id, int trajectory_length_threshold)
+	std::shared_ptr<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id, int trajectory_length_threshold, int min_interval)
 	{
 		std::stringstream query;
 		query << "SELECT venue_id, timestamp, category_id, latitude, longitude FROM " << user_table_name << " INNER JOIN " << venue_table_name << " ON " << user_table_name << ".venue_id = " << venue_table_name << ".id WHERE user_id = " << user_id << " ORDER BY timestamp ASC;";
@@ -65,6 +65,10 @@ namespace User
 				double latitude = result->getDouble("latitude");
 				double longitude = result->getDouble("longitude");
 
+				//‚ªmin_interval‚æ‚è’Z‚¯‚ê‚Îmin_interval•ª‰ÁZ‚·‚é
+				int interval = Time::TimeUtility::interval(timestamp, previous_time);
+				if (interval < min_interval) timestamp = Time::TimeUtility::forward(timestamp, min_interval);
+			
 				if (division_rule(timestamp , previous_time)) {
 					if (times != nullptr && times->size() > trajectory_length_threshold) {
 						std::shared_ptr<Time::TimeSlotManager const> timeslot = std::make_shared<Time::TimeSlotManager const>(std::move(times));
@@ -93,7 +97,7 @@ namespace User
 	/// ƒf[ƒ^ƒx[ƒX‚©‚çTrajectory‚ğ“Ç‚İo‚·
 	///</summary>
 	template <>
-	std::shared_ptr<std::vector<std::shared_ptr<Graph::Trajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::Trajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id, int trajectory_length_threshold)
+	std::shared_ptr<std::vector<std::shared_ptr<Graph::Trajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::Trajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id, int trajectory_length_threshold, int min_interval)
 	{
 		std::stringstream query;
 		query << "SELECT venue_id, timestamp, latitude, longitude FROM " << user_table_name << " INNER JOIN " << venue_table_name << " ON " << user_table_name << ".venue_id = " << venue_table_name << ".id WHERE user_id = " << user_id << " ORDER BY timestamp ASC;";
@@ -116,6 +120,10 @@ namespace User
 				double latitude = result->getDouble("latitude");
 				double longitude = result->getDouble("longitude");
 
+				//‚ªmin_interval‚æ‚è’Z‚¯‚ê‚Îmin_interval•ª‰ÁZ‚·‚é
+				int interval = Time::TimeUtility::interval(timestamp, previous_time);
+				if (interval < min_interval) timestamp = Time::TimeUtility::forward(timestamp, min_interval);
+				
 				if (division_rule(timestamp, previous_time)) {
 					if (times != nullptr && times->size() > trajectory_length_threshold) {
 						timeslot = std::make_shared<Time::TimeSlotManager const>(std::move(times));

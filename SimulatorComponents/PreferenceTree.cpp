@@ -10,7 +10,7 @@ namespace User
 	///</summary>
 	PreferenceTree::PreferenceTree() : Graph::SequentialTree<PreferenceTreeNode, User::category_id>()
 	{
-		initialize();
+
 	}
 
 
@@ -37,8 +37,9 @@ namespace User
 	{
 		Collection::Sequence<std::shared_ptr<PreferenceTreeNode const>> sequence = get_sequence_by_node(node);
 		Collection::Sequence<category_id> ret(sequence.size());
-		for (Collection::Sequence<std::shared_ptr<PreferenceTreeNode const>>::const_iterator iter = sequence.begin(); iter != sequence.end(); iter++) {
-			ret.push_back((*iter)->category_id());
+		int index = 0;
+		for (Collection::Sequence<std::shared_ptr<PreferenceTreeNode const>>::const_iterator iter = sequence.begin(); iter != sequence.end(); iter++, index++) {
+			ret.at(index) = (*iter)->category_id();
 		}
 		return ret;
 	}
@@ -67,20 +68,6 @@ namespace User
 			current_node = next_node;
 		}
 		return *current_node;
-	}
-
-
-	///<summary>
-	/// 木に含まれるプレフィックスの最大長を取得する
-	///</summary>
-	int PreferenceTree::max_depth() const
-	{
-		int max = 0;
-		node_collection->foreach([&max](std::shared_ptr<PreferenceTreeNode const> node) {
-			int depth = node->get_depth();
-			if (max < depth) max = depth;
-		});
-		return max;
 	}
 
 	///<summary>

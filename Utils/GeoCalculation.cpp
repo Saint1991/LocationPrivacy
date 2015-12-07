@@ -46,6 +46,9 @@ double Geography::GeoCalculation::haversine_distance(const Geography::LatLng& ll
 ///</summary>
 double Geography::GeoCalculation::lambert_distance(const Geography::LatLng& ll1, const Geography::LatLng& ll2)
 {
+
+	if (ll1 == ll2) return 0.0;
+
 	//ùGïΩó¶Ç∆ã…îºåa
 	static const double F = 1.0 / 298.257222101;
 
@@ -141,6 +144,10 @@ std::vector<std::shared_ptr<Graph::Coordinate const>> convert_to_cartesian(const
 
 	unsigned int id = 1;
 	for (; iter != point_list.end(); iter++) {
+		if (*reference_point == **iter) {
+			ret.push_back(std::make_shared<Graph::Coordinate const>(0U, 0.0, 0.0));
+			continue;
+		}
 		double distance = Geography::dist(*reference_point, **iter);
 		double azimuth_angle = Geography::angle(*reference_point, **iter);
 		Graph::Vector2d position_vector = Graph::Vector2dFactory::create_by_polar(distance, azimuth_angle);

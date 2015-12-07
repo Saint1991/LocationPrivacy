@@ -95,5 +95,29 @@ namespace Time
 		timestamp << year << month << day;
 		return timestamp.str();
 	}
+
+	
+
+
+	///<summary>
+	/// 2つの時刻の時間間隔を返す
+	///</summary>
+	int TimeUtility::interval(const std::string& time1, const std::string& time2)
+	{
+		return std::abs(convert_to_unixtimestamp(time1) - convert_to_unixtimestamp(time2));
+	}
+
+
+	///<summary>
+	/// timeからforward_time分だけ時刻を進めたタイムスタンプを取得する
+	///</summary>
+	std::string TimeUtility::forward(const std::string& time, time_t forward_time)
+	{
+		time_t newtime = convert_to_unixtimestamp(time) + forward_time;
+		std::string newtime_str = timestamp(newtime);
+		std::stringstream ret;
+		ret << newtime_str.substr(0, 4) << "-" << newtime_str.substr(4, 2) << "-" << newtime_str.substr(6, 2) << " " << newtime_str.substr(8, 2) << ":" << newtime_str.substr(10, 2) << ":" << newtime_str.substr(12, 2);
+		return ret.str();
+	}
 }
 

@@ -377,6 +377,20 @@ namespace Entity
 		
 		return counter;
 	}
+
+
+	///<summary>
+	/// from_phaseの位置からto_phaseまでの位置のユーザの進行方向の角度(rad)を返す．
+	///</summary>
+	template <typename DUMMY, typename USER, typename POSITION_TYPE>
+	double EntityManager<DUMMY, USER, POSITION_TYPE>::get_user_direction_of_phase(int from_phase, int to_phase) const
+	{
+		std::shared_ptr<Geography::LatLng const> from_position = user->read_position_of_phase(from_phase);
+		std::shared_ptr<Geography::LatLng const> to_position = user->read_position_of_phase(to_phase);
+		if (from_position == nullptr || to_position == nullptr) return DBL_MAX;
+		double direction = Geography::GeoCalculation::lambert_azimuth_angle(*from_position, *to_position);
+		return direction;
+	}
 }
 
 

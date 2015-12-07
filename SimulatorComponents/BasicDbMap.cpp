@@ -100,10 +100,10 @@ namespace Map
 	///</summary>
 	Graph::Rectangle<Geography::LatLng> create_reachable_rect(const Geography::LatLng& center, double reachable_distance)
 	{
-		double top = center.lat() + 0.000007 * reachable_distance;
-		double left = center.lng() - 0.000009 * reachable_distance;
-		double bottom = center.lat() - 0.000007 * reachable_distance;
-		double right = center.lng() + 0.000009 * reachable_distance;
+		double top = center.lat() + 0.000009 * reachable_distance;
+		double left = center.lng() - 0.0000011 * reachable_distance;
+		double bottom = center.lat() - 0.000009 * reachable_distance;
+		double right = center.lng() + 0.000011 * reachable_distance;
 		return Graph::Rectangle<Geography::LatLng>(top, left, bottom, right);
 	}
 
@@ -111,8 +111,13 @@ namespace Map
 	/// point_basisを基準にcategory_sequenceとmove_distance_listの制約を満たす経路を全て取得する
 	/// 経路の長さはcategory_sequenceの長さに依存
 	///</summary>
-	std::shared_ptr<std::vector<Collection::Sequence<Graph::MapNodeIndicator>>> BasicDbMap::find_reachable_trajectory(const Graph::MapNodeIndicator& point_basis, const Collection::Sequence<User::category_id> category_sequence, const std::vector<double> reachable_distance_list) const
+	std::shared_ptr<std::vector<Collection::Sequence<Graph::MapNodeIndicator>>> BasicDbMap::find_reachable_trajectories(const Graph::MapNodeIndicator& point_basis, const Collection::Sequence<User::category_id> category_sequence, const std::vector<double> reachable_distance_list, int poi_limit_for_each_phase) const
 	{
+
+		//ランダマイズ用
+		std::random_device rd;
+		std::mt19937_64 generator(rd());
+
 		std::shared_ptr<std::vector<Collection::Sequence<Graph::MapNodeIndicator>>> ret = std::make_shared<std::vector<Collection::Sequence<Graph::MapNodeIndicator>>>();
 
 		//現在の訪問地点
@@ -129,27 +134,31 @@ namespace Map
 			for (std::vector<Graph::node_id>::const_iterator current_child = children.begin(); current_child != children.end(); current_child++) {
 				current_node = trajectory_tree->get_iter_by_id<Graph::BaseIterator<Graph::SequentialTreeNode<Graph::node_id>, Graph::node_id, Graph::BasicEdge>>(*current_child);
 				current_poi = get_static_poi(*current_node->data);
-				
+
 				//到達可能なPOIの探索
-				Graph::Rectangle<Geography::LatLng> search_boundary = create_reachable_rect(current_poi->get_point(), reachable_distance_list.at(current_node->get_depth() - 1));
-				std::vector<std::shared_ptr<BasicPoi const>> pois = find_pois_of_category_within_boundary(search_boundary, category_sequence.at(current_node->get_depth() - 1));
+				int current_index = current_node->get_depth() - 1;
+				double reachable_distance = reachable_distance_list.at(current_index);
+				User::category_id current_category = category_sequence.at(current_index);
+				Graph::Rectangle<Geography::LatLng> search_boundary = create_reachable_rect(current_poi->get_point(), reachable_distance_list.at(current_index));
+				std::vector<std::shared_ptr<BasicPoi const>> pois = find_pois_of_category_within_boundary(search_boundary, category_sequence.at(current_index));
+				std::shuffle(pois.begin(), pois.end(), generator);
 				for (std::vector<std::shared_ptr<BasicPoi const>>::const_iterator poi = pois.begin(); poi != pois.end(); poi++) {
-					if (shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id())) <= reachable_distance_list.at(current_node->get_depth() - 1)) {
+					double distance = shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance);
+					if (distance <= reachable_distance_list.at(current_index)) {
 						current_node.add_child(std::make_shared<Graph::SequentialTreeNode<Graph::node_id>>(current_node_id++, current_node->get_id(), current_node->get_depth() + 1, std::make_shared<Graph::node_id>((*poi)->get_id())));
+						if (current_node->get_children().size() > poi_limit_for_each_phase) break;
 					}
 				}
 			}
 		}
 		
-		trajectory_tree->for_each_sequence([&ret, &reachable_distance_list](const Collection::Sequence<std::shared_ptr<Graph::SequentialTreeNode<Graph::node_id> const>>& sequence) {
-			if (sequence.size() == reachable_distance_list.size() + 1) {
-				Collection::Sequence<Graph::MapNodeIndicator> trajectory(sequence.size());
-				int index = 0;
-				for (Collection::Sequence<std::shared_ptr<Graph::SequentialTreeNode<Graph::node_id> const>>::const_iterator iter = sequence.begin(); iter != sequence.end(); iter++, index++) {
-					trajectory.at(index) = Graph::MapNodeIndicator(*(*iter)->data);
-				}
-				ret->push_back(trajectory);
+		trajectory_tree->for_each_sequence(reachable_distance_list.size() + 1, [&ret, &reachable_distance_list](const Collection::Sequence<std::shared_ptr<Graph::SequentialTreeNode<Graph::node_id> const>>& sequence) {
+			Collection::Sequence<Graph::MapNodeIndicator> trajectory(sequence.size());
+			int index = 0;
+			for (Collection::Sequence<std::shared_ptr<Graph::SequentialTreeNode<Graph::node_id> const>>::const_iterator iter = sequence.begin(); iter != sequence.end(); iter++, index++) {
+				trajectory.at(index) = Graph::MapNodeIndicator(*(*iter)->data);
 			}
+			ret->push_back(trajectory);
 		});
 		return ret;
 	}

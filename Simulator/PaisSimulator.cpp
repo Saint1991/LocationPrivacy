@@ -19,19 +19,20 @@ namespace Simulation
 	void PaisSimulator::make_requirement_list()
 	{
 		requirements = {
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 1.0, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.9, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.8, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.7, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.6, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.5, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.4, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.3, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.2, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.1, 1.5, 0.5),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.0, 1.5, 0.5)
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 1.0, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.9, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.8, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.7, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.6, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.5, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.4, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.3, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.2, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.1, 5.0, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.0, 5.0, 1.0)
 		};
 	}
+
 
 	void PaisSimulator::run()
 	{
@@ -67,6 +68,9 @@ namespace Simulation
 					Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>
 				>> proposed = std::make_shared<Method::MizunoMethod>(map, user, observed_preference_tree_copy, *iter, timeslot);
 				
+				//各トラジェクトリに対して手法を適用した後のコールバック
+				proposed->set_execution_callback(std::bind(&PaisSimulator::each_trajectory_end_callback, this, time_manager, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+				
 				try {
 					//提案手法の起動
 					proposed->run();
@@ -89,15 +93,60 @@ namespace Simulation
 		std::cout << "Fail Rate: " << std::to_string(fail_rate) << std::endl;
 	}
 
+	///<summary>
+	/// 各トラジェクトリ実行後のコールバック
+	///</summary>
+	void PaisSimulator::each_trajectory_end_callback(std::shared_ptr<Entity::EntityManager<Entity::Dummy<>, User::BasicUser<>, Geography::LatLng>> entities, std::shared_ptr<Requirement::PreferenceRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
+	{
+		
+		std::list<std::pair<std::string, std::string>> export_name_map = {
+			{Geography::LatLng::LATITUDE, "緯度" },
+			{Geography::LatLng::LONGITUDE, "経度" },
+			{Graph::TrajectoryState<>::TIME, "タイムスタンプ"},
+			{Graph::SemanticTrajectoryState<>::CATEGORY, "カテゴリID"}
+		};
+		IO::FileExporter exporter(export_name_map, "C:/Users/Mizuno/Desktop/EvaluationResults/user_trajectory");
+		
+		//ユーザトラジェクトリのエクスポート
+		std::list<std::shared_ptr<IO::FileExportable const>> user_trajectory = entities->get_user()->read_trajectory()->get_export_data();
+		exporter.export_lines(user_trajectory);
+
+		//各ダミーのエクスポート
+		for (int dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++) {
+			std::shared_ptr<Entity::Dummy<> const> dummy = entities->read_dummy_by_id(dummy_id);
+			std::list<std::shared_ptr<IO::FileExportable const>> dummy_trajectory = dummy->read_trajectory()->get_export_data();
+			IO::FileExporter dummy_exporter(export_name_map, "C:/Users/Mizuno/Desktop/EvaluationResults/dummy" + std::to_string(dummy_id));
+			dummy_exporter.export_lines(dummy_trajectory);
+		}
+
+		//AR系の評価
+		int achive_count = 0;
+		double achive_size = 0.0;
+		int phase_count = time_manager->phase_count();
+		for (int phase = 0; phase < phase_count; phase++) {
+			double ar = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
+			if (ar >= requirement->required_anonymous_area) achive_count++;
+			achive_size += ar / requirement->required_anonymous_area;
+		}
+		double ar_count = (double)achive_count / phase_count;
+		double ar_size = achive_size / phase_count;
+
+		//MTCの評価
+
+		//木の更新
+	}
+
 	void PaisSimulator::evaluate()
 	{
-
+		
 	}
 
 	void PaisSimulator::export_evaluation_result()
 	{
 
 	}
+
+
 
 }
 

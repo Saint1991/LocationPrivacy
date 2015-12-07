@@ -21,6 +21,7 @@ namespace Graph
 
 		Collection::Sequence<std::shared_ptr<NODE const>> get_sequence_by_node(std::shared_ptr<NODE const> node) const;
 		void for_each_sequence(const std::function<void(const Collection::Sequence<std::shared_ptr<NODE const>>)>& execute_function) const;
+		void for_each_sequence(size_t length, const std::function<void(const Collection::Sequence<std::shared_ptr<NODE const>>)>& execute_function) const;
 	};
 }
 

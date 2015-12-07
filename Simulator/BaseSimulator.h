@@ -27,6 +27,8 @@ namespace Simulation
 		: public ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
 	{
 	private:
+		//トラジェクトリ加工用 (最低この間隔がない場合間隔を広げる)
+		static constexpr int MIN_SERVICE_INTERVAL = 300;
 		const int TRAJECTORY_LENGTH_THRESHOLD = 3;
 		const double TRAININGSET_PROPORTION;
 		const std::string DB_NAME;

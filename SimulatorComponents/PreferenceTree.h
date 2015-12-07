@@ -25,13 +25,12 @@ namespace User
 		PreferenceTree(const PreferenceTree& t);
 		~PreferenceTree();
 
-		int max_depth() const;
 		void for_each_prefix(unsigned int sequence_length, const std::function<void(const Collection::Sequence<category_id>&, double)>& execute_function) const;
 		void add_sequence_counter(const std::vector<category_id>& sequence, double add_num = 1.0);
 		double get_support_of(const std::vector<category_id>& sequence) const;
 		
-		friend double distance(const User::PreferenceTree& t1, const User::PreferenceTree& t2);
-		friend double similarity(const User::PreferenceTree& t1, const User::PreferenceTree& t2);
+		PREFERENCE_TREE_API friend double distance(const User::PreferenceTree& t1, const User::PreferenceTree& t2);
+		PREFERENCE_TREE_API friend double similarity(const User::PreferenceTree& t1, const User::PreferenceTree& t2);
 	};
 }
 
