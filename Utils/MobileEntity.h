@@ -39,11 +39,11 @@ namespace Entity
 		MobileEntity(entity_id id, std::shared_ptr<TRAJECTORY_TYPE> trajectory);
 		virtual ~MobileEntity();
 
-		void set_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position);
-		void set_position_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position);
+		void set_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const std::string& venue_name = "");
+		void set_position_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const std::string& venue_name = "");
 
-		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position);
-		void set_crossing_position_at(time_t time, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position);
+		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position, const std::string& venue_name = "");
+		void set_crossing_position_at(time_t time, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position, const std::string& venue_name = "");
 
 		void register_as_cross_position(int phase);
 		int get_cross_count() const;
@@ -60,6 +60,8 @@ namespace Entity
 
 		node_pos_info read_node_pos_info_of_phase(int phase) const;
 		node_pos_info read_node_pos_info_at(time_t time) const;
+
+		void clear_cross_info();
 		
 		std::shared_ptr<TRAJECTORY_TYPE const> read_trajectory() const;
 	};

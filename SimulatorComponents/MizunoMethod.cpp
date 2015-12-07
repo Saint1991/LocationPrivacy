@@ -116,8 +116,8 @@ namespace Method
 				Graph::MapNodeIndicator node_id = route.at(phase);
 				std::shared_ptr<Map::BasicPoi const> visit_poi = map->get_static_poi(node_id.id());
 				Geography::LatLng position(visit_poi->lat(), visit_poi->lng());
-				phase == cross_phase ? current_dummy->set_crossing_position_of_phase(phase, node_id, position) : current_dummy->set_position_of_phase(phase, node_id, position);
-				current_dummy->set_category_of_phase(phase, visit_poi->category_id());
+				phase == cross_phase ? current_dummy->set_crossing_position_of_phase(phase, node_id, position, visit_poi->name()) : current_dummy->set_position_of_phase(phase, node_id, position, visit_poi->name());
+				current_dummy->set_category_of_phase(phase, visit_poi->category_id(), visit_poi->category_name());
 				std::cout << visit_poi->category_name() << "\t";
 			}
 			std::cout << std::endl;
@@ -404,8 +404,8 @@ namespace Method
 				std::shared_ptr<Map::BasicPoi const> visit_poi = map->get_static_poi(iter->id());
 				std::shared_ptr<Geography::LatLng const> position = std::make_shared<Geography::LatLng const>(visit_poi->lat(), visit_poi->lng());
 				User::category_id category = visit_poi->data->get_category_id();
-				target_entity->set_category_of_phase(phase, category);
-				target_entity->set_position_of_phase(phase, *iter, *position);
+				target_entity->set_category_of_phase(phase, category, visit_poi->category_name());
+				target_entity->set_position_of_phase(phase, *iter, *position, visit_poi->name());
 				if (phase == target_phase) target_entity->register_as_cross_position(phase);
 			}
 		}

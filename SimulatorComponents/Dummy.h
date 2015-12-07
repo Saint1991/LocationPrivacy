@@ -27,11 +27,11 @@ namespace Entity
 		Dummy(entity_id id, std::shared_ptr<Graph::SemanticTrajectory<POSITION_TYPE>> trajectory);
 		virtual ~Dummy();
 
-		void set_state_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const category_id& category);
-		void set_state_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const category_id& category);
+		void set_state_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const category_id& category, const std::string& venue_name = "", const std::string& category_name = "");
+		void set_state_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const category_id& category, const std::string& venue_name = "", const std::string& category_name = "");
 
-		void set_category_of_phase(int phase, const category_id& category);
-		void set_category_at(time_t time, const category_id& category);
+		void set_category_of_phase(int phase, const category_id& category, const std::string& category_name = "");
+		void set_category_at(time_t time, const category_id& category, const std::string& category_name = "");
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»

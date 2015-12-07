@@ -64,6 +64,7 @@ namespace Framework
 	void IProposedMethod<MAP_TYPE, USER_TYPE, DUMMY_TYPE, REQUIREMENT_TYPE, POSITION_TYPE, TRAJECTORY_TYPE>::terminate()
 	{
 		if (execution_callback != nullptr) execution_callback(entities, requirement, timer);
+		entities->get_user()->clear_cross_info();
 	}
 
 }

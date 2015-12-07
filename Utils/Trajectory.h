@@ -23,11 +23,13 @@ namespace Graph
 	struct TRAJECTORY_API TrajectoryState : public IO::FileExportable
 	{
 		static constexpr char* TIME = "time";
-		
+		static constexpr char* VENUE_NAME = "venue_name";
+
 		time_t time;
+		std::string venue_name;
 		std::shared_ptr<POSITION_TYPE> position;
 		
-		TrajectoryState(time_t time, std::shared_ptr<POSITION_TYPE> position);
+		TrajectoryState(time_t time, std::shared_ptr<POSITION_TYPE> position, const std::string& venue_name = "");
 		std::unordered_map<std::string, std::string> get_export_data() const;
 	};
 	template struct TrajectoryState<Geography::LatLng>;
@@ -45,18 +47,19 @@ namespace Graph
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions;
 		std::shared_ptr<Time::TimeSlotManager const> timeslot;
 		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> visited_node_ids;
+		std::shared_ptr<std::vector<std::string>> venue_names;
 
 	public:
 		typedef std::pair<Graph::MapNodeIndicator, std::shared_ptr<POSITION_TYPE const>> node_pos_info;
 
 		Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot);
-		Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions);
+		Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, std::shared_ptr<std::vector<std::string>> venue_names = nullptr);
 		virtual ~Trajectory();
 
 		size_t phase_count() const;
 
-		bool set_position_of_phase(int phase, const MapNodeIndicator& node_id, const POSITION_TYPE& position);
-		bool set_position_at(time_t time, const MapNodeIndicator& node_id, const POSITION_TYPE& position);
+		bool set_position_of_phase(int phase, const MapNodeIndicator& node_id, const POSITION_TYPE& position, const std::string& venue_name = "");
+		bool set_position_at(time_t time, const MapNodeIndicator& node_id, const POSITION_TYPE& position, const std::string& venue_name = "");
 
 		std::shared_ptr<POSITION_TYPE const> position_of_phase(int phase) const;
 		std::shared_ptr<POSITION_TYPE const> position_at(time_t time) const;

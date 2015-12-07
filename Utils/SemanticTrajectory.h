@@ -20,9 +20,12 @@ namespace Graph
 	struct SEMANTIC_TRAJECTORY_API SemanticTrajectoryState : TrajectoryState<POSITION_TYPE>
 	{
 		static constexpr char* CATEGORY = "Category";
+		static constexpr char* CATEGORY_NAME = "CategoryName";
+
 		category_id category;
+		std::string category_name;
 		
-		SemanticTrajectoryState(time_t time, const category_id& category, std::shared_ptr<POSITION_TYPE> positioin);
+		SemanticTrajectoryState(time_t time, const category_id& category, std::shared_ptr<POSITION_TYPE> position, const std::string& venue_name = "", const std::string& category_name = "");
 		std::unordered_map<std::string, std::string> get_export_data() const;
 	};
 	template struct SemanticTrajectoryState<Geography::LatLng>;
@@ -35,14 +38,21 @@ namespace Graph
 	{
 	protected:
 		std::shared_ptr<Collection::Sequence<category_id>> category_sequence;
+		std::shared_ptr<std::vector<std::string>> category_names;
 	
 	public:
 		SemanticTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot);
-		SemanticTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, std::shared_ptr<Collection::Sequence<category_id>> category_sequence);
+		SemanticTrajectory(
+			std::shared_ptr<Time::TimeSlotManager const> timeslot,
+			std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids,
+			std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions,
+			std::shared_ptr<Collection::Sequence<category_id>> category_sequence,
+			std::shared_ptr<std::vector<std::string>> venue_names = nullptr,
+			std::shared_ptr<std::vector<std::string>> category_names = nullptr);
 		~SemanticTrajectory();
 
-		bool set_category_of_phase(int phase, const std::string& category_id);
-		bool set_category_at(time_t time, const std::string& category_id);
+		bool set_category_of_phase(int phase, const std::string& category_id, const std::string& category_name = "");
+		bool set_category_at(time_t time, const std::string& category_id, const std::string& category_name = "");
 
 		category_id category_of_phase(int phase) const;
 		category_id category_at(time_t time) const;

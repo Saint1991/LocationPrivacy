@@ -39,18 +39,18 @@ namespace Entity
 	/// 指定したPhaseにおける位置を設定する
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position)
+	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const std::string& venue_name)
 	{
-		trajectory->set_position_of_phase(phase, node_id, position);
+		trajectory->set_position_of_phase(phase, node_id, position, venue_name);
 	}
 
 	///<summary>
 	/// 時刻tにおける位置を設定する
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_position_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position)
+	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_position_at(time_t time, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position, const std::string& venue_name)
 	{
-		trajectory->set_position_at(time, node_id, position);
+		trajectory->set_position_at(time, node_id, position, venue_name);
 	}
 
 
@@ -58,20 +58,20 @@ namespace Entity
 	/// 共有地点の設定をする
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position)
+	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position, const std::string& venue_name)
 	{
 		register_as_cross_position(phase);
-		set_position_of_phase(phase, node_id, position);
+		set_position_of_phase(phase, node_id, position, venue_name);
 	}
 
 	///<summary>
 	/// 共有地点の設定をする
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_crossing_position_at(time_t time, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position)
+	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_crossing_position_at(time_t time, const Graph::MapNodeIndicator& node_id, POSITION_TYPE position, const std::string& venue_name)
 	{
 		int phase = trajectory->find_phase_of_time(time);
-		set_crossing_position_of_phase(phase, node_id, position);
+		set_crossing_position_of_phase(phase, node_id, position, venue_name);
 	}
 
 
@@ -228,5 +228,12 @@ namespace Entity
 		return trajectory;
 	}
 	
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::clear_cross_info()
+	{
+		total_cross_count = 0;
+		size_t trajectory_length = cross_flg->size();
+		cross_flg = std::make_shared<std::vector<bool>>(trajectory_length, false);
+	}
 }
 

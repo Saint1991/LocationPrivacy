@@ -69,7 +69,7 @@ namespace Simulation
 				>> proposed = std::make_shared<Method::MizunoMethod>(map, user, observed_preference_tree_copy, *iter, timeslot);
 				
 				//各トラジェクトリに対して手法を適用した後のコールバック
-				proposed->set_execution_callback(std::bind(&PaisSimulator::each_trajectory_end_callback, this, time_manager, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+				proposed->set_execution_callback(std::bind(&PaisSimulator::each_trajectory_end_callback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 				
 				try {
 					//提案手法の起動
@@ -103,7 +103,9 @@ namespace Simulation
 			{Geography::LatLng::LATITUDE, "緯度" },
 			{Geography::LatLng::LONGITUDE, "経度" },
 			{Graph::TrajectoryState<>::TIME, "タイムスタンプ"},
-			{Graph::SemanticTrajectoryState<>::CATEGORY, "カテゴリID"}
+			{Graph::SemanticTrajectoryState<>::CATEGORY, "カテゴリID"},
+			{Graph::SemanticTrajectoryState<>::CATEGORY_NAME, "カテゴリ名"},
+			{Graph::TrajectoryState<>::VENUE_NAME, "POI名"}
 		};
 		IO::FileExporter exporter(export_name_map, "C:/Users/Mizuno/Desktop/EvaluationResults/user_trajectory");
 		
@@ -122,7 +124,7 @@ namespace Simulation
 		//AR系の評価
 		int achive_count = 0;
 		double achive_size = 0.0;
-		int phase_count = time_manager->phase_count();
+		int phase_count = this->time_manager->phase_count();
 		for (int phase = 0; phase < phase_count; phase++) {
 			double ar = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
 			if (ar >= requirement->required_anonymous_area) achive_count++;

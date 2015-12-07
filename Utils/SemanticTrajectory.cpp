@@ -10,8 +10,8 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename POSITION_TYPE>
-	SemanticTrajectoryState<POSITION_TYPE>::SemanticTrajectoryState(time_t time, const category_id& category, std::shared_ptr<POSITION_TYPE> position)
-		: TrajectoryState<POSITION_TYPE>(time, position), category(category)
+	SemanticTrajectoryState<POSITION_TYPE>::SemanticTrajectoryState(time_t time, const category_id& category, std::shared_ptr<POSITION_TYPE> position, const std::string& venue_name, const std::string& category_name)
+		: TrajectoryState<POSITION_TYPE>(time, position, venue_name), category(category), category_name(category_name)
 	{
 
 	}
@@ -24,6 +24,7 @@ namespace Graph
 	{
 		std::unordered_map<std::string, std::string> ret = TrajectoryState<POSITION_TYPE>::get_export_data();
 		ret.insert(std::make_pair(CATEGORY, category));
+		ret.insert(std::make_pair(CATEGORY_NAME, category_name));
 		return ret;
 	}
 
@@ -35,7 +36,7 @@ namespace Graph
 	///</summary>
 	template <typename POSITION_TYPE>
 	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot) 
-		: Trajectory<POSITION_TYPE>(timeslot), category_sequence(std::make_shared<Collection::Sequence<category_id>>(timeslot->phase_count()))
+		: Trajectory<POSITION_TYPE>(timeslot), category_sequence(std::make_shared<Collection::Sequence<category_id>>(timeslot->phase_count())), category_names(std::make_shared<std::vector<std::string>>(timeslot->phase_count()))
 	{
 	}
 
@@ -44,8 +45,14 @@ namespace Graph
 	/// コンストラクタ
  	///</summary>
 	template <typename POSITION_TYPE>
-	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, std::shared_ptr<Collection::Sequence<category_id>> category_sequence)
-		: Trajectory<POSITION_TYPE>(timeslot, node_ids, positions), category_sequence(category_sequence)
+	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(
+		std::shared_ptr<Time::TimeSlotManager const> timeslot, 
+		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids,
+		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, 
+		std::shared_ptr<Collection::Sequence<category_id>> category_sequence,
+		std::shared_ptr<std::vector<std::string>> venue_names, 
+		std::shared_ptr<std::vector<std::string>> category_names)
+		: Trajectory<POSITION_TYPE>(timeslot, node_ids, positions, venue_names), category_sequence(category_sequence), category_names(category_names)
 	{
 
 	}
@@ -64,10 +71,11 @@ namespace Graph
 	/// 指定したPhaseにおけるカテゴリを設定する
 	///</summary>
 	template <typename POSITION_TYPE>
-	bool SemanticTrajectory<POSITION_TYPE>::set_category_of_phase(int phase, const std::string& category_id)
+	bool SemanticTrajectory<POSITION_TYPE>::set_category_of_phase(int phase, const std::string& category_id, const std::string& category_name)
 	{
 		if (phase < 0 || category_sequence->size() <= phase) return false;
 		category_sequence->at(phase) = category_id;
+		category_names->at(phase) = category_name;
 	}
 
 
@@ -76,10 +84,10 @@ namespace Graph
 	/// 指定した時刻におけるカテゴリを設定する
 	///</summary>
 	template <typename POSITION_TYPE>
-	bool SemanticTrajectory<POSITION_TYPE>::set_category_at(time_t time, const std::string& category_id)
+	bool SemanticTrajectory<POSITION_TYPE>::set_category_at(time_t time, const std::string& category_id, const std::string& category_name)
 	{
 		int phase = timeslot->find_phase_of_time(time);
-		return set_category_of_phase(phase, category_id);
+		return set_category_of_phase(phase, category_id, category_name);
 	}
 
 
@@ -143,7 +151,9 @@ namespace Graph
 		timeslot->for_each_time([this, &ret](time_t time, long interval, int phase) {
 			std::shared_ptr<POSITION_TYPE> position = positions->at(phase);
 			category_id category = category_sequence->at(phase);
-			std::shared_ptr<IO::FileExportable const> data = std::make_shared<SemanticTrajectoryState<POSITION_TYPE> const>(time, category, position);
+			std::string venue_name = venue_names->at(phase);
+			std::string category_name = category_names->at(phase);
+			std::shared_ptr<IO::FileExportable const> data = std::make_shared<SemanticTrajectoryState<POSITION_TYPE> const>(time, category, position, venue_name, category_name);
 			ret.push_back(data);
 		});
 		return ret;
