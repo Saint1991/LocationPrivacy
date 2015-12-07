@@ -20,27 +20,40 @@ namespace Method {
 	class KatoMasterMethod :public KatoBachelorMethod
 	{
 	private:
-		int time_to_change;//行動の変化分
+		int changes_in_arrival_time;//ユーザの到着時間の変化分
+		enum ChangeParameter { LONGER_PAUSE_TIME, SHORTER_PAUSE_TIME, PATH, FASTER_SPEED, SLOER_SPEED, POSITION, NO_CHANGE };
+		
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> make_real_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> make_real_user_plan_for_comparing_hayashida_method(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
+		//std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> make_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
 
-		void revise_dummy_movement_plan(int phase_id);//ダミーの行動プランを修正する
-		void revise_dummy_pause_time(int phase_id);//ダミーの停止時間の修正
-		void revise_dummy_trajectory(int phase_id);//ダミーの移動経路の修正
-		void revise_dummy_speed(int phase_id);//ダミーの行動速度の修正
-		void revise_dummy_pause_position(int phase_id);//ダミーの停止地点の修正
 
 		bool check_going_pause_position_in_plan();//ユーザの行動プランに含まれる停止地点に向かっているかどうかをチェック
-		int check_user_plan();//ユーザの行動プラン変更のチェック
-		bool check_user_pause_time();
-		bool check_user_speed();
-		bool check_user_path();
-		bool check_user_position();
+		std::pair<ChangeParameter, double> check_user_plan(int now_phase);//ユーザの行動プラン変更のチェック
+			std::pair<ChangeParameter, double> check_user_pause_time(int now_phase);
+			std::pair<ChangeParameter, double> check_user_speed(int now_phase);
+			std::pair<ChangeParameter, double> check_user_path(int now_phase);
+			std::pair<ChangeParameter, double> check_user_position(int now_phase);
 
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predict_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user_plan);//ユーザの行動を予測する.
-		void predict_user_next_pause_position_time(int check_num);
-		void update_user_plan();
+		void update_user_plan(std::pair<ChangeParameter, double> check_parameter, int phase_id);
+			void update_user_pause_time(std::pair<ChangeParameter, double> check_parameter, int phase_id);//userの停止時間の修正
+			void update_user_path(std::pair<ChangeParameter, double> check_parameter, int phase_id);//userの移動経路の修正
+			void update_user_speed(std::pair<ChangeParameter, double> check_parameter, int phase_id);//userの行動速度の修正
+			void update_user_pause_position(std::pair<ChangeParameter, double> check_parameter, int phase_id);//userの停止地点の修正
+
+		void revise_dummy_movement_plan(int phase_id);//ダミーの行動プランを修正する
+			void revise_dummy_pause_time(int phase_id);//ダミーの停止時間の修正
+			void revise_dummy_path(int phase_id);//ダミーの移動経路の修正
+			void revise_dummy_speed(int phase_id);//ダミーの行動速度の修正
+			void revise_dummy_pause_position(int phase_id);//ダミーの停止地点の修正
+
 
 	protected:
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user;//システムへの入力によって得られたユーザ．Simulator単位で作成する.get_user()で取得可能
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> real_user;//実際のユーザ.input_userから確率的に各要素を変更させる.
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user;//予測されたユーザ
+
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> revising_dummy;//修正対象ダミー
 
 		void initialize();
 		void revise_dummy_positions();

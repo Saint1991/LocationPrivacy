@@ -23,6 +23,10 @@ namespace Method {
 	protected:
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user;
 
+		void make_predicted_user();
+		bool check_user_plan();
+
+
 		void initialize();
 		void adjust_dummy_positions();
 		void evaluate();

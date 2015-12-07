@@ -456,6 +456,9 @@
     <ClInclude Include="SequentialTree.hpp">
       <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClInclude>
+    <ClInclude Include="RevisableTrajectory.h">
+      <Filter>ヘッダー ファイル\Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -577,6 +580,9 @@
     </ClCompile>
     <ClCompile Include="CrossInfo.cpp">
       <Filter>ソース ファイル\Evaluation\MTC</Filter>
+    </ClCompile>
+    <ClCompile Include="RevisableTrajectory.cpp">
+      <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -105,6 +105,9 @@
     <ClInclude Include="MizunoMethod.h">
       <Filter>ヘッダー ファイル\Method</Filter>
     </ClInclude>
+    <ClInclude Include="HayashidaDbMap.h">
+      <Filter>ヘッダー ファイル\Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -166,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="MizunoMethod.cpp">
       <Filter>ソース ファイル\Method</Filter>
+    </ClCompile>
+    <ClCompile Include="HayashidaDbMap.cpp">
+      <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

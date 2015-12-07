@@ -35,21 +35,6 @@ namespace Method
 	///</summary>
 	void HayashidaBachelorMethod::adjust_dummy_positions()
 	{
-		/*
-		time_t time_to_change = 0;// (C³Œã‚Ì)time_manager->time_of_phase(phase_id) - (C³‘O‚Ì)time_manager->time_of_phase(phase_id);
-		predict_user = predict_user_plan(entities->get_user());
-
-		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
-		{
-			if (check_going_pause_position_in_plan()) {
-				if (check_user_plan() != 0) {
-					predict_user_next_pause_position_time(check_user_plan());//ŽŸ‚Ì’âŽ~’n“_‚Ì“ž’…ŽžŠÔ‚ð—\‘ª
-					revise_dummy_movement_plan(phase_id);
-					update_user_plan();
-				}
-			}
-		}
-		*/
 		
 	}
 

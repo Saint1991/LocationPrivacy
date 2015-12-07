@@ -261,6 +261,7 @@
     <ClInclude Include="Probability.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RevisableTrajectory.h" />
     <ClInclude Include="RouteInfo.h" />
     <ClInclude Include="RoutingClient.h" />
     <ClInclude Include="RouteInfo.hpp" />
@@ -329,6 +330,7 @@
     <ClCompile Include="QueryGenerateUtility.cpp" />
     <ClCompile Include="Probability.cpp" />
     <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="RevisableTrajectory.cpp" />
     <ClCompile Include="RoutingTable.cpp" />
     <ClCompile Include="SemanticTrajectory.cpp" />
     <ClCompile Include="stdafx.cpp">

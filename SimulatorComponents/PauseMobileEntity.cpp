@@ -14,7 +14,6 @@ namespace Entity
 		  pause_time_list(std::vector<double>(timeslot->phase_count(),0)), 
 		  speed_list(std::vector<double>(timeslot->phase_count(), 0))
 	{
-		
 	}
 
 	///<summary>
@@ -42,6 +41,7 @@ namespace Entity
 	void PauseMobileEntity<POSITION_TYPE>::set_pause_time(int phase, int pause_time)
 	{
 		pause_time_list.at(phase) = pause_time;
+		//(visited_poi_info.at(visited_poi_id)).pause_phase.push_back(phase);
 	}
 
 	///<summary>
@@ -51,6 +51,7 @@ namespace Entity
 	void PauseMobileEntity<POSITION_TYPE>::set_pause_time(int phase, double pause_time)
 	{
 		pause_time_list.at(phase) = pause_time;
+		//(visited_poi_info.at(visited_poi_id)).pause_phase.push_back(phase);
 	}
 
 	
@@ -113,7 +114,6 @@ namespace Entity
 		speed_list.at(phase) = dummy_speed;
 	}
 
-	
 	///<summary>
 	/// 交差が設定されていないPhaseを全て取得する
 	///</summary>
@@ -142,7 +142,58 @@ namespace Entity
 		return not_set_phases.at(generator.uniform_distribution(0, not_set_phases.size() - 1));
 	}
 
+	///<summary>
+	/// visited_poi_listを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::vector<std::shared_ptr<Map::BasicPoi const>> PauseMobileEntity<POSITION_TYPE>::get_visited_poi_list()
+	{
+		return visited_poi_list;
+	}
+
+	///<summary>
+	/// POIをセットする
+	///</summary>
+	template <typename POSITION_TYPE>
+	void PauseMobileEntity<POSITION_TYPE>::set_visited_poi_list(std::shared_ptr<Map::BasicPoi const> visited_poi)
+	{
+		visited_poi_list.push_back(visited_poi);
+	}
+
+	/*
+	///<summary>
+	/// visited_poi_infoを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::vector<PauseMobileEntity<>::VisitedPoiInfo> PauseMobileEntity<POSITION_TYPE>::get_visited_poi_info()
+	{
+		return visited_poi_info;
+	}
 	
+	
+
+	///<summary>
+	/// POIをセットする
+	///</summary>
+	template <typename POSITION_TYPE>
+	void PauseMobileEntity<POSITION_TYPE>::set_visit_POI_of_phase(int phase, std::shared_ptr<Map::BasicPoi const>& visited_poi)
+	{
+
+	}
+
+
+	*/
+
+	/*
+	///<summary>
+	/// トラジェクトリデータを変更可能な状態で取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::shared_ptr<TRAJECTORY_TYPE> MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_trajectory()
+	{
+		return trajectory;
+	}
+	*/
 	
 
 }
