@@ -41,6 +41,7 @@ namespace Entity
 	void PauseMobileEntity<POSITION_TYPE>::set_pause_time(int phase, int pause_time)
 	{
 		pause_time_list.at(phase) = pause_time;
+		//(visited_poi_info.at(visited_poi_id)).pause_phase.push_back(phase);
 	}
 
 	///<summary>
@@ -50,6 +51,7 @@ namespace Entity
 	void PauseMobileEntity<POSITION_TYPE>::set_pause_time(int phase, double pause_time)
 	{
 		pause_time_list.at(phase) = pause_time;
+		//(visited_poi_info.at(visited_poi_id)).pause_phase.push_back(phase);
 	}
 
 	
@@ -141,14 +143,47 @@ namespace Entity
 	}
 
 	///<summary>
-	/// 交差が設定されていない時刻を一つランダムに取得する
-	/// 設定されていないphaseが存在しない場合はINVALIDを返す
+	/// visited_poi_listを取得する
 	///</summary>
 	template <typename POSITION_TYPE>
-	void PauseMobileEntity<POSITION_TYPE>::set_visit_POI_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position)
+	std::vector<std::shared_ptr<Map::BasicPoi const>> PauseMobileEntity<POSITION_TYPE>::get_visited_poi_list()
+	{
+		return visited_poi_list;
+	}
+
+	///<summary>
+	/// POIをセットする
+	///</summary>
+	template <typename POSITION_TYPE>
+	void PauseMobileEntity<POSITION_TYPE>::set_visited_poi_list(std::shared_ptr<Map::BasicPoi const> visited_poi)
+	{
+		visited_poi_list.push_back(visited_poi);
+	}
+
+	/*
+	///<summary>
+	/// visited_poi_infoを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::vector<PauseMobileEntity<>::VisitedPoiInfo> PauseMobileEntity<POSITION_TYPE>::get_visited_poi_info()
+	{
+		return visited_poi_info;
+	}
+	
+	
+
+	///<summary>
+	/// POIをセットする
+	///</summary>
+	template <typename POSITION_TYPE>
+	void PauseMobileEntity<POSITION_TYPE>::set_visit_POI_of_phase(int phase, std::shared_ptr<Map::BasicPoi const>& visited_poi)
 	{
 
 	}
+
+
+	*/
+
 	/*
 	///<summary>
 	/// トラジェクトリデータを変更可能な状態で取得する

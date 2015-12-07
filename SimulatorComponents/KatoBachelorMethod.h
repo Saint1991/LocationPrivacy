@@ -15,7 +15,7 @@
 #include "KatoMethodRequirement.h"
 #include "Probability.h"
 #include "GeoCalculation.h"
-
+#include "RevisableTrajectory.h"
 namespace Method
 {
 
@@ -23,7 +23,7 @@ namespace Method
 	/// ‰Á“¡‚³‚ñŠw•”‘²‹Æ˜_•¶‚Ì’ñˆÄè–@‚ÌÀ‘•
 	///</summary>
 	class KATO_BACHELOR_METHOD_API KatoBachelorMethod
-		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>
+		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>
 	{
 	private:
 		//•Ï”

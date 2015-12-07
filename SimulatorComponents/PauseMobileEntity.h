@@ -7,6 +7,7 @@
 #pragma once
 #include "MobileEntity.h"
 #include "KatoMethodRequirement.h"
+#include "BasicPoi.h"
 
 namespace Entity
 {
@@ -21,16 +22,24 @@ namespace Entity
 	class PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE>
 	{
 	protected:
-		std::vector<double> pause_time_list;
-		std::vector<double> speed_list;
-		struct VisitedPoiInfo
+		/*
+		struct PAUSE_MOBILE_ENTITY_API VisitedPoiInfo
 		{
-			std::pair<Graph::MapNodeIndicator, Geography::LatLng> visited_poi;//–K–âPOI
-			std::pair<std::pair<Graph::MapNodeIndicator, Geography::LatLng>, double/*trajectory*/> next_visited_poi_info;//Ÿ‚É–K–â—\’è‚ÌPOI‚Æ‚»‚ÌŒo˜H
+			std::shared_ptr<Map::BasicPoi const> visited_poi;//–K–âPOI
+			std::pair<std::pair<Graph::MapNodeIndicator, Geography::LatLng>, double(trajectory)> next_visited_poi_info;//Ÿ‚É–K–â—\’è‚ÌPOI‚Æ‚»‚ÌŒo˜H
 			std::vector<int> pause_phase;//–K–âPOI‚É‚¨‚¯‚é’â~phase
 			double starting_speed;//–K–âPOI‚Ìo”­‘¬“x
 			double rest_pause_time_when_departing;//o”­‚µ‚½‚Ì—]‚Á‚½’â~ŠÔ
 		};
+		*/
+		//std::vector<VisitedPoiInfo> visited_poi_info;
+
+		std::vector<double> pause_time_list;
+		std::vector<double> speed_list;
+		
+		int visited_poi_id;
+
+		std::vector<std::shared_ptr<Map::BasicPoi const>> visited_poi_list;
 
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
@@ -49,8 +58,13 @@ namespace Entity
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;
 
-		void set_visit_POI_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const POSITION_TYPE& position);
+		std::vector<std::shared_ptr<Map::BasicPoi const>> get_visited_poi_list();
+		void set_visited_poi_list(std::shared_ptr<Map::BasicPoi const> visited_poi);
 
+		//std::vector<VisitedPoiInfo> get_visited_poi_info();
+		//void set_visited_POI_of_phase(int phase, std::shared_ptr<Map::BasicPoi const>& visited_poi);
+		//set_visited_POI_of_phase‚ÍMapNodeIndicatorƒ^ƒCƒv‚Å‚à‚¢‚¢‚©‚à
+		
 		//std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
 
 	};

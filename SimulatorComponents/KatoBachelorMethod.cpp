@@ -9,7 +9,7 @@ namespace Method
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
 	KatoBachelorMethod::KatoBachelorMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::Trajectory<Geography::LatLng>>(map, user, requirement, time_manager),
+		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>(map, user, requirement, time_manager),
 		grid_list(std::vector<Grid>((time_manager->phase_count() / requirement->interval_of_base_phase))),
 		creating_dummy(nullptr)
 	{
@@ -159,6 +159,7 @@ namespace Method
 
 
 
+
 	///<summary>
 	/// position間のパスを線形補間する．
 	/// sourceには決定点,destinationには目的地，source_phaseには，決定しているphaseを入力すること.
@@ -166,7 +167,7 @@ namespace Method
 	/// dest_rest_timeをポインタ引数にすることで，複数の返り値を実現.次の到着時間の余りを返す．
 	///</summary>
 	void KatoBachelorMethod::linear_interpolation_of_path_between_positions(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int *phase_id, double *dest_rest_time) {
-			//全体の停止時間から，前回の到着分を差し引いた停止時間を引いた時間
+		//全体の停止時間から，前回の到着分を差し引いた停止時間を引いた時間
 		int last_phase = time_manager->phase_count() - 1;
 		double rest_pause_time = creating_dummy->get_pause_time(*phase_id) - *dest_rest_time;
 
@@ -230,8 +231,8 @@ namespace Method
 		//speedは別途設定のため不要
 		(*phase_id)++;
 		creating_dummy->set_position_of_phase(*phase_id, destination, map->get_static_poi(destination.id())->data->get_position());
-	
-		
+
+
 	}
 
 
@@ -269,7 +270,7 @@ namespace Method
 			grid = make_grid(requirement->required_anonymous_area, *center, CELL_NUM_ON_SIDE);//phaseごとにグリッドを作成
 			grid_list.at(grid_list_id) = grid;//あるphaseのGrid.grud_list_idで何回目かのgrid生成かを記録する
 
-											  //あるphaseの全てのセルの，エンティティ数を計算(表の列を計算することに相当)
+			//あるphaseの全てのセルの，エンティティ数を計算(表の列を計算することに相当)
 			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid_list.at(grid_list_id).begin(); iter != grid_list.at(grid_list_id).end(); iter++, cell_id++)
 			{
 				entities_num_table.at(cell_id).at(grid_list_id) = entities->get_entity_count_within_boundary(phase, *iter);
@@ -293,7 +294,7 @@ namespace Method
 			//min_cell_idのセルでエンティティ数が昇順となるbase_phaseをlistで取得
 			Math::Probability generator;
 			int base_phase = generator.uniform_distribution(start_of_cycle, end_of_cycle - 1);
-			
+
 			//base_phaseはinterval_of_base_phaseの中の数なので，実際のphaseは別
 			//grid_listのみbase_phaseを使う！
 			int real_phase = (base_phase + 1) * requirement->interval_of_base_phase;
@@ -587,7 +588,7 @@ namespace Method
 				}
 				return;
 			}
-			else{
+			else {
 				//距離は適切な範囲で調整
 				double distance = 1.3 * (rest_phase_time - requirement->max_pause_time) * creating_dummy->get_speed(phase_id);
 				double angle_of_positions = generator.uniform_distribution(-M_PI_2, M_PI_2);
@@ -602,18 +603,18 @@ namespace Method
 				//decided_positionの停止時間を決める
 				//停止時間 = Moving_time(From decided_position to dest_position)
 				double pause_time_at_decided_position = generator.uniform_distribution(requirement->min_pause_time, requirement->max_pause_time);
-				
+
 				//停止時間のセット
 				creating_dummy->set_pause_time(phase_id, pause_time_at_decided_position);
 
 				//途中目的地から次の停止地点のpathを決める
 				linear_interpolation_of_path_between_positions(now_poi.first, (*next_poi)->get_id(), &phase_id, &dest_rest_time);
-		
+
 			}
 		}
 	}
 
-	
+
 	///<summary>
 	/// 初期化 (今回は特にやることはない)
 	///</summary>
@@ -622,7 +623,7 @@ namespace Method
 
 	}
 
-	
+
 
 
 	///<summary>
