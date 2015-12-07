@@ -1,5 +1,3 @@
-#include "stdafx.h"
-#include "MobileEntity.h"
 
 namespace Entity
 {
@@ -227,7 +225,7 @@ namespace Entity
 	{
 		return trajectory;
 	}
-	
+
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::clear_cross_info()
 	{

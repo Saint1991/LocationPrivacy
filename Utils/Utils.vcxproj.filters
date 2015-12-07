@@ -457,7 +457,10 @@
       <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClInclude>
     <ClInclude Include="RevisableTrajectory.h">
-      <Filter>ヘッダー ファイル\Graph</Filter>
+      <Filter>ヘッダー ファイル\Graph\Trajectory</Filter>
+    </ClInclude>
+    <ClInclude Include="MobileEntity.hpp">
+      <Filter>ソース ファイル\Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -539,9 +542,6 @@
     <ClCompile Include="MapNodeIndicator.cpp">
       <Filter>ソース ファイル\Graph</Filter>
     </ClCompile>
-    <ClCompile Include="MobileEntity.cpp">
-      <Filter>ソース ファイル\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="KatoMethodRequirement.cpp">
       <Filter>ソース ファイル\Requirement</Filter>
     </ClCompile>
@@ -582,7 +582,7 @@
       <Filter>ソース ファイル\Evaluation\MTC</Filter>
     </ClCompile>
     <ClCompile Include="RevisableTrajectory.cpp">
-      <Filter>ソース ファイル\Graph</Filter>
+      <Filter>ソース ファイル\Graph\Trajectory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

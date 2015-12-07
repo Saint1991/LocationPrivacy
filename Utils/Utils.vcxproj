@@ -244,6 +244,7 @@
     <ClInclude Include="MapNodeIndicator.h" />
     <ClInclude Include="MobileEntity.h" />
     <ClInclude Include="Column.h" />
+    <ClInclude Include="MobileEntity.hpp" />
     <ClInclude Include="MTCCalculationModule.h" />
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="PoiData.h" />
@@ -322,7 +323,6 @@
     <ClCompile Include="LatLng.cpp" />
     <ClCompile Include="MapNodeIndicator.cpp" />
     <ClCompile Include="Column.cpp" />
-    <ClCompile Include="MobileEntity.cpp" />
     <ClCompile Include="MTCCalculationModule.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
     <ClCompile Include="PoiData.cpp" />

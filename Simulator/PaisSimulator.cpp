@@ -132,7 +132,8 @@ namespace Simulation
 		}
 		double ar_count = (double)achive_count / phase_count;
 		double ar_size = achive_size / phase_count;
-
+		std::cout << "AR-Count: " << std::to_string(ar_count) << std::endl;
+		std::cout << "AR-Size: " << std::to_string(ar_size) << "m^2" << std::endl;
 		//MTC‚Ì•]‰¿
 
 		//–Ø‚ÌXV

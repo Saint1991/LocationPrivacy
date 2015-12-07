@@ -5,6 +5,7 @@
 #endif
 
 #pragma once
+#include "stdafx.h"
 #include "Identifiable.h"
 #include "Coordinate.h"
 #include "LatLng.h"
@@ -24,7 +25,7 @@ namespace Entity
 	/// ユーザ，ダミーを表すのに用いるクラス (ここから派生して別個にUser, Dummyクラスを作ってもよい)
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE = Graph::SemanticTrajectory<POSITION_TYPE>>
-	class MOBILE_ENTITY_API MobileEntity : public Identifiable<entity_id>
+	class MobileEntity : public Identifiable<entity_id>
 	{
 	
 	protected:
@@ -65,11 +66,7 @@ namespace Entity
 		
 		std::shared_ptr<TRAJECTORY_TYPE const> read_trajectory() const;
 	};
-
-	//明示的特殊化
-	template class MobileEntity<Graph::Coordinate>;
-	template class MobileEntity<Geography::LatLng>;
 }
 
-
+#include "MobileEntity.hpp"
 
