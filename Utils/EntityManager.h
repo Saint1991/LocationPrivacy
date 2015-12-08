@@ -24,8 +24,6 @@ namespace Entity
 	{
 	
 	static_assert(std::is_base_of<Geography::LatLng, POSITION_TYPE>::value, "POSITION_TYPE must be Coordinate or the class derived from LatLng");
-	static_assert(std::is_base_of<MobileEntity<Geography::LatLng>, DUMMY>::value, "DUMMY must be derived from MobileEntity");
-	static_assert(std::is_base_of<MobileEntity<Geography::LatLng>, USER>::value, "USER must be derived from MobileEntity");
 	
 	protected:
 		std::shared_ptr<std::vector<std::shared_ptr<DUMMY>>> dummies;

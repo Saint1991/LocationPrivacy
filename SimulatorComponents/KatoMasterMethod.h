@@ -20,13 +20,11 @@ namespace Method {
 	class KatoMasterMethod :public KatoBachelorMethod
 	{
 	private:
-		int changes_in_arrival_time;//ユーザの到着時間の変化分
+		double changes_in_arrival_time;//ユーザの到着時間の変化分
 		enum ChangeParameter { LONGER_PAUSE_TIME, SHORTER_PAUSE_TIME, PATH, FASTER_SPEED, SLOER_SPEED, POSITION, NO_CHANGE };
 		
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> make_real_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> make_real_user_plan_for_comparing_hayashida_method(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
-		//std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> make_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
-
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> make_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
+		
 
 		bool check_going_pause_position_in_plan();//ユーザの行動プランに含まれる停止地点に向かっているかどうかをチェック
 		std::pair<ChangeParameter, double> check_user_plan(int now_phase);//ユーザの行動プラン変更のチェック

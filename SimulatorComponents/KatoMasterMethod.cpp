@@ -27,21 +27,17 @@ namespace Method
 	/// 加藤さん手法の場合は，各要素の生成確率によって割合を決める．
 	/// その割合に従って，実際のユーザを作成する
 	///</summary>
-	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMasterMethod::make_real_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user)
+	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMasterMethod::make_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user)
 	{
-		return real_user;
+		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> input_user_positions = input_user->read_trajectory()->read_positions();
+		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> predicted_user_positions;
+
+		std::copy(input_user_positions->begin(), input_user_positions->end(), predicted_user_positions->begin());
+
+		return predicted_user;
 	}
 
-	///<summary>
-	/// input_user_planからユーザの行動を予測し，そのユーザを返す．
-	/// POIのみ，順番を確率的に入れ替えるようにして，あとは適当
-	///</summary>
-	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMasterMethod::make_real_user_plan_for_comparing_hayashida_method(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user) {
-		return real_user;
-	}
-
-
-	
+		
 	///<summary>
 	/// ユーザの行動プランに含まれる停止地点に向かっているかどうかをチェック
 	///</summary>
@@ -58,7 +54,8 @@ namespace Method
 	std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_plan(int now_phase)
 	{
 		//止まっている→停止時間の変更or停止地点の変更
-		if (/*もし片方でも停止していたら→停止時間変更の判断*/true) {
+		//もし片方でも停止していたら→停止時間変更の判断
+		if (predicted_user->check_pause_flag() || real_user->check_pause_flag()) {
 			return check_user_pause_time(now_phase);
 		}
 		//動いていたら，
@@ -79,30 +76,28 @@ namespace Method
 		///</summary>
 		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_pause_time(int now_phase)
 		{
-			//停止しているかどうかのフラグを作る？
-			Geography::LatLng previous_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase - 1).second;
-			Geography::LatLng previous_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase - 1).second;
-			Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase).second;
-			Geography::LatLng now_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase).second;
-			
 			double change_time = 0.0;
-			//もしプラン通り停止していたら，NO_CHANGE
-			if (/*もし両者の停止フラグが１なら，*/true) {
+			//もしプラン通り停止していたら(両者の停止フラグが１)，NO_CHANGE
+			if (predicted_user->check_pause_flag() && real_user->check_pause_flag()) {
 				return std::make_pair(NO_CHANGE, change_time);
 			}
-			else if(/*もし片方でも停止フラグが1なら*/true){
-				if (/*もしrealのほうが停止フラグが0で(出発していて)，predictが1なら*/true) {
+			else if(predicted_user->check_pause_flag() || real_user->check_pause_flag()){
+				//もしrealのほうが停止フラグが0で(出発していて)，predictが1なら,予定より早く出発
+				if (predicted_user->check_pause_flag() == true && real_user->check_pause_flag() == false) {
 					//change_timeの差分を求める
+					change_time -= requirement->service_interval;
 					return std::make_pair(SHORTER_PAUSE_TIME, change_time);
 				}
 				else {
 					//change_timeの差分を求める
+					change_time += requirement->service_interval;
 					return std::make_pair(LONGER_PAUSE_TIME, change_time);
 				}
 			}
-			//両方フラグが0なら，速度変更でなく，rest_time分をずれを検知
+			//両方フラグが0なら(速度変更からジャンプして飛んできた場合)，速度変更でなく，rest_time分をずれを検知
 			else {
-				if (/*移動距離がrealのほうが大きいなら*/true) {
+				//移動距離がrealのほうが大きいなら
+				if (true) {
 					//change_timeの差分を求める
 					return std::make_pair(SHORTER_PAUSE_TIME, change_time);
 				}
@@ -121,9 +116,14 @@ namespace Method
 		///</summary>
 		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_speed(int now_phase)
 		{
+			Geography::LatLng previous_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase - 1).second;
+			Geography::LatLng previous_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase - 1).second;
+			Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase).second;
+			Geography::LatLng now_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase).second;
+			
 			double change_time = 0.0;
-
-			if (/*もし同じ場所にいいたら*/true) {
+			//もし同じ場所にいたら，NO_CHANGE
+			if (now_predicted_user_position == now_real_user_position) {
 				return std::make_pair(NO_CHANGE, change_time);
 			}
 			else {
@@ -350,7 +350,7 @@ namespace Method
 	void KatoMasterMethod::initialize()
 	{
 		//ユーザの動きの変更→新しく作る．
-		predicted_user = make_real_user_plan(entities->get_user());
+		predicted_user = make_predicted_user_plan(entities->get_user());
 	}
 
 
@@ -372,9 +372,7 @@ namespace Method
 					}
 				}
 			}
-	}
-		
-
+		}
 	}
 
 	/*

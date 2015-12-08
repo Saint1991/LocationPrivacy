@@ -19,6 +19,11 @@ namespace Graph
 	public:
 		RevisableTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		~RevisableTrajectory();
+
+		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> read_positions() const;
+		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> get_positions();
+
+
 	};
 
 	template class RevisableTrajectory<Geography::LatLng>;

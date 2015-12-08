@@ -6,6 +6,7 @@
 
 #pragma once
 #include "MobileEntity.h"
+#include "RevisableTrajectory.h"
 #include "KatoMethodRequirement.h"
 #include "BasicPoi.h"
 
@@ -14,30 +15,33 @@ namespace Entity
 
 	typedef unsigned int entity_id;
 
+	
+
 	///<summary>
 	/// 停止時間を含んだ移動体を表すクラス
 	/// ユーザ，ダミーを表すのに用いるクラス (MobileEntityから派生)
 	///</summary>
-	template <typename POSITION_TYPE = Geography::LatLng>
-	class PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE>
+	template <typename POSITION_TYPE = Geography::LatLng, typename TRAJECTORY_TYPE = Graph::RevisableTrajectory<POSITION_TYPE>>
+	class PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>
 	{
 	protected:
-		/*
-		struct PAUSE_MOBILE_ENTITY_API VisitedPoiInfo
+		
+		struct VisitedPoiInfo
 		{
 			std::shared_ptr<Map::BasicPoi const> visited_poi;//訪問POI
-			std::pair<std::pair<Graph::MapNodeIndicator, Geography::LatLng>, double(trajectory)> next_visited_poi_info;//次に訪問予定のPOIとその経路
+			std::pair<std::pair<Graph::MapNodeIndicator, POSITION_TYPE>, TRAJECTORY_TYPE> next_visited_poi_info;//次に訪問予定のPOIとその経路
 			std::vector<int> pause_phase;//訪問POIにおける停止phase
 			double starting_speed;//訪問POIの出発速度
 			double rest_pause_time_when_departing;//出発した時の余った停止時間
 		};
-		*/
-		//std::vector<VisitedPoiInfo> visited_poi_info;
+		
+		std::vector<VisitedPoiInfo> visited_poi_info;
 
 		std::vector<double> pause_time_list;
 		std::vector<double> speed_list;
 		
 		int visited_poi_id;
+		int pause_flag;
 
 		std::vector<std::shared_ptr<Map::BasicPoi const>> visited_poi_list;
 
@@ -65,11 +69,11 @@ namespace Entity
 		//void set_visited_POI_of_phase(int phase, std::shared_ptr<Map::BasicPoi const>& visited_poi);
 		//set_visited_POI_of_phaseはMapNodeIndicatorタイプでもいいかも
 		
-		//std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
-
+		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
+		bool check_pause_flag();
 	};
 
 	//明示的特殊化
 	template class PauseMobileEntity<Graph::Coordinate>;
-	template class PauseMobileEntity<Geography::LatLng>;
+	template class PauseMobileEntity<Geography::LatLng, Graph::RevisableTrajectory<>>;
 }

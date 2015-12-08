@@ -20,4 +20,22 @@ namespace Graph
 	{
 	}
 
+	///<summary>
+	/// positions‚ğ•ÏX•s‰Â‚Ìó‘Ô‚Åæ“¾‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> RevisableTrajectory<POSITION_TYPE>::read_positions() const
+	{
+		return positions;
+	}
+
+	///<summary>
+	/// positions‚ğ•ÏX‰Â‚Ìó‘Ô‚Åæ“¾‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> RevisableTrajectory<POSITION_TYPE>::get_positions()
+	{
+		return positions;
+	}
+
 }
