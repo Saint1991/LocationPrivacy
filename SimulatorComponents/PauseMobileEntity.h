@@ -15,8 +15,6 @@ namespace Entity
 
 	typedef unsigned int entity_id;
 
-	
-
 	///<summary>
 	/// 停止時間を含んだ移動体を表すクラス
 	/// ユーザ，ダミーを表すのに用いるクラス (MobileEntityから派生)
@@ -25,7 +23,6 @@ namespace Entity
 	class PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>
 	{
 	protected:
-		
 		struct VisitedPoiInfo
 		{
 			std::shared_ptr<Map::BasicPoi const> visited_poi;//訪問POI
@@ -36,13 +33,13 @@ namespace Entity
 		};
 		
 		std::vector<VisitedPoiInfo> visited_poi_info;
+		int visited_poi_id;
 
 		std::vector<double> pause_time_list;
-		std::vector<double> speed_list;
-		
-		int visited_poi_id;
 		int pause_flag;
 
+		std::vector<double> speed_list;
+		
 		std::vector<std::shared_ptr<Map::BasicPoi const>> visited_poi_list;
 
 	public:
@@ -54,7 +51,8 @@ namespace Entity
 		void set_pause_time(int phase, double pause_time);
 		void set_random_pause_time(int phase, int min, int max);
 		void set_random_pause_time(int phase, double min, double max);
-
+		int get_next_pause_phase(int phase);
+		
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
 		void set_random_speed(int phase, double average_speed, double speed_range);

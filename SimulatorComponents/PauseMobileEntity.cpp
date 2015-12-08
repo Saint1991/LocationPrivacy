@@ -81,6 +81,22 @@ namespace Entity
 
 
 	///<summary>
+	/// 次に訪問予定の停止POIの到着するphaseを求める．
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_next_pause_phase(int phase)
+	{
+		//auto *iter = &*pause_time_list.at(phase);
+		//while (*iter != 0) iter++;
+		
+		//もし次の停止地点がない場合は，最終phaseを返す
+		int pause_phase = 0;// std::distance(pause_time_list.begin(), *iter);
+
+		return pause_phase;
+	}
+
+
+	///<summary>
 	/// 移動速度を求める
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
@@ -167,13 +183,13 @@ namespace Entity
 	/// visited_poi_infoを取得する
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	std::vector<PauseMobileEntity<>::VisitedPoiInfo> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_visited_poi_info()
+	std::vector<PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::VisitedPoiInfo> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_visited_poi_info()
 	{
-		return visited_poi_info;
+		return (visited);
 	}
+	*/
 	
-	
-
+	/*
 	///<summary>
 	/// POIをセットする
 	///</summary>
