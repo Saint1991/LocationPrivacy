@@ -182,7 +182,7 @@ namespace Entity
 	
 	///<summary>
 	/// 訪問POI情報をセットする
-	/// 
+	/// 訪問地点の登録の時はこちらを使う
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position)
@@ -191,8 +191,17 @@ namespace Entity
 		visited_pois_info_list.at(visited_pois_info_list_id).visited_poi = std::make_pair(node_id, position);
 		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
 	}
-	
 
+	///<summary>
+	/// 共有地点設定時の訪問POI情報をセットする
+	/// MobileEntityをオーバーライドした関数
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name)
+	{
+		register_as_cross_position(phase);
+		set_visited_poi_of_phase(phase, node_id, position);
+	}
 	
 	///<summary>
 	/// トラジェクトリデータを変更可能な状態で取得する

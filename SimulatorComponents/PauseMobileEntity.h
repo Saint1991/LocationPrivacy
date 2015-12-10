@@ -9,7 +9,6 @@
 #include "RevisableTrajectory.h"
 #include "KatoMethodRequirement.h"
 #include "BasicPoi.h"
-//#include "VisitedPoiInfo.h"
 
 namespace Entity
 {
@@ -67,6 +66,7 @@ namespace Entity
 		double get_starting_speed(int visited_poi_info_id);
 		
 		void set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position);
+		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name = "");//MobileEntityのオーバーライド
 
 		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
 		bool check_pause_flag();

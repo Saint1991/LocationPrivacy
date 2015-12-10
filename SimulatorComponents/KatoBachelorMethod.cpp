@@ -230,7 +230,7 @@ namespace Method
 		//目的地の登録
 		//speedは別途設定のため不要
 		(*phase_id)++;
-		creating_dummy->set_position_of_phase(*phase_id, destination, map->get_static_poi(destination.id())->data->get_position());
+		creating_dummy->set_visited_poi_of_phase(*phase_id, destination, map->get_static_poi(destination.id())->data->get_position());
 
 
 	}
@@ -307,7 +307,7 @@ namespace Method
 
 			//一番最初のみ到達可能性を考慮せずに停止地点を決定する．
 			if (creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first == INVALID) {
-				creating_dummy->set_position_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
+				creating_dummy->set_visited_poi_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
 				creating_dummy->set_random_speed(real_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 			}
 			//二箇所目以降の基準地点は，以前の基準地点から到達可能性を調べたのちに決定する．
@@ -341,7 +341,7 @@ namespace Method
 					}
 				}
 
-				creating_dummy->set_position_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
+				creating_dummy->set_visited_poi_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
 				creating_dummy->set_random_speed(real_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
 			}
 		}
@@ -487,7 +487,7 @@ namespace Method
 		}
 
 		//PPoutに<position, start, pauseのinit>を追加;
-		creating_dummy->set_position_of_phase(phase_id, Graph::MapNodeIndicator((*init_poi)->get_id()), (*init_poi)->data->get_position());
+		creating_dummy->set_visited_poi_of_phase(phase_id, Graph::MapNodeIndicator((*init_poi)->get_id()), (*init_poi)->data->get_position());
 
 		//------------------------------------↑初期位置の決定↑------------------------------------------------------//
 
