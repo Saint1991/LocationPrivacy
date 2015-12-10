@@ -12,7 +12,9 @@ namespace Method
 		:KatoBachelorMethod(map, user, requirement, time_manager),
 		real_user(nullptr), predicted_user(nullptr)
 	{
+		//ユーザが2つ持てるように，データ構造を修正する．input_userの方はget_user()ではないので，注意
 		input_user = entities->get_user();
+		real_user = entities->get_user();
 	}
 
 	///<summary>
@@ -27,21 +29,42 @@ namespace Method
 	/// 加藤さん手法の場合は，各要素の生成確率によって割合を決める．
 	/// その割合に従って，実際のユーザを作成する
 	///</summary>
-	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMasterMethod::make_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user)
+	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> KatoMasterMethod::copy_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user)
 	{
-		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> input_user_positions = input_user->read_trajectory()->read_positions();
+		//std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> input_user_positions = input_user->read_trajectory()->read_positions();
 		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> predicted_user_positions;
 
-		std::copy(input_user_positions->begin(), input_user_positions->end(), predicted_user_positions->begin());
-
+		//std::copy(input_user_positions->begin(), input_user_positions->end(), predicted_user_positions->begin());
+		
 		return predicted_user;
 	}
+
+
+	///<summary>
+	/// 速度の最大変化値と最小変化値を計算する
+	///</summary>
+	std::pair<double, double> KatoMasterMethod::calc_max_variable_speed(double speed)
+	{
+		double max_speed = requirement->average_speed_of_dummy + requirement->speed_range_of_dummy;
+		double min_speed = requirement->average_speed_of_dummy - requirement->speed_range_of_dummy;
+
+		return std::make_pair(requirement->max_variation_of_speed*(max_speed - speed), requirement->max_variation_of_speed*(speed - min_speed));
+	}
+
+	///<summary>
+	/// 停止時間の最大変化値と最小変化値を計算する
+	///</summary>
+	std::pair<double, double> KatoMasterMethod::calc_max_variable_pause_time(double pause_time)
+	{
+		return std::make_pair(requirement->max_variation_of_pause_time*(requirement->max_pause_time - pause_time), requirement->max_variation_of_pause_time*(pause_time - requirement->min_pause_time));
+	}
+
 
 		
 	///<summary>
 	/// ユーザの行動プランに含まれる停止地点に向かっているかどうかをチェック
 	///</summary>
-	bool KatoMasterMethod::check_going_pause_position_in_plan()
+	bool KatoMasterMethod::check_going_same_poi_as_plan()
 	{
 		return true;
 	}
@@ -206,11 +229,10 @@ namespace Method
 
 
 	///<summary>
-	/// ユーザの停止時間の修正
+	/// ユーザの停止時間が予定より短い時のpredicted_userの修正
 	///</summary>
 	void KatoMasterMethod::modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(std::pair<ChangeParameter, double> check_parameter, int phase_id)
 	{
-
 
 	}
 
@@ -223,7 +245,7 @@ namespace Method
 	}
 
 	///<summary>
-	/// ユーザの移動速度の修正
+	/// ユーザの移動速度が予定より早い時の修正
 	///</summary>
 	void KatoMasterMethod::modification_of_user_trajectory_when_FASTER_SPEED(std::pair<ChangeParameter, double> check_parameter, int phase_id)
 	{
@@ -232,7 +254,7 @@ namespace Method
 	}
 
 	///<summary>
-	/// ユーザの移動速度の修正
+	/// ユーザの移動速度が予定より遅い時の修正
 	///</summary>
 	void KatoMasterMethod::modification_of_user_trajectory_when_SLOER_SPEED(std::pair<ChangeParameter, double> check_parameter, int phase_id)
 	{
@@ -253,9 +275,26 @@ namespace Method
 	///<summary>
 	/// ダミーの行動プランを修正する
 	///</summary>
-	void KatoMasterMethod::revise_dummy_movement_plan(int phase_id)
+	void KatoMasterMethod::revise_dummy_trajectory(int phase_id)
 	{
+		//poiに止まっている時
+		if (revising_dummy->check_pause_flag()) {
+			//全ての停止地点の到着時間を変更し，Tu分変更させる．
+			revise_dummy_pause_time(phase_id);
+			revise_dummy_path(phase_id);
+			revise_dummy_speed(phase_id);
+			if (changes_in_arrival_time != 0) revise_dummy_visit_poi(phase_id);
+			
+		}
+		//現在移動中で，プランと同じpoiに向かっている場合，向かっているpoiに停止中だとして考える
+		else {
+			//全ての停止地点の到着時間を変更し，Tu分変更させる．
+			revise_dummy_pause_time(phase_id);
+			revise_dummy_path(phase_id);
+			revise_dummy_speed(phase_id);
+			if (changes_in_arrival_time != 0) revise_dummy_visit_poi(phase_id);
 
+		}
 	}
 
 
@@ -265,28 +304,25 @@ namespace Method
 	void KatoMasterMethod::revise_dummy_pause_time(int phase_id)
 	{
 		//前の値の保持
-		int next_pause_phase = revising_dummy->get_next_pause_phase(phase_id);
-		double next_pause_time = revising_dummy->get_pause_time(next_pause_phase);
-		double next_arrive_time = time_manager->time_of_phase(next_pause_phase);
+		int pause_phase = revising_dummy->get_pause_phase(phase_id);
+		double pause_time = revising_dummy->get_pause_time(pause_phase);
+		double next_arrive_time = time_manager->time_of_phase(pause_phase);
 
+		double max_variable_value = calc_max_variable_pause_time(pause_phase).first;
+		double min_variable_value = calc_max_variable_pause_time(pause_phase).second;
+		double new_pause_time = changes_in_arrival_time;
 
-		//修正幅が最大変化量を超えたら，修正幅は最大変化量とする．
-		if (std::abs(changes_in_arrival_time) > requirement->max_variation_of_pause_time)
-		{
-			double new_pause_time = changes_in_arrival_time > 0 ? next_pause_time + requirement->max_variation_of_pause_time : next_pause_time - requirement->max_variation_of_pause_time;
-			revising_dummy->set_pause_time(next_pause_phase, new_pause_time);
+		//修正幅 ＜ 最大変化量　を満たし，かつ，修正幅 < 最大停止時間とする．
+		if (changes_in_arrival_time > 0) {
+			if (changes_in_arrival_time > max_variable_value) new_pause_time = max_variable_value;
+			if (max_variable_value > requirement->max_pause_time) new_pause_time = requirement->max_pause_time;
 		}
-		else
-		{
-			revising_dummy->set_pause_time(next_pause_phase, next_pause_time + changes_in_arrival_time);
+		else {
+			if (changes_in_arrival_time < min_variable_value) new_pause_time = min_variable_value;
+			if (min_variable_value < requirement->min_pause_time) new_pause_time = requirement->min_pause_time;
 		}
-
-		if (requirement->max_pause_time < time_manager->time_of_phase(next_pause_phase)) revising_dummy->set_pause_time(next_pause_phase, requirement->max_pause_time);
-		if (requirement->min_pause_time > time_manager->time_of_phase(next_pause_phase)) revising_dummy->set_pause_time(next_pause_phase, requirement->min_pause_time);
-
-		//停止時間の変化量を求める
-		int variation_of_pause_time = revising_dummy->get_pause_time(next_pause_phase) - next_pause_time;
-
+		revising_dummy->set_pause_time(pause_phase, pause_time + new_pause_time);
+		
 		//調整した分，ダミーの停止時間を修正する．
 		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)
 		{
@@ -295,7 +331,7 @@ namespace Method
 		if (time_manager->time_of_phase(phase_id + 1) == next_arrive_time + changes_in_arrival_time) return;
 		
 		//もし調整しきれなかったら，次のpathの調整をする
-		changes_in_arrival_time -= variation_of_pause_time;
+		changes_in_arrival_time -= new_pause_time;
 	}
 
 
@@ -314,8 +350,8 @@ namespace Method
 	void KatoMasterMethod::revise_dummy_speed(int phase_id)
 	{
 		//前の値の保持
-		int next_pause_phase = revising_dummy->get_next_pause_phase(phase_id);
-		int next_next_pause_phase = revising_dummy->get_next_pause_phase(next_pause_phase);
+		int next_pause_phase = revising_dummy->get_pause_phase(phase_id);
+		int next_next_pause_phase = revising_dummy->get_pause_phase(next_pause_phase);
 		double next_departing_speed = revising_dummy->get_speed(next_pause_phase);
 		double next_arrive_time = time_manager->time_of_phase(next_pause_phase);
 		
@@ -361,7 +397,7 @@ namespace Method
 	void KatoMasterMethod::initialize()
 	{
 		//ユーザの動きの変更→新しく作る．
-		predicted_user = make_predicted_user_plan(entities->get_user());
+		predicted_user = copy_predicted_user_plan(entities->get_user());
 	}
 
 
@@ -375,9 +411,9 @@ namespace Method
 			revising_dummy = entities->get_dummy_by_id(dummy_id);
 			for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
 			{
-				if (check_going_pause_position_in_plan()) {
+				if (check_going_same_poi_as_plan()) {
 					if (check_user_plan(phase_id).second != 0.0) {
-						revise_dummy_movement_plan(phase_id);//dummyの行動プランの更新
+						revise_dummy_trajectory(phase_id);//dummyの行動プランの更新
 						update_user_plan(check_user_plan(phase_id), phase_id);//次の停止地点の到着時間を予測し，ユーザの行動プランを更新
 					}
 				}

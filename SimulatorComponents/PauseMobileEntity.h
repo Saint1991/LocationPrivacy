@@ -9,12 +9,27 @@
 #include "RevisableTrajectory.h"
 #include "KatoMethodRequirement.h"
 #include "BasicPoi.h"
+//#include "VisitedPoiInfo.h"
 
 namespace Entity
 {
-
 	typedef unsigned int entity_id;
 
+	class VisitedPoiInfo
+	{
+	public:
+		VisitedPoiInfo();
+		virtual ~VisitedPoiInfo();
+		
+		std::pair<Graph::MapNodeIndicator, Geography::LatLng> visited_poi;//訪問POI
+		std::vector<int> pause_phase;//訪問POIにおける停止phase
+		int arrive_phase;//到着したphase
+		double pause_time;//停止時間
+		double starting_speed;//訪問POIの出発速度
+		double rest_pause_time_when_departing;//出発時の余り停止時間
+		double dest_rest_time;//POIに到着した時の余り時間
+	};
+	
 	///<summary>
 	/// 停止時間を含んだ移動体を表すクラス
 	/// ユーザ，ダミーを表すのに用いるクラス (MobileEntityから派生)
@@ -23,25 +38,14 @@ namespace Entity
 	class PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>
 	{
 	protected:
-		struct VisitedPoiInfo
-		{
-			std::shared_ptr<Map::BasicPoi const> visited_poi;//訪問POI
-			std::pair<std::pair<Graph::MapNodeIndicator, POSITION_TYPE>, TRAJECTORY_TYPE> next_visited_poi_info;//次に訪問予定のPOIとその経路
-			std::vector<int> pause_phase;//訪問POIにおける停止phase
-			double starting_speed;//訪問POIの出発速度
-			double rest_pause_time_when_departing;//出発した時の余った停止時間
-		};
-		
-		std::vector<VisitedPoiInfo> visited_poi_info;
-		int visited_poi_id;
+		std::vector<VisitedPoiInfo> visited_pois_info_list;
+		int visited_pois_info_list_id;
 
-		std::vector<double> pause_time_list;
+		std::vector<double> pause_time_list;//現在地点における残り停止時間
 		int pause_flag;
 
 		std::vector<double> speed_list;
 		
-		std::vector<std::shared_ptr<Map::BasicPoi const>> visited_poi_list;
-
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		virtual ~PauseMobileEntity();
@@ -51,7 +55,7 @@ namespace Entity
 		void set_pause_time(int phase, double pause_time);
 		void set_random_pause_time(int phase, int min, int max);
 		void set_random_pause_time(int phase, double min, double max);
-		int get_next_pause_phase(int phase);
+		int get_pause_phase(int phase);
 		
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
@@ -60,13 +64,10 @@ namespace Entity
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;
 
-		std::vector<std::shared_ptr<Map::BasicPoi const>> get_visited_poi_list();
-		void set_visited_poi_list(std::shared_ptr<Map::BasicPoi const> visited_poi);
-
-		//std::vector<VisitedPoiInfo> get_visited_poi_info();
-		//void set_visited_POI_of_phase(int phase, std::shared_ptr<Map::BasicPoi const>& visited_poi);
-		//set_visited_POI_of_phaseはMapNodeIndicatorタイプでもいいかも
+		double get_starting_speed(int visited_poi_info_id);
 		
+		void set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position);
+
 		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
 		bool check_pause_flag();
 	};

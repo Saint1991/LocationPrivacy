@@ -113,26 +113,58 @@ namespace Simulation
 			user->set_speed(*phase_id, 0);
 		}
 	}
+		
 
 	///<summary>
-	/// inputする要素を作成
+	/// inputするpoiのlistを作成
 	///</summary>
-	void HayashidaSimulator::input_elements() {
+	void HayashidaSimulator::input_visit_pois() {
 		//POI系列を作成する際の，選択範囲
 		Graph::Rectangle<Geography::LatLng> poi_range(BASE_LAT + 0.5*length_of_all_POI_rect, BASE_LNG - 0.5*length_of_all_POI_rect, BASE_LAT - 0.5*length_of_all_POI_rect, BASE_LNG + 0.5*length_of_all_POI_rect);
 
 		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = get_pois_list(poi_range);
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator iter = random_pois_list.begin();
 		for (int i = 0; i < POI_NUM; i++, iter++) {
-			user->set_visited_poi_list(*iter);
+			input_poi_list.push_back(*iter);
 		}
 	}
+
+	///<summary>
+	/// input_elementsの入力POIを基に，巡回セールスマン問題を時，総距離が小さ順にソートしたvectorを返す．
+	///</summary>
+	std::vector<std::vector<std::shared_ptr<Map::BasicPoi const>>> HayashidaSimulator::all_traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois)
+	{
+		std::vector<std::vector<std::shared_ptr<Map::BasicPoi const>>> all_tsp_solution;
+		return all_tsp_solution;
+	}
+
+
+	///<summary>
+	/// input_elementsの入力POIを基に，巡回セールスマン問題を解き，最適解を返す．
+	///</summary>
+	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois)
+	{
+		return all_traveling_salesman_problem(visited_pois).front();
+	}
+
+	///<summary>
+	/// input_elementsの入力POIを基に，巡回セールスマン問題を解き，ガウス分布に従って一定確率で求めたpoi系列を返す．
+	///</summary>
+	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::Gaussian_distribution(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois)
+	{
+		std::vector<std::vector<std::shared_ptr<Map::BasicPoi const>>> all_tsp_solution = all_traveling_salesman_problem(visited_pois);
+		std::vector<std::shared_ptr<Map::BasicPoi const>> gaussian_pois;
+		
+		return gaussian_pois;
+	}
+
+
 
 	///<summary>
 	/// ランダムムーブを行うユーザを生成する
 	/// ただし，現在は最短経路で移動
 	///</summary>
-	void HayashidaSimulator::random_user_moving_shortest_path()
+	void HayashidaSimulator::make_random_movement_user()
 	{
 		Math::Probability generator;
 
@@ -261,30 +293,23 @@ namespace Simulation
 		std::cout << "Success Creating Random User" << std::endl;
 	}
 
-	///<summary>
-	/// input_elementsの入力POIを基に，巡回セールスマン問題を時，ユーザのPOI訪問順序を予測
-	///</summary>
-	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois)
-	{
-		return visited_pois;
-	}
-
+	
 
 	///<summary>
-	/// input_elementsを基に，ユーザを作成する．
+	/// input_poisを基に，t.s.p.を用い，予想ユーザを作成する．
 	///</summary>
-	void HayashidaSimulator::make_input_user_using_input_POI() {
+	void HayashidaSimulator::make_predicted_user() {
 		
 		time_manager = create_time_manager();//time_managerの生成
 		user = std::make_shared<Entity::PauseMobileEntity<Geography::LatLng>>(0, time_manager);
 				
-		input_elements();//userのinput情報を入れる
+		input_visit_pois();//userのinput情報を入れる
 
 		//---------------------------POI訪問順序を決定---------------------------------------------
 		int phase_id = 0;
 		
 		//userのvisited_poisを用いて，始点がstart_poiの巡回セールスマン問題を解く
-		std::vector<std::shared_ptr<Map::BasicPoi const>> order_visited_poi = traveling_salesman_problem(user->get_visited_poi_list());
+		std::vector<std::shared_ptr<Map::BasicPoi const>> order_visited_poi = traveling_salesman_problem(input_poi_list);
 		
 		int dest_rest_time = 0;//phaseの到着時間と実際の到着時間の差分.最初だけ0
 		//最初の点を登録
@@ -389,7 +414,128 @@ namespace Simulation
 
 	}
 
+	
+	///<summary>
+	/// input_poisを基に，実際のユーザを作成する．
+	/// t.s.p.の解の距離が近い順に正規分布で重み付けして，確率的に変化させる．
+	///</summary>
+	void HayashidaSimulator::make_real_user() {
 
+		time_manager = create_time_manager();//time_managerの生成
+		user = std::make_shared<Entity::PauseMobileEntity<Geography::LatLng>>(0, time_manager);
+
+		input_visit_pois();//userのinput情報を入れる
+
+		//---------------------------POI訪問順序を決定---------------------------------------------
+		int phase_id = 0;
+
+		//userのvisited_poisを用いて，始点がstart_poiの巡回セールスマン問題の解のうち，ガウス分布に従い，ある結果を抽出する．
+		std::vector<std::shared_ptr<Map::BasicPoi const>> order_visited_poi = Gaussian_distribution(input_poi_list);
+
+		int dest_rest_time = 0;//phaseの到着時間と実際の到着時間の差分.最初だけ0
+		//最初の点を登録
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = order_visited_poi.begin();
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator next_poi = order_visited_poi.begin() + 1;
+
+		user->set_position_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
+		user->set_random_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
+		user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+		//--------------二個目以降の点を決定．forで，確保したいpoiの個数分をループさせる-------------------
+		for (int i = 1; i < POI_NUM; i++)
+		{
+			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
+			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
+
+			int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
+
+			//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
+			div_t variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
+
+			//停止時間分，各phaseに停止場所と移動速度(0)を登録
+			set_pause_time_and_speed_0_of_visitPOI(&phase_id, variable_of_converted_pause_time_to_phase, now_poi);
+
+			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
+			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
+																										   //速度はphaseで埋める前を参照しなければならないことに注意
+			double pause_position_speed = user->get_speed(phase_id - variable_of_converted_pause_time_to_phase.quot);
+
+			//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
+			double distance = (SERVICE_INTERVAL - variable_of_converted_pause_time_to_phase.rem) * pause_position_speed;
+			double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*next_poi)->get_id());
+
+			Graph::MapNodeIndicator nearest_position = (*now_poi)->get_id();
+
+			//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
+			while (distance < distance_between_now_and_next_poi) {
+				//最短路の中で一番近いintersectionを探し，線形補間する．		
+				set_path_between_poi(now_poi, path_iter, nearest_position, pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
+			}
+
+			//destinationのところまで補完できたら，rest_timeを保持しておく！
+			double distance_between_arrive_position_and_dest_position = distance - distance_between_now_and_next_poi;
+			dest_rest_time = distance_between_arrive_position_and_dest_position / pause_position_speed;
+
+			//目的地の登録
+			phase_id++;
+			user->set_position_of_phase(phase_id, (*next_poi)->get_id(), map->get_static_poi((*next_poi)->get_id())->data->get_position());
+			user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+			user->set_random_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
+
+			now_poi++;
+			next_poi++;
+		}
+
+		//---------------------------------end_timeまで適当に経路を決める！---------------------------------------------------
+
+		Math::Probability generator;
+		//最終地点は少し遠くにとる(1.5倍～2倍)．ただし，マップの限界範囲に注意
+		double last_distance = 1.3 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_speed(phase_id);
+
+		//次の候補点の範囲を求める
+		double last_angle = generator.uniform_distribution(-(M_PI), M_PI_2);
+		Geography::LatLng last_candidate_poi_position_range
+			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
+
+		Graph::Rectangle<Geography::LatLng> last_range(last_candidate_poi_position_range.lat() + 0.001, last_candidate_poi_position_range.lng(), last_candidate_poi_position_range.lat(), last_candidate_poi_position_range.lng() + 0.001);
+
+		std::vector<std::shared_ptr<Map::BasicPoi const>> last_candidate_pois_list = get_pois_list(last_range);
+		//次のPOIの決定
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator last_poi = last_candidate_pois_list.begin();
+
+		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
+		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), user->get_speed(phase_id));
+		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
+
+		//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
+		int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
+		div_t last_variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
+
+		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
+
+		//停止時間分，各phaseに停止場所と移動速度(0)を登録
+		set_pause_time_and_speed_0_of_visitPOI(&phase_id, last_variable_of_converted_pause_time_to_phase, now_poi);
+
+		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
+																									//速度はphaseで埋める前を参照しなければならないことに注意
+		double last_pause_position_speed = user->get_speed(phase_id - last_variable_of_converted_pause_time_to_phase.quot);
+
+		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
+		double distance = (SERVICE_INTERVAL - last_variable_of_converted_pause_time_to_phase.rem) * last_pause_position_speed;
+		double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*last_poi)->get_id());
+
+		Graph::MapNodeIndicator last_nearest_position = (*now_poi)->get_id();
+
+		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
+		//last_phaseまで埋める！
+		while (phase_id != (time_manager->phase_count() - 1)) {
+			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
+		}
+
+		std::cout << "Success Creating Input User" << std::endl;
+
+	}
+
+	
 	///<summary>
 	/// ダミーのtrajectoryを出力する
 	///</summary>
@@ -446,7 +592,7 @@ namespace Simulation
 	void HayashidaSimulator::create_trajectories()
 	{
 		//random_user_moving_shortest_path();
-		make_input_user_using_input_POI();
+		make_predicted_user();
 	}
 
 
