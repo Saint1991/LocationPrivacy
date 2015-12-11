@@ -11,7 +11,7 @@
 #include "BasicRequirement.h"
 #include "IProposedMethod.h"
 #include "Rectangle.h"
-#include "PauseMobileEntity.h"
+#include "RevisablePauseMobileEntity.h"
 #include "KatoMethodRequirement.h"
 #include "Probability.h"
 #include "GeoCalculation.h"
@@ -23,7 +23,7 @@ namespace Method
 	/// 加藤さん学部卒業論文の提案手法の実装
 	///</summary>
 	class KATO_BACHELOR_METHOD_API KatoBachelorMethod
-		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>
+		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>
 	{
 	private:
 		//変数
@@ -36,7 +36,7 @@ namespace Method
 
 		static constexpr auto DUMMY_TRAJECTORT_OUT_PATH = "C:/Users/Shuhei/Desktop/dummy_trajectory";
 		
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> creating_dummy;
+		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> creating_dummy;
 		
 		//メソッド
 		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_area, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成

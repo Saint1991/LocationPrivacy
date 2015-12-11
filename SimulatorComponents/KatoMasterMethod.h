@@ -6,7 +6,7 @@
 #include "Dummy.h"
 #include "BasicRequirement.h"
 #include "Rectangle.h"
-#include "PauseMobileEntity.h"
+#include "RevisablePauseMobileEntity.h"
 #include "KatoMethodRequirement.h"
 #include "Probability.h"
 #include "GeoCalculation.h"
@@ -23,7 +23,7 @@ namespace Method {
 		double changes_in_arrival_time;//ユーザの到着時間の変化分
 		enum ChangeParameter { LONGER_PAUSE_TIME, SHORTER_PAUSE_TIME, PATH, FASTER_SPEED, SLOER_SPEED, VISIT_POI, NO_CHANGE };
 		
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> copy_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
+		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> copy_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
 		
 		std::pair<double, double> calc_max_variable_speed(double speed);
 		std::pair<double, double> calc_max_variable_pause_time(double pause_time);
@@ -48,16 +48,15 @@ namespace Method {
 			void revise_dummy_path(int phase_id);//ダミーの移動経路の修正
 			void revise_dummy_speed(int phase_id);//ダミーの行動速度の修正
 			void revise_dummy_visit_poi(int phase_id);//ダミーの停止地点の修正
-
 		
 
 
 	protected:
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user;//システムへの入力によって得られたユーザ．Simulator単位で作成する.変更厳禁
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> real_user;//実際のユーザ.get_user()で取得可能
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user;//予測されたユーザ．こちらを修正していく．
+		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> predicted_user;//予測されたユーザ．こちらを修正していく．
 
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> revising_dummy;//修正対象ダミー
+		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> revising_dummy;//修正対象ダミー
 
 		void initialize();
 		void revise_dummy_positions();
