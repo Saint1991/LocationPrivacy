@@ -159,9 +159,13 @@ namespace Method
 					return check_user_pause_time(now_phase);
 				}
 				else {
-					if (/*ˆÚ“®‹——£‚ªreal‚Ì‚Ù‚¤‚ª‘å‚«‚¢‚È‚ç*/true) {
+					double real_user_dist = Geography::GeoCalculation::lambert_distance(*real_user->read_position_of_phase(now_phase - 1), *real_user->read_position_of_phase(now_phase));
+					double predicted_user_dist = Geography::GeoCalculation::lambert_distance(*predicted_user->read_position_of_phase(now_phase - 1), *predicted_user->read_position_of_phase(now_phase));
+					//ˆÚ“®‹——£‚ªreal‚Ì‚Ù‚¤‚ª‘å‚«‚¢‚È‚ç
+					if (real_user_dist > predicted_user_dist) {
 						//change_time‚Ì·•ª‚ğ‹‚ß‚é
-						//Tu =
+						//Tu = 
+						//‚±‚±‚ÅC‚Ç‚ê‚­‚ç‚¢‘¬“x‚ª’x‚­‚È‚Á‚½‚©‚à‹‚ß‚Ä‚µ‚Ü‚¤D
 						return SLOER_SPEED;
 					}
 					else {
