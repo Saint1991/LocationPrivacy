@@ -10,7 +10,6 @@
 #include "Sequence.h"
 #include "Trajectory.h"
 
-
 namespace Graph
 {
 	template <typename POSITION_TYPE = Geography::LatLng>
@@ -23,7 +22,8 @@ namespace Graph
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> read_positions() const;
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> get_positions();
 
-
+		void insert_positions_to_trajectory(int phase_id, int insert_num);
+		void delete_positions_to_trajectory(int phase_id, int delete_num);
 	};
 
 	template class RevisableTrajectory<Geography::LatLng>;

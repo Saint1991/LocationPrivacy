@@ -33,7 +33,7 @@ namespace Method
 		double grid_length = std::sqrt(grid_area);//grid全体の一辺の長さ．匿名領域の√
 		double cell_length = grid_length / cell_num_on_side;//セル一つ分の長方形の長さ
 
-															//長さ(cell_length)を緯度経度の単位に変換
+		//長さ(cell_length)を緯度経度の単位に変換
 		double length_translated_lat = Geography::GeoCalculation::calc_translated_point(center, cell_length, M_PI_2 * 3).lat() - center.lat();
 		double length_translated_lng = Geography::GeoCalculation::calc_translated_point(center, cell_length, 0).lng() - center.lng();
 

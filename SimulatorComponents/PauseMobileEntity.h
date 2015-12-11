@@ -62,8 +62,7 @@ namespace Entity
 		int get_rest_pause_time(int now_phase) const;
 		int get_rest_pause_time(int now_phase);
 		void set_rest_pause_time(int now_phase, double time);
-
-
+		
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
 		void set_random_speed(int phase, double average_speed, double speed_range);

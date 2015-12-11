@@ -76,7 +76,7 @@ namespace Method
 	/// real_userとpredict_userの違いで見る
 	/// ユーザがプラン通りに行動している場合はNO_CHANGEをリターン
 	///</summary>
-	std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_plan(int now_phase)
+	KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_plan(int now_phase)
 	{
 		//止まっている→停止時間の変更or停止地点の変更
 		//もし片方でも停止していたら→停止時間変更の判断
@@ -99,36 +99,39 @@ namespace Method
 		/// real_userとpredicted_userの違いで見る
 		/// pause_timeのチェック
 		///</summary>
-		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_pause_time(int now_phase)
+		KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_pause_time(int now_phase)
 		{
-			double change_time = 0.0;
 			//もしプラン通り停止していたら(両者の停止フラグが１)，NO_CHANGE
 			if (predicted_user->check_pause_flag() && real_user->check_pause_flag()) {
-				return std::make_pair(NO_CHANGE, change_time);
+				return NO_CHANGE;
 			}
 			else if(predicted_user->check_pause_flag() || real_user->check_pause_flag()){
 				//もしrealのほうが停止フラグが0で(出発していて)，predictが1なら,予定より早く出発
 				if (predicted_user->check_pause_flag() == true && real_user->check_pause_flag() == false) {
 					//change_timeの差分を求める
-					change_time -= requirement->service_interval;
-					return std::make_pair(SHORTER_PAUSE_TIME, change_time);
+					Tu -= requirement->service_interval;
+					return SHORTER_PAUSE_TIME;
 				}
 				else {
 					//change_timeの差分を求める
-					change_time += requirement->service_interval;
-					return std::make_pair(LONGER_PAUSE_TIME, change_time);
+					Tu += requirement->service_interval;
+					return LONGER_PAUSE_TIME;
 				}
 			}
 			//両方フラグが0なら(速度変更からジャンプして飛んできた場合)，速度変更でなく，rest_time分をずれを検知
 			else {
+				double real_user_dist = Geography::GeoCalculation::lambert_distance(*real_user->read_position_of_phase(now_phase - 1), *real_user->read_position_of_phase(now_phase));
+				double predicted_user_dist = Geography::GeoCalculation::lambert_distance(*predicted_user->read_position_of_phase(now_phase - 1), *predicted_user->read_position_of_phase(now_phase));
 				//移動距離がrealのほうが大きいなら
-				if (true) {
+				if (real_user_dist > predicted_user_dist) {
 					//change_timeの差分を求める
-					return std::make_pair(SHORTER_PAUSE_TIME, change_time);
+					Tu -= (real_user_dist - predicted_user_dist) / predicted_user->get_starting_speed(now_phase);
+					return SHORTER_PAUSE_TIME;
 				}
 				else {
 					//change_timeの差分を求める
-					return std::make_pair(LONGER_PAUSE_TIME, change_time);
+					Tu -= (predicted_user_dist - real_user_dist) / predicted_user->get_starting_speed(now_phase);
+					return LONGER_PAUSE_TIME;
 				}
 			}
 		}
@@ -139,17 +142,17 @@ namespace Method
 		/// real_userとpredicted_userの違いで見る
 		/// 速度のチェック
 		///</summary>
-		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_speed(int now_phase)
+		KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_speed(int now_phase)
 		{
 			Geography::LatLng previous_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase - 1).second;
 			Geography::LatLng previous_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase - 1).second;
 			Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase).second;
 			Geography::LatLng now_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase).second;
 			
-			double change_time = 0.0;
 			//もし同じ場所にいたら，NO_CHANGE
 			if (now_predicted_user_position == now_real_user_position) {
-				return std::make_pair(NO_CHANGE, change_time);
+				Tu = 0.0;
+				return NO_CHANGE;
 			}
 			else {
 				if (/*もしrest_time分を考慮して，逆算して，速度が同じなら*/true) {
@@ -158,11 +161,13 @@ namespace Method
 				else {
 					if (/*移動距離がrealのほうが大きいなら*/true) {
 						//change_timeの差分を求める
-						return std::make_pair(SLOER_SPEED, change_time);
+						//Tu =
+						return SLOER_SPEED;
 					}
 					else {
 						//change_timeの差分を求める
-						return std::make_pair(FASTER_SPEED, change_time);
+						//Tu = 
+						return FASTER_SPEED;
 					}
 				}
 			}
@@ -174,11 +179,12 @@ namespace Method
 		/// real_userとpredicted_userの違いで見る
 		/// pathのチェック
 		///</summary>
-		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_path(int now_phase)
+		KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_path(int now_phase)
 		{
 			double change_time = 0.0;
 			//change_timeを求める
-			return std::make_pair(PATH, change_time);
+			//Tu = 
+			return PATH;
 		}
 
 
@@ -187,9 +193,9 @@ namespace Method
 		/// real_userとpredicted_userの違いで見る
 		/// 停止位置のチェック
 		///</summary>
-		std::pair<KatoMasterMethod::ChangeParameter, double> KatoMasterMethod::check_user_position(int now_phase)
+		KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_position(int now_phase)
 		{
-			return std::make_pair(VISIT_POI, 0.0);
+			return VISIT_POI;
 		}
 
 		
@@ -197,9 +203,9 @@ namespace Method
 	///<summary>
 	/// ユーザの次の停止地点の到着時間を予測する
 	///</summary>
-	void KatoMasterMethod::update_user_plan(std::pair<ChangeParameter, double> check_parameter, int phase_id)
+	void KatoMasterMethod::update_user_plan(ChangeParameter check_parameter, int phase_id)
 	{
-		switch (check_parameter.first) {
+		switch (check_parameter) {
 		case LONGER_PAUSE_TIME:
 			modification_of_user_trajectory_when_LONGER_PAUSE_TIME(check_parameter, phase_id);
 			break;
@@ -224,16 +230,23 @@ namespace Method
 	///<summary>
 	/// ユーザの停止時間が予定より長い時のpredicted_userの修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_LONGER_PAUSE_TIME(std::pair<ChangeParameter, double> check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_LONGER_PAUSE_TIME(ChangeParameter check_parameter, int phase_id)
 	{
-		
+		if (Tu == requirement->service_interval) {
+			//trajectoryをずらすことで対応
+			//停止時間の修正を行う．
+			//predicted_user->get_trajectory()->;
+		}
+		else {
+			//経路を再計算
+		}
 	}
 
 
 	///<summary>
 	/// ユーザの停止時間が予定より短い時のpredicted_userの修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(std::pair<ChangeParameter, double> check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(ChangeParameter check_parameter, int phase_id)
 	{
 
 	}
@@ -241,7 +254,7 @@ namespace Method
 	///<summary>
 	/// ユーザのパスの修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_PATH(std::pair<ChangeParameter, double> check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_PATH(ChangeParameter check_parameter, int phase_id)
 	{
 
 	}
@@ -249,16 +262,16 @@ namespace Method
 	///<summary>
 	/// ユーザの移動速度が予定より早い時の修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_FASTER_SPEED(std::pair<ChangeParameter, double> check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_FASTER_SPEED(ChangeParameter check_parameter, int phase_id)
 	{
-		double real_user_speed = check_parameter.second;
+		double real_user_speed = 0.0;
 
 	}
 
 	///<summary>
 	/// ユーザの移動速度が予定より遅い時の修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_SLOER_SPEED(std::pair<ChangeParameter, double> check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_SLOER_SPEED(ChangeParameter check_parameter, int phase_id)
 	{
 
 	}
@@ -267,7 +280,7 @@ namespace Method
 	///<summary>
 	/// ユーザの停止位置の修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_VISIT_POI(std::pair<ChangeParameter, double> check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_VISIT_POI(ChangeParameter check_parameter, int phase_id)
 	{
 
 	}
@@ -285,7 +298,7 @@ namespace Method
 			revise_dummy_pause_time(phase_id);
 			revise_dummy_path(phase_id);
 			revise_dummy_speed(phase_id);
-			if (changes_in_arrival_time != 0) revise_dummy_visit_poi(phase_id);
+			if (Tu != 0) revise_dummy_visit_poi(phase_id);
 			
 		}
 		//現在移動中で，プランと同じpoiに向かっている場合，向かっているpoiに停止中だとして考える
@@ -294,7 +307,7 @@ namespace Method
 			revise_dummy_pause_time(phase_id);
 			revise_dummy_path(phase_id);
 			revise_dummy_speed(phase_id);
-			if (changes_in_arrival_time != 0) revise_dummy_visit_poi(phase_id);
+			if (Tu != 0) revise_dummy_visit_poi(phase_id);
 
 		}
 	}
@@ -308,35 +321,44 @@ namespace Method
 		//前の値の保持
 		int pause_phase = revising_dummy->get_pause_phase(phase_id);
 		double pause_time = revising_dummy->get_rest_pause_time(pause_phase);
-		double next_arrive_time = time_manager->time_of_phase(pause_phase);
-
+	
 		double max_variable_value = calc_max_variable_pause_time(pause_phase).first;
 		double min_variable_value = calc_max_variable_pause_time(pause_phase).second;
-		double new_pause_time = changes_in_arrival_time;//初期値は，変更分Tu
+		double new_pause_time = Tu;//初期値は，変更分Tu
 
 		//修正幅 ＜ 最大変化量　を満たし，かつ，修正幅 < 最大停止時間とする．
-		if (changes_in_arrival_time > 0) {
-			if (changes_in_arrival_time > max_variable_value) new_pause_time = max_variable_value;
+		if (Tu > 0) {
+			if (Tu > max_variable_value) new_pause_time = max_variable_value;
 			if (max_variable_value > requirement->max_pause_time) new_pause_time = requirement->max_pause_time;
+		
+			revising_dummy->revise_rest_pause_time(phase_id, new_pause_time);
 		}
 		else {
-			if (changes_in_arrival_time < min_variable_value) new_pause_time = min_variable_value;
+			if (std::abs(Tu) < min_variable_value) new_pause_time = min_variable_value;
 			if (min_variable_value < requirement->min_pause_time) new_pause_time = requirement->min_pause_time;
-		}
-
-		//revising_dummy->check_pause_flag() ?
-		//revising_dummy->set_pause_time(pause_phase, pause_time + new_pause_time) : ;
 		
+			
+			if (std::abs(new_pause_time) > revising_dummy->get_rest_pause_time(pause_phase)) {
+				int next_pause_phase = revising_dummy->get_pause_phase(pause_phase);
+				revising_dummy->set_rest_pause_time(next_pause_phase, revising_dummy->get_rest_pause_time(pause_phase));
+
+				revising_dummy->set_rest_pause_time(pause_phase, 0.0);
+			}
+		}		
+
 		//調整した分，ダミーの停止時間を修正する．
 		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)
 		{
 			//ここに次の訪問POIの到着時間と出発時刻を考慮して，修正する関数をラムダ式で記述．		
 		}
-		if (time_manager->time_of_phase(phase_id + 1) == next_arrive_time + changes_in_arrival_time) return;
+		//if (time_manager->time_of_phase(phase_id + 1) == next_arrive_time + Tu) return;
 		
 		//もし調整しきれなかったら，次のpathの調整をする
-		changes_in_arrival_time -= new_pause_time;
+		Tu -= new_pause_time;
 	}
+
+
+
 
 
 	///<summary>
@@ -361,7 +383,7 @@ namespace Method
 		
 		double distance = map->shortest_distance(revising_dummy->read_node_pos_info_of_phase(next_pause_phase).first, revising_dummy->read_node_pos_info_of_phase(next_next_pause_phase).first);
 		
-		double new_speed = distance / (time_manager->time_of_phase(next_next_pause_phase) + changes_in_arrival_time - time_manager->time_of_phase(next_pause_phase));
+		double new_speed = distance / (time_manager->time_of_phase(next_next_pause_phase) + Tu - time_manager->time_of_phase(next_pause_phase));
 		revising_dummy->set_speed(next_pause_phase, new_speed);
 
 		if (std::abs(revising_dummy->get_speed(next_pause_phase) - next_departing_speed) > requirement->max_variation_of_speed)
@@ -381,7 +403,7 @@ namespace Method
 		{
 			//ここに，速度が変化した際のダミーの行動修正を記述
 		}
-		if (time_manager->time_of_phase(phase_id + 1) == next_arrive_time + changes_in_arrival_time) return;
+		if (time_manager->time_of_phase(phase_id + 1) == next_arrive_time + Tu) return;
 
 	}
 
@@ -416,7 +438,7 @@ namespace Method
 			for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
 			{
 				if (check_going_same_poi_as_plan()) {
-					if (check_user_plan(phase_id).second != 0.0) {
+					if (check_user_plan(phase_id) != NO_CHANGE) {
 						revise_dummy_trajectory(phase_id);//dummyの行動プランの更新
 						update_user_plan(check_user_plan(phase_id), phase_id);//次の停止地点の到着時間を予測し，ユーザの行動プランを更新
 					}
