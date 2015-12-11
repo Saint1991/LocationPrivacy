@@ -25,7 +25,7 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
 		: MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>(id, timeslot), 
-		  pause_time_list(std::vector<double>(timeslot->phase_count(),0)), 
+		  rest_pause_time_list(std::vector<double>(timeslot->phase_count(),0)), 
 		  speed_list(std::vector<double>(timeslot->phase_count(), 0))
 	{
 	}
@@ -40,37 +40,49 @@ namespace Entity
 
 
 	///<summary>
-	/// ’â~ŠÔ‚ğ‹‚ß‚é
+	/// –K–âPOI‚Ì’â~ŠÔ‚ğ•ÏX•s‰Â”\‚Èó‘Ô‚Å‹‚ß‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time(int phase) const
 	{
-		return pause_time_list.at(phase);
+		return visited_pois_info_list.at(visited_pois_info_list_id).pause_time;
 	}
 
 	///<summary>
-	/// “Á’è‚Ì’l‚ğintŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
+	/// –K–âPOI‚Ì’â~ŠÔ‚ğ•ÏX‰Â”\‚Èó‘Ô‚Å‹‚ß‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time(int phase)
+	{
+		return visited_pois_info_list.at(visited_pois_info_list_id).pause_time;
+	}
+
+
+	///<summary>
+	/// –K–âPOIî•ñ‚ÉCintŒ^‚Ì’â~ŠÔ‚Æ“’…phase‚ğset‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_time(int phase, int pause_time)
 	{
-		pause_time_list.at(phase) = pause_time;
-		//(visited_poi_info.at(visited_poi_id)).pause_phase.push_back(phase);
+		//pause_time_list.at(phase) = pause_time;
+		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
+
 	}
 
 	///<summary>
-	/// “Á’è‚Ì’l‚ğdoubleŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
+	/// –K–âPOIî•ñ‚ÉCdoubleŒ^‚Ì’â~ŠÔ‚Æ“’…phase‚ğset‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_time(int phase, double pause_time)
 	{
-		pause_time_list.at(phase) = pause_time;
-		//(visited_poi_info.at(visited_poi_id)).pause_phase.push_back(phase);
+		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
 
 	
 	///<summary>
-	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğintŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
+	/// –K–âPOIî•ñ‚É,ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğintŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_pause_time(int phase, int min, int max)
@@ -78,7 +90,8 @@ namespace Entity
 		Math::Probability generator;
 		int pause_time = generator.uniform_distribution(min, max);
 		
-		pause_time_list.at(phase) = pause_time;
+		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
 
 	///<summary>
@@ -89,20 +102,48 @@ namespace Entity
 	{
 		Math::Probability generator;
 		double pause_time = generator.uniform_distribution(min, max);
-
-		pause_time_list.at(phase) = pause_time;
+		
+		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
 
 
 	///<summary>
 	/// Ÿ‚É–K–â—\’è‚Ì’â~POI‚Ì“’…‚·‚éphase‚ğ‹‚ß‚éD
-	/// ‚à‚µ’â~’†‚Ìê‡‚ÍŒ»İ‚Ìphase‚ğ•Ô‚·D
+	/// ’â~’†‚Ìê‡‚ÍCŒ»İphase‚ğ•Ô‚µCˆÚ“®’†‚Ìê‡‚ÍCŒü‚©‚Á‚Ä‚¢‚é–K–â’n“_‚Ì—\’è‚µ‚Ä‚¢‚é“’…ŠÔ‚É’l‚·‚éphase‚ğ•Ô‚·
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_phase(int phase)
 	{
-		//’â~’†‚Ìê‡‚ÍCŒ»İphase‚ğ•Ô‚µCˆÚ“®’†‚Ìê‡‚ÍCŒü‚©‚Á‚Ä‚¢‚é–K–â’n“_‚Ì—\’è‚µ‚Ä‚¢‚é“’…ŠÔ‚É’l‚·‚éphase‚ğ•Ô‚·
 		return pause_flag == 1 ? phase : visited_pois_info_list.at(visited_pois_info_list_id + 1).pause_phase.front();
+	}
+
+
+	///<summary>
+	/// Œ»İphase‚Ìc‚è’â~ŠÔ‚ğC•ÏX•s‰Â”\‚Èó‘Ô‚Å‹‚ß‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_rest_pause_time(int now_phase) const
+	{
+		return rest_pause_time_list.at(now_phase);
+	}
+
+	///<summary>
+	/// Œ»İphase‚Ìc‚è’â~ŠÔ‚ğC•ÏX‰Â”\‚Èó‘Ô‚Å‹‚ß‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_rest_pause_time(int now_phase)
+	{
+		return rest_pause_time_list.at(now_phase);
+	}
+
+	///<summary>
+	/// Œ»İphase‚Ìc‚è’â~ŠÔ‚ğCset‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_rest_pause_time(int now_phase, double time)
+	{
+		rest_pause_time_list.at(now_phase) = time;
 	}
 
 
@@ -220,6 +261,5 @@ namespace Entity
 	{
 		return pause_flag == 1 ? true : false;
 	}
-
-
+	
 }

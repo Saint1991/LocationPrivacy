@@ -40,7 +40,7 @@ namespace Entity
 		std::vector<VisitedPoiInfo> visited_pois_info_list;
 		int visited_pois_info_list_id;
 
-		std::vector<double> pause_time_list;//Œ»İ’n“_‚É‚¨‚¯‚éc‚è’â~ŠÔ
+		std::vector<double> rest_pause_time_list;//Œ»İ’n“_‚É‚¨‚¯‚éc‚è’â~ŠÔ
 		int pause_flag;
 
 		std::vector<double> speed_list;
@@ -49,13 +49,21 @@ namespace Entity
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		virtual ~PauseMobileEntity();
 
+		//–K–âPOIî•ñ‚Ì’â~ŠÔ‚ÉŠÖ‚·‚ésetter‚Ægetter
 		int get_pause_time(int phase) const;
+		int get_pause_time(int phase);
 		void set_pause_time(int phase, int pause_time);
 		void set_pause_time(int phase, double pause_time);
 		void set_random_pause_time(int phase, int min, int max);
 		void set_random_pause_time(int phase, double min, double max);
 		int get_pause_phase(int phase);
 		
+		//Œ»İphase‚É‚¨‚¯‚éc‚è’â~ŠÔ‚Ìsetter‚Ægetter
+		int get_rest_pause_time(int now_phase) const;
+		int get_rest_pause_time(int now_phase);
+		void set_rest_pause_time(int now_phase, double time);
+
+
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
 		void set_random_speed(int phase, double average_speed, double speed_range);
@@ -74,5 +82,5 @@ namespace Entity
 
 	//–¾¦“I“Áê‰»
 	template class PauseMobileEntity<Graph::Coordinate>;
-	template class PauseMobileEntity<Geography::LatLng, Graph::RevisableTrajectory<>>;
+	template class PauseMobileEntity<Geography::LatLng>;
 }

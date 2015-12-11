@@ -42,6 +42,7 @@ namespace Method
 
 	///<summary>
 	/// 速度の最大変化値と最小変化値を計算する
+	/// pair(Max, min)
 	///</summary>
 	std::pair<double, double> KatoMasterMethod::calc_max_variable_speed(double speed)
 	{
@@ -53,6 +54,7 @@ namespace Method
 
 	///<summary>
 	/// 停止時間の最大変化値と最小変化値を計算する
+	/// pair(Max, min)
 	///</summary>
 	std::pair<double, double> KatoMasterMethod::calc_max_variable_pause_time(double pause_time)
 	{
@@ -305,12 +307,12 @@ namespace Method
 	{
 		//前の値の保持
 		int pause_phase = revising_dummy->get_pause_phase(phase_id);
-		double pause_time = revising_dummy->get_pause_time(pause_phase);
+		double pause_time = revising_dummy->get_rest_pause_time(pause_phase);
 		double next_arrive_time = time_manager->time_of_phase(pause_phase);
 
 		double max_variable_value = calc_max_variable_pause_time(pause_phase).first;
 		double min_variable_value = calc_max_variable_pause_time(pause_phase).second;
-		double new_pause_time = changes_in_arrival_time;
+		double new_pause_time = changes_in_arrival_time;//初期値は，変更分Tu
 
 		//修正幅 ＜ 最大変化量　を満たし，かつ，修正幅 < 最大停止時間とする．
 		if (changes_in_arrival_time > 0) {
@@ -321,7 +323,9 @@ namespace Method
 			if (changes_in_arrival_time < min_variable_value) new_pause_time = min_variable_value;
 			if (min_variable_value < requirement->min_pause_time) new_pause_time = requirement->min_pause_time;
 		}
-		revising_dummy->set_pause_time(pause_phase, pause_time + new_pause_time);
+
+		//revising_dummy->check_pause_flag() ?
+		//revising_dummy->set_pause_time(pause_phase, pause_time + new_pause_time) : ;
 		
 		//調整した分，ダミーの停止時間を修正する．
 		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)

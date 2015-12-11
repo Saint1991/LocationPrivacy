@@ -104,7 +104,7 @@ namespace Simulation
 	///<summary>
 	/// 停止時間と速度0のセット
 	///</summary>
-	void HayashidaSimulator::set_pause_time_and_speed_0_of_visitPOI(int *phase_id, div_t variable_of_converted_pause_time_to_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi) {
+	void HayashidaSimulator::set_pause_time_and_speed_0_of_visitPOI(int *phase_id, div_t variable_of_converted_pause_time_to_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi) {
 		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 		{
 			if (*phase_id == time_manager->phase_count() - 1) break;

@@ -158,31 +158,39 @@ namespace Method
 	}
 
 
-
-
 	///<summary>
-	/// position間のパスを線形補間する．
-	/// sourceには決定点,destinationには目的地，source_phaseには，決定しているphaseを入力すること.
-	/// sourceには既に停止地点は入力されている
-	/// dest_rest_timeをポインタ引数にすることで，複数の返り値を実現.次の到着時間の余りを返す．
+	/// 残りの停止時間をphaseに換算し，phase分埋める．
 	///</summary>
-	void KatoBachelorMethod::linear_interpolation_of_path_between_positions(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int *phase_id, double *dest_rest_time) {
-		//全体の停止時間から，前回の到着分を差し引いた停止時間を引いた時間
+	void KatoBachelorMethod::set_pause_time_and_speed_0_of_visitedPOI(int *phase_id, double rest_pause_time, int total_pause_phase, const Graph::MapNodeIndicator& source) {
 		int last_phase = time_manager->phase_count() - 1;
-		double rest_pause_time = creating_dummy->get_pause_time(*phase_id) - *dest_rest_time;
 
-		//残りの停止時間をphaseに換算し，phase分埋める．
-		lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, requirement->service_interval);
-
-		//停止時間分，各phaseに停止場所と移動速度(0)を登録
-		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
+		for (int i = 0; i < total_pause_phase; i++)
 		{
 			if (*phase_id == last_phase) return;
 			(*phase_id)++;
 			creating_dummy->set_position_of_phase(*phase_id, source, map->get_static_poi(source.id())->data->get_position());
 			creating_dummy->set_speed(*phase_id, 0);
+			creating_dummy->set_rest_pause_time(*phase_id, rest_pause_time - i * requirement->service_interval);
 		}
+	}
 
+
+	///<summary>
+	/// position間のパスを線形補間する．
+	/// sourceには決定点,destinationには目的地，source_phaseには，決定しているphaseを入力すること.
+	/// sourceには既に停止時間は入力されている
+	/// dest_rest_timeをポインタ引数にすることで，複数の返り値を実現.次の到着時間の余りを返す．
+	///</summary>
+	void KatoBachelorMethod::linear_interpolation_of_path_between_positions(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int *phase_id, double *dest_rest_time) {
+		//全体の停止時間から，前回の到着分を差し引いた停止時間を引いた時間
+		double rest_pause_time = creating_dummy->get_pause_time(*phase_id) - *dest_rest_time;
+
+		//残りの停止時間をphaseに換算し，phase分埋める．
+		lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, requirement->service_interval);
+				
+		//停止時間分，各phaseに停止場所と移動速度(0)を登録
+		set_pause_time_and_speed_0_of_visitedPOI(&*phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, source);
+		
 		std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path(source, destination);
 		std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
 
@@ -215,7 +223,7 @@ namespace Method
 
 			Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
 
-			if (*phase_id == last_phase) return;//残りのpathを決める時の終了条件
+			if (*phase_id == time_manager->phase_count() - 1) return;//残りのpathを決める時の終了条件
 			(*phase_id)++;
 			creating_dummy->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
 			creating_dummy->set_speed(*phase_id, pause_position_speed);
@@ -231,8 +239,6 @@ namespace Method
 		//speedは別途設定のため不要
 		(*phase_id)++;
 		creating_dummy->set_visited_poi_of_phase(*phase_id, destination, map->get_static_poi(destination.id())->data->get_position());
-
-
 	}
 
 
