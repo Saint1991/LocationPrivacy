@@ -48,35 +48,54 @@ namespace Entity
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		virtual ~PauseMobileEntity();
-
+		
 		//訪問POI情報の停止時間に関するsetterとgetter
-		int get_pause_time(int phase) const;
-		int get_pause_time(int phase);
+		int get_pause_time() const;
+		int get_pause_time();
 		void set_pause_time(int phase, int pause_time);
 		void set_pause_time(int phase, double pause_time);
 		void set_random_pause_time(int phase, int min, int max);
 		void set_random_pause_time(int phase, double min, double max);
 		int get_pause_phase(int phase);
-		
+				
+
 		//現在phaseにおける残り停止時間のsetterとgetter
 		int get_rest_pause_time(int now_phase) const;
 		int get_rest_pause_time(int now_phase);
 		void set_rest_pause_time(int now_phase, double time);
 		
+		//現在phaseにおける速度のsetterとgetter
 		double get_speed(int phase) const;
 		void set_speed(int phase, double speed);
 		void set_random_speed(int phase, double average_speed, double speed_range);
+		void set_starting_speed_at_poi(double speed);
+		double get_starting_speed(int visited_poi_info_id);
+
+
+		//到着時と出発時の余り時間のsetterとgetter
+		void set_dest_rest_time(double dest_rest_time);
+		void set_rest_pause_time_when_departing(double rest_pause_time);
+		
+		//訪問POIに関するsetterとgetter
+		void set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position);
+		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name = "");//MobileEntityのオーバーライド
+		std::pair<Graph::MapNodeIndicator, Geography::LatLng> get_poi();
+		VisitedPoiInfo get_next_poi_info();
+
+		//停止POIにいるかどうかのチェック用
+		bool check_pause_flag();
+		void raise_flag();
+		void take_down_flag();
+
+		void increment_visited_pois_info_list_id();
+
+		//trajectory取得用
+		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
+		
 		
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;
 
-		double get_starting_speed(int visited_poi_info_id);
-		
-		void set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position);
-		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name = "");//MobileEntityのオーバーライド
-
-		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
-		bool check_pause_flag();
 	};
 
 	//明示的特殊化

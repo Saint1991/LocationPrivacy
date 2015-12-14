@@ -31,10 +31,10 @@ namespace Method
 	///</summary>
 	std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> KatoMasterMethod::copy_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user)
 	{
-		//std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> input_user_positions = input_user->read_trajectory()->read_positions();
+		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> input_user_positions = input_user->read_trajectory()->read_positions();
 		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> predicted_user_positions;
 
-		//std::copy(input_user_positions->begin(), input_user_positions->end(), predicted_user_positions->begin());
+		std::copy(input_user_positions->begin(), input_user_positions->end(), predicted_user_positions->begin());
 		
 		return predicted_user;
 	}
@@ -164,14 +164,18 @@ namespace Method
 					//移動距離がrealのほうが大きいなら
 					if (real_user_dist > predicted_user_dist) {
 						//change_timeの差分を求める
-						//Tu = 
-						//ここで，どれくらい速度が遅くなったかも求めてしまう．
-						return SLOER_SPEED;
+						//ここで，どれくらい速度が大きくなったかも求めてしまう．
+						//ここは計算量に関わってきそうだから，要検討
+						double real_speed = real_user_dist / requirement->service_interval;
+						Tu += map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase).first, real_user->get_poi().first, real_speed);
+						return FASTER_SPEED;
 					}
 					else {
 						//change_timeの差分を求める
-						//Tu = 
-						return FASTER_SPEED;
+						//ここで，どれくらい速度が小さくなったかも求めてしまう．	
+						double real_speed = real_user_dist / requirement->service_interval;
+						Tu -= map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase).first, real_user->get_poi().first, real_speed);;
+						return SLOER_SPEED;
 					}
 				}
 			}
@@ -238,11 +242,15 @@ namespace Method
 	{
 		if (Tu == requirement->service_interval) {
 			//trajectoryをずらすことで対応
+			predicted_user->get_trajectory()->insert_positions_to_trajectory(phase_id, 1);
+			
 			//停止時間の修正を行う．
-			//predicted_user->get_trajectory()->;
+			predicted_user->revise_pause_time(Tu);
+			predicted_user->revise_rest_pause_time(phase_id, Tu);
 		}
 		else {
 			//経路を再計算
+
 		}
 	}
 

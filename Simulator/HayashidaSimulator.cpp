@@ -105,10 +105,15 @@ namespace Simulation
 	/// ’â~ŠÔ‚Æ‘¬“x0‚ÌƒZƒbƒg
 	///</summary>
 	void HayashidaSimulator::set_pause_time_and_speed_0_of_visitPOI(int *phase_id, div_t variable_of_converted_pause_time_to_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi) {
+		double rest_pause_time = SERVICE_INTERVAL * variable_of_converted_pause_time_to_phase.quot + variable_of_converted_pause_time_to_phase.rem;
+		user->set_rest_pause_time(*phase_id, rest_pause_time);
+
 		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 		{
 			if (*phase_id == time_manager->phase_count() - 1) break;
 			(*phase_id)++;
+			rest_pause_time -= SERVICE_INTERVAL;
+			user->set_rest_pause_time(*phase_id, rest_pause_time);
 			user->set_position_of_phase(*phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
 			user->set_speed(*phase_id, 0);
 		}
@@ -179,10 +184,11 @@ namespace Simulation
 		int phase_id = 0;
 		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = get_pois_list(rect_init_range);
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = random_pois_list.begin();
-		user->set_position_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
+		user->set_visited_poi_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
 		user->set_random_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
+		user->set_starting_speed_at_poi(user->get_speed(phase_id));
 
-		int dest_rest_time = 0;//phase‚Ì“’…ŠÔ‚ÆÀÛ‚Ì“’…ŠÔ‚Ì·•ª.Å‰‚¾‚¯0
+		double dest_rest_time = 0;//phase‚Ì“’…ŠÔ‚ÆÀÛ‚Ì“’…ŠÔ‚Ì·•ª.Å‰‚¾‚¯0
 
 		//--------------“ñŒÂ–ÚˆÈ~‚Ì“_‚ğŒˆ’èDfor‚ÅCŠm•Û‚µ‚½‚¢poi‚ÌŒÂ”•ª‚ğƒ‹[ƒv‚³‚¹‚é-------------------
 		for (int i = 1; i < POI_NUM; i++)
@@ -202,10 +208,12 @@ namespace Simulation
 		
 			//Œ»İ’n‚Ì’â~ŠÔ‚ğƒ‰ƒ“ƒ_ƒ€‚Åİ’è‚µCŒ»’n“_‚Ìo”­’n‚Ì‘¬“x‚ÅCŸ‚ÌPOI‚Ü‚Å‚ÌÅ’Z˜H‚ÅˆÚ“®‚µ‚½‚ÌŠÔ‚ğ‹‚ß‚éD
 			user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
-			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
-			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
+			user->set_dest_rest_time(dest_rest_time);
 
-			int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
+			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
+			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
+
+			int rest_pause_time = user->get_pause_time() - dest_rest_time;
 
 			//’â~ŠÔ‚ğphase‚ÉŠ·Z‚µCpause_time‚ÆÅ’Z˜HŒo˜H‚©‚çpath‚ğŒˆ’è‚µ‚Ä‚¢‚­
 			div_t variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
@@ -235,6 +243,8 @@ namespace Simulation
 			dest_rest_time = distance_between_arrive_position_and_dest_position / pause_position_speed;
 			//–Ú“I’n‚Ì“o˜^
 			phase_id++;
+			user->increment_visited_pois_info_list_id();
+			user->set_rest_pause_time_when_departing(dest_rest_time);
 			user->set_position_of_phase(phase_id, (*next_poi)->get_id(), map->get_static_poi((*next_poi)->get_id())->data->get_position());
 			user->set_random_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
 
@@ -262,11 +272,11 @@ namespace Simulation
 		//Œ»İ’n‚Ì’â~ŠÔ‚ğƒ‰ƒ“ƒ_ƒ€‚Åİ’è‚µCŒ»’n“_‚Ìo”­’n‚Ì‘¬“x‚ÅCŸ‚ÌPOI‚Ü‚Å‚ÌÅ’Z˜H‚ÅˆÚ“®‚µ‚½‚ÌŠÔ‚ğ‹‚ß‚éD
 		user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
 		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), user->get_speed(phase_id));
-		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
+		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
 
 		
 		//’â~ŠÔ‚ğphase‚ÉŠ·Z‚µCpause_time‚ÆÅ’Z˜HŒo˜H‚©‚çpath‚ğŒˆ’è‚µ‚Ä‚¢‚­
-		int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
+		int rest_pause_time = user->get_pause_time() - dest_rest_time;
 		div_t last_variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
 
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
@@ -323,9 +333,9 @@ namespace Simulation
 		for (int i = 1; i < POI_NUM; i++)
 		{
 			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
-			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
+			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
 
-			int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
+			int rest_pause_time = user->get_pause_time() - dest_rest_time;
 
 			//’â~ŠÔ‚ğphase‚ÉŠ·Z‚µCpause_time‚ÆÅ’Z˜HŒo˜H‚©‚çpath‚ğŒˆ’è‚µ‚Ä‚¢‚­
 			div_t variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
@@ -383,10 +393,10 @@ namespace Simulation
 
 		//Œ»İ’n‚Ì’â~ŠÔ‚ğƒ‰ƒ“ƒ_ƒ€‚Åİ’è‚µCŒ»’n“_‚Ìo”­’n‚Ì‘¬“x‚ÅCŸ‚ÌPOI‚Ü‚Å‚ÌÅ’Z˜H‚ÅˆÚ“®‚µ‚½‚ÌŠÔ‚ğ‹‚ß‚éD
 		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), user->get_speed(phase_id));
-		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
+		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
 		
 		//’â~ŠÔ‚ğphase‚ÉŠ·Z‚µCpause_time‚ÆÅ’Z˜HŒo˜H‚©‚çpath‚ğŒˆ’è‚µ‚Ä‚¢‚­
-		int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
+		int rest_pause_time = user->get_pause_time() - dest_rest_time;
 		div_t last_variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
 
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
@@ -444,9 +454,9 @@ namespace Simulation
 		for (int i = 1; i < POI_NUM; i++)
 		{
 			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_speed(phase_id));
-			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
+			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
 
-			int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
+			int rest_pause_time = user->get_pause_time() - dest_rest_time;
 
 			//’â~ŠÔ‚ğphase‚ÉŠ·Z‚µCpause_time‚ÆÅ’Z˜HŒo˜H‚©‚çpath‚ğŒˆ’è‚µ‚Ä‚¢‚­
 			div_t variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
@@ -504,10 +514,10 @@ namespace Simulation
 
 		//Œ»İ’n‚Ì’â~ŠÔ‚ğƒ‰ƒ“ƒ_ƒ€‚Åİ’è‚µCŒ»’n“_‚Ìo”­’n‚Ì‘¬“x‚ÅCŸ‚ÌPOI‚Ü‚Å‚ÌÅ’Z˜H‚ÅˆÚ“®‚µ‚½‚ÌŠÔ‚ğ‹‚ß‚éD
 		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), user->get_speed(phase_id));
-		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time(phase_id);
+		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
 
 		//’â~ŠÔ‚ğphase‚ÉŠ·Z‚µCpause_time‚ÆÅ’Z˜HŒo˜H‚©‚çpath‚ğŒˆ’è‚µ‚Ä‚¢‚­
-		int rest_pause_time = user->get_pause_time(phase_id) - dest_rest_time;
+		int rest_pause_time = user->get_pause_time() - dest_rest_time;
 		div_t last_variable_of_converted_pause_time_to_phase = std::div(rest_pause_time, SERVICE_INTERVAL);
 
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
@@ -531,7 +541,7 @@ namespace Simulation
 			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
 		}
 
-		std::cout << "Success Creating Input User" << std::endl;
+		std::cout << "Success Creating Real User" << std::endl;
 
 	}
 

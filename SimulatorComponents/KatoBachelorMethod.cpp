@@ -183,11 +183,11 @@ namespace Method
 	///</summary>
 	void KatoBachelorMethod::linear_interpolation_of_path_between_positions(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int *phase_id, double *dest_rest_time) {
 		//‘S‘Ì‚Ì’â~ŠÔ‚©‚çC‘O‰ñ‚Ì“’…•ª‚ğ·‚µˆø‚¢‚½’â~ŠÔ‚ğˆø‚¢‚½ŠÔ
-		double rest_pause_time = creating_dummy->get_pause_time(*phase_id) - *dest_rest_time;
+		double rest_pause_time = creating_dummy->get_pause_time() - *dest_rest_time;
 
 		//c‚è‚Ì’â~ŠÔ‚ğphase‚ÉŠ·Z‚µCphase•ª–„‚ß‚éD
 		lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, requirement->service_interval);
-				
+		
 		//’â~ŠÔ•ªCŠephase‚É’â~êŠ‚ÆˆÚ“®‘¬“x(0)‚ğ“o˜^
 		set_pause_time_and_speed_0_of_visitedPOI(&*phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, source);
 		

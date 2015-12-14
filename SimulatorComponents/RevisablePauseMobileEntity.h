@@ -24,9 +24,10 @@ namespace Entity
 		~RevisablePauseMobileEntity();
 
 		void revise_rest_pause_time(int phase_id, double new_pause_time);
-		void revise_pause_time();
+		void revise_pause_time(double new_pause_time);
 
-
+		void revise_path();
+		void recalculation_path();
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»
