@@ -21,7 +21,7 @@ namespace Method
 	{
 	private:
 		//スコアリングのパラメータ
-		static constexpr double B = 0.5;
+		static constexpr double B = 0.1;
 		//進行方向に沿わせる制限の角度θ
 		static constexpr double THETA = M_PI_2;
 		//経路生成の試行回数の上限

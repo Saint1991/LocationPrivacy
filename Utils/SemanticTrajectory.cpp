@@ -10,7 +10,7 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename POSITION_TYPE>
-	SemanticTrajectoryState<POSITION_TYPE>::SemanticTrajectoryState(time_t time, const category_id& category, std::shared_ptr<POSITION_TYPE> position, const std::string& venue_name, const std::string& category_name)
+	SemanticTrajectoryState<POSITION_TYPE>::SemanticTrajectoryState(time_t time, const category_id& category, std::shared_ptr<POSITION_TYPE const> position, const std::string& venue_name, const std::string& category_name)
 		: TrajectoryState<POSITION_TYPE>(time, position, venue_name), category(category), category_name(category_name)
 	{
 
@@ -48,7 +48,7 @@ namespace Graph
 	SemanticTrajectory<POSITION_TYPE>::SemanticTrajectory(
 		std::shared_ptr<Time::TimeSlotManager const> timeslot, 
 		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids,
-		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, 
+		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE const>>> positions, 
 		std::shared_ptr<Collection::Sequence<category_id>> category_sequence,
 		std::shared_ptr<std::vector<std::string>> venue_names, 
 		std::shared_ptr<std::vector<std::string>> category_names)
@@ -116,6 +116,21 @@ namespace Graph
 
 
 	///<summary>
+	/// PhaseにおけるSemanticTrajectoryStateを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::shared_ptr<Graph::SemanticTrajectoryState<POSITION_TYPE> const> SemanticTrajectory<POSITION_TYPE>::read_semantic_state_of_phase(int phase) const
+	{
+		time_t time = timeslot->time_of_phase(phase);
+		std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
+		std::string venue_name = venue_names->at(phase);
+		std::string category_id = category_sequence->at(phase);
+		std::string category_name = category_names->at(phase);
+		return std::make_shared<SemanticTrajectoryState<POSITION_TYPE>>(time, category_id, position, venue_name, category_name);
+	}
+
+
+	///<summary>
 	/// 各時刻における状態について繰り返し実行する
 	///</summary>
 	template <typename POSITION_TYPE>
@@ -128,6 +143,22 @@ namespace Graph
 		});
 	}
 
+
+	///<summary>
+	///各phase，前Phaseからの経過時刻, Stateについてexecute_functionを実行する
+	///</summary>
+	template <typename POSITION_TYPE>
+	void SemanticTrajectory<POSITION_TYPE>::foreach_state(const std::function<void(int, long, const Graph::MapNodeIndicator&, std::shared_ptr<SemanticTrajectoryState<POSITION_TYPE> const>)>& execute_function) const
+	{
+		timeslot->for_each_time([&](time_t time, long interval, int phase) {
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
+			category_id category = category_sequence->at(phase);
+			std::string venue_name = venue_names->at(phase);
+			std::string category_name = category_names->at(phase);
+			Graph::MapNodeIndicator visited_node = visited_node_ids->at(phase);
+			execute_function(phase, interval, visited_node, std::make_shared<SemanticTrajectoryState<POSITION_TYPE> const>(time, category, position, venue_name, category_name));
+		});
+	}
 
 	///<summary>
 	/// from_phaseからto_phaseまでのカテゴリシークエンスを取り出す
@@ -149,7 +180,7 @@ namespace Graph
 	{
 		std::list<std::shared_ptr<IO::FileExportable const>> ret;
 		timeslot->for_each_time([this, &ret](time_t time, long interval, int phase) {
-			std::shared_ptr<POSITION_TYPE> position = positions->at(phase);
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
 			category_id category = category_sequence->at(phase);
 			std::string venue_name = venue_names->at(phase);
 			std::string category_name = category_names->at(phase);

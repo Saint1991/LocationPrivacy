@@ -32,7 +32,7 @@ namespace Simulation
 		virtual void make_requirement_list() = 0;
 
 	public:
-		ISimulator() {}
+		ISimulator() : user_trajectories(std::make_shared<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>>()) {}
 		virtual ~ISimulator() {}
 
 		virtual void prepare() = 0;

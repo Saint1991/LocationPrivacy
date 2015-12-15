@@ -52,7 +52,7 @@ namespace User
 			
 			std::unique_ptr<std::vector<std::string>> times;
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>>node_ids;
-			std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> positions;
+			std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng const>>> positions;
 			std::shared_ptr<Collection::Sequence<std::string>>category_sequence;
 			std::shared_ptr<std::vector<std::string>> venue_names;
 			std::shared_ptr<std::vector<std::string>> category_names;
@@ -82,7 +82,7 @@ namespace User
 					previous_time = timestamp;
 					times = std::make_unique<std::vector<std::string>>();
 					node_ids = std::make_shared<std::vector<Graph::MapNodeIndicator>>();
-					positions = std::make_shared<std::vector<std::shared_ptr<Geography::LatLng>>>();
+					positions = std::make_shared<std::vector<std::shared_ptr<Geography::LatLng const>>>();
 					category_sequence = std::make_shared<Collection::Sequence<std::string>>();
 					venue_names = std::make_shared<std::vector<std::string>>();
 					category_names = std::make_shared<std::vector<std::string>>();
@@ -90,7 +90,7 @@ namespace User
 
 				times->push_back(timestamp);
 				node_ids->push_back(venue_id);
-				positions->push_back(std::make_shared<Geography::LatLng>(latitude, longitude));
+				positions->push_back(std::make_shared<Geography::LatLng const>(latitude, longitude));
 				category_sequence->push_back(category_id);
 				venue_names->push_back(venue_name);
 				category_names->push_back(category_name);
@@ -117,7 +117,7 @@ namespace User
 			std::shared_ptr<Time::TimeSlotManager const> timeslot;
 			std::unique_ptr<std::vector<std::string>> times;
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>>node_ids;
-			std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> positions;
+			std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng const>>> positions;
 			std::shared_ptr<std::vector<std::string>> venue_names;
 
 			result->beforeFirst();
@@ -142,13 +142,13 @@ namespace User
 					}
 					times = std::make_unique<std::vector<std::string>>();
 					node_ids = std::make_shared<std::vector<Graph::MapNodeIndicator>>();
-					positions = std::make_shared<std::vector<std::shared_ptr<Geography::LatLng>>>();
+					positions = std::make_shared<std::vector<std::shared_ptr<Geography::LatLng const>>>();
 					venue_names = std::make_shared<std::vector<std::string>>();
 				}
 
 				times->push_back(timestamp);
 				node_ids->push_back(venue_id);
-				positions->push_back(std::make_shared<Geography::LatLng>(latitude, longitude));
+				positions->push_back(std::make_shared<Geography::LatLng const>(latitude, longitude));
 				venue_names->push_back(venue_name);
 			}
 

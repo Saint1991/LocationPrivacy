@@ -10,7 +10,7 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename POSITION_TYPE>
-	TrajectoryState<POSITION_TYPE>::TrajectoryState(time_t time, std::shared_ptr<POSITION_TYPE> position, const std::string& venue_name) : time(time), position(position), venue_name(venue_name)
+	TrajectoryState<POSITION_TYPE>::TrajectoryState(time_t time, std::shared_ptr<POSITION_TYPE const> position, const std::string& venue_name) : time(time), position(position), venue_name(venue_name)
 	{
 
 	}
@@ -53,7 +53,7 @@ namespace Graph
 	///</summary>
 	template <typename POSITION_TYPE>
 	Trajectory<POSITION_TYPE>::Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot) 
-		: timeslot(timeslot), positions(std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>(timeslot->phase_count(), nullptr)), 
+		: timeslot(timeslot), positions(std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE const>>>(timeslot->phase_count(), nullptr)), 
 		visited_node_ids(std::make_shared<std::vector<MapNodeIndicator>>(timeslot->phase_count(), MapNodeIndicator(INVALID, NodeType::INVALID))),
 		venue_names(std::make_shared<std::vector<std::string>>(timeslot->phase_count(), ""))
 	{
@@ -65,7 +65,7 @@ namespace Graph
 	/// コンストラクタ
 	///</summary>
 	template <typename POSITION_TYPE>
-	Trajectory<POSITION_TYPE>::Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> positions, std::shared_ptr<std::vector<std::string>> venue_names)
+	Trajectory<POSITION_TYPE>::Trajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE const>>> positions, std::shared_ptr<std::vector<std::string>> venue_names)
 		: timeslot(timeslot), visited_node_ids(node_ids), positions(positions), venue_names(venue_names)
 	{
 
@@ -155,6 +155,18 @@ namespace Graph
 
 
 	///<summary>
+	/// 指定したPhaseにおけるStateを取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::shared_ptr<TrajectoryState<POSITION_TYPE> const> Trajectory<POSITION_TYPE>::read_state_of_phase(int phase) const
+	{
+		time_t time = timeslot->time_of_phase(phase);
+		std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
+		std::string venue_name = venue_names->at(phase);
+		return std::make_shared<TrajectoryState<POSITION_TYPE>>(time, position, venue_name);
+	}
+
+	///<summary>
 	/// タイムスロットを読み専用で取得する
 	///</summary>
 	template <typename POSITION_TYPE>
@@ -183,7 +195,7 @@ namespace Graph
 		double max_lng = -180.0;
 		double max_lat = -90.0;
 
-		for (std::vector<std::shared_ptr<POSITION_TYPE>>::const_iterator iter = positions->begin(); iter != positions->end(); iter++) {
+		for (std::vector<std::shared_ptr<POSITION_TYPE const>>::const_iterator iter = positions->begin(); iter != positions->end(); iter++) {
 			double lat = (*iter)->y();
 			double lng = (*iter)->x();
 			min_lng = min(min_lng, lng);
@@ -209,6 +221,20 @@ namespace Graph
 
 
 	///<summary>
+	/// 時系列順に各Phase, 前Phaseからの経過時刻, Stateについてexecute_functionを実行する
+	///</summary>
+	template <typename POSITION_TYPE>
+	void Trajectory<POSITION_TYPE>::foreach_state(const std::function<void(int, long, const Graph::MapNodeIndicator&, std::shared_ptr<TrajectoryState<POSITION_TYPE> const>)>& execute_function) const
+	{
+		timeslot->for_each_time([this, &execute_function](time_t time, long interval, int phase) {
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
+			std::string venue_name = venue_names->at(phase);
+			Graph::MapNodeIndicator visited_node = visited_node_ids->at(phase);
+			execute_function(phase, interval, visited_node, std::make_shared<TrajectoryState<POSITION_TYPE> const>(time, position, venue_name));
+		});
+	}
+
+	///<summary>
 	/// ファイルエクスポート用トラジェクトリデータを取得する
 	///</summary>
 	template <typename POSITION_TYPE>
@@ -216,7 +242,7 @@ namespace Graph
 	{
 		std::list<std::shared_ptr<IO::FileExportable const>> ret;
 		timeslot->for_each_time([this, &ret](time_t time, long interval, int phase) {
-			std::shared_ptr<POSITION_TYPE> position = positions->at(phase);
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
 			std::string venue_name = venue_names->at(phase);
 			std::shared_ptr<IO::FileExportable const> data = std::make_shared<TrajectoryState<POSITION_TYPE> const>(time, position, venue_name);
 			ret.push_back(data);
