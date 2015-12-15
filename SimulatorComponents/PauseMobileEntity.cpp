@@ -26,7 +26,7 @@ namespace Entity
 	PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
 		: MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>(id, timeslot), 
 		  now_pause_time_list(std::vector<double>(timeslot->phase_count(),0)), 
-		  speed_list(std::vector<double>(timeslot->phase_count(), 0)),
+		  now_speed_list(std::vector<double>(timeslot->phase_count(), 0)),
 		  visited_pois_info_list_id(0)
 	{
 	}
@@ -49,9 +49,13 @@ namespace Entity
 	{
 		trajectory->set_position_of_phase(phase, node_id, position);
 
-		visited_poi_info.visited_poi = std::make_pair(node_id, position);
-		visited_poi_info.arrive_phase = phase;
+		//もし，開始点以外の挿入の時は，pause_phasesをクリアする．
+		if (!visited_pois_info_list.empty()) {
+			clear_visited_poi_info();
+		}
 
+		visited_poi_info.visited_poi = std::make_pair(node_id, position);
+		
 		visited_pois_info_list.push_back(visited_poi_info);
 	}
 
@@ -84,6 +88,24 @@ namespace Entity
 		return visited_pois_info_list.at(visited_pois_info_list_id + 1);
 	}
 
+	///<summary>
+	/// visited_poi_infoの情報をクリアする
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::clear_visited_poi_info()
+	{
+		while (!visited_poi_info.pause_phases.empty()) {
+			visited_poi_info.pause_phases.pop_back();
+		}
+		visited_poi_info.arrive_phase = 0;
+		visited_poi_info.dest_rest_time = 0.0;
+		visited_poi_info.pause_time = 0.0;
+		visited_poi_info.rest_pause_time_when_departing = 0.0;
+		visited_poi_info.starting_speed= 0.0;
+
+	}
+
+
 
 	///<summary>
 	/// 次に訪問予定の停止POIの到着するphasesを求める．
@@ -102,6 +124,8 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_phases(int pause_phase)
 	{
+		visited_poi_info.pause_phases.push_back(pause_phase);
+		
 		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(pause_phase);
 	}
 
@@ -141,7 +165,12 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_time(int phase, int pause_time)
 	{
+		visited_poi_info.arrive_phase = phase;
+		visited_poi_info.pause_phases.push_back(phase);
+		visited_poi_info.pause_time = pause_time;
+
 		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(phase);
 		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
 
@@ -151,7 +180,12 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_time(int phase, double pause_time)
 	{
+		visited_poi_info.arrive_phase = phase;
+		visited_poi_info.pause_phases.push_back(phase);
+		visited_poi_info.pause_time = pause_time;
+		
 		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(phase);
 		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
 
@@ -165,7 +199,12 @@ namespace Entity
 		Math::Probability generator;
 		int pause_time = generator.uniform_distribution(min, max);
 		
+		visited_poi_info.arrive_phase = phase;
+		visited_poi_info.pause_phases.push_back(phase);
+		visited_poi_info.pause_time = pause_time;
+
 		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(phase);
 		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
 
@@ -178,7 +217,12 @@ namespace Entity
 		Math::Probability generator;
 		double pause_time = generator.uniform_distribution(min, max);
 		
+		visited_poi_info.arrive_phase = phase;
+		visited_poi_info.pause_phases.push_back(phase);
+		visited_poi_info.pause_time = pause_time;
+
 		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(phase);
 		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
 
@@ -192,6 +236,23 @@ namespace Entity
 		visited_pois_info_list.at(visited_pois_info_list_id).starting_speed = speed;
 	}
 
+	///<summary>
+	/// 訪問POI情報にspeedをrandamにsetする
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_starting_speed_at_poi(double average_speed, double speed_range)
+	{
+		Math::Probability generator;
+		double min = average_speed - 0.5* speed_range;
+		double max = average_speed + 0.5* speed_range;
+		double entity_speed = generator.uniform_distribution(min, max);
+		
+		visited_poi_info.starting_speed = entity_speed;
+		visited_pois_info_list.at(visited_pois_info_list_id).starting_speed = entity_speed;
+	}
+
+
+	
 
 	///<summary>
 	/// POIを出発時の速度を取得する
@@ -208,6 +269,7 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_rest_pause_time_when_departing(double rest_pause_time)
 	{
+		visited_poi_info.rest_pause_time_when_departing = rest_pause_time;
 		visited_pois_info_list.at(visited_pois_info_list_id).rest_pause_time_when_departing = rest_pause_time;
 	}
 	
@@ -217,6 +279,7 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_dest_rest_time(double dest_rest_time)
 	{
+		visited_poi_info.dest_rest_time = dest_rest_time;
 		visited_pois_info_list.at(visited_pois_info_list_id).dest_rest_time = dest_rest_time;
 	}
 
@@ -256,18 +319,18 @@ namespace Entity
 	/// 現在の移動速度を求める
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_speed(int phase) const
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_now_speed(int phase) const
 	{
-		return speed_list.at(phase);
+		return now_speed_list.at(phase);
 	}
 
 	///<summary>
 	/// 特定の値の移動速度を現在速度にsetする
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_speed(int phase, double speed)
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_now_speed(int phase, double speed)
 	{
-		speed_list.at(phase) = speed;
+		now_speed_list.at(phase) = speed;
 	}
 
 	
@@ -275,14 +338,14 @@ namespace Entity
 	/// ランダムな値の移動速度をsetする
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_speed(int phase, double average_speed, double speed_range)
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_now_speed(int phase, double average_speed, double speed_range)
 	{
 		Math::Probability generator;
-		double min = average_speed -0.5* speed_range;
+		double min = average_speed - 0.5* speed_range;
 		double max = average_speed + 0.5* speed_range;
 		double entity_speed = generator.uniform_distribution(min, max);
 
-		speed_list.at(phase) = entity_speed;
+		now_speed_list.at(phase) = entity_speed;
 		
 	}
 	

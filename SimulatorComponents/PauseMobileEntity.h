@@ -20,7 +20,7 @@ namespace Entity
 		VisitedPoiInfo();
 		virtual ~VisitedPoiInfo();
 		
-		const int POI_NUM = 10;
+		//const int POI_NUM = 10;
 
 		std::pair<Graph::MapNodeIndicator, Geography::LatLng> visited_poi;//訪問POI→set_visited_poi_of_phaseで設定
 		std::vector<int> pause_phases;//訪問POIにおける停止phase→set_pause_phaseで設定
@@ -46,7 +46,7 @@ namespace Entity
 		std::vector<double> now_pause_time_list;//現在地点における残り停止時間
 		int pause_flag;
 
-		std::vector<double> speed_list;
+		std::vector<double> now_speed_list;
 		
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
@@ -57,7 +57,7 @@ namespace Entity
 		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name = "");//MobileEntityのオーバーライド
 		std::pair<Graph::MapNodeIndicator, Geography::LatLng> get_poi();
 		VisitedPoiInfo get_next_poi_info();
-
+		void clear_visited_poi_info();
 
 		//pause_phaseに関するsetterとgetter
 		std::vector<int> get_pause_phases(int phase);
@@ -77,12 +77,12 @@ namespace Entity
 		
 		//starting_speedに関するsetterとgetter
 		void set_starting_speed_at_poi(double speed);
+		void set_random_starting_speed_at_poi(double average_speed, double speed_range);
 		double get_starting_speed();
 
 
 		//現在phaseにおける残り停止時間のsetterとgetter
 		void set_rest_pause_time_when_departing(double rest_pause_time);
-
 
 
 		//到着時と出発時の余り時間のsetterとgetter
@@ -97,9 +97,9 @@ namespace Entity
 
 
 		//現在phaseにおける速度のsetterとgetter
-		double get_speed(int phase) const;
-		void set_speed(int phase, double speed);
-		void set_random_speed(int phase, double average_speed, double speed_range);
+		double get_now_speed(int phase) const;
+		void set_now_speed(int phase, double speed);
+		void set_random_now_speed(int phase, double average_speed, double speed_range);
 				
 
 		//停止POIにいるかどうかのチェック用

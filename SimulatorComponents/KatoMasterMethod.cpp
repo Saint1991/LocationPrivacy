@@ -390,23 +390,23 @@ namespace Method
 		//‘O‚Ì’l‚Ì•ÛŽ
 		int next_pause_phase = revising_dummy->get_arrive_phase();
 		int next_next_pause_phase = revising_dummy->get_arrive_phase();
-		double next_departing_speed = revising_dummy->get_speed(next_pause_phase);
+		double next_departing_speed = revising_dummy->get_now_speed(next_pause_phase);
 		double next_arrive_time = time_manager->time_of_phase(next_pause_phase);
 		
 		double distance = map->shortest_distance(revising_dummy->read_node_pos_info_of_phase(next_pause_phase).first, revising_dummy->read_node_pos_info_of_phase(next_next_pause_phase).first);
 		
 		double new_speed = distance / (time_manager->time_of_phase(next_next_pause_phase) + Tu - time_manager->time_of_phase(next_pause_phase));
-		revising_dummy->set_speed(next_pause_phase, new_speed);
+		revising_dummy->set_now_speed(next_pause_phase, new_speed);
 
-		if (std::abs(revising_dummy->get_speed(next_pause_phase) - next_departing_speed) > requirement->max_variation_of_speed)
+		if (std::abs(revising_dummy->get_now_speed(next_pause_phase) - next_departing_speed) > requirement->max_variation_of_speed)
 		{
-			new_speed = revising_dummy->get_speed(next_pause_phase) - next_departing_speed > 0 ? next_departing_speed + requirement->max_variation_of_speed : next_departing_speed - requirement->max_variation_of_speed;
+			new_speed = revising_dummy->get_now_speed(next_pause_phase) - next_departing_speed > 0 ? next_departing_speed + requirement->max_variation_of_speed : next_departing_speed - requirement->max_variation_of_speed;
 			revising_dummy->set_pause_time(next_pause_phase, new_speed);
 		}
 		double max_speed = requirement->average_speed_of_dummy + 0.5 * requirement->speed_range_of_dummy;
 		double min_speed = requirement->average_speed_of_dummy - 0.5 * requirement->speed_range_of_dummy;
-		if (max_speed < revising_dummy->get_speed(next_pause_phase)) revising_dummy->set_speed(next_pause_phase, max_speed);
-		if (min_speed > revising_dummy->get_speed(next_pause_phase)) revising_dummy->set_speed(next_pause_phase, min_speed);
+		if (max_speed < revising_dummy->get_now_speed(next_pause_phase)) revising_dummy->set_now_speed(next_pause_phase, max_speed);
+		if (min_speed > revising_dummy->get_now_speed(next_pause_phase)) revising_dummy->set_now_speed(next_pause_phase, min_speed);
 
 		//time_manager->time_of_phase(next_next_pause_phase) = time_manager->time_of_phase(phase_id) + revising_dummy->get_pause_time(phase_id) + (time_t)(distance / revising_dummy->get_speed(phase_id));
 		double variation_of_arrive_time = time_manager->time_of_phase(next_next_pause_phase) - next_arrive_time;
