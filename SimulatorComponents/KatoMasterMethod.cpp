@@ -125,12 +125,12 @@ namespace Method
 				//ˆÚ“®‹——£‚ªreal‚Ì‚Ù‚¤‚ª‘å‚«‚¢‚È‚ç
 				if (real_user_dist > predicted_user_dist) {
 					//change_time‚Ì·•ª‚ð‹‚ß‚é
-					Tu -= (real_user_dist - predicted_user_dist) / predicted_user->get_starting_speed(now_phase);
+					Tu -= (real_user_dist - predicted_user_dist) / predicted_user->get_starting_speed();
 					return SHORTER_PAUSE_TIME;
 				}
 				else {
 					//change_time‚Ì·•ª‚ð‹‚ß‚é
-					Tu -= (predicted_user_dist - real_user_dist) / predicted_user->get_starting_speed(now_phase);
+					Tu -= (predicted_user_dist - real_user_dist) / predicted_user->get_starting_speed();
 					return LONGER_PAUSE_TIME;
 				}
 			}
@@ -246,7 +246,7 @@ namespace Method
 			
 			//’âŽ~ŽžŠÔ‚ÌC³‚ðs‚¤D
 			predicted_user->revise_pause_time(Tu);
-			predicted_user->revise_rest_pause_time(phase_id, Tu);
+			predicted_user->revise_now_pause_time(phase_id, Tu);
 		}
 		else {
 			//Œo˜H‚ðÄŒvŽZ
@@ -331,8 +331,8 @@ namespace Method
 	void KatoMasterMethod::revise_dummy_pause_time(int phase_id)
 	{
 		//‘O‚Ì’l‚Ì•ÛŽ
-		int pause_phase = revising_dummy->get_pause_phase(phase_id);
-		double pause_time = revising_dummy->get_rest_pause_time(pause_phase);
+		int pause_phase = revising_dummy->get_arrive_phase();
+		double pause_time = revising_dummy->get_now_pause_time(pause_phase);
 	
 		double max_variable_value = calc_max_variable_pause_time(pause_phase).first;
 		double min_variable_value = calc_max_variable_pause_time(pause_phase).second;
@@ -343,18 +343,18 @@ namespace Method
 			if (Tu > max_variable_value) new_pause_time = max_variable_value;
 			if (max_variable_value > requirement->max_pause_time) new_pause_time = requirement->max_pause_time;
 		
-			revising_dummy->revise_rest_pause_time(phase_id, new_pause_time);
+			revising_dummy->revise_now_pause_time(phase_id, new_pause_time);
 		}
 		else {
 			if (std::abs(Tu) < min_variable_value) new_pause_time = min_variable_value;
 			if (min_variable_value < requirement->min_pause_time) new_pause_time = requirement->min_pause_time;
 		
 			
-			if (std::abs(new_pause_time) > revising_dummy->get_rest_pause_time(pause_phase)) {
-				int next_pause_phase = revising_dummy->get_pause_phase(pause_phase);
-				revising_dummy->set_rest_pause_time(next_pause_phase, revising_dummy->get_rest_pause_time(pause_phase));
+			if (std::abs(new_pause_time) > revising_dummy->get_now_pause_time(pause_phase)) {
+				int next_pause_phase = revising_dummy->get_arrive_phase();
+				revising_dummy->set_now_pause_time(next_pause_phase, revising_dummy->get_now_pause_time(pause_phase));
 
-				revising_dummy->set_rest_pause_time(pause_phase, 0.0);
+				revising_dummy->set_now_pause_time(pause_phase, 0.0);
 			}
 		}		
 
@@ -388,8 +388,8 @@ namespace Method
 	void KatoMasterMethod::revise_dummy_speed(int phase_id)
 	{
 		//‘O‚Ì’l‚Ì•ÛŽ
-		int next_pause_phase = revising_dummy->get_pause_phase(phase_id);
-		int next_next_pause_phase = revising_dummy->get_pause_phase(next_pause_phase);
+		int next_pause_phase = revising_dummy->get_arrive_phase();
+		int next_next_pause_phase = revising_dummy->get_arrive_phase();
 		double next_departing_speed = revising_dummy->get_speed(next_pause_phase);
 		double next_arrive_time = time_manager->time_of_phase(next_pause_phase);
 		

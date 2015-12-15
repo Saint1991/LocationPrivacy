@@ -23,7 +23,7 @@ namespace Entity
 		RevisablePauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		~RevisablePauseMobileEntity();
 
-		void revise_rest_pause_time(int phase_id, double new_pause_time);
+		void revise_now_pause_time(int phase_id, double new_pause_time);
 		void revise_pause_time(double new_pause_time);
 
 		void revise_path();

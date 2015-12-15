@@ -106,14 +106,14 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::set_pause_time_and_speed_0_of_visitPOI(int *phase_id, div_t variable_of_converted_pause_time_to_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi) {
 		double rest_pause_time = SERVICE_INTERVAL * variable_of_converted_pause_time_to_phase.quot + variable_of_converted_pause_time_to_phase.rem;
-		user->set_rest_pause_time(*phase_id, rest_pause_time);
+		user->set_now_pause_time(*phase_id, rest_pause_time);
 
 		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 		{
 			if (*phase_id == time_manager->phase_count() - 1) break;
 			(*phase_id)++;
 			rest_pause_time -= SERVICE_INTERVAL;
-			user->set_rest_pause_time(*phase_id, rest_pause_time);
+			user->set_now_pause_time(*phase_id, rest_pause_time);
 			user->set_position_of_phase(*phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
 			user->set_speed(*phase_id, 0);
 		}
@@ -205,7 +205,6 @@ namespace Simulation
 			//次のPOIの決定
 			std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator next_poi = candidate_pois_list.begin();
 
-		
 			//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
 			user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
 			user->set_dest_rest_time(dest_rest_time);
@@ -601,8 +600,8 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::create_trajectories()
 	{
-		//random_user_moving_shortest_path();
-		make_predicted_user();
+		make_random_movement_user();
+		//make_predicted_user();
 	}
 
 

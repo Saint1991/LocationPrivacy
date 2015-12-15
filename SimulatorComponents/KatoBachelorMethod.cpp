@@ -170,7 +170,7 @@ namespace Method
 			(*phase_id)++;
 			creating_dummy->set_position_of_phase(*phase_id, source, map->get_static_poi(source.id())->data->get_position());
 			creating_dummy->set_speed(*phase_id, 0);
-			creating_dummy->set_rest_pause_time(*phase_id, rest_pause_time - i * requirement->service_interval);
+			creating_dummy->set_now_pause_time(*phase_id, rest_pause_time - i * requirement->service_interval);
 		}
 	}
 

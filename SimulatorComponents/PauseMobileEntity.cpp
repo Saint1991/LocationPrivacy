@@ -25,7 +25,7 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
 		: MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>(id, timeslot), 
-		  rest_pause_time_list(std::vector<double>(timeslot->phase_count(),0)), 
+		  now_pause_time_list(std::vector<double>(timeslot->phase_count(),0)), 
 		  speed_list(std::vector<double>(timeslot->phase_count(), 0)),
 		  visited_pois_info_list_id(0)
 	{
@@ -37,6 +37,82 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::~PauseMobileEntity()
 	{
+	}
+
+
+	///<summary>
+	/// 訪問POI情報をセットする
+	/// 訪問地点の登録の時はこちらを使う
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position)
+	{
+		trajectory->set_position_of_phase(phase, node_id, position);
+
+		visited_poi_info.visited_poi = std::make_pair(node_id, position);
+		visited_poi_info.arrive_phase = phase;
+
+		visited_pois_info_list.push_back(visited_poi_info);
+	}
+
+	///<summary>
+	/// 共有地点設定時の訪問POI情報をセットする
+	/// MobileEntityをオーバーライドした関数
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name)
+	{
+		register_as_cross_position(phase);
+		set_visited_poi_of_phase(phase, node_id, position);
+	}
+
+	///<summary>
+	/// 現在停止中or現在向かっているPOIを取得
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	std::pair<Graph::MapNodeIndicator, Geography::LatLng> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_poi()
+	{
+		return visited_pois_info_list.at(visited_pois_info_list_id).visited_poi;
+	}
+
+	///<summary>
+	/// 次に向かうPOIの情報を取得
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	VisitedPoiInfo PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_next_poi_info()
+	{
+		return visited_pois_info_list.at(visited_pois_info_list_id + 1);
+	}
+
+
+	///<summary>
+	/// 次に訪問予定の停止POIの到着するphasesを求める．
+	/// 停止中の場合は，現在phaseを返し，移動中の場合は，向かっている訪問地点の予定している到着時間に値するphaseを返す
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	std::vector<int> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_phases(int phase)
+	{
+		return visited_pois_info_list.at(visited_pois_info_list_id).pause_phases;
+	}
+
+
+	///<summary>
+	/// 次に訪問予定の停止POIの到着するphaseをsetする．
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_phases(int pause_phase)
+	{
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(pause_phase);
+	}
+
+	///<summary>
+	/// 次に訪問予定の停止POIの到着するphaseを求める．
+	/// 停止中の場合は，現在phaseを返し，移動中の場合は，向かっている訪問地点の予定している到着時間に値するphaseを返す
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_arrive_phase()
+	{
+		return visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase;
 	}
 
 
@@ -65,10 +141,8 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_time(int phase, int pause_time)
 	{
-		//pause_time_list.at(phase) = pause_time;
 		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
 		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
-
 	}
 
 	///<summary>
@@ -108,48 +182,78 @@ namespace Entity
 		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
 
-
 	///<summary>
-	/// 次に訪問予定の停止POIの到着するphaseを求める．
-	/// 停止中の場合は，現在phaseを返し，移動中の場合は，向かっている訪問地点の予定している到着時間に値するphaseを返す
+	/// 訪問POI情報にspeedをsetする
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_phase(int phase)
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_starting_speed_at_poi(double speed)
 	{
-		return pause_flag == 1 ? phase : visited_pois_info_list.at(visited_pois_info_list_id + 1).pause_phase.front();
+		visited_poi_info.starting_speed = speed;
+		visited_pois_info_list.at(visited_pois_info_list_id).starting_speed = speed;
 	}
+
+
+	///<summary>
+	/// POIを出発時の速度を取得する
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_starting_speed()
+	{
+		return visited_pois_info_list.at(visited_pois_info_list_id).starting_speed;
+	}
+
+	///<summary>
+	/// POI出発時の余り時間を登録
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_rest_pause_time_when_departing(double rest_pause_time)
+	{
+		visited_pois_info_list.at(visited_pois_info_list_id).rest_pause_time_when_departing = rest_pause_time;
+	}
+	
+	///<summary>
+	/// POI到着時の余り時間を登録
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_dest_rest_time(double dest_rest_time)
+	{
+		visited_pois_info_list.at(visited_pois_info_list_id).dest_rest_time = dest_rest_time;
+	}
+
 
 
 	///<summary>
 	/// 現在phaseの残り停止時間を，変更不可能な状態で求める．
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_rest_pause_time(int now_phase) const
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_now_pause_time(int now_phase) const
 	{
-		return rest_pause_time_list.at(now_phase);
+		return now_pause_time_list.at(now_phase);
 	}
 
 	///<summary>
 	/// 現在phaseの残り停止時間を，変更可能な状態で求める．
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_rest_pause_time(int now_phase)
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_now_pause_time(int now_phase)
 	{
-		return rest_pause_time_list.at(now_phase);
+		return now_pause_time_list.at(now_phase);
 	}
 
 	///<summary>
 	/// 現在phaseの残り停止時間を，setする．
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_rest_pause_time(int now_phase, double time)
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_now_pause_time(int now_phase, double time)
 	{
-		rest_pause_time_list.at(now_phase) = time;
+		now_pause_time_list.at(now_phase) = time;
 	}
 
 
+
+
 	///<summary>
-	/// 移動速度を求める
+	/// 現在の移動速度を求める
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_speed(int phase) const
@@ -158,7 +262,7 @@ namespace Entity
 	}
 
 	///<summary>
-	/// 特定の値の移動速度をsetする
+	/// 特定の値の移動速度を現在速度にsetする
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_speed(int phase, double speed)
@@ -182,83 +286,6 @@ namespace Entity
 		
 	}
 	
-	///<summary>
-	/// 訪問POI情報にspeedをsetする
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_starting_speed_at_poi(double speed) 
-	{
-		visited_pois_info_list.at(visited_pois_info_list_id).starting_speed = speed;
-	}
-
-
-	///<summary>
-	/// POIを出発時の速度を取得する
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_starting_speed(int visited_poi_id)
-	{
-		return visited_pois_info_list.at(visited_poi_id).starting_speed;
-	}
-	
-	///<summary>
-	/// POI到着時の余り時間を登録
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_dest_rest_time(double dest_rest_time)
-	{
-		visited_pois_info_list.at(visited_pois_info_list_id).dest_rest_time = dest_rest_time;
-	}
-		
-	///<summary>
-	/// POI出発時の余り時間を登録
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_rest_pause_time_when_departing(double rest_pause_time)
-	{
-		visited_pois_info_list.at(visited_pois_info_list_id).rest_pause_time_when_departing = rest_pause_time;
-	}
-	
-	///<summary>
-	/// 訪問POI情報をセットする
-	/// 訪問地点の登録の時はこちらを使う
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position)
-	{
-		trajectory->set_position_of_phase(phase, node_id, position);
-		visited_pois_info_list.at(visited_pois_info_list_id).visited_poi = std::make_pair(node_id, position);
-		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = phase;
-	}
-
-	///<summary>
-	/// 共有地点設定時の訪問POI情報をセットする
-	/// MobileEntityをオーバーライドした関数
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name)
-	{
-		register_as_cross_position(phase);
-		set_visited_poi_of_phase(phase, node_id, position);
-	}
-
-	///<summary>
-	/// 現在停止中or現在向かっているPOIを取得
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	std::pair<Graph::MapNodeIndicator, Geography::LatLng> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_poi()
-	{
-		return visited_pois_info_list.at(visited_pois_info_list_id).visited_poi;
-	}
-
-	///<summary>
-	/// 次に向かうPOIの情報を取得
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	VisitedPoiInfo PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_next_poi_info()
-	{
-		return visited_pois_info_list.at(visited_pois_info_list_id + 1);
-	}
 
 	///<summary>
 	/// 停止しているかどうか確認する

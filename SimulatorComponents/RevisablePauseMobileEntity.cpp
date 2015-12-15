@@ -21,12 +21,12 @@ namespace Entity
 	}
 
 	///<summary>
-	/// rest_pause_time‚ğC³‚·‚éD
+	/// now_pause_time_list‚ğC³‚·‚éD
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_rest_pause_time(int phase_id, double new_pause_time)
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_now_pause_time(int phase_id, double new_pause_time)
 	{
-		rest_pause_time_list.at(phase_id) += new_pause_time;
+		now_pause_time_list.at(phase_id) += new_pause_time;
 	}
 
 	///<summary>
