@@ -252,16 +252,29 @@ namespace Entity
 	}
 
 
-	
-
 	///<summary>
-	/// POIを出発時の速度を取得する
+	/// POIを出発時の速度をvisited_pois_info_list_idを用いて取得する
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_starting_speed()
 	{
 		return visited_pois_info_list.at(visited_pois_info_list_id).starting_speed;
 	}
+
+	///<summary>
+	/// POIを出発時の速度をvisited_pois_info_list_idを用いて取得する
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_starting_speed_using_arrive_phase(int arrive_phase)
+	{
+		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
+			if (iter->arrive_phase == arrive_phase) {
+				return iter->starting_speed;
+			}
+		}
+		std::invalid_argument("Not Found");
+	}
+
 
 	///<summary>
 	/// POI出発時の余り時間を登録

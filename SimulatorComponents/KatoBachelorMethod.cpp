@@ -314,7 +314,8 @@ namespace Method
 			//一番最初のみ到達可能性を考慮せずに停止地点を決定する．
 			if (creating_dummy->find_previous_fixed_position(time_manager->phase_count()).first == INVALID) {
 				creating_dummy->set_visited_poi_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
-				creating_dummy->set_random_now_speed(real_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				creating_dummy->set_random_starting_speed_at_poi(requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				creating_dummy->increment_visited_pois_info_list_id();
 			}
 			//二箇所目以降の基準地点は，以前の基準地点から到達可能性を調べたのちに決定する．
 			else
@@ -326,7 +327,7 @@ namespace Method
 				//見つからない場合は違う領域(cell)を参照して再探索
 				auto serach_poi = [&](int flag_id = 0) {
 					for (int flag = 0; flag < 5; flag++) {
-						if (map->is_reachable(previous_base_info.second.first, Graph::MapNodeIndicator((*poi)->get_id()), creating_dummy->get_now_speed(previous_base_info.first), base_time_limit)) {
+						if (map->is_reachable(previous_base_info.second.first, Graph::MapNodeIndicator((*poi)->get_id()), creating_dummy->get_starting_speed_using_arrive_phase(previous_base_info.first), base_time_limit)) {
 							return flag_id + 1;
 						}
 						else {
@@ -349,6 +350,7 @@ namespace Method
 
 				creating_dummy->set_visited_poi_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
 				creating_dummy->set_random_now_speed(real_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				creating_dummy->increment_visited_pois_info_list_id();
 			}
 		}
 	}
@@ -404,7 +406,7 @@ namespace Method
 					double previous_time_limit = time_manager->time_of_phase(share_phase) - time_manager->time_of_phase(previous_info.first) - requirement->min_pause_time;
 
 					//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
-					if (previous_time_limit < 0 || !map->is_reachable(previous_info.second.first, share_position.first, creating_dummy->get_now_speed(previous_info.first), previous_time_limit)) {
+					if (previous_time_limit < 0 || !map->is_reachable(previous_info.second.first, share_position.first, creating_dummy->get_starting_speed_using_arrive_phase(previous_info.first), previous_time_limit)) {
 						continue;
 					}
 				}
@@ -415,7 +417,7 @@ namespace Method
 					std::pair<int, std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>>> next_info = creating_dummy->find_next_fixed_position(0);
 					double next_time_limit = time_manager->time_of_phase(next_info.first) - time_manager->time_of_phase(share_phase) - requirement->min_pause_time;
 
-					if (next_time_limit < 0 || !map->is_reachable(share_position.first, next_info.second.first, target->get_now_speed(share_phase), next_time_limit)) {
+					if (next_time_limit < 0 || !map->is_reachable(share_position.first, next_info.second.first, target->get_starting_speed_using_arrive_phase(share_phase), next_time_limit)) {
 						continue;
 					}
 				}
@@ -429,8 +431,8 @@ namespace Method
 					double next_time_limit = time_manager->time_of_phase(next_info.first) - time_manager->time_of_phase(share_phase) - requirement->min_pause_time;
 
 					if (previous_time_limit < 0 || next_time_limit < 0) continue;
-					if (!map->is_reachable(previous_info.second.first, share_position.first, creating_dummy->get_now_speed(previous_info.first), previous_time_limit)
-						|| !map->is_reachable(share_position.first, next_info.second.first, target->get_now_speed(share_phase), next_time_limit)) {
+					if (!map->is_reachable(previous_info.second.first, share_position.first, creating_dummy->get_starting_speed_using_arrive_phase(previous_info.first), previous_time_limit)
+						|| !map->is_reachable(share_position.first, next_info.second.first, target->get_starting_speed_using_arrive_phase(share_phase), next_time_limit)) {
 						//ここで一旦POIを探しなおすことを行う！
 						continue;
 					}
@@ -439,8 +441,9 @@ namespace Method
 				//Dmincross = += 1;
 				//生成中のダミーの交差回数 += 1;
 				creating_dummy->set_crossing_position_of_phase(share_phase, share_position.first, *share_position.second);
-				creating_dummy->set_now_speed(share_phase, target->get_now_speed(share_phase));
-				creating_dummy->set_random_now_speed(share_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				creating_dummy->set_starting_speed_at_poi(target->get_starting_speed_using_arrive_phase(share_phase));
+				creating_dummy->set_random_starting_speed_at_poi(requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				creating_dummy->increment_visited_pois_info_list_id();
 				//targetの交差回数+1
 				target->register_as_cross_position(share_phase);
 				break;

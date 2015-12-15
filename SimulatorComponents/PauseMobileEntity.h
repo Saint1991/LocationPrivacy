@@ -79,6 +79,7 @@ namespace Entity
 		void set_starting_speed_at_poi(double speed);
 		void set_random_starting_speed_at_poi(double average_speed, double speed_range);
 		double get_starting_speed();
+		double get_starting_speed_using_arrive_phase(int arrive_phase);
 
 
 		//Œ»İphase‚É‚¨‚¯‚éc‚è’â~ŠÔ‚Ìsetter‚Ægetter

@@ -487,7 +487,8 @@ namespace Simulation
 
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
-																										   //速度はphaseで埋める前を参照しなければならないことに注意
+			
+			//速度はphaseで埋める前を参照しなければならないことに注意
 			double pause_position_speed = user->get_now_speed(phase_id - variable_of_converted_pause_time_to_phase.quot);
 
 			//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
