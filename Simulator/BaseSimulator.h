@@ -15,7 +15,7 @@
 #include "PreferenceTree.h"
 #include "Dijkstra.h"
 #include "TimeUtility.h"
-//#include "UserTrajectoryConverter.h"
+#include "UserTrajectoryConverter.h"
 
 namespace Simulation
 {
@@ -30,13 +30,14 @@ namespace Simulation
 	private:
 		//トラジェクトリ加工用 (最低この間隔がない場合間隔を広げる)
 		static constexpr int MIN_SERVICE_INTERVAL = 300;
-		const int TRAJECTORY_LENGTH_THRESHOLD = 3;
 		const double TRAININGSET_PROPORTION;
 		const std::string DB_NAME;
 		const unsigned int USER_ID;
 		
 	
 	protected:
+		static constexpr double AVERAGE_SPEED = 5.0;
+		const int TRAJECTORY_LENGTH_THRESHOLD = 3;
 		unsigned int current_trajectory_id;
 		std::shared_ptr<User::PreferenceTree> user_preference_tree;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree;

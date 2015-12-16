@@ -19,17 +19,17 @@ namespace Simulation
 	void PaisSimulator::make_requirement_list()
 	{
 		requirements = {
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 1.0, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.9, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.8, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.7, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.6, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.5, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.4, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.3, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.2, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.1, 5.0, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.0, 5.0, 1.0)
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 1.0, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.9, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.8, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.7, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.6, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.5, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.4, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.3, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.2, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.1, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 16, 0.0, AVERAGE_SPEED, 1.0)
 		};
 	}
 
@@ -46,6 +46,17 @@ namespace Simulation
 				std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> user_trajectory = user_trajectories->at(current_trajectory_id);
 				std::shared_ptr<Time::TimeSlotManager const> timeslot = user_trajectory->read_timeslot();
 				
+				//読み込む地図の領域
+				Graph::Rectangle<Geography::LatLng> map_boundary = user_trajectory->get_trajectory_boundary();
+				map_boundary = calc_map_boundary(map_boundary);
+				
+				//地図の読み込み
+				build_map(map_boundary);
+				User::UserTrajectoryConverter converter(map);
+
+				//トラジェクトリ変換
+				std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> converted_trajectory = converter.extract_walking_semantic_trajectory(user_trajectory, TRAJECTORY_LENGTH_THRESHOLD, AVERAGE_SPEED);
+
 				//対象のトラジェクトリでユーザの嗜好の木を更新
 				user_preference_tree->add_sequence_counter(user_trajectory->get_category_sequence());
 
@@ -55,12 +66,9 @@ namespace Simulation
 				//ユーザの作成
 				std::shared_ptr<User::BasicUser<Geography::LatLng>> user = std::make_shared<User::BasicUser<Geography::LatLng>>(user_trajectory, user_preference_tree);
 				
-				//読み込む地図の領域
-				Graph::Rectangle<Geography::LatLng> map_boundary = user_trajectory->get_trajectory_boundary();
-				map_boundary = calc_map_boundary(map_boundary);
 
-				//地図の読み込み
-				build_map(map_boundary);
+
+
 
 				//提案手法のインスタンス化
 				std::shared_ptr<Framework::IProposedMethod<

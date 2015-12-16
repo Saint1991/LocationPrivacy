@@ -108,6 +108,9 @@
     <ClInclude Include="HayashidaDbMap.h">
       <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
+    <ClInclude Include="UserTrajectoryConverter.h">
+      <Filter>ヘッダー ファイル\User</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -172,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="HayashidaDbMap.cpp">
       <Filter>ソース ファイル\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="UserTrajectoryConverter.cpp">
+      <Filter>ソース ファイル\User</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

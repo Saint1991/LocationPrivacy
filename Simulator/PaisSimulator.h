@@ -9,7 +9,7 @@
 #include "MizunoMethod.h"
 #include "MatsunoMethod.h"
 #include "PreferenceRequirement.h"
-
+#include "UserTrajectoryConverter.h"
 
 namespace Simulation 
 {
