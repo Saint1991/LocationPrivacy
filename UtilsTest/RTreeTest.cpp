@@ -23,6 +23,7 @@ namespace RtreeTest
 		typedef bg::model::point<float, 2, bg::cs::cartesian> point;
 		typedef bg::model::box<point> box;
 		typedef std::pair<box, unsigned> value;
+		typedef std::pair<point, unsigned> point_value;
 
 	public:
 
@@ -64,6 +65,18 @@ namespace RtreeTest
 			box query_box(point(0, 0), point(5, 5));
 			std::vector<m_value> result_s;
 			tree.query(bgi::within(query_box), std::back_inserter(result_s));
+		}
+
+		TEST_METHOD(RTreeSample3)
+		{
+			bgi::rtree< point_value, bgi::quadratic<16> > rtree;
+			rtree.insert(std::make_pair(point(0, 0), 0));
+			rtree.insert(std::make_pair(point(1, 1), 1));
+			
+			box query_box(point(0, 0), point(2, 2));
+			std::vector<point_value> result_s;
+			rtree.query(bgi::intersects(query_box), std::back_inserter(result_s));
+			Assert::AreEqual(2U, result_s.size());
 		}
 	};
 }

@@ -251,7 +251,7 @@ namespace Graph
 	std::vector<std::shared_ptr<POI const>> Map<NODE, POI, PATH>::find_pois_within_boundary(const box& boundary) const
 	{
 		std::vector<rtree_value> ret;
-		rtree_index->query(index::within(boundary), std::back_inserter(ret));
+		rtree_index->query(index::intersects(boundary), std::back_inserter(ret));
 		return ret;
 	}
 
