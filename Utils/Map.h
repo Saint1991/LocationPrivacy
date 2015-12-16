@@ -57,6 +57,8 @@ namespace Graph
 		void build_rtree_index();
 
 	public:
+		static Graph::Rectangle<Geography::LatLng> calc_map_boundary(const Graph::Rectangle<Geography::LatLng>& trajectory_boundary, double boundary_side_length = 10000.0);
+
 		typedef std::pair<std::vector<MapNodeIndicator>, double> shortest_path_info;
 		
 		Map(std::shared_ptr<IRoutingModule<NODE, PATH>> routing_method);

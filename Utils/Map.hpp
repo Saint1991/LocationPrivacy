@@ -2,6 +2,28 @@
 namespace Graph
 {
 	
+
+	///<summary>
+	/// 読み出すマップ領域を計算するためのユーティリティ
+	/// trajectory_boundaryを基に読み出す地図領域を計算するユーティリティ
+	/// boundary_side_lengthは目安
+	///</summary>
+	template <typename NODE, typename POI, typename PATH>
+	Graph::Rectangle<Geography::LatLng> Map<NODE, POI, PATH>::calc_map_boundary(const Graph::Rectangle<Geography::LatLng>& trajectory_boundary, double boundary_side_length)
+	{
+		double width = trajectory_boundary.width();
+		double height = trajectory_boundary.height();
+
+		double left_width = width > boundary_side_length ? 3000.0 : boundary_side_length - width;
+		double left_height = height > boundary_side_length ? 3000.0 : boundary_side_length - height;
+
+		double left_lng = 0.000009 * (left_width / 2.0);
+		double left_lat = 0.000007 * (left_height / 2.0);
+
+		Graph::Rectangle<Geography::LatLng> ret(trajectory_boundary.top + left_lat, trajectory_boundary.left - left_lng, trajectory_boundary.bottom - left_lat, trajectory_boundary.right + left_lng);
+		return ret;
+	}
+
 	///<summary>
 	/// コンストラクタ
 	///</summary>

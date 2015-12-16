@@ -30,26 +30,22 @@ namespace Simulation
 	private:
 		//ƒgƒ‰ƒWƒFƒNƒgƒŠ‰ÁH—p (Å’á‚±‚ÌŠÔŠu‚ª‚È‚¢ê‡ŠÔŠu‚ğL‚°‚é)
 		static constexpr int MIN_SERVICE_INTERVAL = 300;
-		const double TRAININGSET_PROPORTION;
 		const std::string DB_NAME;
 		const unsigned int USER_ID;
-		
 	
 	protected:
 		static constexpr double AVERAGE_SPEED = 5.0;
 		const int TRAJECTORY_LENGTH_THRESHOLD = 3;
-		unsigned int current_trajectory_id;
 		std::shared_ptr<User::PreferenceTree> user_preference_tree;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree;
 
-		Graph::Rectangle<Geography::LatLng> calc_map_boundary(const Graph::Rectangle<Geography::LatLng>& trajectory_boundary, double boundary_side_length = 10000.0);
 		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
 		void create_trajectories();
 		void build_user_preference_tree();
 		virtual void make_requirement_list() = 0;
 		
 	public:
-		BaseSimulator(unsigned int user_id = 1, double trainingset_proportion = 0.3, const std::string& db_name = "map_tokyo_category_top_level");
+		BaseSimulator(unsigned int user_id = 1, const std::string& db_name = "map_tokyo_category_top_level");
 		virtual ~BaseSimulator();
 		void prepare();
 		virtual void run() = 0;

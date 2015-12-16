@@ -4,7 +4,7 @@
 namespace Simulation
 {
 
-	PaisSimulator::PaisSimulator() : BaseSimulator(USER_ID, TRAININGSET_PROPORTION, DB_NAME)
+	PaisSimulator::PaisSimulator() : BaseSimulator(USER_ID, DB_NAME)
 	{
 	}
 
@@ -39,8 +39,11 @@ namespace Simulation
 
 		int failed_count = 0;
 
+		//全トラジェクトリデータからユーザの嗜好の木を作成する
+
+
 		for (std::list<std::shared_ptr<Requirement::PreferenceRequirement const>>::const_iterator iter = requirements.begin(); iter != requirements.end(); iter++) {
-			for (; current_trajectory_id < user_trajectories->size(); current_trajectory_id++) {
+			for (int current_trajectory_id = 0; current_trajectory_id < user_trajectories->size(); current_trajectory_id++) {
 			
 				//対象のユーザトラジェクトリ
 				std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> user_trajectory = user_trajectories->at(current_trajectory_id);
@@ -48,7 +51,7 @@ namespace Simulation
 				
 				//読み込む地図の領域
 				Graph::Rectangle<Geography::LatLng> map_boundary = user_trajectory->get_trajectory_boundary();
-				map_boundary = calc_map_boundary(map_boundary);
+				map_boundary = Map::BasicDbMap::calc_map_boundary(map_boundary);
 				
 				//地図の読み込み
 				build_map(map_boundary);
@@ -56,6 +59,7 @@ namespace Simulation
 
 				//トラジェクトリ変換
 				std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> converted_trajectory = converter.extract_walking_semantic_trajectory(user_trajectory, TRAJECTORY_LENGTH_THRESHOLD, AVERAGE_SPEED);
+				if (converted_trajectory == nullptr) continue;
 
 				//対象のトラジェクトリでユーザの嗜好の木を更新
 				user_preference_tree->add_sequence_counter(user_trajectory->get_category_sequence());
@@ -66,10 +70,6 @@ namespace Simulation
 				//ユーザの作成
 				std::shared_ptr<User::BasicUser<Geography::LatLng>> user = std::make_shared<User::BasicUser<Geography::LatLng>>(user_trajectory, user_preference_tree);
 				
-
-
-
-
 				//提案手法のインスタンス化
 				std::shared_ptr<Framework::IProposedMethod<
 					Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>,
