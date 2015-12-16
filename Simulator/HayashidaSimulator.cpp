@@ -104,11 +104,10 @@ namespace Simulation
 	///<summary>
 	/// ’â~ŠÔ‚Æphase‚ÌƒZƒbƒg
 	///</summary>
-	void HayashidaSimulator::set_pause_time_and_phases_of_visited_POI(int *phase_id, lldiv_t variable_of_converted_pause_time_to_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi) {
-		double rest_pause_time = SERVICE_INTERVAL * variable_of_converted_pause_time_to_phase.quot + variable_of_converted_pause_time_to_phase.rem;
+	void HayashidaSimulator::set_pause_time_and_phases_of_visited_POI(int *phase_id, double rest_pause_time, int total_pause_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi){
 		user->set_now_pause_time(*phase_id, rest_pause_time);
 
-		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
+		for (int i = 0; i < total_pause_phase; i++)
 		{
 			if (*phase_id == time_manager->phase_count() - 1) break;
 			(*phase_id)++;
@@ -220,9 +219,8 @@ namespace Simulation
 			user->set_rest_pause_time_when_departing(variable_of_converted_pause_time_to_phase.rem);
 
 			//’â~ŠÔ•ªCŠephase‚É’â~êŠ‚ÆˆÚ“®‘¬“x(0)‚ğ“o˜^
-			set_pause_time_and_phases_of_visited_POI(&phase_id, variable_of_converted_pause_time_to_phase, now_poi);
+			set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, now_poi);
 			
-
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//path‚ğŒŸõ‚·‚é‚½‚ß‚Ìindex
 			//‘¬“x‚Íphase‚Å–„‚ß‚é‘O‚ğQÆ‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢‚±‚Æ‚É’ˆÓ
@@ -282,12 +280,13 @@ namespace Simulation
 		double rest_pause_time = user->get_pause_time() - dest_rest_time;
 		lldiv_t last_variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
 		
+		//o”­‚Ì—]‚èŠÔ‚ğ“o˜^
 		user->set_rest_pause_time_when_departing(last_variable_of_converted_pause_time_to_phase.rem);
 
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
 
 		//’â~ŠÔ•ªCŠephase‚É’â~êŠ‚ÆˆÚ“®‘¬“x(0)‚ğ“o˜^
-		set_pause_time_and_phases_of_visited_POI(&phase_id, last_variable_of_converted_pause_time_to_phase, now_poi);
+		set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//path‚ğŒŸõ‚·‚é‚½‚ß‚Ìindex
 		//‘¬“x‚Íphase‚Å–„‚ß‚é‘O‚ğQÆ‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢‚±‚Æ‚É’ˆÓ
@@ -353,7 +352,7 @@ namespace Simulation
 			user->set_rest_pause_time_when_departing(variable_of_converted_pause_time_to_phase.rem);
 
 			//’â~ŠÔ•ªCŠephase‚É’â~êŠ‚ÆˆÚ“®‘¬“x(0)‚ğ“o˜^
-			set_pause_time_and_phases_of_visited_POI(&phase_id, variable_of_converted_pause_time_to_phase, now_poi);
+			set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//path‚ğŒŸõ‚·‚é‚½‚ß‚Ìindex
@@ -423,7 +422,7 @@ namespace Simulation
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
 
 		//’â~ŠÔ•ªCŠephase‚É’â~êŠ‚ÆˆÚ“®‘¬“x(0)‚ğ“o˜^
-		set_pause_time_and_phases_of_visited_POI(&phase_id, last_variable_of_converted_pause_time_to_phase, now_poi);
+		set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//path‚ğŒŸõ‚·‚é‚½‚ß‚Ìindex
 		//‘¬“x‚Íphase‚Å–„‚ß‚é‘O‚ğQÆ‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢‚±‚Æ‚É’ˆÓ
@@ -483,7 +482,7 @@ namespace Simulation
 			lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
 
 			//’â~ŠÔ•ªCŠephase‚É’â~êŠ‚ÆˆÚ“®‘¬“x(0)‚ğ“o˜^
-			set_pause_time_and_phases_of_visited_POI(&phase_id, variable_of_converted_pause_time_to_phase, now_poi);
+			set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//path‚ğŒŸõ‚·‚é‚½‚ß‚Ìindex
@@ -545,7 +544,7 @@ namespace Simulation
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
 
 		//’â~ŠÔ•ªCŠephase‚É’â~êŠ‚ÆˆÚ“®‘¬“x(0)‚ğ“o˜^
-		set_pause_time_and_phases_of_visited_POI(&phase_id, last_variable_of_converted_pause_time_to_phase, now_poi);
+		set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//path‚ğŒŸõ‚·‚é‚½‚ß‚Ìindex
 																									//‘¬“x‚Íphase‚Å–„‚ß‚é‘O‚ğQÆ‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢‚±‚Æ‚É’ˆÓ
@@ -654,7 +653,7 @@ namespace Simulation
 
 		requirements = 
 		{
-			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 4, 90, 5, 3, 500, 200),
+			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 4, 90, 5, 2, 500, 200),
 			//std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 16, 90, 5, 2)
 		};
 	}

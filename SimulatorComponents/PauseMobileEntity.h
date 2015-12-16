@@ -58,12 +58,14 @@ namespace Entity
 		std::pair<Graph::MapNodeIndicator, Geography::LatLng> get_poi();
 		VisitedPoiInfo get_next_poi_info();
 		void clear_visited_poi_info();
+		void sort_pois_order_by_arrive_phase();
 
 		//pause_phaseに関するsetterとgetter
 		std::vector<int> get_pause_phases(int phase);
 		void set_pause_phases(int pause_phase);
+		void set_pause_phases_using_arrive_phase(int arrive_phase, int pause_phase);
 
-		//arrive_phaseに関するsetterとgetter.ただし，setはpause_timeと同時に設定を行うため不要．
+		//arrive_phaseに関するgetter.ただし，setはvisitedPOI登録時に設定を行うため不要．
 		int get_arrive_phase();
 		
 
@@ -72,11 +74,13 @@ namespace Entity
 		int get_pause_time();
 		void set_pause_time(int phase, int pause_time);
 		void set_pause_time(int phase, double pause_time);
+		void set_pause_time_using_arrive_phase(int arrive_phase, int phase, double pause_time);
 		void set_random_pause_time(int phase, int min, int max);
 		void set_random_pause_time(int phase, double min, double max);
 		
 		//starting_speedに関するsetterとgetter
 		void set_starting_speed_at_poi(double speed);
+		void set_starting_speed_at_poi_using_arrive_phase(int arrive_phase, double speed);
 		void set_random_starting_speed_at_poi(double average_speed, double speed_range);
 		double get_starting_speed();
 		double get_starting_speed_using_arrive_phase(int arrive_phase);
@@ -84,17 +88,16 @@ namespace Entity
 
 		//現在phaseにおける残り停止時間のsetterとgetter
 		void set_rest_pause_time_when_departing(double rest_pause_time);
-
+		void set_rest_pause_time_when_departing_using_arrive_phase(int arrive_phase, double rest_pause_time);
 
 		//到着時と出発時の余り時間のsetterとgetter
 		void set_dest_rest_time(double dest_rest_time);
-		
+		void set_dest_rest_time_using_arrive_phase(int arrive_phase, double dest_rest_time);
 
 		//現在情報のrest_pause_timeに関するsetterとgetter
 		int get_now_pause_time(int now_phase) const;
 		int get_now_pause_time(int now_phase);
 		void set_now_pause_time(int now_phase, double time);
-
 
 
 		//現在phaseにおける速度のsetterとgetter
