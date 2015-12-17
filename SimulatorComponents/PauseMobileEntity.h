@@ -44,7 +44,7 @@ namespace Entity
 		int visited_pois_info_list_id;
 		
 		std::vector<double> now_pause_time_list;//Œ»İ’n“_‚É‚¨‚¯‚éc‚è’â~ŠÔ
-		int pause_flag;
+		//int pause_flag;
 
 		std::vector<double> now_speed_list;
 		
@@ -61,7 +61,7 @@ namespace Entity
 		void sort_pois_order_by_arrive_phase();
 
 		//pause_phase‚ÉŠÖ‚·‚ésetter‚Ægetter
-		std::vector<int> get_pause_phases(int phase);
+		std::vector<int> get_pause_phases();
 		void set_pause_phases(int pause_phase);
 		void set_pause_phases_using_arrive_phase(int arrive_phase, int pause_phase);
 
@@ -72,19 +72,22 @@ namespace Entity
 		//–K–âPOIî•ñ‚Ì’â~ŠÔ(pause_time)‚ÉŠÖ‚·‚ésetter‚Ægetter
 		int get_pause_time() const;
 		int get_pause_time();
+		int get_pause_time_using_arrive_phase(int arrive_phase);
 		void set_pause_time(int phase, int pause_time);
 		void set_pause_time(int phase, double pause_time);
-		void set_pause_time_using_arrive_phase(int arrive_phase, int phase, double pause_time);
+		void set_pause_time_using_arrive_phase(int arrive_phase, double pause_time);
 		void set_random_pause_time(int phase, int min, int max);
 		void set_random_pause_time(int phase, double min, double max);
-		
+		void set_random_pause_time_using_arrive_phase(int arrive_phase, int phase, double min, double max);
+
 		//starting_speed‚ÉŠÖ‚·‚ésetter‚Ægetter
 		void set_starting_speed_at_poi(double speed);
 		void set_starting_speed_at_poi_using_arrive_phase(int arrive_phase, double speed);
 		void set_random_starting_speed_at_poi(double average_speed, double speed_range);
+		void set_random_starting_speed_at_poi_using_arrive_phase(int arrive_phase, double average_speed, double speed_range);
 		double get_starting_speed();
 		double get_starting_speed_using_arrive_phase(int arrive_phase);
-
+		double get_starting_speed_using_pause_phase(int pause_phase);
 
 		//Œ»İphase‚É‚¨‚¯‚éc‚è’â~ŠÔ‚Ìsetter‚Ægetter
 		void set_rest_pause_time_when_departing(double rest_pause_time);
@@ -107,7 +110,7 @@ namespace Entity
 				
 
 		//’â~POI‚É‚¢‚é‚©‚Ç‚¤‚©‚Ìƒ`ƒFƒbƒN—p
-		bool check_pause_flag();
+		bool check_pause_condition(int now_phase);
 		void raise_flag();
 		void take_down_flag();
 

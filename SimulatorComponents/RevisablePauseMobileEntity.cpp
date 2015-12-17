@@ -21,6 +21,29 @@ namespace Entity
 	}
 
 	///<summary>
+	/// pause_time‚ğC³‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_pause_time(double new_pause_time)
+	{
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = new_pause_time;
+	}
+
+	///<summary>
+	/// pause_time‚ğC³‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_pause_time_using_pause_phase(double new_pause_time, int phase)
+	{
+		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
+			for (std::vector<int>::iterator iter2 = iter->pause_phases.begin(); iter2 != iter->pause_phases.end(); iter2++) {
+				if (*iter2 == phase) iter->pause_time = new_pause_time;
+			}
+		}
+		std::invalid_argument("Not Found");
+	}
+
+	///<summary>
 	/// now_pause_time_list‚ğC³‚·‚éD
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
@@ -29,14 +52,7 @@ namespace Entity
 		now_pause_time_list.at(phase_id) += new_pause_time;
 	}
 
-	///<summary>
-	/// pause_time‚ğC³‚·‚éD
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_pause_time(double new_pause_time)
-	{
-		visited_pois_info_list.at(visited_pois_info_list_id).pause_time += new_pause_time;
-	}
+	
 
 	///<summary>
 	/// path‚ğC³‚µCÄŒvZ‚ğ{‚·D

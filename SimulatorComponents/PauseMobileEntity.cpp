@@ -4,7 +4,7 @@
 
 namespace Entity
 {
-	
+
 	///<summary>
 	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 	///</summary>
@@ -24,10 +24,10 @@ namespace Entity
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot)
-		: MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>(id, timeslot), 
-		  now_pause_time_list(std::vector<double>(timeslot->phase_count(),0)), 
-		  now_speed_list(std::vector<double>(timeslot->phase_count(), 0)),
-		  visited_pois_info_list_id(0)
+		: MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>(id, timeslot),
+		now_pause_time_list(std::vector<double>(timeslot->phase_count(), 0)),
+		now_speed_list(std::vector<double>(timeslot->phase_count(), 0)),
+		visited_pois_info_list_id(0)
 	{
 	}
 
@@ -41,9 +41,10 @@ namespace Entity
 
 
 	///<summary>
-	/// –K–âPOIî•ñ‚ğƒZƒbƒg‚·‚é
-	/// “’…phase‚à‹L˜^
-	/// –K–â’n“_‚Ì“o˜^‚Ì‚Í‚±‚¿‚ç‚ğg‚¤
+	/// –K–âPOIî•ñ‚ğƒZƒbƒg‚·‚éD–K–â’n“_‚Ì“o˜^‚Ì‚Í‚±‚¿‚ç‚ğg‚¤
+	/// arrive_phase‚à‹L˜^.‚½‚¾‚µCpause_phase‚Í“o˜^‚µ‚È‚¢Dpause_phase‚Ís’â~ŠÔ“o˜^‚ÌÛ‚És‚¤D
+	/// visited_poi_info‚ğpush_back‚·‚é‘O‚ÉCpause_phases‚ÍƒNƒŠƒA‚·‚é‚±‚Æ
+	/// push_backŒã‚ÍCarrive_phase‚ğ—p‚¢‚ÄCƒ\[ƒg‚ğs‚¤D
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position)
@@ -55,10 +56,10 @@ namespace Entity
 			clear_visited_poi_info();
 		}
 
-		visited_poi_info.visited_poi = std::make_pair(node_id, position);		
+		visited_poi_info.visited_poi = std::make_pair(node_id, position);
 		visited_poi_info.arrive_phase = phase;
 		visited_pois_info_list.push_back(visited_poi_info);
-		
+
 		//sortŒãCarrive_phase‡‚Éƒ\[ƒg‚µ‚Ä‚¨‚­D
 		sort_pois_order_by_arrive_phase();
 	}
@@ -105,7 +106,7 @@ namespace Entity
 		visited_poi_info.dest_rest_time = 0.0;
 		visited_poi_info.pause_time = 0.0;
 		visited_poi_info.rest_pause_time_when_departing = 0.0;
-		visited_poi_info.starting_speed= 0.0;
+		visited_poi_info.starting_speed = 0.0;
 
 	}
 	///<summary>
@@ -114,7 +115,7 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::sort_pois_order_by_arrive_phase()
 	{
-		std::sort(visited_pois_info_list.begin(), visited_pois_info_list.end(), 
+		std::sort(visited_pois_info_list.begin(), visited_pois_info_list.end(),
 			[](VisitedPoiInfo& poi1, VisitedPoiInfo& poi2) {
 			return poi1.arrive_phase < poi2.arrive_phase;
 		});
@@ -126,11 +127,10 @@ namespace Entity
 	/// ’â~’†‚Ìê‡‚ÍCŒ»İphase‚ğ•Ô‚µCˆÚ“®’†‚Ìê‡‚ÍCŒü‚©‚Á‚Ä‚¢‚é–K–â’n“_‚Ì—\’è‚µ‚Ä‚¢‚é“’…ŠÔ‚É’l‚·‚éphase‚ğ•Ô‚·
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	std::vector<int> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_phases(int phase)
+	std::vector<int> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_phases()
 	{
 		return visited_pois_info_list.at(visited_pois_info_list_id).pause_phases;
 	}
-
 
 	///<summary>
 	/// Ÿ‚É–K–â—\’è‚Ì’â~POI‚Ì“’…‚·‚éphase‚ğset‚·‚éD
@@ -188,6 +188,22 @@ namespace Entity
 
 
 	///<summary>
+	/// –K–âPOI‚Ì’â~ŠÔ‚ğ•ÏX‰Â”\‚Èó‘Ô‚Å‹‚ß‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time_using_arrive_phase(int arrive_phase)
+	{
+		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
+			if (iter->arrive_phase == arrive_phase) {
+				return iter->pause_time;
+			}
+		}
+		std::invalid_argument("Not Found");
+	}
+
+
+
+	///<summary>
 	/// –K–âPOIî•ñ‚ÉCintŒ^‚Ì’â~ŠÔ‚Æ“’…phase‚ğset‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
@@ -208,7 +224,7 @@ namespace Entity
 	{
 		visited_poi_info.pause_phases.push_back(phase);
 		visited_poi_info.pause_time = pause_time;
-	
+
 		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(phase);
 		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
@@ -217,8 +233,64 @@ namespace Entity
 	/// –K–âPOIî•ñ‚ÉCdoubleŒ^‚Ì’â~ŠÔ‚Æ“’…phase‚ğset‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_time_using_arrive_phase(int arrive_phase, int phase, double pause_time)
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_time_using_arrive_phase(int arrive_phase, double pause_time)
 	{
+		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
+			if (iter->arrive_phase == arrive_phase) {
+				visited_poi_info.pause_phases.push_back(arrive_phase);
+				visited_poi_info.pause_time = pause_time;
+
+				iter->pause_phases.push_back(arrive_phase);
+				iter->pause_time = pause_time;
+				return;
+			}
+		}
+		std::invalid_argument("Not Found");
+	}
+
+	///<summary>
+	/// –K–âPOIî•ñ‚É,intŒ^‚Ìƒ‰ƒ“ƒ_ƒ€‚È’â~ŠÔ‚Æ“’…phase‚ğset‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_pause_time(int phase, int min, int max)
+	{
+		Math::Probability generator;
+		int pause_time = generator.uniform_distribution(min, max);
+
+		visited_poi_info.pause_phases.push_back(phase);
+		visited_poi_info.pause_time = pause_time;
+
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(phase);
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
+	}
+
+	///<summary>
+	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğdoubleŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
+	/// Å‰‚Ìpause_phase‚àpause_phases‚Épush_back‚·‚é‚±‚Æ‚É’ˆÓ
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_pause_time(int phase, double min, double max)
+	{
+		Math::Probability generator;
+		double pause_time = generator.uniform_distribution(min, max);
+
+		visited_poi_info.pause_phases.push_back(phase);
+		visited_poi_info.pause_time = pause_time;
+
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(phase);
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
+	}
+
+	///<summary>
+	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğdoubleŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
+	/// Å‰‚Ìpause_phase‚àpause_phases‚Épush_back‚·‚é‚±‚Æ‚É’ˆÓ
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_pause_time_using_arrive_phase(int arrive_phase, int phase, double min, double max) {
+
+		Math::Probability generator;
+		double pause_time = generator.uniform_distribution(min, max);
+
 		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
 			if (iter->arrive_phase == arrive_phase) {
 				visited_poi_info.pause_phases.push_back(phase);
@@ -230,38 +302,6 @@ namespace Entity
 			}
 		}
 		std::invalid_argument("Not Found");
-	}
-
-	///<summary>
-	/// –K–âPOIî•ñ‚É,ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğintŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_pause_time(int phase, int min, int max)
-	{
-		Math::Probability generator;
-		int pause_time = generator.uniform_distribution(min, max);
-		
-		visited_poi_info.pause_phases.push_back(phase);
-		visited_poi_info.pause_time = pause_time;
-
-		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(phase);
-		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
-	}
-
-	///<summary>
-	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ğdoubleŒ^‚Å’â~ŠÔ‚Æ‚µ‚Äset‚·‚é
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_pause_time(int phase, double min, double max)
-	{
-		Math::Probability generator;
-		double pause_time = generator.uniform_distribution(min, max);
-		
-		visited_poi_info.pause_phases.push_back(phase);
-		visited_poi_info.pause_time = pause_time;
-
-		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(phase);
-		visited_pois_info_list.at(visited_pois_info_list_id).pause_time = pause_time;
 	}
 
 	///<summary>
@@ -300,9 +340,29 @@ namespace Entity
 		double min = average_speed - 0.5* speed_range;
 		double max = average_speed + 0.5* speed_range;
 		double entity_speed = generator.uniform_distribution(min, max);
-		
+
 		visited_poi_info.starting_speed = entity_speed;
 		visited_pois_info_list.at(visited_pois_info_list_id).starting_speed = entity_speed;
+	}
+
+	///<summary>
+	/// –K–âPOIî•ñ‚Éspeed‚ğrandam‚Éset‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_random_starting_speed_at_poi_using_arrive_phase(int arrive_phase, double average_speed, double speed_range)
+	{
+		Math::Probability generator;
+		double min = average_speed - 0.5* speed_range;
+		double max = average_speed + 0.5* speed_range;
+		double entity_speed = generator.uniform_distribution(min, max);
+		
+		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
+			if (iter->arrive_phase == arrive_phase) {
+				iter->starting_speed = entity_speed;
+			}
+		}
+		std::invalid_argument("Not Found");
+		
 	}
 
 
@@ -316,19 +376,30 @@ namespace Entity
 	}
 
 	///<summary>
-	/// POI‚ğo”­‚Ì‘¬“x‚ğvisited_pois_info_list_id‚ğ—p‚¢‚Äæ“¾‚·‚é
+	/// POI‚ğo”­‚Ì‘¬“x‚ğarrive_phase‚ğ—p‚¢‚Äæ“¾‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_starting_speed_using_arrive_phase(int arrive_phase)
 	{
 		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
-			if (iter->arrive_phase == arrive_phase) {
-				return iter->starting_speed;
-			}
+			if (iter->arrive_phase == arrive_phase) return iter->starting_speed;
 		}
 		std::invalid_argument("Not Found");
 	}
 
+	///<summary>
+	/// POI‚ğo”­‚Ì‘¬“x‚ğarrive_phase‚ğ—p‚¢‚Äæ“¾‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_starting_speed_using_pause_phase(int pause_phase)
+	{
+		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
+			for (std::vector<int>::iterator iter2 = iter->pause_phases.begin(); iter2 != iter->pause_phases.end(); iter2++) {
+				if (*iter2 == pause_phase) return iter->starting_speed;
+			}
+		}
+		std::invalid_argument("Not Found");
+	}
 
 	///<summary>
 	/// POIo”­‚Ì—]‚èŠÔ‚ğ“o˜^
@@ -349,14 +420,14 @@ namespace Entity
 		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
 			if (iter->arrive_phase == arrive_phase) {
 				visited_poi_info.rest_pause_time_when_departing = rest_pause_time;
-				visited_pois_info_list.at(visited_pois_info_list_id).rest_pause_time_when_departing = rest_pause_time;
+				iter->rest_pause_time_when_departing = rest_pause_time;
 				return;
 			}
 		}
-		std::invalid_argument("Not Found");		
+		std::invalid_argument("Not Found");
 	}
 
-	
+
 	///<summary>
 	/// POI“’…‚Ì—]‚èŠÔ‚ğ“o˜^
 	///</summary>
@@ -377,7 +448,7 @@ namespace Entity
 		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
 			if (iter->arrive_phase == arrive_phase) {
 				visited_poi_info.dest_rest_time = dest_rest_time;
-				visited_pois_info_list.at(visited_pois_info_list_id).dest_rest_time = dest_rest_time;
+				iter->dest_rest_time = dest_rest_time;
 				return;
 			}
 		}
@@ -405,6 +476,7 @@ namespace Entity
 
 	///<summary>
 	/// Œ»İphase‚Ìc‚è’â~ŠÔ‚ğCset‚·‚éD
+	/// phase‚É‚Ípush_back‚µ‚È‚¢‚Ì‚Å’ˆÓ
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_now_pause_time(int now_phase, double time)
@@ -433,7 +505,7 @@ namespace Entity
 		now_speed_list.at(phase) = speed;
 	}
 
-	
+
 	///<summary>
 	/// ƒ‰ƒ“ƒ_ƒ€‚È’l‚ÌˆÚ“®‘¬“x‚ğset‚·‚é
 	///</summary>
@@ -446,17 +518,18 @@ namespace Entity
 		double entity_speed = generator.uniform_distribution(min, max);
 
 		now_speed_list.at(phase) = entity_speed;
-		
+
 	}
-	
+
 
 	///<summary>
 	/// ’â~‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©Šm”F‚·‚é
+	/// Œ»İ‘¬“x‚ª0‚Ìê‡’â~‚Æ”»’f
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	bool PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::check_pause_flag()
+	bool PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::check_pause_condition(int now_phase)
 	{
-		return pause_flag == 1 ? true : false;
+		return get_now_speed(now_phase) == 0.0 ? true : false;
 	}
 
 	///<summary>
@@ -495,7 +568,7 @@ namespace Entity
 	{
 		return trajectory;
 	}
-		
+
 
 	///<summary>
 	/// Œğ·‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢Phase‚ğ‘S‚Äæ“¾‚·‚é
@@ -523,5 +596,5 @@ namespace Entity
 		if (not_set_phases.size() == 0) return INVALID;
 		return not_set_phases.at(generator.uniform_distribution(0, not_set_phases.size() - 1));
 	}
-	
+
 }

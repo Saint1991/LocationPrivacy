@@ -10,7 +10,7 @@ namespace Method
 	///</summary>
 	KatoMasterMethod::KatoMasterMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
 		:KatoBachelorMethod(map, user, requirement, time_manager),
-		real_user(nullptr), predicted_user(nullptr)
+		real_user(nullptr), predicted_user(nullptr),Tu(0.0)
 	{
 		//ユーザが2つ持てるように，データ構造を修正する．input_userの方はget_user()ではないので，注意
 		input_user = entities->get_user();
@@ -80,7 +80,7 @@ namespace Method
 	{
 		//止まっている→停止時間の変更or停止地点の変更
 		//もし片方でも停止していたら→停止時間変更の判断
-		if (predicted_user->check_pause_flag() || real_user->check_pause_flag()) {
+		if (predicted_user->check_pause_condition(now_phase) || real_user->check_pause_condition(now_phase)) {
 			return check_user_pause_time(now_phase);
 		}
 		//動いていたら，
@@ -102,12 +102,12 @@ namespace Method
 		KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_pause_time(int now_phase)
 		{
 			//もしプラン通り停止していたら(両者の停止フラグが１)，NO_CHANGE
-			if (predicted_user->check_pause_flag() && real_user->check_pause_flag()) {
+			if (predicted_user->check_pause_condition(now_phase) && real_user->check_pause_condition(now_phase)) {
 				return NO_CHANGE;
 			}
-			else if(predicted_user->check_pause_flag() || real_user->check_pause_flag()){
+			else if(predicted_user->check_pause_condition(now_phase) || real_user->check_pause_condition(now_phase)){
 				//もしrealのほうが停止フラグが0で(出発していて)，predictが1なら,予定より早く出発
-				if (predicted_user->check_pause_flag() == true && real_user->check_pause_flag() == false) {
+				if (predicted_user->check_pause_condition(now_phase) == true && real_user->check_pause_condition(now_phase) == false) {
 					//change_timeの差分を求める
 					Tu -= requirement->service_interval;
 					return SHORTER_PAUSE_TIME;
@@ -206,7 +206,15 @@ namespace Method
 			return VISIT_POI;
 		}
 
-		
+		///<summary>
+		/// ダミーがパス上に存在するかどうかをチェック
+		///</summary>
+		bool KatoMasterMethod::check_on_the_path()
+		{
+			return true;
+		}
+
+
 
 	///<summary>
 	/// ユーザの次の停止地点の到着時間を予測する
@@ -305,7 +313,7 @@ namespace Method
 	void KatoMasterMethod::revise_dummy_trajectory(int phase_id)
 	{
 		//poiに止まっている時
-		if (revising_dummy->check_pause_flag()) {
+		if (revising_dummy->check_pause_condition(phase_id)) {
 			//全ての停止地点の到着時間を変更し，Tu分変更させる．
 			revise_dummy_pause_time(phase_id);
 			revise_dummy_path(phase_id);
@@ -342,14 +350,13 @@ namespace Method
 		if (Tu > 0) {
 			if (Tu > max_variable_value) new_pause_time = max_variable_value;
 			if (max_variable_value > requirement->max_pause_time) new_pause_time = requirement->max_pause_time;
-		
+			
 			revising_dummy->revise_now_pause_time(phase_id, new_pause_time);
 		}
 		else {
 			if (std::abs(Tu) < min_variable_value) new_pause_time = min_variable_value;
 			if (min_variable_value < requirement->min_pause_time) new_pause_time = requirement->min_pause_time;
-		
-			
+					
 			if (std::abs(new_pause_time) > revising_dummy->get_now_pause_time(pause_phase)) {
 				int next_pause_phase = revising_dummy->get_arrive_phase();
 				revising_dummy->set_now_pause_time(next_pause_phase, revising_dummy->get_now_pause_time(pause_phase));
