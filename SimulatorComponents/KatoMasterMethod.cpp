@@ -85,7 +85,8 @@ namespace Method
 		}
 		//動いていたら，
 		else {
-			if (/*もし線形補間した線の上に位置していたら，*/true) {
+			//もし線形補間した線の上に位置していたら
+			if (check_on_the_path(now_phase)) {
 				return check_user_speed(now_phase);
 			}
 			else {
@@ -208,9 +209,18 @@ namespace Method
 
 		///<summary>
 		/// ダミーがパス上に存在するかどうかをチェック
+		/// predicted_userの現停止POIから次の停止POIまでの経路を取ってきて，その直線上に乗っているかどうかをチェック
 		///</summary>
-		bool KatoMasterMethod::check_on_the_path()
+		bool KatoMasterMethod::check_on_the_path(int phase_id)
 		{
+			Graph::MapNodeIndicator source;
+			Graph::MapNodeIndicator destination;
+
+			std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> path_between_pois = predicted_user->get_trajectory()->get_positions();
+			std::vector<std::shared_ptr<Geography::LatLng>>::iterator path_iter = path_between_pois->begin();//pathを検索するためのindex
+						
+			Graph::MapNodeIndicator nearest_position = source;
+
 			return true;
 		}
 
@@ -253,12 +263,14 @@ namespace Method
 			predicted_user->get_trajectory()->insert_positions_to_trajectory(phase_id, 1);
 			
 			//停止時間の修正を行う．
-			predicted_user->revise_pause_time(Tu);
 			predicted_user->revise_now_pause_time(phase_id, Tu);
 		}
 		else {
-			//経路を再計算
+			//停止時間の修正を行う．
+			predicted_user->revise_now_pause_time(phase_id, Tu);
 
+			//経路を再計算
+			//recalculation_path(phase_id);
 		}
 	}
 
@@ -268,7 +280,16 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(ChangeParameter check_parameter, int phase_id)
 	{
+		if (Tu == requirement->service_interval) {
+			//trajectoryをずらすことで対応
+			predicted_user->get_trajectory()->delete_positions_to_trajectory(phase_id, 1);
 
+			//停止時間の修正を行う．
+			predicted_user->revise_now_pause_time(phase_id, Tu);
+		}
+		else {
+			//経路を再計算
+		}
 	}
 
 	///<summary>
@@ -350,21 +371,12 @@ namespace Method
 		if (Tu > 0) {
 			if (Tu > max_variable_value) new_pause_time = max_variable_value;
 			if (max_variable_value > requirement->max_pause_time) new_pause_time = requirement->max_pause_time;
-			
-			revising_dummy->revise_now_pause_time(phase_id, new_pause_time);
 		}
 		else {
 			if (std::abs(Tu) < min_variable_value) new_pause_time = min_variable_value;
 			if (min_variable_value < requirement->min_pause_time) new_pause_time = requirement->min_pause_time;
-					
-			if (std::abs(new_pause_time) > revising_dummy->get_now_pause_time(pause_phase)) {
-				int next_pause_phase = revising_dummy->get_arrive_phase();
-				revising_dummy->set_now_pause_time(next_pause_phase, revising_dummy->get_now_pause_time(pause_phase));
-
-				revising_dummy->set_now_pause_time(pause_phase, 0.0);
-			}
 		}		
-
+				
 		//調整した分，ダミーの停止時間を修正する．
 		for (int i = phase_id + 1; i <= time_manager->phase_count(); i++)
 		{
@@ -375,10 +387,7 @@ namespace Method
 		//もし調整しきれなかったら，次のpathの調整をする
 		Tu -= new_pause_time;
 	}
-
-
-
-
+	
 
 	///<summary>
 	/// ダミーの移動経路の修正
@@ -436,6 +445,72 @@ namespace Method
 	}
 	
 
+	///<summary>
+	/// ダミーの停止位置の修正
+	///</summary>
+	void KatoMasterMethod::recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int phase_id)
+	{
+		double pause_position_speed = revising_dummy->get_now_speed(phase_id);
+
+		//現在phaseから，now_puase_timeが0以下になるまで，停止情報を登録
+		phase_id++;
+		for (double rest_pause_time = revising_dummy->get_now_pause_time(phase_id); time < 0; phase_id++)
+		{
+			rest_pause_time -= requirement->service_interval;
+			revising_dummy->set_now_pause_time(phase_id, rest_pause_time);
+			revising_dummy->set_position_of_phase(phase_id, source, map->get_static_poi(source.id())->data->get_position());
+		}
+
+		std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path(source, destination);
+		std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
+
+		//sourceからの距離
+		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
+		//速度はphaseで埋める前を参照しなければならないことに注意
+		double now_time = requirement->service_interval - revising_dummy->get_now_pause_time(phase_id);
+		double total_time_from_source_to_destination = map->calc_necessary_time(source, destination, pause_position_speed);
+		Graph::MapNodeIndicator nearest_position = source;
+		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
+		while (now_time < total_time_from_source_to_destination)
+		{
+			//最初は停止時間をphaseに換算したときの余り分をdistanceとして，最短路の中で一番近いintersectionを探し，線形補間する．
+			//double total_path_length = map->shortest_distance(source, *path_iter);
+			while (now_time > map->calc_necessary_time(source, *path_iter, pause_position_speed))
+			{
+				nearest_position = *path_iter;
+				path_iter++;
+			}
+
+			double distance = now_time * pause_position_speed;
+			double distance_between_nearest_intersection_and_arrive_position = distance - map->shortest_distance(source, nearest_position);
+			Geography::LatLng nearest_latlng
+				= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
+			Geography::LatLng next_nearest_latlang
+				= (*path_iter).type() == Graph::NodeType::POI ? map->get_static_poi((*path_iter).id())->data->get_position() : *map->get_static_node((*path_iter).id())->data;
+			double angle = Geography::GeoCalculation::lambert_azimuth_angle(nearest_latlng, next_nearest_latlang);
+
+			Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
+
+			if (phase_id == time_manager->phase_count() - 1) return;//残りのpathを決める時の終了条件
+			(phase_id)++;
+			revising_dummy->set_position_of_phase(phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
+			revising_dummy->set_now_speed(phase_id, pause_position_speed);
+
+			now_time += requirement->service_interval;
+		}
+
+		//destinationのところまで補完できたら，rest_timeを保持しておく！
+		double time_between_arrive_position_and_dest_position = now_time - total_time_from_source_to_destination;
+		double dest_rest_time
+			= time_between_arrive_position_and_dest_position == requirement->service_interval ? 0 : time_between_arrive_position_and_dest_position;
+		//目的地の登録
+		//speedは別途設定のため不要
+		(phase_id)++;
+		revising_dummy->set_position_of_phase(phase_id, destination, map->get_static_poi(destination.id())->data->get_position());
+
+	}
+
+	
 	///<summary>
 	/// 初期化
 	///</summary>

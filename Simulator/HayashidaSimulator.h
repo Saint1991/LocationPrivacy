@@ -64,7 +64,7 @@ namespace Simulation
 		void input_visit_pois();
 		std::vector<std::vector<std::shared_ptr<Map::BasicPoi const>>> all_traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois);
 		std::vector<std::shared_ptr<Map::BasicPoi const>> traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois);
-		std::vector<std::shared_ptr<Map::BasicPoi const>> Gaussian_distribution(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois);
+		std::vector<std::shared_ptr<Map::BasicPoi const>> the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois, int alpha);
 
 		void make_random_movement_user();//‘S—v‘f‚Ì“ü—Í‚ð‘O’ñ
 		void make_predicted_user();

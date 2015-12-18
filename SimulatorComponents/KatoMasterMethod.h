@@ -35,7 +35,7 @@ namespace Method {
 				double calc_user_speed();
 			ChangeParameter check_user_path(int now_phase);
 			ChangeParameter check_user_position(int now_phase);
-			bool check_on_the_path();
+			bool check_on_the_path(int phase_id);
 
 		void update_user_plan(ChangeParameter check_parameter, int phase_id);
 			void modification_of_user_trajectory_when_LONGER_PAUSE_TIME(ChangeParameter check_parameter, int phase_id);//userの停止時間の修正
@@ -51,7 +51,7 @@ namespace Method {
 			void revise_dummy_speed(int phase_id);//ダミーの行動速度の修正
 			void revise_dummy_visit_poi(int phase_id);//ダミーの停止地点の修正
 			
-		void set_pause_time_and_speed_0_of_visitedPOI();
+		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int phase_id);
 
 
 	protected:

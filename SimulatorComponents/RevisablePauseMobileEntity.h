@@ -32,7 +32,7 @@ namespace Entity
 		
 
 		void revise_path();
-		void recalculation_path();
+		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int phase_id);
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»

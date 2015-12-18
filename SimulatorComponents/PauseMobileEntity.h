@@ -67,7 +67,8 @@ namespace Entity
 
 		//arrive_phase‚ÉŠÖ‚·‚égetter.‚½‚¾‚µCset‚ÍvisitedPOI“o˜^‚Éİ’è‚ğs‚¤‚½‚ß•s—vD
 		int get_arrive_phase();
-		
+		int get_arrive_phase_using_pause_phase(int pause_phase);
+
 
 		//–K–âPOIî•ñ‚Ì’â~ŠÔ(pause_time)‚ÉŠÖ‚·‚ésetter‚Ægetter
 		int get_pause_time() const;

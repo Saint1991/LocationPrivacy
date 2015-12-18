@@ -154,12 +154,12 @@ namespace Simulation
 	///<summary>
 	/// input_elementsの入力POIを基に，巡回セールスマン問題を解き，ガウス分布に従って一定確率で求めたpoi系列を返す．
 	///</summary>
-	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::Gaussian_distribution(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois)
+	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois, int alpha)
 	{
 		std::vector<std::vector<std::shared_ptr<Map::BasicPoi const>>> all_tsp_solution = all_traveling_salesman_problem(visited_pois);
-		std::vector<std::shared_ptr<Map::BasicPoi const>> gaussian_pois;
+		std::vector<std::shared_ptr<Map::BasicPoi const>> the_power_alpha_of__the_reciprocal_pois;
 		
-		return gaussian_pois;
+		return the_power_alpha_of__the_reciprocal_pois;
 	}
 
 
@@ -342,7 +342,7 @@ namespace Simulation
 
 			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_now_speed(phase_id));
 			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
-
+			
 			double rest_pause_time = user->get_pause_time() - dest_rest_time;
 
 			//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
@@ -460,26 +460,32 @@ namespace Simulation
 		int phase_id = 0;
 
 		//userのvisited_poisを用いて，始点がstart_poiの巡回セールスマン問題の解のうち，ガウス分布に従い，ある結果を抽出する．
-		std::vector<std::shared_ptr<Map::BasicPoi const>> order_visited_poi = Gaussian_distribution(input_poi_list);
+		std::vector<std::shared_ptr<Map::BasicPoi const>> order_visited_poi = the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(input_poi_list, 1);
 
 		int dest_rest_time = 0;//phaseの到着時間と実際の到着時間の差分.最初だけ0
 		//最初の点を登録
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = order_visited_poi.begin();
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator next_poi = order_visited_poi.begin() + 1;
 
-		user->set_position_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
-		user->set_random_now_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
-		user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+		user->set_visited_poi_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
+		user->set_random_starting_speed_at_poi(AVERAGE_SPEED, RANGE_OF_SPEED);
 		//--------------二個目以降の点を決定．forで，確保したいpoiの個数分をループさせる-------------------
 		for (int i = 1; i < POI_NUM; i++)
 		{
 			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_now_speed(phase_id));
 			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
 
-			int rest_pause_time = user->get_pause_time() - dest_rest_time;
+			//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
+			user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+			user->set_dest_rest_time(dest_rest_time);
+
+			double rest_pause_time = user->get_pause_time() - dest_rest_time;
 
 			//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
 			lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
+
+			//出発するときの余り時間を登録
+			user->set_rest_pause_time_when_departing(variable_of_converted_pause_time_to_phase.rem);
 
 			//停止時間分，各phaseに停止場所と移動速度(0)を登録
 			set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, now_poi);
@@ -488,7 +494,7 @@ namespace Simulation
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
 			
 			//速度はphaseで埋める前を参照しなければならないことに注意
-			double pause_position_speed = user->get_now_speed(phase_id - variable_of_converted_pause_time_to_phase.quot);
+			double pause_position_speed = user->get_starting_speed();
 
 			//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
 			double distance = (SERVICE_INTERVAL - variable_of_converted_pause_time_to_phase.rem) * pause_position_speed;
@@ -508,9 +514,9 @@ namespace Simulation
 
 			//目的地の登録
 			phase_id++;
-			user->set_position_of_phase(phase_id, (*next_poi)->get_id(), map->get_static_poi((*next_poi)->get_id())->data->get_position());
-			user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
-			user->set_random_now_speed(phase_id, AVERAGE_SPEED, RANGE_OF_SPEED);
+			user->increment_visited_pois_info_list_id();
+			user->set_visited_poi_of_phase(phase_id, (*next_poi)->get_id(), map->get_static_poi((*next_poi)->get_id())->data->get_position());
+			user->set_random_starting_speed_at_poi(AVERAGE_SPEED, RANGE_OF_SPEED);
 
 			now_poi++;
 			next_poi++;
@@ -534,12 +540,19 @@ namespace Simulation
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator last_poi = last_candidate_pois_list.begin();
 
 		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
+		user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+		user->set_dest_rest_time(dest_rest_time);
+
+
+		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
 		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), user->get_now_speed(phase_id));
 		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
 
 		//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
-		int rest_pause_time = user->get_pause_time() - dest_rest_time;
+		double rest_pause_time = user->get_pause_time() - dest_rest_time;
 		lldiv_t last_variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
+
+		user->set_rest_pause_time_when_departing(last_variable_of_converted_pause_time_to_phase.rem);
 
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
 
@@ -548,7 +561,7 @@ namespace Simulation
 
 		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
 																									//速度はphaseで埋める前を参照しなければならないことに注意
-		double last_pause_position_speed = user->get_now_speed(phase_id - last_variable_of_converted_pause_time_to_phase.quot);
+		double last_pause_position_speed = user->get_starting_speed();
 
 		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
 		double distance = (SERVICE_INTERVAL - last_variable_of_converted_pause_time_to_phase.rem) * last_pause_position_speed;
@@ -563,7 +576,6 @@ namespace Simulation
 		}
 
 		std::cout << "Success Creating Real User" << std::endl;
-
 	}
 
 	
