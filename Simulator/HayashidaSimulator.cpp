@@ -7,7 +7,7 @@ namespace Simulation
 	/// コンストラクタ
 	///</summary>
 	HayashidaSimulator::HayashidaSimulator(const Graph::Rectangle<Geography::LatLng>& boundary) 
-		: ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>(), map_boundary(boundary)
+		: ISimulator<Map::HayashidaDbMap, Entity::DifferentMovementUser<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>(), map_boundary(boundary)
 	{
 	}
 
@@ -177,7 +177,7 @@ namespace Simulation
 	 
 		//----------------------------time_managerとuserの生成-------------------------------------//
 		time_manager = create_time_manager();
-		user = std::make_shared<Entity::PauseMobileEntity<Geography::LatLng>>(0, time_manager);
+		user = std::make_shared<Entity::DifferentMovementUser<Geography::LatLng>>(0, time_manager);
 		
 		//---------------------------最初の点を決定---------------------------------------------
 		int phase_id = 0;
@@ -315,7 +315,7 @@ namespace Simulation
 	void HayashidaSimulator::make_predicted_user() {
 		
 		time_manager = create_time_manager();//time_managerの生成
-		user = std::make_shared<Entity::PauseMobileEntity<Geography::LatLng>>(0, time_manager);
+		user = std::make_shared<Entity::DifferentMovementUser<Geography::LatLng>>(0, time_manager);
 				
 		input_visit_pois();//userのinput情報を入れる
 
@@ -452,7 +452,7 @@ namespace Simulation
 	void HayashidaSimulator::make_real_user() {
 
 		time_manager = create_time_manager();//time_managerの生成
-		user = std::make_shared<Entity::PauseMobileEntity<Geography::LatLng>>(0, time_manager);
+		user = std::make_shared<Entity::DifferentMovementUser<Geography::LatLng>>(0, time_manager);
 
 		input_visit_pois();//userのinput情報を入れる
 
@@ -582,7 +582,7 @@ namespace Simulation
 	///<summary>
 	/// ダミーのtrajectoryを出力する
 	///</summary>
-	void HayashidaSimulator::export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id)
+	void HayashidaSimulator::export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id)
 	{
 		IO::FileExporter dummy_exporter({
 			{ Geography::LatLng::LATITUDE, "緯度" },
@@ -600,7 +600,7 @@ namespace Simulation
 	///<summary>
 	/// ダミーのtrajectoryを出力する
 	///</summary>
-	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
+	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
 	{
 		
 		entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> dummy) {
@@ -624,7 +624,7 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", "map_tokyo");
+		map = std::make_shared<Map::HayashidaDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", "map_tokyo");
 		map->load(boundary);
 	}
 

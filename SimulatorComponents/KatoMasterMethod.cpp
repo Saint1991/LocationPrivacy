@@ -8,7 +8,7 @@ namespace Method
 	/// コンストラクタ
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
-	KatoMasterMethod::KatoMasterMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
+	KatoMasterMethod::KatoMasterMethod(std::shared_ptr<Map::HayashidaDbMap const> map, std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
 		:KatoBachelorMethod(map, user, requirement, time_manager),
 		real_user(nullptr), predicted_user(nullptr),Tu(0.0)
 	{

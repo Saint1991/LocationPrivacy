@@ -8,8 +8,8 @@ namespace Method
 	/// コンストラクタ
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
-	KatoBachelorMethod::KatoBachelorMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>(map, user, requirement, time_manager),
+	KatoBachelorMethod::KatoBachelorMethod(std::shared_ptr<Map::HayashidaDbMap const> map, std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
+		: Framework::IProposedMethod<Map::HayashidaDbMap, Entity::DifferentMovementUser<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>(map, user, requirement, time_manager),
 		grid_list(std::vector<Grid>((time_manager->phase_count() / requirement->interval_of_base_phase))),
 		creating_dummy(nullptr), flag_of_dest_position(0)
 	{
@@ -268,7 +268,7 @@ namespace Method
 		int phase = requirement->interval_of_base_phase;
 		const int GRID_TOTAL_NUM = CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE;//グリッドの数
 
-																	 //各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
+		//各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
 		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>((time_manager->phase_count() / requirement->interval_of_base_phase), 0));
 
 		//あるphaseにおける各セルに存在するユーザ及び生成済みダミーの移動経路(停止地点)の数
@@ -388,7 +388,8 @@ namespace Method
 			//BasicUserはDummyを継承しているのでポインタ代入は可能
 			//targetが交差するユーザorダミー
 			//target_phasesは交差が設定されていないphaseの一覧
-			std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> target = cross_target == 0 ? entities->get_user() : entities->get_dummy_by_id(cross_target);
+			std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> target = cross_target == 0 ? entities->get_user(): entities->get_dummy_by_id(cross_target);
+
 			std::vector<int> target_phases = target->find_cross_not_set_phases_of_poi();
 
 			//基準地点に設定されているphaseは削除する．

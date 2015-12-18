@@ -4,7 +4,7 @@
 #define KATO_BACHELOR_METHOD_API __declspec(dllimport)
 #endif
 #pragma once
-#include "BasicDbMap.h"
+#include "HayashidaDbMap.h"
 #include "LatLng.h"
 #include "BasicUser.h"
 #include "Dummy.h"
@@ -16,6 +16,7 @@
 #include "Probability.h"
 #include "GeoCalculation.h"
 #include "RevisableTrajectory.h"
+#include "DifferentMovementUser.h"
 namespace Method
 {
 
@@ -23,7 +24,7 @@ namespace Method
 	/// â¡ì°Ç≥ÇÒäwïîë≤ã∆ò_ï∂ÇÃíÒàƒéËñ@ÇÃé¿ëï
 	///</summary>
 	class KATO_BACHELOR_METHOD_API KatoBachelorMethod
-		: public Framework::IProposedMethod<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>
+		: public Framework::IProposedMethod<Map::HayashidaDbMap, Entity::DifferentMovementUser<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>
 	{
 	private:
 		//ïœêî
@@ -61,7 +62,7 @@ namespace Method
 		void decide_dummy_positions();
 		
 	public:
-		KatoBachelorMethod(std::shared_ptr<Map::BasicDbMap const> map, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
+		KatoBachelorMethod(std::shared_ptr<Map::HayashidaDbMap const> map, std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
 		~KatoBachelorMethod();
 
 		void run();

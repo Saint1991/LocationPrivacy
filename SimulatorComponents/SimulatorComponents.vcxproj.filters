@@ -114,6 +114,9 @@
     <ClInclude Include="RevisablePauseMobileEntity.h">
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="DifferentMovementUser.h">
+      <Filter>ヘッダー ファイル\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -183,6 +186,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="RevisablePauseMobileEntity.cpp">
+      <Filter>ソース ファイル\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="DifferentMovementUser.cpp">
       <Filter>ソース ファイル\Entity</Filter>
     </ClCompile>
   </ItemGroup>
