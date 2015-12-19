@@ -54,6 +54,10 @@ namespace Simulation
 		//メンバ変数
 		Graph::Rectangle<Geography::LatLng> map_boundary;
 		std::vector<std::shared_ptr<Map::BasicPoi const>> input_poi_list;
+		std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user;
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> real_user;
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user;
+
 
 		//メソッド
 		std::vector<std::shared_ptr<Map::BasicPoi const>> get_pois_list(Graph::Rectangle<Geography::LatLng>& boundary);
@@ -73,7 +77,7 @@ namespace Simulation
 		void export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id);
 		void export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
 		void export_MTC();
-
+		
 
 		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
 		void create_trajectories();

@@ -36,7 +36,7 @@ namespace Entity
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»
-	template class RevisablePauseMobileEntity<Graph::Coordinate>;
+	//template class RevisablePauseMobileEntity<Graph::Coordinate>;
 	template class RevisablePauseMobileEntity<Geography::LatLng>;
 
 }

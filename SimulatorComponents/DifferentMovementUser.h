@@ -15,17 +15,18 @@ namespace Entity
 	protected:
 		//メンバ変数
 		//実際のユーザ用
-		std::shared_ptr<TRAJECTORY_TYPE> different_trajectory;
-		std::shared_ptr<std::vector<bool>> different_cross_flg;
-		int different_total_cross_count;
+		std::shared_ptr<PauseMobileEntity> real_user;
+		std::shared_ptr<PauseMobileEntity> predicted_user;
 		
 	public:
 		DifferentMovementUser(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		~DifferentMovementUser();
 		
+		std::shared_ptr<PauseMobileEntity<>> get_real_user();
+		std::shared_ptr<PauseMobileEntity<>> get_predicted_user();
 	};
 
 	//明示的特殊化
-	template class DifferentMovementUser<Graph::Coordinate>;
+	//template class DifferentMovementUser<Graph::Coordinate>;
 	template class DifferentMovementUser<Geography::LatLng>;
 }
