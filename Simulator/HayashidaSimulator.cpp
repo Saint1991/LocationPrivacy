@@ -281,7 +281,7 @@ namespace Simulation
 	}
 
 	///<summary>
-	/// input_elementsの入力POIを基に，巡回セールスマン問題を解き，ガウス分布に従って一定確率で求めたpoi系列を返す．
+	/// input_elementsの入力POIを基に，巡回セールスマン問題を解き，距離の比の逆数の分布に従って一定確率で求めたpoi系列を返す．
 	///</summary>
 	std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> HayashidaSimulator::the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois, int alpha)
 	{
@@ -609,7 +609,7 @@ namespace Simulation
 		int phase_id = 0;
 
 		//userのvisited_poisを用いて，始点がstart_poiの巡回セールスマン問題の解のうち，逆数の分布に従い，ある結果を抽出する．
-		std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi = the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(input_poi_list, 1);
+		std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi = the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(input_poi_list, ALPHA);
 
 		int dest_rest_time = 0;//phaseの到着時間と実際の到着時間の差分.最初だけ0
 		//最初の点を登録

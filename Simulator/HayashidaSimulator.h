@@ -43,6 +43,7 @@ namespace Simulation
 		static constexpr int MIN_PAUSE_TIME = 200;//SERVICE_INTERVALより大きくする！
 		static constexpr int SERVICE_INTERVAL = 90;
 		static constexpr int POI_NUM = 4;
+		static constexpr int ALPHA = 1;//tspの最適解に対する距離比の指数．大きいほど，最適解を選びやすい
 		static constexpr double BASE_LAT = 35.655;//出発地の目安の緯度．全POIの平均値
 		static constexpr double BASE_LNG = 139.700;//出発地の目安の経度．全POIの平均値
 		int end_time = 2250;//目安の終了時間．経路を設定し終えて，時間が余った分は削除．
