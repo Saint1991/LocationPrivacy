@@ -15,8 +15,8 @@ namespace Entity
 	protected:
 		//メンバ変数
 		//実際のユーザ用
-		std::shared_ptr<PauseMobileEntity> real_user;
-		std::shared_ptr<PauseMobileEntity> predicted_user;
+		std::shared_ptr<PauseMobileEntity<>> real_user;
+		std::shared_ptr<PauseMobileEntity<>> predicted_user;
 		
 	public:
 		DifferentMovementUser(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);

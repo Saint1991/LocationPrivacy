@@ -93,10 +93,13 @@ namespace Entity
 		//Œ»İphase‚É‚¨‚¯‚éc‚è’â~ŠÔ‚Ìsetter‚Ægetter
 		void set_rest_pause_time_when_departing(double rest_pause_time);
 		void set_rest_pause_time_when_departing_using_arrive_phase(int arrive_phase, double rest_pause_time);
+		double get_rest_pause_time_when_departing_using_pause_phase(int pause_phase);
+
 
 		//“’…‚Æo”­‚Ì—]‚èŠÔ‚Ìsetter‚Ægetter
 		void set_dest_rest_time(double dest_rest_time);
 		void set_dest_rest_time_using_arrive_phase(int arrive_phase, double dest_rest_time);
+	
 
 		//Œ»İî•ñ‚Ìrest_pause_time‚ÉŠÖ‚·‚ésetter‚Ægetter
 		int get_now_pause_time(int now_phase) const;

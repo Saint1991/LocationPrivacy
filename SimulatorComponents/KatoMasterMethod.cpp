@@ -12,9 +12,9 @@ namespace Method
 		:KatoBachelorMethod(map, user, requirement, time_manager),
 		real_user(nullptr), predicted_user(nullptr),Tu(0.0)
 	{
-		//ユーザが2つ持てるように，データ構造を修正する．input_userの方はget_user()ではないので，注意
-		input_user = entities->get_user();
-		real_user = entities->get_user();
+		//input_userとreal_userの生成．この2つは変更しない
+		input_user = entities->get_user()->get_predicted_user();
+		real_user = entities->get_user()->get_real_user();
 	}
 
 	///<summary>
@@ -150,18 +150,27 @@ namespace Method
 			Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase).second;
 			Geography::LatLng now_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase).second;
 			
+			double real_user_dist = Geography::GeoCalculation::lambert_distance(*real_user->read_position_of_phase(now_phase - 1), *real_user->read_position_of_phase(now_phase));
+			double predicted_user_dist = Geography::GeoCalculation::lambert_distance(*predicted_user->read_position_of_phase(now_phase - 1), *predicted_user->read_position_of_phase(now_phase));
+
+			double real_user_rest_time = real_user->get_rest_pause_time_when_departing_using_pause_phase(now_phase - 1);
+			double predicted_uesr_rest_time = predicted_user->get_rest_pause_time_when_departing_using_pause_phase(now_phase - 1);
+
+			double real_user_speed = real_user_dist / (requirement->service_interval - real_user_rest_time);
+			double predicted_user_speed = predicted_user_dist / (requirement->service_interval - real_user_rest_time);
+
+			
 			//もし同じ場所にいたら，NO_CHANGE
 			if (now_predicted_user_position == now_real_user_position) {
 				Tu = 0.0;
 				return NO_CHANGE;
 			}
 			else {
-				if (/*もしrest_time分を考慮して，逆算して，速度が同じなら*/true) {
+				//もしrest_time分を考慮して，逆算して，速度が同じなら，停止時間の変更と判断
+				if (real_user_speed == predicted_user_speed) {
 					return check_user_pause_time(now_phase);
 				}
 				else {
-					double real_user_dist = Geography::GeoCalculation::lambert_distance(*real_user->read_position_of_phase(now_phase - 1), *real_user->read_position_of_phase(now_phase));
-					double predicted_user_dist = Geography::GeoCalculation::lambert_distance(*predicted_user->read_position_of_phase(now_phase - 1), *predicted_user->read_position_of_phase(now_phase));
 					//移動距離がrealのほうが大きいなら
 					if (real_user_dist > predicted_user_dist) {
 						//change_timeの差分を求める
@@ -190,7 +199,6 @@ namespace Method
 		///</summary>
 		KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_path(int now_phase)
 		{
-			double change_time = 0.0;
 			//change_timeを求める
 			//Tu = 
 			return PATH;

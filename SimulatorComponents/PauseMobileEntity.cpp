@@ -442,6 +442,20 @@ namespace Entity
 		std::invalid_argument("Not Found");
 	}
 
+	///<summary>
+	/// POIo”­‚Ì—]‚èŠÔ‚ğ,pause_phase‚ğ—p‚¢‚Ä“o˜^
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_rest_pause_time_when_departing_using_pause_phase(int pause_phase)
+	{
+		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
+			for (std::vector<int>::iterator iter2 = iter->pause_phases.begin(); iter2 != iter->pause_phases.end(); iter2++) {
+				if (*iter2 == pause_phase) return iter->rest_pause_time_when_departing;
+			}
+		}
+		std::invalid_argument("Not Found");
+	}
+	
 
 	///<summary>
 	/// POI“’…‚Ì—]‚èŠÔ‚ğ“o˜^

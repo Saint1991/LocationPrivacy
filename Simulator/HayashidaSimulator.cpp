@@ -49,6 +49,21 @@ namespace Simulation
 	}
 
 
+
+
+	///<summary>
+	/// time_managerの生成
+	///</summary>
+	std::shared_ptr<Time::TimeSlotManager> HayashidaSimulator::create_time_manager() {
+		std::unique_ptr<std::vector<time_t>> timeslots = std::make_unique<std::vector<time_t>>();
+		for (int time = 0; time <= end_time; time += SERVICE_INTERVAL) {
+			timeslots->push_back(time);
+		}
+
+		return std::make_shared<Time::TimeSlotManager>(std::move(timeslots));
+	}
+
+
 	///<summary>
 	/// 最短路の中で一番近いintersectionを探し，線形補間する． 
 	/// now_poiには速度と停止時間を設定してあること
@@ -77,30 +92,17 @@ namespace Simulation
 		(*phase_id)++;
 		user->set_now_speed(*phase_id, pause_position_speed);
 		user->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
-		
+
 		/*}
 		//distanceとmap->shortest_distance((*now_poi)->get_id(), *path_iter)が等しい時は，丁度交差点orPOIに到着する場合
 		else {
-			(*phase_id)++;
-			(*path_iter).type() == Graph::NodeType::POI ?
-				user->set_position_of_phase(*phase_id, (*path_iter).id(), map->get_static_poi((*path_iter).id())->data->get_position()) :
-				user->set_position_of_phase(*phase_id, (*path_iter).id(), *map->get_static_node((*path_iter).id())->data);
+		(*phase_id)++;
+		(*path_iter).type() == Graph::NodeType::POI ?
+		user->set_position_of_phase(*phase_id, (*path_iter).id(), map->get_static_poi((*path_iter).id())->data->get_position()) :
+		user->set_position_of_phase(*phase_id, (*path_iter).id(), *map->get_static_node((*path_iter).id())->data);
 		}*/
 
 		*distance += service_interval * pause_position_speed;
-	}
-
-
-	///<summary>
-	/// time_managerの生成
-	///</summary>
-	std::shared_ptr<Time::TimeSlotManager> HayashidaSimulator::create_time_manager() {
-		std::unique_ptr<std::vector<time_t>> timeslots = std::make_unique<std::vector<time_t>>();
-		for (int time = 0; time <= end_time; time += SERVICE_INTERVAL) {
-			timeslots->push_back(time);
-		}
-
-		return std::make_shared<Time::TimeSlotManager>(std::move(timeslots));
 	}
 
 	///<summary>
@@ -119,14 +121,113 @@ namespace Simulation
 			user->set_position_of_phase(*phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
 		}
 	}
+	
+
+	///<summary>
+	/// 最短路の中で一番近いintersectionを探し，線形補間する． 
+	/// now_poiには速度と停止時間を設定してあること
+	/// 最後は目的地の直前の場所を補完した場所が登録されている．
+	///</summary>
+	void HayashidaSimulator::set_path_between_poi_of_real_user(std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi, std::vector<Graph::MapNodeIndicator>::iterator& path_iter, Graph::MapNodeIndicator& nearest_position, double pause_position_speed, double service_interval, double *distance, int *phase_id)
+	{
+		while (*distance > map->shortest_distance((*now_poi)->get_id(), *path_iter))
+		{
+			nearest_position = *path_iter;
+			path_iter++;
+		}
+
+		double distance_between_start_and_nearest_position = map->shortest_distance((*now_poi)->get_id(), nearest_position);
+		double distance_between_nearest_intersection_and_arrive_position = *distance - distance_between_start_and_nearest_position;
+
+		Geography::LatLng nearest_latlng
+			= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
+		Geography::LatLng next_nearest_latlang
+			= (*path_iter).type() == Graph::NodeType::POI ? map->get_static_poi((*path_iter).id())->data->get_position() : *map->get_static_node((*path_iter).id())->data;
+		double angle = Geography::GeoCalculation::lambert_azimuth_angle(nearest_latlng, next_nearest_latlang);
+
+		Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
+
+		(*phase_id)++;
+		real_user->set_now_speed(*phase_id, pause_position_speed);
+		real_user->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
+
 		
+		*distance += service_interval * pause_position_speed;
+	}
+
+	///<summary>
+	/// real_userの停止時間とphaseのセット
+	///</summary>
+	void HayashidaSimulator::set_pause_time_and_phases_of_visited_POI_of_real_user(int *phase_id, double rest_pause_time, int total_pause_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi) {
+		real_user->set_now_pause_time(*phase_id, rest_pause_time);
+
+		for (int i = 0; i < total_pause_phase; i++)
+		{
+			if (*phase_id == time_manager->phase_count() - 1) break;
+			(*phase_id)++;
+			real_user->set_pause_phases(*phase_id);
+			rest_pause_time -= SERVICE_INTERVAL;
+			real_user->set_now_pause_time(*phase_id, rest_pause_time);
+			real_user->set_position_of_phase(*phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
+		}
+	}
+
+
+	///<summary>
+	/// 最短路の中で一番近いintersectionを探し，線形補間する． 
+	/// now_poiには速度と停止時間を設定してあること
+	/// 最後は目的地の直前の場所を補完した場所が登録されている．
+	///</summary>
+	void HayashidaSimulator::set_path_between_poi_of_predicted_user(std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi, std::vector<Graph::MapNodeIndicator>::iterator& path_iter, Graph::MapNodeIndicator& nearest_position, double pause_position_speed, double service_interval, double *distance, int *phase_id)
+	{
+		while (*distance > map->shortest_distance((*now_poi)->get_id(), *path_iter))
+		{
+			nearest_position = *path_iter;
+			path_iter++;
+		}
+
+		double distance_between_start_and_nearest_position = map->shortest_distance((*now_poi)->get_id(), nearest_position);
+		double distance_between_nearest_intersection_and_arrive_position = *distance - distance_between_start_and_nearest_position;
+
+		Geography::LatLng nearest_latlng
+			= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
+		Geography::LatLng next_nearest_latlang
+			= (*path_iter).type() == Graph::NodeType::POI ? map->get_static_poi((*path_iter).id())->data->get_position() : *map->get_static_node((*path_iter).id())->data;
+		double angle = Geography::GeoCalculation::lambert_azimuth_angle(nearest_latlng, next_nearest_latlang);
+
+		Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
+
+		(*phase_id)++;
+		predicted_user->set_now_speed(*phase_id, pause_position_speed);
+		predicted_user->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
+
+		*distance += service_interval * pause_position_speed;
+	}
+
+	///<summary>
+	/// 停止時間とphaseのセット
+	///</summary>
+	void HayashidaSimulator::set_pause_time_and_phases_of_visited_POI_of_predicted_user(int *phase_id, double rest_pause_time, int total_pause_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi) {
+		predicted_user->set_now_pause_time(*phase_id, rest_pause_time);
+
+		for (int i = 0; i < total_pause_phase; i++)
+		{
+			if (*phase_id == time_manager->phase_count() - 1) break;
+			(*phase_id)++;
+			predicted_user->set_pause_phases(*phase_id);
+			rest_pause_time -= SERVICE_INTERVAL;
+			predicted_user->set_now_pause_time(*phase_id, rest_pause_time);
+			predicted_user->set_position_of_phase(*phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
+		}
+	}
+
 
 	///<summary>
 	/// inputするpoiのlistを作成
 	///</summary>
 	void HayashidaSimulator::input_visit_pois() {
 		//POI系列を作成する際の，選択範囲
-		Graph::Rectangle<Geography::LatLng> poi_range(BASE_LAT + 0.5*length_of_all_POI_rect, BASE_LNG - 0.5*length_of_all_POI_rect, BASE_LAT - 0.5*length_of_all_POI_rect, BASE_LNG + 0.5*length_of_all_POI_rect);
+		Graph::Rectangle<Geography::LatLng> poi_range(BASE_LAT + 0.5 * length_of_all_POI_rect, BASE_LNG - 0.5 * length_of_all_POI_rect, BASE_LAT - 0.5 * length_of_all_POI_rect, BASE_LNG + 0.5 * length_of_all_POI_rect);
 
 		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = get_pois_list(poi_range);
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator iter = random_pois_list.begin();
@@ -136,11 +237,37 @@ namespace Simulation
 	}
 
 	///<summary>
-	/// input_elementsの入力POIを基に，巡回セールスマン問題を時，総距離が小さ順にソートしたvectorを返す．
+	/// input_elementsの入力POIを基に，巡回セールスマン問題を解き，総距離が小さい順にソートしたvectorを返す．
 	///</summary>
-	std::vector<std::vector<std::shared_ptr<Map::BasicPoi const>>> HayashidaSimulator::all_traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois)
+	std::vector<std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>> HayashidaSimulator::all_traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois)
 	{
-		std::vector<std::vector<std::shared_ptr<Map::BasicPoi const>>> all_tsp_solution;
+		std::vector<std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>> all_tsp_solution;
+		std::shared_ptr<Map::BasicPoi const> start_poi = visited_pois.front();//最初の訪問POI
+		
+		std::vector<std::shared_ptr<Map::BasicPoi const>> visited_pois_except_start_poi;//最初の訪問POIを除いたPOI_list
+		for (std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator iter = visited_pois.begin() + 1; iter != visited_pois.end(); iter++) {
+			visited_pois_except_start_poi.push_back(*iter);
+		}
+
+		//id順にソート
+		std::sort(visited_pois_except_start_poi.begin(), visited_pois_except_start_poi.end(), [](std::shared_ptr<Map::BasicPoi const>& poi1, std::shared_ptr<Map::BasicPoi const>& poi2) {
+			return poi1->get_id() < poi2->get_id();
+		});
+
+		do {
+			double distance = map->shortest_distance(start_poi->get_id(), visited_pois_except_start_poi.front()->get_id());
+			std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator iter = visited_pois_except_start_poi.begin();
+			for (int i= 0; i < POI_NUM - 2; i++, iter++) {
+				distance += map->shortest_distance((*iter)->get_id(), (*(iter+1))->get_id());
+			}
+			all_tsp_solution.push_back(std::make_pair(visited_pois_except_start_poi, distance));
+			all_tsp_solution.back().first.insert(all_tsp_solution.back().first.begin(), start_poi);
+		} while (std::next_permutation(visited_pois_except_start_poi.begin(), visited_pois_except_start_poi.end()));
+		
+		std::sort(all_tsp_solution.begin(), all_tsp_solution.end(), [](std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>& poi1, std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> poi2) {
+			return poi1.second < poi2.second;
+		});
+
 		return all_tsp_solution;
 	}
 
@@ -148,7 +275,7 @@ namespace Simulation
 	///<summary>
 	/// input_elementsの入力POIを基に，巡回セールスマン問題を解き，最適解を返す．
 	///</summary>
-	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois)
+	std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> HayashidaSimulator::traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois)
 	{
 		return all_traveling_salesman_problem(visited_pois).front();
 	}
@@ -158,7 +285,7 @@ namespace Simulation
 	///</summary>
 	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois, int alpha)
 	{
-		std::vector<std::vector<std::shared_ptr<Map::BasicPoi const>>> all_tsp_solution = all_traveling_salesman_problem(visited_pois);
+		std::vector<std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>> all_tsp_solution = all_traveling_salesman_problem(visited_pois);
 		std::vector<std::shared_ptr<Map::BasicPoi const>> the_power_alpha_of__the_reciprocal_pois;
 		
 		return the_power_alpha_of__the_reciprocal_pois;
@@ -315,20 +442,18 @@ namespace Simulation
 	/// input_poisを基に，T.S.P.を用い，予想ユーザを作成する．
 	///</summary>
 	void HayashidaSimulator::make_predicted_user() {
-		
-		predicted_user = user->get_predicted_user();
-
+				
 		input_visit_pois();//userのinput情報を入れる
 
 		//---------------------------POI訪問順序を決定---------------------------------------------
 		int phase_id = 0;
 		
 		//userのvisited_poisを用いて，始点がstart_poiの巡回セールスマン問題を解く
-		std::vector<std::shared_ptr<Map::BasicPoi const>> order_visited_poi = traveling_salesman_problem(input_poi_list);
+		std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi = traveling_salesman_problem(input_poi_list);
 		
 		//最初の点を登録
-		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = order_visited_poi.begin();
-		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator next_poi = order_visited_poi.begin() + 1;
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = order_visited_poi.first.begin();
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator next_poi = order_visited_poi.first.begin() + 1;
 
 		predicted_user->set_visited_poi_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
 		predicted_user->set_random_starting_speed_at_poi(AVERAGE_SPEED, RANGE_OF_SPEED);
@@ -353,7 +478,7 @@ namespace Simulation
 			predicted_user->set_rest_pause_time_when_departing(variable_of_converted_pause_time_to_phase.rem);
 
 			//停止時間分，各phaseに停止場所と移動速度(0)を登録
-			set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, now_poi);
+			set_pause_time_and_phases_of_visited_POI_of_predicted_user(&phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
@@ -370,7 +495,7 @@ namespace Simulation
 			//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
 			while (distance < distance_between_now_and_next_poi) {
 				//最短路の中で一番近いintersectionを探し，線形補間する．		
-				set_path_between_poi(now_poi, path_iter, nearest_position, pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
+				set_path_between_poi_of_predicted_user(now_poi, path_iter, nearest_position, pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
 			}
 
 			//destinationのところまで補完できたら，rest_timeを保持しておく！
@@ -422,8 +547,8 @@ namespace Simulation
 
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
 
-		//停止時間分，各phaseに停止場所と移動速度(0)を登録
-		set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
+		//停止時間分，各phaseに停止場所と停止phaseを登録
+		set_pause_time_and_phases_of_visited_POI_of_predicted_user(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
 		//速度はphaseで埋める前を参照しなければならないことに注意
@@ -438,7 +563,7 @@ namespace Simulation
 		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
 		//last_phaseまで埋める！
 		while (phase_id != (time_manager->phase_count() - 1)) {
-			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
+			set_path_between_poi_of_predicted_user(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
 		}
 
 		std::cout << "Success Creating Input User" << std::endl;
@@ -487,8 +612,8 @@ namespace Simulation
 			//出発するときの余り時間を登録
 			real_user->set_rest_pause_time_when_departing(variable_of_converted_pause_time_to_phase.rem);
 
-			//停止時間分，各phaseに停止場所と移動速度(0)を登録
-			set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, now_poi);
+			//停止時間分，各phaseに停止場所と停止phaseを登録
+			set_pause_time_and_phases_of_visited_POI_of_real_user(&phase_id, rest_pause_time, variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
@@ -505,7 +630,7 @@ namespace Simulation
 			//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
 			while (distance < distance_between_now_and_next_poi) {
 				//最短路の中で一番近いintersectionを探し，線形補間する．		
-				set_path_between_poi(now_poi, path_iter, nearest_position, pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
+				set_path_between_poi_of_real_user(now_poi, path_iter, nearest_position, pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
 			}
 
 			//destinationのところまで補完できたら，rest_timeを保持しておく！
@@ -556,8 +681,8 @@ namespace Simulation
 
 		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
 
-		//停止時間分，各phaseに停止場所と移動速度(0)を登録
-		set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
+		//停止時間分，各phaseに停止場所と停止phaseを登録
+		set_pause_time_and_phases_of_visited_POI_of_real_user(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
 																									//速度はphaseで埋める前を参照しなければならないことに注意
@@ -572,7 +697,7 @@ namespace Simulation
 		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
 		//last_phaseまで埋める！
 		while (phase_id != (time_manager->phase_count() - 1)) {
-			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
+			set_path_between_poi_of_real_user(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
 		}
 
 		std::cout << "Success Creating Real User" << std::endl;
@@ -634,8 +759,9 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::create_trajectories()
 	{
-		make_random_movement_user();
-		//make_predicted_user();
+		//make_random_movement_user();
+		make_predicted_user();
+		make_real_user();
 	}
 
 
