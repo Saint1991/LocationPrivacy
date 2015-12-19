@@ -283,12 +283,38 @@ namespace Simulation
 	///<summary>
 	/// input_elementsの入力POIを基に，巡回セールスマン問題を解き，ガウス分布に従って一定確率で求めたpoi系列を返す．
 	///</summary>
-	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois, int alpha)
+	std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> HayashidaSimulator::the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois, int alpha)
 	{
 		std::vector<std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>> all_tsp_solution = all_traveling_salesman_problem(visited_pois);
-		std::vector<std::shared_ptr<Map::BasicPoi const>> the_power_alpha_of__the_reciprocal_pois;
-		
-		return the_power_alpha_of__the_reciprocal_pois;
+		double optimal_distance = all_tsp_solution.front().second;
+				
+		std::vector<double> distance_ratio_list;//距離の比の逆数を格納
+		std::vector<double> normalization_ratio_list;//距離の比の逆数を正規化したものを格納
+
+		//最適解に対する距離の比を計算
+		//alphaを忘れずに
+		for (size_t i = 0; i < all_tsp_solution.size(); i++) {
+			distance_ratio_list.push_back((1/(all_tsp_solution.at(i).second/ optimal_distance)) * alpha);
+		}
+
+		//距離の比の逆数を正規化
+		double total_ratio = 0.0;
+		double accumulation_ratio = 0.0;
+		for (auto iter : distance_ratio_list) total_ratio += iter;
+		for (auto iter : distance_ratio_list) {
+			accumulation_ratio += iter / total_ratio;
+			normalization_ratio_list.push_back(accumulation_ratio);
+		}
+
+		Math::Probability generator;
+		double rate = generator.uniform_distribution(0.0, 1.0);
+
+		int i = 0;
+		for (std::vector<double>::iterator iter = normalization_ratio_list.begin(); iter != normalization_ratio_list.end(); iter++, i++) {
+			if (rate <= *iter) {
+				return all_tsp_solution.at(i);
+			}
+		}
 	}
 
 
@@ -576,21 +602,19 @@ namespace Simulation
 	/// t.s.p.の解の距離が近い順に正規分布で重み付けして，確率的に変化させる．
 	///</summary>
 	void HayashidaSimulator::make_real_user() {
-
-		real_user = user->get_real_user();
-
+				
 		input_visit_pois();//userのinput情報を入れる
 
 		//---------------------------POI訪問順序を決定---------------------------------------------
 		int phase_id = 0;
 
-		//userのvisited_poisを用いて，始点がstart_poiの巡回セールスマン問題の解のうち，ガウス分布に従い，ある結果を抽出する．
-		std::vector<std::shared_ptr<Map::BasicPoi const>> order_visited_poi = the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(input_poi_list, 1);
+		//userのvisited_poisを用いて，始点がstart_poiの巡回セールスマン問題の解のうち，逆数の分布に従い，ある結果を抽出する．
+		std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi = the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(input_poi_list, 1);
 
 		int dest_rest_time = 0;//phaseの到着時間と実際の到着時間の差分.最初だけ0
 		//最初の点を登録
-		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = order_visited_poi.begin();
-		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator next_poi = order_visited_poi.begin() + 1;
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = order_visited_poi.first.begin();
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator next_poi = order_visited_poi.first.begin() + 1;
 
 		real_user->set_visited_poi_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
 		real_user->set_random_starting_speed_at_poi(AVERAGE_SPEED, RANGE_OF_SPEED);
@@ -760,7 +784,7 @@ namespace Simulation
 	void HayashidaSimulator::create_trajectories()
 	{
 		//make_random_movement_user();
-		make_predicted_user();
+		//make_predicted_user();
 		make_real_user();
 	}
 
