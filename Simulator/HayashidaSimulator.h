@@ -19,7 +19,6 @@
 #include "FileExporter.h"
 #include "MTCCalculationModule.h"
 #include "TimeUtility.h"
-
 namespace Simulation
 {
 	///<summary>
@@ -32,11 +31,8 @@ namespace Simulation
 	#pragma region
 		//ñ⁄à¿
 		//ãóó£300m~1000mÅCPOI3å¬,service_interval360Ç≈15phaseÇÆÇÁÇ¢
-		static constexpr auto USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/user_trajectory";
-		static constexpr auto DUMMY_TRAJECTORT_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/dummy_trajectory";
 		std::stringstream export_path;
-		//export_path << "C:/Users/Shuhei/Desktop/EvaluationResults/" << Time::TimeUtility::current_timestamp() << "/";
-		
+
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
 		static constexpr int MAX_PAUSE_TIME = 600;//ìríÜñ⁄ìIínê›íËÇÃä÷åWÇ≈min_pause_timeÇÃ2.5î{à»è„Ç≈ê›íËÇ∑ÇÈÅI
@@ -85,8 +81,7 @@ namespace Simulation
 		void make_real_user();
 		void make_same_predicted_user_as_real_user();
 
-		void export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id);
-		void export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
+		void export_users_and_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
 		void export_MTC();
 		
 

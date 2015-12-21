@@ -52,7 +52,7 @@ namespace IO
 				values->at(key_position_map->at(key)) = iter->second;
 			}
 		}
-
+		
 		std::string line("");
 		for (auto iter = values->begin(); iter != values->end(); iter++) {
 			line += *iter + DELIMITER;

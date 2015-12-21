@@ -729,46 +729,60 @@ namespace Simulation
 
 		std::cout << "Success Creating Real User" << std::endl;
 	}
-
 	
 	///<summary>
-	/// ダミーのtrajectoryを出力する
+	/// ユーザとダミーのtrajectoryを出力する
 	///</summary>
-	void HayashidaSimulator::export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id)
+	void HayashidaSimulator::export_users_and_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
 	{
-		IO::FileExporter dummy_exporter({
+		static constexpr auto REAL_USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/real_user_trajectory";
+		static constexpr auto PREDICTED_USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/predicted_user_trajectory";
+		static constexpr auto DUMMY_TRAJECTORT_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/dummy_trajectory";
+
+		std::list<std::pair<std::string, std::string>> export_name_map = {
 			{ Geography::LatLng::LATITUDE, "緯度" },
-			{ Geography::LatLng::LONGITUDE, "経度" }
-		}, DUMMY_TRAJECTORT_OUT_PATH);
+			{ Geography::LatLng::LONGITUDE, "経度" },
+			{ Graph::TrajectoryState<>::TIME, "タイムスタンプ" },
+			//{ Graph::SemanticTrajectoryState<>::CATEGORY, "カテゴリID" },
+			//{ Graph::SemanticTrajectoryState<>::CATEGORY_NAME, "カテゴリ名" },
+			//{ Graph::TrajectoryState<>::VENUE_NAME, "POI名" }
+		};
 
-		std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
-		time_manager->for_each_time([&](time_t time, long interval, int phase) {
-			dummy_exportable_positions.push_back(entities->read_dummy_by_id(dummy_id)->read_position_of_phase(phase));
-		});
+		//実際のユーザトラジェクトリのエクスポート
+		IO::FileExporter real_user_exporter(export_name_map, REAL_USER_TRAJECTORY_OUT_PATH);
+		std::list<std::shared_ptr<IO::FileExportable const>> real_user_trajectory = entities->get_user()->get_real_user()->read_trajectory()->get_export_data();
+		real_user_exporter.export_lines(real_user_trajectory);
 
-	}
-
-
-	///<summary>
-	/// ダミーのtrajectoryを出力する
-	///</summary>
-	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
-	{
+		//予測したユーザトラジェクトリのエクスポート
+		IO::FileExporter predicted_user_exporter(export_name_map, PREDICTED_USER_TRAJECTORY_OUT_PATH);
+		std::list<std::shared_ptr<IO::FileExportable const>> predicted_user_trajectory = entities->get_user()->read_trajectory()->get_export_data();
+		predicted_user_exporter.export_lines(predicted_user_trajectory);
 		
-		entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> dummy) {
-			std::string file_name = DUMMY_TRAJECTORT_OUT_PATH + std::to_string(dummy_id);
-			std::cout << file_name << std::endl;
-			IO::FileExporter dummies_exporter({
-				{ Geography::LatLng::LATITUDE, "緯度" },
-				{ Geography::LatLng::LONGITUDE, "経度" }
-			}, file_name);
-			
-			std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
-			time_manager->for_each_time([&](time_t time, long interval, int phase) {
-				dummy_exportable_positions.push_back(entities->read_dummy_by_id(dummy_id)->read_position_of_phase(phase));
-			});
-			dummies_exporter.export_lines(dummy_exportable_positions);
-		});
+
+		//各ダミーのエクスポート
+		for (int dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++) {
+			std::shared_ptr<Entity::RevisablePauseMobileEntity<> const> dummy = entities->read_dummy_by_id(dummy_id);
+			std::list<std::shared_ptr<IO::FileExportable const>> dummy_trajectory = dummy->read_trajectory()->get_export_data();
+			IO::FileExporter dummy_exporter(export_name_map, DUMMY_TRAJECTORT_OUT_PATH + std::to_string(dummy_id));
+			dummy_exporter.export_lines(dummy_trajectory);
+		}
+	
+
+		//AR系の評価
+		int achive_count = 0;
+		double achive_size = 0.0;
+		int phase_count = this->time_manager->phase_count();
+		for (int phase = 0; phase < phase_count; phase++) {
+			double ar = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
+			if (ar >= requirement->required_anonymous_area) achive_count++;
+			achive_size += ar / requirement->required_anonymous_area;
+		}
+		double ar_count = (double)achive_count / phase_count;
+		double ar_size = achive_size / phase_count;
+		std::cout << "AR-Count: " << std::to_string(ar_count) << std::endl;
+		std::cout << "AR-Size: " << std::to_string(ar_size) << "m^2" << std::endl;
+
+
 	}
 
 	///<summary>
@@ -787,11 +801,10 @@ namespace Simulation
 	void HayashidaSimulator::create_trajectories()
 	{
 		input_visit_pois();
-		//make_random_movement_user();
-		make_predicted_user();
 		make_real_user();
-		//もしreal_userとpredicted同じにしたかったら，以下を実行
-		//predicted_userを本物と同じ作り方にして，コピーすればOK
+		make_predicted_user();
+		//make_random_movement_user();
+		//make_same_predicted_user_as_real_user();
 	}
 
 
@@ -845,7 +858,7 @@ namespace Simulation
 		for (std::list<std::shared_ptr<Requirement::KatoMethodRequirement const>>::iterator requirement = requirements.begin(); requirement != requirements.end(); requirement++)
 		{
 			Method::KatoBachelorMethod kato_bachelor_method(map,user,*requirement,time_manager);
-			kato_bachelor_method.set_execution_callback(std::bind(&HayashidaSimulator::export_dummies_trajectory,this,std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+			kato_bachelor_method.set_execution_callback(std::bind(&HayashidaSimulator::export_users_and_dummies_trajectory,this,std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			kato_bachelor_method.run();
 		}
 	}
@@ -863,18 +876,41 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::export_evaluation_result()
 	{
+	
+
+		/*
 		IO::FileExporter user_exporter({
 			{Geography::LatLng::LATITUDE, "緯度"},
-			{Geography::LatLng::LONGITUDE, "経度"}
+			{Geography::LatLng::LONGITUDE, "経度"},
+			{Graph::TrajectoryState<>::TIME, "タイムスタンプ" }
 		}, USER_TRAJECTORY_OUT_PATH);
 
+		
 		std::list<std::shared_ptr<IO::FileExportable const>> user_exportable_positions;
 		
 		time_manager->for_each_time([&](time_t time, long interval, int phase) {
 			user_exportable_positions.push_back(user->read_position_of_phase(phase));
 		});
 		
-		user_exporter.export_lines(user_exportable_positions);
+		user_exporter.export_lines(user_exportable_positions);*/
+
+		/*
+		entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> dummy) {
+		std::string file_name = DUMMY_TRAJECTORT_OUT_PATH + std::to_string(dummy_id);
+		std::cout << file_name << std::endl;
+		IO::FileExporter dummies_exporter({
+		{ Geography::LatLng::LATITUDE, "緯度" },
+		{ Geography::LatLng::LONGITUDE, "経度" }
+		}, file_name);
+
+		std::list<std::shared_ptr<IO::FileExportable const>> dummy_exportable_positions;
+		time_manager->for_each_time([&](time_t time, long interval, int phase) {
+		dummy_exportable_positions.push_back(entities->read_dummy_by_id(dummy_id)->read_position_of_phase(phase));
+		});
+		dummies_exporter.export_lines(dummy_exportable_positions);
+
+		});
+		*/
 	}
 
 	

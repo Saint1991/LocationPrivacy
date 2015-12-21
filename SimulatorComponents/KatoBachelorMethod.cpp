@@ -694,7 +694,7 @@ namespace Method
 			decide_base_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 			decide_share_positions_and_arrive_time(dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 			decide_destination_on_the_way(dummy_id);// 生成中ダミー(k番目)の移動経路の決定
-			std::cout << "Success Creating Dummy_Id[" << dummy_id << "]" << std::endl;
+			std::cout << "Success Creating Dummy-id[" << dummy_id << "]" << std::endl;
 		}
 
 	}
