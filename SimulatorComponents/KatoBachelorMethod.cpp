@@ -395,7 +395,7 @@ namespace Method
 			//基準地点に設定されているphaseは削除する．
 			int interval_of_base_phase = requirement->interval_of_base_phase;
 			auto iterNewEnd = std::remove_if(target_phases.begin(), target_phases.end(), [interval_of_base_phase](int phase) {
-				return phase % interval_of_base_phase == 0;
+				return phase % interval_of_base_phase == 0 || phase <= interval_of_base_phase;
 			});
 			target_phases.erase(iterNewEnd, target_phases.end());
 
@@ -484,8 +484,8 @@ namespace Method
 
 		//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
 		//一旦リストで取得してから，その中からランダムで選択
-		double distance = init_speed * (time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(phase_id));
-		Geography::LatLng candidate_init_latlng = Geography::GeoCalculation::calc_translated_point(*dest_position.second.second, distance, M_PI * 0.5);
+		double distance = init_speed * (time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(0));
+		Geography::LatLng candidate_init_latlng = Geography::GeoCalculation::calc_translated_point(*dest_position.second.second, distance, M_PI * 5/4);
 		//POIを探索する長方形を取得．目的地に近づく方向を考慮
 		double top = dest_position.second.second->lat() - candidate_init_latlng.lat() > 0 ? dest_position.second.second->lat() : candidate_init_latlng.lat();
 		double left = dest_position.second.second->lng() - candidate_init_latlng.lng() > 0 ? candidate_init_latlng.lng() : dest_position.second.second->lng();
@@ -495,7 +495,9 @@ namespace Method
 
 		std::vector<std::shared_ptr<Map::BasicPoi const>> init_pois_list = get_candidate_pois_list(rect1);
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator init_poi = init_pois_list.begin();
-		double init_time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(phase_id) - requirement->min_pause_time;
+		double init_time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(0) - requirement->min_pause_time;
+
+		if (init_time_limit < 0) std::invalid_argument("init time limit is negative number!!");
 
 		while (!map->is_reachable(Graph::MapNodeIndicator((*init_poi)->get_id()), dest_position.second.first, init_speed, init_time_limit)) {
 			init_poi++;

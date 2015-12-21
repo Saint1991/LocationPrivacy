@@ -40,7 +40,7 @@ namespace Simulation
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
 		static constexpr int MAX_PAUSE_TIME = 600;//途中目的地設定の関係でmin_pause_timeの2.5倍以上で設定する！
-		static constexpr int MIN_PAUSE_TIME = 200;//SERVICE_INTERVALより大きくする！
+		static constexpr int MIN_PAUSE_TIME = 200;//SERVICE_INTERVALより大きくする！最初の匿名領域設定の間隔よりは短く！！
 		static constexpr int SERVICE_INTERVAL = 90;
 		static constexpr int POI_NUM = 4;
 		static constexpr int ALPHA = 1;//tspの最適解に対する距離比の指数．大きいほど，最適解を選びやすい
