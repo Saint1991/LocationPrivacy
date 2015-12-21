@@ -56,14 +56,38 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::create_trajectories()
 	{
-		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins", "pois");
-		user_trajectories = loader.load_trajectories(USER_ID, TRAJECTORY_LENGTH_THRESHOLD, MIN_SERVICE_INTERVAL);
+		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins_cleaned", "pois");
+		std::shared_ptr<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>> trajectories = loader.load_trajectories(USER_ID, TRAJECTORY_LENGTH_THRESHOLD, MIN_SERVICE_INTERVAL);
+		
+		//DB内マップ全域をカバーする範囲
+		Graph::Rectangle<Geography::LatLng> all_map_boundary(35.9, 139.4, 35.5, 141.0);
+		build_map(all_map_boundary);
+
+		size_t original_trajectory_count = trajectories->size();
+		std::unique_ptr<User::UserTrajectoryConverter> converter = std::make_unique<User::UserTrajectoryConverter>(map);
+
+		int progress = 1;
+		//作成したトラジェクトリから歩行部分のみを切り出す
+		for (std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>::const_iterator trajectory = trajectories->begin(); trajectory != trajectories->end(); trajectory++, progress++) {
+			
+			//該当部分の地図情報を読み込む
+			//Graph::Rectangle<Geography::LatLng> map_boundary = (*trajectory)->get_trajectory_boundary();
+			//build_map(map_boundary);
+
+			//std::unique_ptr<User::UserTrajectoryConverter> converter = std::make_unique<User::UserTrajectoryConverter>(map);
+			std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> converted_trajectory = converter->extract_walking_semantic_trajectory(*trajectory, TRAJECTORY_LENGTH_THRESHOLD, AVERAGE_SPEED);
+			if (converted_trajectory != nullptr) {
+				user_trajectories->push_back(converted_trajectory);
+			}
+			std::cout << std::to_string(progress) << " / " << std::to_string(original_trajectory_count) << std::endl;
+		}
 
 		size_t trajectory_size = user_trajectories->size();
+		std::cout << "Original Trajectory Size: " << std::to_string(trajectories->size()) << std::endl;
 		std::cout << "Create " << trajectory_size << " Trajectories." << std::endl;
 	}
 
-	///<summary>
+	///<summary
 	/// 嗜好の木の作成
 	/// 全トラジェクトリのデータを使ってユーザの嗜好の木を作成する
 	///</summary>

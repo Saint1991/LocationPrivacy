@@ -35,6 +35,8 @@ namespace Map
 		in << "(SELECT DISTINCT(node_id) FROM nodes WHERE latitude BETWEEN " << boundary.bottom << " AND " << boundary.top << " AND longitude BETWEEN " << boundary.left << " AND " << boundary.right << ")";
 		sub << "(SELECT DISTINCT(id) FROM " << connection_table << " WHERE to1 IN " << in.str() << " AND to2 IN " << in.str() << ")";
 		query << "SELECT id, latitude, longitude, category_id, category_name, venue_name FROM " << poi_table << " WHERE id IN " << sub.str() << " ORDER BY id ASC;";
+		
+		std::cout << query.str() << std::endl;
 		sql::ResultSet* result = db->raw_query(query.str());
 
 		result->beforeFirst();

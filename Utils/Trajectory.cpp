@@ -204,7 +204,7 @@ namespace Graph
 			max_lat = max(max_lat, lat);
 		}
 
-		return Rectangle<Geography::LatLng>(max_lat + 0.001, min_lng - 0.001, min_lat - 0.001, max_lng + 0.001);
+		return Rectangle<Geography::LatLng>(max_lat + 0.01, min_lng - 0.01, min_lat - 0.01, max_lng + 0.01);
 	}
 
 	///<summary>

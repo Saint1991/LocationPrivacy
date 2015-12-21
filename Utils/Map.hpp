@@ -60,6 +60,7 @@ namespace Graph
 		std::cout << "Loading Nodes and connectivities"  << std::endl;
 		build_map(boundary);
 		std::cout << "Complete! " << node_collection->size() << " Nodes Loaded." << std::endl;
+		std::cout << "Complete! " << poi_collection->size() << " Pois Loaded." << std::endl;
 
 		std::cout << "Setup Routing Client" << std::endl;
 		routing_client = std::make_unique<RoutingClient<NODE, PATH>>(node_collection, routing_method);
@@ -67,7 +68,7 @@ namespace Graph
 
 		std::cout << "Start Building R-Tree Index." << std::endl;
 		build_rtree_index();
-		std::cout << "Comlete! Map Loaded." << std::endl;
+		std::cout << "Complete! Map Loaded." << std::endl;
 	}
 
 	///<summary>

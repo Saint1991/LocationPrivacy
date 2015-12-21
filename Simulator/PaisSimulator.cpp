@@ -97,7 +97,7 @@ namespace Simulation
 			break;
 		}
 
-		double fail_rate = failed_count / (user_trajectories->size() * (1 - TRAININGSET_PROPORTION));
+		double fail_rate = failed_count / user_trajectories->size();
 		std::cout << "Fail Rate: " << std::to_string(fail_rate) << std::endl;
 	}
 
