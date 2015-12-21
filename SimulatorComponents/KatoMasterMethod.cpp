@@ -13,7 +13,7 @@ namespace Method
 		real_user(nullptr), predicted_user(nullptr),Tu(0.0)
 	{
 		//input_user‚Æreal_user‚Ì¶¬D‚±‚Ì2‚Â‚Í•ÏX‚µ‚È‚¢
-		input_user = entities->get_user()->get_predicted_user();
+		input_user = entities->get_user();
 		real_user = entities->get_user()->get_real_user();
 	}
 

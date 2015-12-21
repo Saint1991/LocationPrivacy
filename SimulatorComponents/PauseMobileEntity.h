@@ -130,6 +130,6 @@ namespace Entity
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»
-	//template class PauseMobileEntity<Graph::Coordinate>;
+	template class PauseMobileEntity<Graph::Coordinate>;
 	template class PauseMobileEntity<Geography::LatLng>;
 }

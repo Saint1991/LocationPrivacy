@@ -27,6 +27,6 @@ namespace Entity
 	};
 
 	//–¾Ž¦“I“ÁŽê‰»
-	//template class DifferentMovementUser<Graph::Coordinate>;
+	template class DifferentMovementUser<Graph::Coordinate>;
 	template class DifferentMovementUser<Geography::LatLng>;
 }

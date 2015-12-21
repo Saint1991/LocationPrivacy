@@ -83,7 +83,7 @@ namespace Simulation
 		void make_random_movement_user();//‘S—v‘f‚Ì“ü—Í‚ð‘O’ñ
 		void make_predicted_user();
 		void make_real_user();
-		
+		void make_same_predicted_user_as_real_user();
 
 		void export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id);
 		void export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
