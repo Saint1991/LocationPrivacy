@@ -19,7 +19,7 @@ namespace Graph
 		RevisableTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		~RevisableTrajectory();
 
-		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> read_positions() const;
+		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE const>>> read_positions() const;
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> get_positions();
 
 		void insert_positions_to_trajectory(int phase_id, int insert_num);

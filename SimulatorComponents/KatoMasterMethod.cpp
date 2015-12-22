@@ -31,7 +31,7 @@ namespace Method
 	///</summary>
 	std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> KatoMasterMethod::copy_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user)
 	{
-		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> input_user_positions = input_user->read_trajectory()->read_positions();
+		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> input_user_positions = input_user->get_trajectory()->get_positions();
 		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> predicted_user_positions;
 
 		std::copy(input_user_positions->begin(), input_user_positions->end(), predicted_user_positions->begin());

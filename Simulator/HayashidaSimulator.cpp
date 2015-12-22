@@ -733,7 +733,7 @@ namespace Simulation
 	///<summary>
 	/// ユーザとダミーのtrajectoryを出力する
 	///</summary>
-	void HayashidaSimulator::export_users_and_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
+	void HayashidaSimulator::export_users_and_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
 	{
 		static constexpr auto REAL_USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/real_user_trajectory";
 		static constexpr auto PREDICTED_USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/predicted_user_trajectory";

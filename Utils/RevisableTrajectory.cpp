@@ -24,7 +24,7 @@ namespace Graph
 	/// positions‚ğ•ÏX•s‰Â‚Ìó‘Ô‚Åæ“¾‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE>
-	std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> RevisableTrajectory<POSITION_TYPE>::read_positions() const
+	std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE const>>> RevisableTrajectory<POSITION_TYPE>::read_positions() const
 	{
 		return positions;
 	}
@@ -35,7 +35,11 @@ namespace Graph
 	template <typename POSITION_TYPE>
 	std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> RevisableTrajectory<POSITION_TYPE>::get_positions()
 	{
-		return positions;
+		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> ret = std::make_shared<std::vector<std::shared_ptr<POSITION_TYPE>>>();
+		for (std::vector<std::shared_ptr<POSITION_TYPE const>>::iterator iter = positions->begin(); iter != positions->end(); iter++) {
+			ret->push_back(std::const_pointer_cast<POSITION_TYPE>(*iter));
+		}
+		return ret;
 	}
 
 	///<summary>

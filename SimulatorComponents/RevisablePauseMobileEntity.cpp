@@ -72,6 +72,11 @@ namespace Entity
 	}
 
 	
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	std::shared_ptr<TRAJECTORY_TYPE> RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_trajectory()
+	{
+		return trajectory;
+	}
 
 	///<summary>
 	/// path‚ğC³‚µCÄŒvZ‚ğ{‚·D
