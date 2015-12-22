@@ -26,6 +26,15 @@ namespace Entity
 
 
 	///<summary>
+	/// TimeSlotManagerを読み専用で取得
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::shared_ptr <Time::TimeSlotManager const> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::read_timeslot() const
+	{
+		return timeslot;
+	}
+
+	///<summary>
 	/// ダミーを生成する
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>

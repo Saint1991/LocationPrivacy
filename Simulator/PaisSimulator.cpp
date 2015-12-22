@@ -132,7 +132,7 @@ namespace Simulation
 		//ARŒn‚Ì•]‰¿
 		int achive_count = 0;
 		double achive_size = 0.0;
-		int phase_count =entities->get_user()->read_trajectory()->phase_count();
+		int phase_count = entities->get_user()->read_trajectory()->phase_count();
 		for (int phase = 0; phase < phase_count; phase++) {
 			double ar = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
 			if (ar >= requirement->required_anonymous_area) achive_count++;
@@ -142,7 +142,9 @@ namespace Simulation
 		double ar_size = achive_size / phase_count;
 		std::cout << "AR-Count: " << std::to_string(ar_count) << std::endl;
 		std::cout << "AR-Size: " << std::to_string(ar_size) << "m^2" << std::endl;
+		
 		//MTC‚Ì•]‰¿
+		
 
 		//–Ø‚ÌXV
 	}
