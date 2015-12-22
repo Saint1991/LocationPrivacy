@@ -66,8 +66,8 @@ namespace Simulation
 		void make_input_user_using_input_POI();
 		std::vector<std::shared_ptr<Map::BasicPoi const>> traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois);
 		
-		void export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id);
-		void export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
+		void export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id);
+		void export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
 		void export_MTC();
 
 

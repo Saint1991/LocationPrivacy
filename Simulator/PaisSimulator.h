@@ -25,7 +25,7 @@ namespace Simulation
 		
 	protected:
 		void make_requirement_list();
-		void each_trajectory_end_callback(std::shared_ptr<Entity::EntityManager<Entity::Dummy<>, User::BasicUser<>, Geography::LatLng>> entities, std::shared_ptr<Requirement::PreferenceRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
+		void each_trajectory_end_callback(std::shared_ptr<Entity::EntityManager<Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>, Entity::Dummy<>, User::BasicUser<>>> entities, std::shared_ptr<Requirement::PreferenceRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
 	
 	public:
 		PaisSimulator();

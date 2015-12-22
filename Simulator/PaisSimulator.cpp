@@ -104,7 +104,7 @@ namespace Simulation
 	///<summary>
 	/// 各トラジェクトリ実行後のコールバック
 	///</summary>
-	void PaisSimulator::each_trajectory_end_callback(std::shared_ptr<Entity::EntityManager<Entity::Dummy<>, User::BasicUser<>, Geography::LatLng>> entities, std::shared_ptr<Requirement::PreferenceRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
+	void PaisSimulator::each_trajectory_end_callback(std::shared_ptr<Entity::EntityManager<Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>, Entity::Dummy<>, User::BasicUser<>>> entities, std::shared_ptr<Requirement::PreferenceRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
 	{
 		
 		std::list<std::pair<std::string, std::string>> export_name_map = {

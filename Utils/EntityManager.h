@@ -7,6 +7,7 @@
 #include "MobileEntity.h"
 #include "TimeSlotManager.h"
 #include "Rectangle.h"
+#include "Trajectory.h"
 
 namespace Entity
 {
@@ -18,12 +19,15 @@ namespace Entity
 	/// ダミーとユーザを管理するクラス
 	/// 交差回数カウントのため，ユーザもconstにしていないが，基本positionsには操作は加えないこと
 	/// POSITION_TYPEは暫定的にLatLngの派生クラスに制限
+	/// USERとDUMMYは同じMobileEntityから派生したクラスである必要がある
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE = Geography::LatLng>
+	template <typename POSITION_TYPE = Geography::LatLng, typename TRAJECTORY_TYPE = Graph::Trajectory<POSITION_TYPE>,  typename DUMMY = Entity::MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>, typename USER = Entity::MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>>
 	class EntityManager
 	{
 	
 	static_assert(std::is_base_of<Geography::LatLng, POSITION_TYPE>::value, "POSITION_TYPE must be Coordinate or the class derived from LatLng");
+	static_assert(std::is_base_of<Graph::Trajectory<POSITION_TYPE>, TRAJECTORY_TYPE>::value, "TRAJECTORY_TYPE must be derived from Trajectory<POSITION_TYPE>");
+	static_assert(std::is_base_of<Entity::MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>, DUMMY>::value && std::is_base_of<Entity::MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>, USER>::value, "Both User and Dummy must be derived from same MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>");
 	
 	protected:
 		std::shared_ptr<std::vector<std::shared_ptr<DUMMY>>> dummies;
@@ -37,6 +41,7 @@ namespace Entity
 		entity_id create_dummy();
 		std::shared_ptr<USER> get_user();
 		std::shared_ptr<DUMMY> get_dummy_by_id(entity_id id);
+		std::shared_ptr<MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>> get_entity_by_id(entity_id id);
 		std::shared_ptr<DUMMY> find_dummy_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::vector<std::shared_ptr<DUMMY>> find_all_dummies_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::shared_ptr<DUMMY const> read_dummy_by_id(entity_id id) const;

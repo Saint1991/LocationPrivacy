@@ -393,7 +393,7 @@ namespace Simulation
 	///<summary>
 	/// ダミーのtrajectoryを出力する
 	///</summary>
-	void HayashidaSimulator::export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id)
+	void HayashidaSimulator::export_dummy_trajectory(std::shared_ptr<Entity::EntityManager<Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>>> entities, std::shared_ptr<Time::Timer> timer, int dummy_id)
 	{
 		IO::FileExporter dummy_exporter({
 			{ Geography::LatLng::LATITUDE, "緯度" },
@@ -411,7 +411,7 @@ namespace Simulation
 	///<summary>
 	/// ダミーのtrajectoryを出力する
 	///</summary>
-	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Geography::LatLng>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
+	void HayashidaSimulator::export_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
 	{
 		
 		entities->for_each_dummy([&](int dummy_id, std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> dummy) {

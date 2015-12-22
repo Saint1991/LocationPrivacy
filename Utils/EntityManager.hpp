@@ -6,8 +6,8 @@ namespace Entity
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	EntityManager<DUMMY, USER, POSITION_TYPE>::EntityManager(std::shared_ptr<USER> user, int num_of_dummy, std::shared_ptr<Time::TimeSlotManager const> timeslot)
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::EntityManager(std::shared_ptr<USER> user, int num_of_dummy, std::shared_ptr<Time::TimeSlotManager const> timeslot)
 		: timeslot(timeslot), dummies(std::make_shared<std::vector<std::shared_ptr<DUMMY>>>(num_of_dummy)), user(user)
 	{
 		for (int id = 1; id <= num_of_dummy; id++) {
@@ -19,8 +19,8 @@ namespace Entity
 	///<summary>
 	/// デストラクタ
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	EntityManager<DUMMY, USER, POSITION_TYPE>::~EntityManager()
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::~EntityManager()
 	{
 	}
 
@@ -28,8 +28,8 @@ namespace Entity
 	///<summary>
 	/// ダミーを生成する
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	entity_id EntityManager<DUMMY, USER, POSITION_TYPE>::create_dummy()
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	entity_id EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::create_dummy()
 	{
 		entity_id new_id = dummies->size() + 1;
 		dummies->push_back(std::make_shared<DUMMY>(new_id, timeslot));
@@ -37,12 +37,23 @@ namespace Entity
 	}
 
 	///<summary>
-	/// ユーザを読み専用で取得
+	/// ユーザを取得
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::shared_ptr<USER> EntityManager<DUMMY, USER, POSITION_TYPE>::get_user()
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::shared_ptr<USER> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_user()
 	{
 		return user;
+	}
+
+
+	///<summary>
+	/// ユーザ，ダミーの区別なくidに対応するエンティティを返す
+	/// ただし存在しないidの場合はnullptrを返す
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::shared_ptr<Entity::MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_entity_by_id(entity_id id)
+	{
+		return id == 0 ? user : get_dummy_by_id(id);
 	}
 
 
@@ -50,8 +61,8 @@ namespace Entity
 	/// 指定したIDのダミーを取得
 	/// 存在しない場合はnullptrが返る
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::shared_ptr<DUMMY> EntityManager<DUMMY, USER, POSITION_TYPE>::get_dummy_by_id(entity_id id)
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::shared_ptr<DUMMY> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_dummy_by_id(entity_id id)
 	{
 		std::shared_ptr<DUMMY> dummy = dummies->at(id - 1);
 		if (dummy->get_id() == id) {
@@ -64,8 +75,8 @@ namespace Entity
 	///<summary>
 	/// 条件に合うダミーを取得
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::shared_ptr<DUMMY> EntityManager<DUMMY, USER, POSITION_TYPE>::find_dummy_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare)
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::shared_ptr<DUMMY> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::find_dummy_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare)
 	{
 		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
 			if (compare(*iter)) return *iter;
@@ -77,8 +88,8 @@ namespace Entity
 	///<summary>
 	/// 条件に合うダミーを全て取得する
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::vector<std::shared_ptr<DUMMY>> EntityManager<DUMMY, USER, POSITION_TYPE>::find_all_dummies_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare)
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::vector<std::shared_ptr<DUMMY>> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::find_all_dummies_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare)
 	{
 		std::vector<std::shared_ptr<DUMMY>> ret;
 		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
@@ -92,8 +103,8 @@ namespace Entity
 	/// 指定したIDのダミーを取得
 	/// 存在しない場合はnullptrが返る
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::shared_ptr<DUMMY const> EntityManager<DUMMY, USER, POSITION_TYPE>::read_dummy_by_id(entity_id id) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::shared_ptr<DUMMY const> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::read_dummy_by_id(entity_id id) const
 	{
 		std::shared_ptr<DUMMY const> dummy = dummies->at(id - 1);
 		if (dummy->get_id() == id) {
@@ -107,8 +118,8 @@ namespace Entity
 	/// 交差回数の小さい順にエンティティIDを格納したリストを返します
 	/// 未生成のダミーも交差回数0として含まれるので注意
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::vector<std::pair<entity_id, int>> EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_id_list_order_by_cross_count() const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::vector<std::pair<entity_id, int>> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_entity_id_list_order_by_cross_count() const
 	{
 		std::vector<std::pair<entity_id, int>> ret;
 		ret.push_back(std::make_pair(0U, user->get_cross_count()));
@@ -130,8 +141,8 @@ namespace Entity
 	///<summary>
 	/// IDがidのエンティティと共有地点が設定されているエンティティのID集合を返す．
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::vector<Entity::entity_id> EntityManager<DUMMY, USER, POSITION_TYPE>::get_entities_cross_with(entity_id id) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::vector<Entity::entity_id> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_entities_cross_with(entity_id id) const
 	{
 
 		std::vector<Entity::entity_id> ret;
@@ -175,8 +186,8 @@ namespace Entity
 	///<summary>
 	/// ダミーの総数を取得
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	size_t EntityManager<DUMMY, USER, POSITION_TYPE>::get_dummy_count() const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	size_t EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_dummy_count() const
 	{
 		return dummies->size();
 	}
@@ -185,8 +196,8 @@ namespace Entity
 	///<summary>
 	/// phaseにおいてすでに共有地点を設定されているエンティティ数を取得する
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	size_t EntityManager<DUMMY, USER, POSITION_TYPE>::get_total_cross_count_of_phase(int phase) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	size_t EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_total_cross_count_of_phase(int phase) const
 	{
 		size_t ret = 0;
 		if (user->is_cross_set_at_phase(phase)) ret++;
@@ -200,8 +211,8 @@ namespace Entity
 	///<summary>
 	/// 共有地点を設定されているエンティティ数が最小のphaseを取得する
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_phase_with_min_total_cross_count() const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	int EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_phase_with_min_total_cross_count() const
 	{
 		int min_phase = -1;
 		int min_cross_count = INT_MAX;
@@ -218,8 +229,8 @@ namespace Entity
 	///<summary>
 	/// 各ダミーについてexecute_functionを実行
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	void EntityManager<DUMMY, USER, POSITION_TYPE>::for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY>)>& execute_function)
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	void EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY>)>& execute_function)
 	{
 		for (std::vector<std::shared_ptr<DUMMY>>::iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
 			if (*iter != nullptr) execute_function((*iter)->get_id(), *iter);
@@ -229,8 +240,8 @@ namespace Entity
 	///<summary>
 	/// 各ダミーについてexecute_functionを実行
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	void EntityManager<DUMMY, USER, POSITION_TYPE>::for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY const>)>& execute_function) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	void EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::for_each_dummy(const std::function<void(entity_id, std::shared_ptr<DUMMY const>)>& execute_function) const
 	{
 		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
 			if (*iter != nullptr) {
@@ -244,8 +255,8 @@ namespace Entity
 	///<summary>
 	/// phaseにおける経路確定済みエンティティの位置を全て取得する
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::vector<std::shared_ptr<POSITION_TYPE const>> EntityManager<DUMMY, USER, POSITION_TYPE>::get_all_fixed_positions_of_phase(int phase) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::vector<std::shared_ptr<POSITION_TYPE const>> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_all_fixed_positions_of_phase(int phase) const
 	{
 		std::vector<std::shared_ptr<POSITION_TYPE const>> ret(1, user->read_position_of_phase(phase));
 		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator dummy = dummies->begin(); dummy != dummies->end(); dummy++) {
@@ -259,8 +270,8 @@ namespace Entity
 	/// phaseにおける経路確定済みエンティティからなる凸包領域の面積を計算します
 	/// ただしエンティティが1つの場合は0を，2つの場合は距離を返します．
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	double EntityManager<DUMMY, USER, POSITION_TYPE>::calc_convex_hull_size_of_fixed_entities_of_phase(int phase) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	double EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::calc_convex_hull_size_of_fixed_entities_of_phase(int phase) const
 	{
 		std::vector<std::shared_ptr<POSITION_TYPE const>> positions = get_all_fixed_positions_of_phase(phase);
 		if (positions.size() <= 1) return 0.0;
@@ -270,8 +281,8 @@ namespace Entity
 	///<summary>
 	/// 各Phaseについて全エンティティの位置を引数にして繰り返す
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	void EntityManager<DUMMY, USER, POSITION_TYPE>::positions_for_each_phase(const std::function<void(int, time_t, const std::vector<std::shared_ptr<POSITION_TYPE const>>&)>& execute_function) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	void EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::positions_for_each_phase(const std::function<void(int, time_t, const std::vector<std::shared_ptr<POSITION_TYPE const>>&)>& execute_function) const
 	{
 		timeslot->for_each_time([&](time_t time, long duration, int phase) {
 			std::vector<std::shared_ptr<POSITION_TYPE const>> positions(dummies->size() + 1);
@@ -287,8 +298,8 @@ namespace Entity
 	///<summary>
 	/// 指定したPhaseにおける位置確定済みエンティティの平均位置を取得する
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_of_phase(int phase) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::shared_ptr<POSITION_TYPE const> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_average_position_of_phase(int phase) const
 	{
 		double x = 0.0;
 		double y = 0.0;
@@ -319,8 +330,8 @@ namespace Entity
 	/// 時刻timeにおいて位置が確定しているエンティティの平均位置を取得します
 	/// 不正な時刻の場合はnullptrを返します．
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	std::shared_ptr<POSITION_TYPE const> EntityManager<DUMMY, USER, POSITION_TYPE>::get_average_position_at(time_t time) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::shared_ptr<POSITION_TYPE const> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_average_position_at(time_t time) const
 	{
 		int phase = timeslot->find_phase_of_time(time);
 		if (phase != INVALID) {
@@ -333,8 +344,8 @@ namespace Entity
 	///<summary>
 	/// 各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_count_within_boundary(int phase, const Graph::Rectangle<POSITION_TYPE>& boundary) const 
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	int EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_entity_count_within_boundary(int phase, const Graph::Rectangle<POSITION_TYPE>& boundary) const 
 	{
 		
 		int counter = 0;
@@ -355,8 +366,8 @@ namespace Entity
 	///<summary>
 	/// 各phaseにおけるセルに存在するユーザおよび生成済みダミーの数を計算します
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	int EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_entity_count_within_boundary(int phase, double top, double left, double bottom, double right) const
 	{
 		return get_entity_count_within_boundary(phase, Graph::Rectangle<POSITION_TYPE>(top, left, bottom, right));
 	}
@@ -364,8 +375,8 @@ namespace Entity
 	///<summary>
 	/// 全てのエンティティの交差回数の合計を計算します
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	int EntityManager<DUMMY, USER, POSITION_TYPE>::get_all_entities_total_crossing_count() const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	int EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_all_entities_total_crossing_count() const
 	{
 		int counter = 0;
 		
@@ -382,8 +393,8 @@ namespace Entity
 	///<summary>
 	/// from_phaseの位置からto_phaseまでの位置のユーザの進行方向の角度(rad)を返す．
 	///</summary>
-	template <typename DUMMY, typename USER, typename POSITION_TYPE>
-	double EntityManager<DUMMY, USER, POSITION_TYPE>::get_user_direction_of_phase(int from_phase, int to_phase) const
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	double EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_user_direction_of_phase(int from_phase, int to_phase) const
 	{
 		std::shared_ptr<Geography::LatLng const> from_position = user->read_position_of_phase(from_phase);
 		std::shared_ptr<Geography::LatLng const> to_position = user->read_position_of_phase(to_phase);
