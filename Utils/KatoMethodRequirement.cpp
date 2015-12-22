@@ -40,7 +40,7 @@ namespace Requirement {
 		double required_anonymous_area,
 		size_t dummy_num,
 		int service_interval,
-		int max_variation_of_pause_time,
+		double max_variation_of_pause_time,
 		double max_variation_of_speed,
 		int interval_of_base_phase,
 		int cycle_of_interval_of_base_num,

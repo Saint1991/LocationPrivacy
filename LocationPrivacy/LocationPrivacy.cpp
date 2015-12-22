@@ -32,7 +32,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	//simulator->evaluate();
 	//simulator->export_evaluation_result(export_path.str());
 	
-	std::unique_ptr<Simulation::ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>> simulator
+	std::unique_ptr<Simulation::ISimulator<Map::HayashidaDbMap, Entity::DifferentMovementUser<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>> simulator
 		= std::make_unique<Simulation::HayashidaSimulator>(MAP_BOUNDARY);
 	simulator->prepare();
 	//simulator->run();

@@ -155,6 +155,7 @@
     <ClInclude Include="DbTrajectoryLoader.h" />
     <ClInclude Include="DbNodeCollectionFactory.h" />
     <ClInclude Include="DbPoiCollectionFactory.h" />
+    <ClInclude Include="DifferentMovementUser.h" />
     <ClInclude Include="Dummy.h" />
     <ClInclude Include="HayashidaBachelorMethod.h" />
     <ClInclude Include="HayashidaDbMap.h" />
@@ -165,9 +166,11 @@
     <ClInclude Include="PauseMobileEntity.h" />
     <ClInclude Include="PreferenceTree.h" />
     <ClInclude Include="PreferenceTreeNode.h" />
+    <ClInclude Include="RevisablePauseMobileEntity.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UserTrajectoryConverter.h" />
+    <ClInclude Include="VisitedPoiInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicDbMap.cpp" />
@@ -178,6 +181,7 @@
     <ClCompile Include="DbTrajectoryLoader.cpp" />
     <ClCompile Include="DbNodeCollectionFactory.cpp" />
     <ClCompile Include="DbPoiCollectionFactory.cpp" />
+    <ClCompile Include="DifferentMovementUser.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -202,6 +206,7 @@
     <ClCompile Include="PauseMobileEntity.cpp" />
     <ClCompile Include="PreferenceTree.cpp" />
     <ClCompile Include="PreferenceTreeNode.cpp" />
+    <ClCompile Include="RevisablePauseMobileEntity.cpp" />
     <ClCompile Include="SimulatorComponents.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -210,6 +215,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="UserTrajectoryConverter.cpp" />
+    <ClCompile Include="VisitedPoiInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.vcxproj">

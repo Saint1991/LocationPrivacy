@@ -111,6 +111,15 @@
     <ClInclude Include="UserTrajectoryConverter.h">
       <Filter>ヘッダー ファイル\User</Filter>
     </ClInclude>
+    <ClInclude Include="VisitedPoiInfo.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="RevisablePauseMobileEntity.h">
+      <Filter>ヘッダー ファイル\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="DifferentMovementUser.h">
+      <Filter>ヘッダー ファイル\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -175,6 +184,15 @@
     </ClCompile>
     <ClCompile Include="HayashidaDbMap.cpp">
       <Filter>ソース ファイル\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="VisitedPoiInfo.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="RevisablePauseMobileEntity.cpp">
+      <Filter>ソース ファイル\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="DifferentMovementUser.cpp">
+      <Filter>ソース ファイル\Entity</Filter>
     </ClCompile>
     <ClCompile Include="UserTrajectoryConverter.cpp">
       <Filter>ソース ファイル\User</Filter>

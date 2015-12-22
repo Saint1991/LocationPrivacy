@@ -20,7 +20,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	constexpr int USER_ID = 1;
 	constexpr double TESTSET_PROPORTION = 0.3;
-	const Graph::Rectangle<Geography::LatLng> MAP_BOUNDARY(35.625, 139.665, 35.690, 139.730);//(35.635, 139.675, 35.680, 139.720)(35.600, 139.645, 35.710, 139.755)
+	const Graph::Rectangle<Geography::LatLng> MAP_BOUNDARY(35.635, 139.675, 35.680, 139.720);//(35.625, 139.665, 35.690, 139.730)(35.600, 139.645, 35.710, 139.755)
 	std::stringstream export_path;
 	export_path << "C:/Users/Shuhei/Desktop/EvaluationResults/" << Time::TimeUtility::current_timestamp() << "/";
 
@@ -32,7 +32,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	//simulator->evaluate();
 	//simulator->export_evaluation_result(export_path.str());
 
-	std::unique_ptr<Simulation::ISimulator<Map::BasicDbMap, Entity::PauseMobileEntity<Geography::LatLng>, Entity::PauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>> simulator
+	std::unique_ptr<Simulation::ISimulator<Map::HayashidaDbMap, Entity::DifferentMovementUser<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>> simulator
 		= std::make_unique<Simulation::HayashidaSimulator>(MAP_BOUNDARY);
 	simulator->prepare();
 	simulator->run();
