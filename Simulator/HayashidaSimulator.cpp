@@ -829,13 +829,28 @@ namespace Simulation
 			double speed_range = 0.5
 		---------------------------------------------*/
 
+		//加藤さん修論手法の要求パラメータ
+		//コンストラクタを作成する
+		/*-------------↓要求パラメータ---------------
+			double required_anonymous_area,
+			size_t dummy_num,
+			int service_interval,
+			double max_variation_of_pause_time,
+			double max_variation_of_speed,
+			int interval_of_base_phase,
+			int cycle_of_interval_of_base_phase,
+			int max_pause_time = 600,
+			int min_pause_time = 300,
+			double average_speed = 1.5,
+			double speed_range = 0.5
+		---------------------------------------------*/
 		//匿名領域決定の周期のパラメータはユーザの総移動時間/周期T個！
 
 
 		requirements = 
 		{
-			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 4, 90, 5, 2, 500, 200),
-			//std::make_shared<Requirement::KatoMethodRequirement>(1000 * 1000, 16, 90, 5, 2)
+			//std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 2, 90, 5, 2, 500, 200),
+			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 2, 90, 0.7, 0.7 , 5, 2)
 		};
 	}
 

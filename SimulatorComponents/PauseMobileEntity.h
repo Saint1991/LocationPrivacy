@@ -52,13 +52,18 @@ namespace Entity
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		virtual ~PauseMobileEntity();
 		
+		//–K–âPOI_ID(visited_pois_info_list_id)‚ÉŠÖ‚·‚ésetter‚Ægetter
+		int get_visited_pois_info_list_id();
+
 		//–K–âPOI(visited_poi)‚ÉŠÖ‚·‚ésetter‚Ægetter
 		void set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position);
 		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name = "");//MobileEntity‚ÌƒI[ƒo[ƒ‰ƒCƒh
 		std::pair<Graph::MapNodeIndicator, Geography::LatLng> get_poi();
+		std::pair<Graph::MapNodeIndicator, Geography::LatLng> get_any_poi(int i);
 		VisitedPoiInfo get_next_poi_info();
 		void clear_visited_poi_info();
 		void sort_pois_order_by_arrive_phase();
+		int get_visited_pois_num();
 
 		//pause_phase‚ÉŠÖ‚·‚ésetter‚Ægetter
 		std::vector<int> get_pause_phases();
@@ -68,12 +73,13 @@ namespace Entity
 		//arrive_phase‚ÉŠÖ‚·‚égetter.‚½‚¾‚µCset‚ÍvisitedPOI“o˜^‚Éİ’è‚ğs‚¤‚½‚ß•s—vD
 		int get_arrive_phase();
 		int get_arrive_phase_using_pause_phase(int pause_phase);
-
+		int get_any_arrive_phase(int i);
 
 		//–K–âPOIî•ñ‚Ì’â~ŠÔ(pause_time)‚ÉŠÖ‚·‚ésetter‚Ægetter
 		int get_pause_time() const;
 		int get_pause_time();
 		int get_pause_time_using_arrive_phase(int arrive_phase);
+		int get_any_poi_pause_time(int i);
 		void set_pause_time(int phase, int pause_time);
 		void set_pause_time(int phase, double pause_time);
 		void set_pause_time_using_arrive_phase(int arrive_phase, double pause_time);

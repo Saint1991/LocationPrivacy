@@ -52,7 +52,7 @@ namespace Method {
 			void revise_dummy_visit_poi(int phase_id);//ダミーの停止地点の修正
 			
 		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int phase_id);
-
+		void update_visited_pois_info_of_dummy();
 
 	protected:
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user;//システムへの入力によって得られたユーザ．Simulator単位で作成する.変更厳禁

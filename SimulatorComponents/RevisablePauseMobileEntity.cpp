@@ -43,6 +43,20 @@ namespace Entity
 		std::invalid_argument("Not Found");
 	}
 
+
+	///<summary>
+	/// now_pause_tim‚ğchange_time•ª‘Œ¸‚³‚¹‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::add_now_pause_time(int now_phase, double change_time)
+	{
+		now_pause_time_list.at(now_phase) += change_time;
+		if (now_pause_time_list.at(now_phase) < 0) std::invalid_argument("Now Pause Time is Negative Numer!!");
+	}
+
+
+
+
 	///<summary>
 	/// now_pause_time_list‚ğphase_id‚Ü‚ÅC³‚·‚éD
 	///</summary>
@@ -55,8 +69,6 @@ namespace Entity
 		for (int i = init_pause_phase; i <= phase_id; i++) {
 			now_pause_time_list.at(i) += new_pause_time;
 		}
-
-
 	}
 
 	

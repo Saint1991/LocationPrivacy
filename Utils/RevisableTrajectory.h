@@ -24,6 +24,7 @@ namespace Graph
 
 		void insert_positions_to_trajectory(int phase_id, int insert_num);
 		void delete_positions_to_trajectory(int phase_id, int delete_num);
+		void copy_trajectory(int phase_id);
 	};
 
 	template class RevisableTrajectory<Geography::LatLng>;

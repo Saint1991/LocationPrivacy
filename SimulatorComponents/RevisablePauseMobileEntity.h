@@ -26,8 +26,9 @@ namespace Entity
 		//’â~ŠÔ‚ÌC³
 		void revise_pause_time(double new_pause_time);
 		void revise_pause_time_using_pause_phase(double new_pause_time, int phase);
-
-
+		
+		//Œ»İ‚Ì’â~ŠÔ‚ÌC³
+		void add_now_pause_time(int now_phase, double change_time);
 		void revise_now_pause_time(int phase_id, double new_pause_time);
 		
 

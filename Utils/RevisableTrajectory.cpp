@@ -61,4 +61,14 @@ namespace Graph
 		//とりあえず現状は，最後の要素をコピー
 		for (int i = 0; i < delete_num; i++) positions->push_back(positions->back());
 	}
+
+	///<summary>
+	/// positionsに，delete_num分だけ，停止phaseを挿入する.
+	///</summary>
+	template <typename POSITION_TYPE>
+	void RevisableTrajectory<POSITION_TYPE>::copy_trajectory(int phase_id)
+	{
+			
+	}
+
 }

@@ -33,11 +33,7 @@ namespace Method
 		typedef std::vector<Graph::Rectangle<Geography::LatLng>> Grid;
 		std::vector<Grid> grid_list;
 		int flag_of_dest_position;//途中目的地設定中か否かを示すフラグ
-
-		typedef unsigned int entity_id;
-
-		static constexpr auto DUMMY_TRAJECTORT_OUT_PATH = "C:/Users/Shuhei/Desktop/dummy_trajectory";
-		
+				
 		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> creating_dummy;
 		
 		//メソッド
@@ -58,6 +54,8 @@ namespace Method
 		void take_down_dest_position_flag();
 
 	protected:
+		typedef unsigned int entity_id;
+
 		void initialize();
 		void decide_dummy_positions();
 		

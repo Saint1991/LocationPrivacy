@@ -39,6 +39,18 @@ namespace Entity
 	{
 	}
 
+	///<summary>
+	/// –K–âPOIî•ñ‚ğƒZƒbƒg‚·‚éD–K–â’n“_‚Ì“o˜^‚Ì‚Í‚±‚¿‚ç‚ğg‚¤
+	/// arrive_phase‚à‹L˜^.‚½‚¾‚µCpause_phase‚Í“o˜^‚µ‚È‚¢Dpause_phase‚Ís’â~ŠÔ“o˜^‚ÌÛ‚És‚¤D
+	/// visited_poi_info‚ğpush_back‚·‚é‘O‚ÉCpause_phases‚ÍƒNƒŠƒA‚·‚é‚±‚Æ
+	/// push_backŒã‚ÍCarrive_phase‚ğ—p‚¢‚ÄCƒ\[ƒg‚ğs‚¤D
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_visited_pois_info_list_id()
+	{
+		return visited_pois_info_list_id;
+	}
+
 
 	///<summary>
 	/// –K–âPOIî•ñ‚ğƒZƒbƒg‚·‚éD–K–â’n“_‚Ì“o˜^‚Ì‚Í‚±‚¿‚ç‚ğg‚¤
@@ -93,6 +105,18 @@ namespace Entity
 		return visited_pois_info_list.at(visited_pois_info_list_id + 1);
 	}
 
+
+	///<summary>
+	/// i”Ô–Ú‚É–K–â—\’è‚ÌPOI‚ğæ“¾
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	std::pair<Graph::MapNodeIndicator, Geography::LatLng> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_poi(int i)
+	{
+		return visited_pois_info_list.at(i).visited_poi;
+	}
+
+
+
 	///<summary>
 	/// visited_poi_info‚Ìî•ñ‚ğƒNƒŠƒA‚·‚é
 	///</summary>
@@ -109,6 +133,7 @@ namespace Entity
 		visited_poi_info.starting_speed = 0.0;
 
 	}
+
 	///<summary>
 	/// visited_pois_info_list‚ğarrive_phase‚Ì‡‚Éƒ\[ƒg‚·‚é
 	///</summary>
@@ -121,6 +146,14 @@ namespace Entity
 		});
 	}
 
+	///<summary>
+	/// —\’è–K–âPOI‚Ì”‚ğ‹‚ß‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_visited_pois_num()
+	{
+		return visited_pois_info_list.size() - 1;
+	}
 
 	///<summary>
 	/// Ÿ‚É–K–â—\’è‚Ì’â~POI‚Ì“’…‚·‚éphases‚ğ‹‚ß‚éD
@@ -182,6 +215,15 @@ namespace Entity
 		std::invalid_argument("Not Found");
 	}
 
+	///<summary>
+	/// i”Ô–Ú‚É–K–â—\’è‚Ì’â~POI‚Ì“’…‚·‚éphase‚ğ‹‚ß‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_arrive_phase(int i)
+	{
+		return visited_pois_info_list.at(i).arrive_phase;
+	}
+
 
 	///<summary>
 	/// –K–âPOI‚Ì’â~ŠÔ‚ğ•ÏX•s‰Â”\‚Èó‘Ô‚Å‹‚ß‚é
@@ -216,7 +258,14 @@ namespace Entity
 		std::invalid_argument("Not Found");
 	}
 
-
+	///<summary>
+	/// i”Ô–Ú‚É–K–â—\’è‚Ì’â~ŠÔ‚ğ•ÏX‰Â”\‚Èó‘Ô‚Å‹‚ß‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_poi_pause_time(int i)
+	{
+		return visited_pois_info_list.at(i).pause_time;
+	}
 
 	///<summary>
 	/// –K–âPOIî•ñ‚ÉCintŒ^‚Ì’â~ŠÔ‚Æ“’…phase‚ğset‚·‚é
