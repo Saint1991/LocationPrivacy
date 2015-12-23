@@ -3,6 +3,7 @@
 
 namespace Evaluate
 {
+
 	///<summary>
 	/// コンストラクタ
 	///</summary>
@@ -10,8 +11,9 @@ namespace Evaluate
 	CrossJudgementModule<MAP_TYPE, POSITION_TYPE, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::CrossJudgementModule(
 		std::shared_ptr<MAP_TYPE const> map, 
 		std::shared_ptr<Entity::EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE> const> entities, 
-		const std::function<bool(std::shared_ptr<MAP_TYPE const>, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&)>& cross_rule
-	)	: map(map), entities(entities), cross_rule(cross_rule)
+		double move_speed,
+		const std::function<bool(std::shared_ptr<MAP_TYPE const>, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, double, long)>& cross_rule
+	)	: map(map), entities(entities), move_speed(move_speed), cross_rule(cross_rule)
 	{
 	}
 
@@ -24,6 +26,14 @@ namespace Evaluate
 	{
 	}
 
+	///<summary>
+	/// 基本の交差判定ルール
+	///</summary>
+	template <typename MAP_TYPE, typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
+	bool CrossJudgementModule<MAP_TYPE, POSITION_TYPE, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::basic_cross_rule(std::shared_ptr<MAP_TYPE const>, const Graph::MapNodeIndicator& previous_position1, const Graph::MapNodeIndicator& current_position1, const Graph::MapNodeIndicator& previous_position2, const Graph::MapNodeIndicator& current_position2, double move_speed, long interval) const
+	{
+		return map->is_reachable(previous_position1, current_position2, move_speed, (double)interval) && map->is_reachable(previous_position2, current_position1, move_speed, (double)interval);
+	}
 
 	///<summary>
 	/// 
@@ -49,7 +59,13 @@ namespace Evaluate
 				std::shared_ptr<Entity::MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>> target_entity = entities->get_entity_by_id(target_id);
 				Graph::MapNodeIndicator target_previous_node = target_entity->read_node_pos_info_of_phase(phase - 1).first;
 				Graph::MapNodeIndicator target_current_node = target_entity->read_node_pos_info_of_phase(phase).first;
+			
+				//交差条件の判定
+				if (cross_rule(map, previous_node, current_node, target_previous_node, target_current_node, move_speed, interval)) {
+					cross_entities.push_back(target_id);
+				}
 			}
+			ret.push_back(CrossInfo(phase, cross_entities));
 		});
 
 		return ret;
