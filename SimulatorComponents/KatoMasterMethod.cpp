@@ -611,31 +611,25 @@ namespace Method
 	///<summary>
 	/// ここが提案手法の核になる部分.ダミーの行動を修正する
 	///</summary>
-	void KatoMasterMethod::revise_dummy_positions()
+	void KatoMasterMethod::revise_dummy_positions(int phase_id, entity_id dummy_id)
 	{
-		clear_visited_pois_info_list_id_of_users();
-		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
+		revising_dummy = entities->get_dummy_by_id(dummy_id);
+		//ダミーのvisited_pois_info_list_idの更新
+		entities->for_each_dummy([=](entity_id dummy_id, std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>>& dummy)
 		{
-			for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
-			{
-				revising_dummy = entities->get_dummy_by_id(dummy_id);
-				//ダミーのvisited_pois_info_list_idの更新
-				entities->for_each_dummy([=](entity_id dummy_id, std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>>& dummy)
-				{
-					if ((phase_id - 1) == dummy->get_pause_phases().back()) dummy->increment_visited_pois_info_list_id();
-				});
-				//ユーザのvisited_pois_info_list_idの更新
-				increment_visited_pois_info_list_id_of_users(phase_id);
-				//ユーザの行動判定及びダミーの修正
-				if (check_going_same_poi_as_plan()) {
-					if (check_user_plan(phase_id) != NO_CHANGE) {
-						revise_dummy_trajectory(phase_id);//dummyの行動プランの更新
-						update_user_plan(check_user_plan(phase_id), phase_id);//次の停止地点の到着時間を予測し，ユーザの行動プランを更新
-					}
-				}
+			if ((phase_id - 1) == dummy->get_pause_phases().back()) dummy->increment_visited_pois_info_list_id();
+		});
+		//ユーザのvisited_pois_info_list_idの更新
+		increment_visited_pois_info_list_id_of_users(phase_id);
+		//ユーザの行動判定及びダミーの修正
+		if (check_going_same_poi_as_plan()) {
+			if (check_user_plan(phase_id) != NO_CHANGE) {
+				revise_dummy_trajectory(phase_id);//dummyの行動プランの更新
+				update_user_plan(check_user_plan(phase_id), phase_id);//次の停止地点の到着時間を予測し，ユーザの行動プランを更新
 			}
 		}
 	}
+		
 
 	void KatoMasterMethod::run()
 	{
@@ -649,7 +643,12 @@ namespace Method
 		Method::KatoBachelorMethod::decide_dummy_positions();
 
 		//ここでユーザの行動の予測やダミーの行動を修正する(加藤さん修論手法)[Kato 14]
-		revise_dummy_positions();
+		clear_visited_pois_info_list_id_of_users();//usersのvisited_pois_info_list_idのクリア
+		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++){
+			for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++){
+				revise_dummy_positions(phase_id, dummy_id);
+			}
+		}
 
 		//ここで計測を終了
 		timer->end();

@@ -848,7 +848,7 @@ namespace Simulation
 
 		requirements = 
 		{
-			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 2, 90, 5, 2, 700, 300)
+			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 2, 90, 5, 2, 600, 250)
 		};
 	}
 
@@ -877,11 +877,17 @@ namespace Simulation
 			kato_bachelor_method.run();
 			*/
 			
+			/*
 			//加藤さん修論手法
 			Method::KatoMasterMethod kato_master_method(map, user, *requirement, time_manager);
 			kato_master_method.set_execution_callback(std::bind(&HayashidaSimulator::export_users_and_dummies_trajectory, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			kato_master_method.run();
-			
+			*/
+
+			//林田さん卒論手法
+			Method::KatoMasterMethod hayashida_bachelor_method(map, user, *requirement, time_manager);
+			hayashida_bachelor_method.set_execution_callback(std::bind(&HayashidaSimulator::export_users_and_dummies_trajectory, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+			hayashida_bachelor_method.run();
 		}
 	}
 

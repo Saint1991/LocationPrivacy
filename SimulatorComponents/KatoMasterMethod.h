@@ -26,7 +26,7 @@ namespace Method {
 	
 	class KATO_MASTER_METHOD_API KatoMasterMethod : public KatoBachelorMethod
 	{
-	private:
+	protected:
 		//メンバ変数
 		double Tu;//ユーザの到着時間の変化分
 		enum ChangeParameter { LONGER_PAUSE_TIME, SHORTER_PAUSE_TIME, PATH, FASTER_SPEED, SLOER_SPEED, VISIT_POI, NO_CHANGE };
@@ -35,7 +35,7 @@ namespace Method {
 
 		//メソッド
 		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> copy_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
-		
+
 		std::pair<double, double> calc_max_variable_speed(double speed);
 		std::pair<double, double> calc_max_variable_pause_time(double pause_time);
 
@@ -79,7 +79,7 @@ namespace Method {
 		
 		//メソッド
 		void initialize();
-		void revise_dummy_positions();
+		void revise_dummy_positions(int phase_id, entity_id dummy_id);
 	
 	public:
 		KatoMasterMethod(std::shared_ptr<Map::HayashidaDbMap const> map, std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);

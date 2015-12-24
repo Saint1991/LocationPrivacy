@@ -9,8 +9,7 @@ namespace Method
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
 	HayashidaBachelorMethod::HayashidaBachelorMethod(std::shared_ptr<Map::HayashidaDbMap const> map, std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: KatoMasterMethod(map, user, requirement, time_manager),
-		predicted_user(nullptr)
+		: KatoMasterMethod(map, user, requirement, time_manager)
 	{
 	}
 
@@ -20,6 +19,32 @@ namespace Method
 	HayashidaBachelorMethod::~HayashidaBachelorMethod()
 	{
 	}
+
+	///<summary>
+	/// ユーザが訪問予定POIに向かっているかどうかをチェックする
+	///</summary>
+	bool HayashidaBachelorMethod::check_user_going_to_sheduled_POI()
+	{
+		return true;
+	}
+
+	///<summary>
+	/// ユーザの行動を再予測する
+	///</summary>
+	void HayashidaBachelorMethod::repredicted_user_trajectory()
+	{
+		
+	}
+
+	///<summary>
+	/// 提案手法の核になる部分
+	/// ユーザの交差を再設定する
+	///</summary>
+	void HayashidaBachelorMethod::re_setting_of_user_cross()
+	{
+		
+	}
+
 
 	///<summary>
 	/// 初期化 (今回は特にやることはない)
@@ -35,10 +60,18 @@ namespace Method
 	///</summary>
 	void HayashidaBachelorMethod::adjust_dummy_positions()
 	{
-		
+		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++) {
+			for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++) {
+				if (!check_user_going_to_sheduled_POI()) {
+					repredicted_user_trajectory();
+					re_setting_of_user_cross();
+				}
+				revise_dummy_positions(phase_id, dummy_id);
+			}
+		}
 	}
 
-
+	/*
 	///<summary>
 	/// 決定した位置を基にMTC等各種評価値を算出する
 	///</summary>
@@ -55,7 +88,7 @@ namespace Method
 	{
 
 	}
-
+	
 
 	///<summary>
 	/// 終了処理 (今回はスマートポインタを利用しているので，特にやることはない)
@@ -64,7 +97,7 @@ namespace Method
 	{
 
 	}
-
+	*/
 
 	void HayashidaBachelorMethod::run()
 	{
@@ -72,22 +105,17 @@ namespace Method
 		timer->start();
 
 		//初期化
-		initialize();
+		Method::KatoMasterMethod::initialize();
 
 		//ここが実行部分(加藤さん卒論手法[Kato 13])
-		decide_dummy_positions();
+		Method::KatoBachelorMethod::decide_dummy_positions();
 
 		//ここでユーザの行動の予測やダミーの行動を修正する(林田さん卒論手法[Hayashida 14])
+		clear_visited_pois_info_list_id_of_users();//usersのvisited_pois_info_list_idのクリア
 		adjust_dummy_positions();
-
+		
 		//ここで計測を終了
 		timer->end();
-
-		//設定したダミー，ユーザの位置を基にMTCなどの評価指標を計算する
-		evaluate();
-
-		//実行時間以外のエクスポート
-		export_results();
 
 		//終了処理
 		terminate();
