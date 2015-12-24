@@ -273,6 +273,12 @@ namespace Simulation
 			return poi1.second < poi2.second;
 		});
 
+		//表示用
+		std::for_each(all_tsp_solution.begin(), all_tsp_solution.end(), [](std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>& tsp) {
+			for (auto iter = tsp.first.begin(); iter != tsp.first.end(); iter++) std::cout << "Node ID : " << (*iter)->get_id() << " → ";
+			std::cout << " distance : " << tsp.second << std::endl;
+		});
+
 		return all_tsp_solution;
 	}
 
@@ -317,6 +323,7 @@ namespace Simulation
 		int i = 0;
 		for (std::vector<double>::iterator iter = normalization_ratio_list.begin(); iter != normalization_ratio_list.end(); iter++, i++) {
 			if (rate <= *iter) {
+				std::cout << " Real User Root is " << i + 1 << " th Root of T.S.P. : " << "distance = " << all_tsp_solution.at(i).second << std::endl;
 				return all_tsp_solution.at(i);
 			}
 		}
@@ -416,10 +423,11 @@ namespace Simulation
 		//---------------------------------end_timeまで適当に経路を決める！---------------------------------------------------
 
 		//最終地点は少し遠くにとる(1.5倍～2倍)．ただし，マップの限界範囲に注意
-		double last_distance = 1.3 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_starting_speed();
+		double last_distance = 1.4 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_starting_speed();
 
 		//次の候補点の範囲を求める
-		double last_angle = generator.uniform_distribution(-(M_PI), M_PI_2);
+		Geography::LatLng center = map_boundary.center();
+		double last_angle = Geography::GeoCalculation::lambert_azimuth_angle((*now_poi)->data->get_position(), center);
 		Geography::LatLng last_candidate_poi_position_range
 			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
 
@@ -547,13 +555,14 @@ namespace Simulation
 
 		Math::Probability generator;
 		//最終地点は少し遠くにとる(1.5倍～2倍)．ただし，マップの限界範囲に注意
-		double last_distance = 1.3 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_now_speed(phase_id);
+		double last_distance = 1.4 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_now_speed(phase_id);
 
 		//次の候補点の範囲を求める
-		double last_angle = generator.uniform_distribution(-(M_PI), M_PI_2);
+		Geography::LatLng center = map_boundary.center();
+		double last_angle = Geography::GeoCalculation::lambert_azimuth_angle((*now_poi)->data->get_position(), center);
 		Geography::LatLng last_candidate_poi_position_range
 			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
-
+	
 		Graph::Rectangle<Geography::LatLng> last_range(last_candidate_poi_position_range.lat() + 0.001, last_candidate_poi_position_range.lng(), last_candidate_poi_position_range.lat(), last_candidate_poi_position_range.lng() + 0.001);
 
 		std::vector<std::shared_ptr<Map::BasicPoi const>> last_candidate_pois_list = get_pois_list(last_range);
@@ -678,10 +687,11 @@ namespace Simulation
 
 		Math::Probability generator;
 		//最終地点は少し遠くにとる(1.5倍～2倍)．ただし，マップの限界範囲に注意
-		double last_distance = 1.3 * (end_time - time_manager->time_of_phase(phase_id)) * real_user->get_now_speed(phase_id);
+		double last_distance = 1.4 * (end_time - time_manager->time_of_phase(phase_id)) * real_user->get_now_speed(phase_id);
 
 		//次の候補点の範囲を求める
-		double last_angle = generator.uniform_distribution(-(M_PI), M_PI_2);
+		Geography::LatLng center = map_boundary.center();
+		double last_angle = Geography::GeoCalculation::lambert_azimuth_angle((*now_poi)->data->get_position(), center);
 		Geography::LatLng last_candidate_poi_position_range
 			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
 
@@ -712,7 +722,7 @@ namespace Simulation
 		set_pause_time_and_phases_of_visited_POI_of_real_user(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
 
 		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
-																									//速度はphaseで埋める前を参照しなければならないことに注意
+		//速度はphaseで埋める前を参照しなければならないことに注意
 		double last_pause_position_speed = real_user->get_starting_speed();
 
 		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
@@ -742,7 +752,7 @@ namespace Simulation
 		std::list<std::pair<std::string, std::string>> export_name_map = {
 			{ Geography::LatLng::LATITUDE, "緯度" },
 			{ Geography::LatLng::LONGITUDE, "経度" },
-			{ Graph::TrajectoryState<>::TIME, "タイムスタンプ" },
+			//{ Graph::TrajectoryState<>::TIME, "タイムスタンプ" },
 			//{ Graph::SemanticTrajectoryState<>::CATEGORY, "カテゴリID" },
 			//{ Graph::SemanticTrajectoryState<>::CATEGORY_NAME, "カテゴリ名" },
 			//{ Graph::TrajectoryState<>::VENUE_NAME, "POI名" }
@@ -801,9 +811,13 @@ namespace Simulation
 	void HayashidaSimulator::create_trajectories()
 	{
 		input_visit_pois();
+
 		make_real_user();
+
 		make_predicted_user();
+
 		predicted_user = user;
+
 		//make_random_movement_user();
 		//make_same_predicted_user_as_real_user();
 	}
@@ -834,7 +848,7 @@ namespace Simulation
 
 		requirements = 
 		{
-			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 2, 90, 5, 2, 500, 200),
+			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 2, 90, 5, 2, 700, 300)
 		};
 	}
 

@@ -54,6 +54,7 @@ namespace Entity
 		
 		//–K–âPOI_ID(visited_pois_info_list_id)‚ÉŠÖ‚·‚ésetter‚Ægetter
 		int get_visited_pois_info_list_id();
+		void clear_visited_pois_info_list_id();
 
 		//–K–âPOI(visited_poi)‚ÉŠÖ‚·‚ésetter‚Ægetter
 		void set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position);

@@ -65,6 +65,10 @@ namespace Method {
 		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int phase_id);
 		void update_visited_pois_info_of_dummy();
 
+		void increment_visited_pois_info_list_id_of_users(int phase_id);
+		void clear_visited_pois_info_list_id_of_users();
+
+
 	protected:
 		//メンバ変数
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user;//システムへの入力によって得られたユーザ．Simulator単位で作成する.変更厳禁

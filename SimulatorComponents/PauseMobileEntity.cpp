@@ -40,15 +40,21 @@ namespace Entity
 	}
 
 	///<summary>
-	/// 訪問POI情報をセットする．訪問地点の登録の時はこちらを使う
-	/// arrive_phaseも記録.ただし，pause_phaseは登録しない．pause_phaseはs停止時間登録の際に行う．
-	/// visited_poi_infoをpush_backする前に，pause_phasesはクリアすること
-	/// push_back後は，arrive_phaseを用いて，ソートを行う．
+	/// 訪問POI情報をk管理するIDを取得する
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_visited_pois_info_list_id()
 	{
 		return visited_pois_info_list_id;
+	}
+
+	///<summary>
+	/// 訪問POI情報を管理するIDをリセットする
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::clear_visited_pois_info_list_id()
+	{
+		visited_pois_info_list_id = 0;
 	}
 
 
@@ -61,7 +67,7 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position)
 	{
-		trajectory->set_position_of_phase(phase, node_id, position);
+ 		trajectory->set_position_of_phase(phase, node_id, position);
 
 		//もし，開始点以外の挿入の時は，pause_phasesをクリアする．
 		if (!visited_pois_info_list.empty()) {
@@ -152,7 +158,7 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_visited_pois_num()
 	{
-		return visited_pois_info_list.size() - 1;
+		return visited_pois_info_list.size();
 	}
 
 	///<summary>
@@ -187,7 +193,7 @@ namespace Entity
 				return;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 	///<summary>
@@ -212,7 +218,7 @@ namespace Entity
 				if (*iter2 == pause_phase) return iter->arrive_phase;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 	///<summary>
@@ -255,7 +261,7 @@ namespace Entity
 				return iter->pause_time;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 	///<summary>
@@ -309,7 +315,7 @@ namespace Entity
 				return;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 	///<summary>
@@ -365,7 +371,7 @@ namespace Entity
 				return;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 	///<summary>
@@ -391,7 +397,7 @@ namespace Entity
 				return;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 	///<summary>
@@ -423,9 +429,10 @@ namespace Entity
 		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
 			if (iter->arrive_phase == arrive_phase) {
 				iter->starting_speed = entity_speed;
+				return;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 		
 	}
 
@@ -448,7 +455,7 @@ namespace Entity
 		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
 			if (iter->arrive_phase == arrive_phase) return iter->starting_speed;
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 	///<summary>
@@ -462,7 +469,7 @@ namespace Entity
 				if (*iter2 == pause_phase) return iter->starting_speed;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 	///<summary>
@@ -488,7 +495,7 @@ namespace Entity
 				return;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 	///<summary>
@@ -502,7 +509,7 @@ namespace Entity
 				if (*iter2 == pause_phase) return iter->rest_pause_time_when_departing;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 	
 
@@ -530,7 +537,7 @@ namespace Entity
 				return;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 

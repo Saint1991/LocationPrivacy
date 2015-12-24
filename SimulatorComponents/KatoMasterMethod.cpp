@@ -576,7 +576,28 @@ namespace Method
 		
 	}
 
+	///<summary>
+	/// ダミーの訪問POI情報を更新する
+	///</summary>
+	void KatoMasterMethod::increment_visited_pois_info_list_id_of_users(int phase_id)
+	{
+		if ((phase_id - 1) == input_user->get_pause_phases().back()) input_user->increment_visited_pois_info_list_id();
+		if ((phase_id - 1) == real_user->get_pause_phases().back()) real_user->increment_visited_pois_info_list_id();
+		if ((phase_id - 1) == predicted_user->get_pause_phases().back()) predicted_user->increment_visited_pois_info_list_id();
+	}
+
+
+	///<summary>
+	/// ダミーの訪問POI情報を更新する
+	///</summary>
+	void KatoMasterMethod::clear_visited_pois_info_list_id_of_users()
+	{
+		input_user->clear_visited_pois_info_list_id();
+		real_user->clear_visited_pois_info_list_id();
+		predicted_user->clear_visited_pois_info_list_id();
+	}
 	
+
 	///<summary>
 	/// 初期化
 	///</summary>
@@ -592,16 +613,20 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_dummy_positions()
 	{
-		for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
+		clear_visited_pois_info_list_id_of_users();
+		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
 		{
-			revising_dummy = entities->get_dummy_by_id(dummy_id);
-			for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++)
+			for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++)
 			{
-				//visited_pois_info_list_idの更新
+				revising_dummy = entities->get_dummy_by_id(dummy_id);
+				//ダミーのvisited_pois_info_list_idの更新
 				entities->for_each_dummy([=](entity_id dummy_id, std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>>& dummy)
 				{
-					if ((phase_id + 1) == dummy->get_pause_phases().back()) dummy->increment_visited_pois_info_list_id();
+					if ((phase_id - 1) == dummy->get_pause_phases().back()) dummy->increment_visited_pois_info_list_id();
 				});
+				//ユーザのvisited_pois_info_list_idの更新
+				increment_visited_pois_info_list_id_of_users(phase_id);
+				//ユーザの行動判定及びダミーの修正
 				if (check_going_same_poi_as_plan()) {
 					if (check_user_plan(phase_id) != NO_CHANGE) {
 						revise_dummy_trajectory(phase_id);//dummyの行動プランの更新
@@ -621,10 +646,10 @@ namespace Method
 		initialize();
 
 		//ここが実行部分(各時刻のダミー位置を計算する)(加藤さん卒論手法)[Kato 13]
-		decide_dummy_positions();
+		Method::KatoBachelorMethod::decide_dummy_positions();
 
 		//ここでユーザの行動の予測やダミーの行動を修正する(加藤さん修論手法)[Kato 14]
-		//revise_dummy_positions();
+		revise_dummy_positions();
 
 		//ここで計測を終了
 		timer->end();

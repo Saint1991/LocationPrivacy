@@ -166,6 +166,7 @@ namespace Method
 		int arrive_phase = *phase_id;
 		creating_dummy->set_now_pause_time(*phase_id, rest_pause_time);
 
+		//停止phaseは停止時間を決めるときに既にひとつ設定しているので，total_pause_phase - 1であることに注意 
 		for (int i = 0; i < total_pause_phase; i++)
 		{
 			if (*phase_id == time_manager->phase_count() - 1) return;
@@ -371,6 +372,7 @@ namespace Method
 				}
 			}
 		}
+		if (creating_dummy->get_visited_pois_num() == 0) throw std::invalid_argument("It must set base point at least one!!");
 	}
 
 
@@ -704,7 +706,7 @@ namespace Method
 			decide_destination_on_the_way(dummy_id);// 生成中ダミー(k番目)の移動経路の決定
 			std::cout << "Success Creating Dummy-id[" << dummy_id << "]" << std::endl;
 		}
-
+		std::cout << "Success Kato's Bachelor Method" << std::endl;
 	}
 
 	void KatoBachelorMethod::run()
