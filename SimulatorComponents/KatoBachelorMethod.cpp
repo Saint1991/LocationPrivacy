@@ -139,8 +139,9 @@ namespace Method
 		std::vector<std::shared_ptr<Map::BasicPoi const>> candidate_pois_list = map->find_pois_within_boundary(boundary);
 		double length = 0.005;
 		//もし範囲内のPOIが見つからなかったら，範囲を広げて再計算
-		if (candidate_pois_list.size() == 0) {
-			while (candidate_pois_list.size() == 0) {
+		if (candidate_pois_list.size() <= 5) {
+			while (candidate_pois_list.size() <= 5) {
+				//boundary.transformed_...(1.1);
 				length += 0.001;
 				boundary.top += 0.5 * length;
 				boundary.left -= 0.5 * length;
@@ -268,7 +269,7 @@ namespace Method
 		int phase = requirement->interval_of_base_phase;
 		const int GRID_TOTAL_NUM = CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE;//グリッドの数
 
-		//各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
+																	 //各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
 		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>((time_manager->phase_count() / requirement->interval_of_base_phase), 0));
 
 		//あるphaseにおける各セルに存在するユーザ及び生成済みダミーの移動経路(停止地点)の数
@@ -336,6 +337,7 @@ namespace Method
 
 				//領域内のPOIを5回まで探索し，到達可能ならその点を採用
 				//見つからない場合は違う領域(cell)を参照して再探索
+				//poiが5個以下だと，見つからない場合があるため，poiの数は5個以上であることを保証させる．
 				auto serach_poi = [&](int flag_id = 0) {
 					for (int flag = 0; flag < 5; flag++) {
 						if (map->is_reachable(previous_base_info.second.first, Graph::MapNodeIndicator((*poi)->get_id()), creating_dummy->get_starting_speed_using_arrive_phase(previous_base_info.first), base_time_limit)) {
@@ -348,6 +350,8 @@ namespace Method
 					return flag_id;
 				};
 
+
+				int flag_of_setting_base_point = 0;//到達可能な基準地点があるかどうかを確認するフラグ
 				for (std::list<std::pair<int, int>>::iterator min_cell_iter = min_cell_id_list.begin(); min_cell_iter != min_cell_id_list.end(); min_cell_iter++) {
 					if (serach_poi() == 0) {
 						cell = grid_list.at(base_phase).at((*min_cell_iter).first);
@@ -355,12 +359,16 @@ namespace Method
 						poi = poi_within_base_point_grid.begin();
 					}
 					else {
+						flag_of_setting_base_point = 1;
 						break;
 					}
 				}
 
-				creating_dummy->set_visited_poi_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
-				creating_dummy->set_random_starting_speed_at_poi_using_arrive_phase(real_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				//到達可能な基準地点が見つかったら設定
+				if (flag_of_setting_base_point == 1) {
+					creating_dummy->set_visited_poi_of_phase(real_phase, Graph::MapNodeIndicator((*poi)->get_id()), (*poi)->data->get_position());
+					creating_dummy->set_random_starting_speed_at_poi_using_arrive_phase(real_phase, requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+				}
 			}
 		}
 	}
@@ -388,7 +396,7 @@ namespace Method
 			//BasicUserはDummyを継承しているのでポインタ代入は可能
 			//targetが交差するユーザorダミー
 			//target_phasesは交差が設定されていないphaseの一覧
-			std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> target = cross_target == 0 ? entities->get_user(): entities->get_dummy_by_id(cross_target);
+			std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> target = cross_target == 0 ? entities->get_user() : entities->get_dummy_by_id(cross_target);
 
 			std::vector<int> target_phases = target->find_cross_not_set_phases_of_poi();
 
@@ -485,7 +493,7 @@ namespace Method
 		//生成中ダミーのプランの中で，一番最初の場所から0秒までの範囲(最大停止時間を考慮)で到着できるPOIを取得
 		//一旦リストで取得してから，その中からランダムで選択
 		double distance = init_speed * (time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(0));
-		Geography::LatLng candidate_init_latlng = Geography::GeoCalculation::calc_translated_point(*dest_position.second.second, distance, M_PI * 5/4);
+		Geography::LatLng candidate_init_latlng = Geography::GeoCalculation::calc_translated_point(*dest_position.second.second, distance, M_PI * 5 / 4);
 		//POIを探索する長方形を取得．目的地に近づく方向を考慮
 		double top = dest_position.second.second->lat() - candidate_init_latlng.lat() > 0 ? dest_position.second.second->lat() : candidate_init_latlng.lat();
 		double left = dest_position.second.second->lng() - candidate_init_latlng.lng() > 0 ? candidate_init_latlng.lng() : dest_position.second.second->lng();
@@ -497,7 +505,7 @@ namespace Method
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator init_poi = init_pois_list.begin();
 		double init_time_limit = time_manager->time_of_phase(dest_position.first) - time_manager->time_of_phase(0) - requirement->min_pause_time;
 
-		if (init_time_limit < 0) std::invalid_argument("init time limit is negative number!!");
+		if (init_time_limit < 0) throw std::invalid_argument("init time limit is negative number!!");
 
 		while (!map->is_reachable(Graph::MapNodeIndicator((*init_poi)->get_id()), dest_position.second.first, init_speed, init_time_limit)) {
 			init_poi++;
@@ -640,7 +648,7 @@ namespace Method
 				creating_dummy->set_pause_time_using_arrive_phase(phase_id, pause_time_at_decided_position);
 				//dest_rest_timeのセット
 				creating_dummy->set_dest_rest_time_using_arrive_phase(phase_id, dest_rest_time);
-			
+
 				//途中目的地から次の停止地点のpathを決める
 				linear_interpolation_of_path_between_positions(now_poi.first, (*next_poi)->get_id(), &phase_id, &dest_rest_time);
 

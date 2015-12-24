@@ -38,6 +38,8 @@ namespace Graph
 		double height() const;
 		double area_size() const;
 		bool contains(const POSITION_TYPE& position) const;
+		Rectangle<Geography::LatLng> transform_rect_of_latlang_to_x_times(double x) const;
+		Rectangle<Coordinate> transform_rect_of_coordinate_to_x_times(double x) const;
 	};
 
 	template class Rectangle<Coordinate>;

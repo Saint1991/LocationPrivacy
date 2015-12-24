@@ -31,8 +31,14 @@ namespace Entity
 		void add_now_pause_time(int now_phase, double change_time);
 		void revise_now_pause_time(int phase_id, double new_pause_time);
 		
-		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
+		//o”­‘¬“x‚ÌC³
+		void revise_starting_speed(double speed);
 
+		//Œ»İ‚ÌˆÚ“®‘¬“x‚ÌC³
+		void revise_now_speed(int phase, double speed);
+
+		//trajectory‚ÌC³
+		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
 		void revise_path();
 		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int phase_id);
 	};

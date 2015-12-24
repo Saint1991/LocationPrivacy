@@ -53,10 +53,7 @@ namespace Entity
 		now_pause_time_list.at(now_phase) += change_time;
 		if (now_pause_time_list.at(now_phase) < 0) std::invalid_argument("Now Pause Time is Negative Numer!!");
 	}
-
-
-
-
+	
 	///<summary>
 	/// now_pause_time_listをphase_id時まで修正する．
 	///</summary>
@@ -71,7 +68,25 @@ namespace Entity
 		}
 	}
 
-	
+	///<summary>
+	/// 出発速度の修正．
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_starting_speed(double speed)
+	{
+		visited_pois_info_list.at(visited_pois_info_list_id).starting_speed = speed;
+	}
+
+	///<summary>
+	/// 現在の速度の修正．
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_now_speed(int phase, double speed)
+	{
+		now_speed_list.at(phase) = speed;
+	}
+
+
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	std::shared_ptr<TRAJECTORY_TYPE> RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_trajectory()
 	{

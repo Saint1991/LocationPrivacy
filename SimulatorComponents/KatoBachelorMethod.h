@@ -3,6 +3,7 @@
 #else
 #define KATO_BACHELOR_METHOD_API __declspec(dllimport)
 #endif
+
 #pragma once
 #include "HayashidaDbMap.h"
 #include "LatLng.h"
@@ -61,7 +62,7 @@ namespace Method
 		
 	public:
 		KatoBachelorMethod(std::shared_ptr<Map::HayashidaDbMap const> map, std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
-		~KatoBachelorMethod();
+		virtual ~KatoBachelorMethod();
 
 		void run();
 

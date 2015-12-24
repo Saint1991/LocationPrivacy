@@ -67,12 +67,17 @@ namespace Graph
 	}
 
 	///<summary>
-	/// positionsに，delete_num分だけ，停止phaseを挿入する.
+	/// トラジェクトリのコピーを行う
 	///</summary>
 	template <typename POSITION_TYPE>
-	void RevisableTrajectory<POSITION_TYPE>::copy_trajectory(int phase_id)
+	void RevisableTrajectory<POSITION_TYPE>::copy_trajectory(RevisableTrajectory<POSITION_TYPE>& copied_trajectory)
 	{
-			
+		/*
+		for (std::vector<std::shared_ptr<POSITION_TYPE const>>::iterator iter = copied_trajectory->positions->begin(); iter != copied_trajectory->positions->end(); iter++) {
+			this->positions->push_back(std::const_pointer_cast<POSITION_TYPE>(*iter));
+		}
+		*/
+		
 	}
 
 }

@@ -1,3 +1,10 @@
+#ifdef SIMULATORCOMPONENTS_EXPORTS
+#define KATO_MASTER_METHOD_API __declspec(dllexport)
+#else
+#define KATO_MASTER_METHOD_API __declspec(dllimport)
+#endif
+
+
 #pragma once
 #include "IProposedMethod.h"
 #include "BasicDbMap.h"
@@ -17,12 +24,16 @@ namespace Method {
 	/// 加藤さん修士卒業論文の提案手法の実装
 	///</summary>
 	
-	class KatoMasterMethod :public KatoBachelorMethod
+	class KATO_MASTER_METHOD_API KatoMasterMethod : public KatoBachelorMethod
 	{
 	private:
+		//メンバ変数
 		double Tu;//ユーザの到着時間の変化分
 		enum ChangeParameter { LONGER_PAUSE_TIME, SHORTER_PAUSE_TIME, PATH, FASTER_SPEED, SLOER_SPEED, VISIT_POI, NO_CHANGE };
-		
+		static constexpr double MAX_VARIATION_OF_PAUSE_TIME = 0.7;
+		static constexpr double MAX_VARIATION_OF_SPEED = 0.7;
+
+		//メソッド
 		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> copy_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user);
 		
 		std::pair<double, double> calc_max_variable_speed(double speed);
@@ -55,22 +66,20 @@ namespace Method {
 		void update_visited_pois_info_of_dummy();
 
 	protected:
+		//メンバ変数
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user;//システムへの入力によって得られたユーザ．Simulator単位で作成する.変更厳禁
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> real_user;//実際のユーザ.get_user()で取得可能
 		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> predicted_user;//予測されたユーザ．こちらを修正していく．
 
 		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> revising_dummy;//修正対象ダミー
-
+		
+		//メソッド
 		void initialize();
 		void revise_dummy_positions();
-		//void evaluate();
-		//void export_results();
-		//void terminate();
-
-
+	
 	public:
 		KatoMasterMethod(std::shared_ptr<Map::HayashidaDbMap const> map, std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager);
-		~KatoMasterMethod();
+		virtual ~KatoMasterMethod();
 
 		void run();
 	};

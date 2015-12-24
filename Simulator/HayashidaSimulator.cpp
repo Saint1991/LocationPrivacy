@@ -232,9 +232,9 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::input_visit_pois() {
 		//POI系列を作成する際の，選択範囲
-		Graph::Rectangle<Geography::LatLng> poi_range(BASE_LAT + 0.5 * length_of_all_POI_rect, BASE_LNG - 0.5 * length_of_all_POI_rect, BASE_LAT - 0.5 * length_of_all_POI_rect, BASE_LNG + 0.5 * length_of_all_POI_rect);
+		Graph::Rectangle<Geography::LatLng> pois_range = map_boundary.transform_rect_of_latlang_to_x_times(0.5);
 
-		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = get_pois_list(poi_range);
+		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = get_pois_list(pois_range);
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator iter = random_pois_list.begin();
 		for (int i = 0; i < POI_NUM; i++, iter++) {
 			input_poi_list.push_back(*iter);
@@ -597,7 +597,7 @@ namespace Simulation
 			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
 		}
 
-		std::cout << "Success Creating Input User" << std::endl;
+		std::cout << "Success Creating predicted User" << std::endl;
 	}
 
 	
@@ -803,6 +803,7 @@ namespace Simulation
 		input_visit_pois();
 		make_real_user();
 		make_predicted_user();
+		predicted_user = user;
 		//make_random_movement_user();
 		//make_same_predicted_user_as_real_user();
 	}
@@ -815,7 +816,7 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::make_requirement_list()
 	{
-		//加藤さん卒論手法の要求パラメータ
+		//加藤さん手法の要求パラメータ
 		//コンストラクタを作成する
 		/*-------------↓要求パラメータ---------------
 			double required_anonymous_area,
@@ -829,28 +830,11 @@ namespace Simulation
 			double speed_range = 0.5
 		---------------------------------------------*/
 
-		//加藤さん修論手法の要求パラメータ
-		//コンストラクタを作成する
-		/*-------------↓要求パラメータ---------------
-			double required_anonymous_area,
-			size_t dummy_num,
-			int service_interval,
-			double max_variation_of_pause_time,
-			double max_variation_of_speed,
-			int interval_of_base_phase,
-			int cycle_of_interval_of_base_phase,
-			int max_pause_time = 600,
-			int min_pause_time = 300,
-			double average_speed = 1.5,
-			double speed_range = 0.5
-		---------------------------------------------*/
 		//匿名領域決定の周期のパラメータはユーザの総移動時間/周期T個！
-
 
 		requirements = 
 		{
-			//std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 2, 90, 5, 2, 500, 200),
-			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 2, 90, 0.7, 0.7 , 5, 2)
+			std::make_shared<Requirement::KatoMethodRequirement>(600 * 600, 2, 90, 5, 2, 500, 200),
 		};
 	}
 
@@ -872,9 +856,18 @@ namespace Simulation
 		
 		for (std::list<std::shared_ptr<Requirement::KatoMethodRequirement const>>::iterator requirement = requirements.begin(); requirement != requirements.end(); requirement++)
 		{
+			/*
+			//加藤さん卒論手法
 			Method::KatoBachelorMethod kato_bachelor_method(map,user,*requirement,time_manager);
 			kato_bachelor_method.set_execution_callback(std::bind(&HayashidaSimulator::export_users_and_dummies_trajectory,this,std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			kato_bachelor_method.run();
+			*/
+			
+			//加藤さん修論手法
+			Method::KatoMasterMethod kato_master_method(map, user, *requirement, time_manager);
+			kato_master_method.set_execution_callback(std::bind(&HayashidaSimulator::export_users_and_dummies_trajectory, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+			kato_master_method.run();
+			
 		}
 	}
 

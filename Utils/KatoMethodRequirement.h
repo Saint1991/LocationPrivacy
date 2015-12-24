@@ -23,16 +23,9 @@ namespace Requirement {
 		int cycle_of_interval_of_base_num;//匿名領域確保のための基準地点を決定する間隔の周期
 
 		int service_interval;
-		
 
-		//加藤さん修論手法のみに必要なパラメータ
-		double max_variation_of_pause_time;
-		double max_variation_of_speed;
-
-		
 		KatoMethodRequirement();
-		
-		//加藤さん卒論手法のコンストラクタ
+		//加藤さん手法のコンストラクタ
 		KatoMethodRequirement(
 			double required_anonymous_area, 
 			size_t dummy_num, 
@@ -44,22 +37,7 @@ namespace Requirement {
 			double average_speed = 1.5, 
 			double speed_range = 0.5
 		);
-		
-		//加藤さん修論手法のコンストラクタ
-		KatoMethodRequirement(
-			double required_anonymous_area,
-			size_t dummy_num,
-			int service_interval,
-			double max_variation_of_pause_time,
-			double max_variation_of_speed,
-			int interval_of_base_phase,
-			int cycle_of_interval_of_base_phase,
-			int max_pause_time = 600,
-			int min_pause_time = 300,
-			double average_speed = 1.5,
-			double speed_range = 0.5
-		);
-
+	
 		virtual ~KatoMethodRequirement();
 	
 	};
