@@ -73,6 +73,8 @@ namespace Graph
 
 		int find_phase_of_time(time_t time) const;
 
+		std::vector<Graph::MapNodeIndicator> sub_trajectory(int from, int to) const;
+
 		Rectangle<Geography::LatLng> get_trajectory_boundary() const;
 		virtual void foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>)>& execute_function) const;
 		virtual void foreach_state(const std::function<void(int, long, const Graph::MapNodeIndicator&, std::shared_ptr<TrajectoryState<POSITION_TYPE> const>)>& execute_function) const;

@@ -1,8 +1,10 @@
 #pragma once
+#include "stdafx.h"
 #include "Coordinate.h"
 #include "LatLng.h"
 #include "EntityManager.h"
 #include "CrossInfo.h"
+#include "SequentialTree.h"
 
 namespace Evaluate
 {
@@ -33,7 +35,10 @@ namespace Evaluate
 		~CrossJudgementModule();
 		
 		std::vector<CrossInfo> get_all_cross_info_of_entity(Entity::entity_id id) const;
+		
 	};
 }
+
+#include "CrossJudgementModule.hpp"
 
 

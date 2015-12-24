@@ -209,6 +209,7 @@
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="CrossInfo.h" />
     <ClInclude Include="CrossJudgementModule.h" />
+    <ClInclude Include="CrossJudgementModule.hpp" />
     <ClInclude Include="DbSettings.h" />
     <ClInclude Include="DbSettingsFileLoader.h" />
     <ClInclude Include="DepthFirstConstIterator.h" />
@@ -299,7 +300,6 @@
     <ClCompile Include="BasicRequirement.cpp" />
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="CrossInfo.cpp" />
-    <ClCompile Include="CrossJudgementModule.cpp" />
     <ClCompile Include="DbSettings.cpp" />
     <ClCompile Include="DbSettingsFileLoader.cpp" />
     <ClCompile Include="dllmain.cpp">

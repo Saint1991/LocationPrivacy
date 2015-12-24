@@ -465,6 +465,9 @@
     <ClInclude Include="CrossJudgementModule.h">
       <Filter>ヘッダー ファイル\Evaluation</Filter>
     </ClInclude>
+    <ClInclude Include="CrossJudgementModule.hpp">
+      <Filter>ソース ファイル\Evaluation\MTC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -586,9 +589,6 @@
     </ClCompile>
     <ClCompile Include="RevisableTrajectory.cpp">
       <Filter>ソース ファイル\Graph\Trajectory</Filter>
-    </ClCompile>
-    <ClCompile Include="CrossJudgementModule.cpp">
-      <Filter>ソース ファイル\Evaluation\MTC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

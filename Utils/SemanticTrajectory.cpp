@@ -171,7 +171,6 @@ namespace Graph
 	}
 
 
-
 	///<summary>
 	/// ファイルエクスポート用トラジェクトリデータを取得する
 	///</summary>

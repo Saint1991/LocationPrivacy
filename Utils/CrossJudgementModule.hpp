@@ -1,5 +1,3 @@
-#include "stdafx.h"
-#include "CrossJudgementModule.h"
 
 namespace Evaluate
 {
@@ -9,11 +7,11 @@ namespace Evaluate
 	///</summary>
 	template <typename MAP_TYPE, typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
 	CrossJudgementModule<MAP_TYPE, POSITION_TYPE, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::CrossJudgementModule(
-		std::shared_ptr<MAP_TYPE const> map, 
-		std::shared_ptr<Entity::EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE> const> entities, 
+		std::shared_ptr<MAP_TYPE const> map,
+		std::shared_ptr<Entity::EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE> const> entities,
 		double move_speed,
 		const std::function<bool(std::shared_ptr<MAP_TYPE const>, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, double, long)>& cross_rule
-	)	: map(map), entities(entities), move_speed(move_speed), cross_rule(cross_rule)
+		) : map(map), entities(entities), move_speed(move_speed), cross_rule(cross_rule)
 	{
 	}
 
@@ -36,7 +34,7 @@ namespace Evaluate
 	}
 
 	///<summary>
-	/// 
+	/// 指定したエンティティの交差情報を全て取得する
 	///</summary>
 	template <typename MAP_TYPE, typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
 	std::vector<CrossInfo> CrossJudgementModule<MAP_TYPE, POSITION_TYPE, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::get_all_cross_info_of_entity(Entity::entity_id id) const
@@ -47,7 +45,7 @@ namespace Evaluate
 
 		timeslot->for_each_time([&](time_t time, long interval, int phase) {
 			if (phase == 0) return;
-			
+
 			//交差相手を格納する
 			std::vector<Entity::entity_id> cross_entities;
 
@@ -59,7 +57,7 @@ namespace Evaluate
 				std::shared_ptr<Entity::MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>> target_entity = entities->get_entity_by_id(target_id);
 				Graph::MapNodeIndicator target_previous_node = target_entity->read_node_pos_info_of_phase(phase - 1).first;
 				Graph::MapNodeIndicator target_current_node = target_entity->read_node_pos_info_of_phase(phase).first;
-			
+
 				//交差条件の判定
 				if (cross_rule(map, previous_node, current_node, target_previous_node, target_current_node, move_speed, interval)) {
 					cross_entities.push_back(target_id);

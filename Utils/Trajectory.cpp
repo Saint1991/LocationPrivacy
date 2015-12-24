@@ -184,6 +184,26 @@ namespace Graph
 		return timeslot->find_phase_of_time(time);
 	}
 
+
+	///<summary>
+	/// fromフェーズからtoフェーズまでのMapNodeIndicatorの系列を返す
+	/// toを-1に設定した場合fromから最後までを返す
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::vector<Graph::MapNodeIndicator> Trajectory<POSITION_TYPE>::sub_trajectory(int from, int to) const
+	{
+		from = from < 0 ? 0 : from;
+		to = phase_count() < to || to == -1 ? phase_count() - 1: to;
+		if (to < -1) throw std::invalid_argument("to must not less than -1");
+
+		std::vector<Graph::MapNodeIndicator> ret;
+		for (int phase = from; phase <= to; phase++) {
+			ret.push_back(visited_node_ids->at(phase));
+		}
+
+		return ret;
+	}
+
 	///<summary>
 	/// トラジェクトリ全体を包含する最小の長方形領域を取得する．
 	///</summary>
