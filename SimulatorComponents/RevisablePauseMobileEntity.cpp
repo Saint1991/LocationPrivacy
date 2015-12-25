@@ -40,7 +40,7 @@ namespace Entity
 				if (*iter2 == phase) iter->pause_time = new_pause_time;
 			}
 		}
-		std::invalid_argument("Not Found");
+		throw std::invalid_argument("Not Found");
 	}
 
 
@@ -50,8 +50,15 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::add_now_pause_time(int now_phase, double change_time)
 	{
-		now_pause_time_list.at(now_phase) += change_time;
-		if (now_pause_time_list.at(now_phase) < 0) std::invalid_argument("Now Pause Time is Negative Numer!!");
+		if (now_pause_time_list.at(now_phase) >= 0) {
+			now_pause_time_list.at(now_phase) += change_time;
+		}
+		//•‰‚Ì‚ÍC0.0‚ğİ’è‚µCrest_pause_time_when_departing‚É—]‚è•ª‚ğ“o˜^
+		else {
+			double rest_time = std::abs(change_time) - now_pause_time_list.at(now_phase);
+			set_now_pause_time(now_phase, 0.0);
+			set_rest_pause_time_when_departing(rest_time);
+		}
 	}
 	
 	///<summary>
@@ -60,9 +67,9 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_now_pause_time(int phase_id, double new_pause_time)
 	{
-		//Œ»İ’â~’†‚©‚Ânew_puase_time‚ªƒT[ƒrƒX—˜—pŠÔŠu‚æ‚è¬‚³‚©‚Á‚½‚çCŒ»İ’â~POI‚ÌC³‚ÅC‚»‚¤‚Å‚È‚¢ê‡‚ÍC¡Œü‚©‚Á‚Ä‚¢‚éPOI‚Ì’â~ŠÔ‚ÌC³
+		//Œ»İ’â~’†‚©‚Ânew_puase_time‚ªƒT[ƒrƒX—˜—pŠÔŠu‚æ‚è‘å‚«‚©‚Á‚½‚çCŒ»İ’â~POI‚ÌC³‚ÅC‚»‚¤‚Å‚È‚¢ê‡‚ÍC¡Œü‚©‚Á‚Ä‚¢‚éPOI‚Ì’â~ŠÔ‚ÌC³
 		double service_interval = trajectory->find_phase_of_time(1) - trajectory->find_phase_of_time(0);
-		int init_pause_phase = get_now_speed(phase_id) == 0.0 && get_now_pause_time(phase_id) < service_interval ? get_arrive_phase_using_pause_phase(phase_id) : get_arrive_phase();
+		int init_pause_phase = get_now_speed(phase_id) == 0.0 && get_now_pause_time(phase_id) > service_interval ? get_arrive_phase_using_pause_phase(phase_id) : get_arrive_phase();
 		for (int i = init_pause_phase; i <= phase_id; i++) {
 			now_pause_time_list.at(i) += new_pause_time;
 		}

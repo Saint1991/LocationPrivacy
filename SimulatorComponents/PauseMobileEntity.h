@@ -61,7 +61,7 @@ namespace Entity
 		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name = "");//MobileEntityのオーバーライド
 		std::pair<Graph::MapNodeIndicator, POSITION_TYPE> get_poi();
 		std::pair<Graph::MapNodeIndicator, POSITION_TYPE> get_any_poi(int i);
-		VisitedPoiInfo get_next_poi_info();
+		std::pair<Graph::MapNodeIndicator, POSITION_TYPE> get_next_poi();
 		void clear_visited_poi_info();
 		void sort_pois_order_by_arrive_phase();
 		int get_visited_pois_num();
@@ -79,10 +79,10 @@ namespace Entity
 		int get_any_arrive_phase(int i);
 
 		//訪問POI情報の停止時間(pause_time)に関するsetterとgetter
-		int get_pause_time() const;
-		int get_pause_time();
-		int get_pause_time_using_arrive_phase(int arrive_phase);
-		int get_any_poi_pause_time(int i);
+		double get_pause_time() const;
+		double get_pause_time();
+		double get_pause_time_using_arrive_phase(int arrive_phase);
+		double get_any_poi_pause_time(int i);
 		void set_pause_time(int phase, int pause_time);
 		void set_pause_time(int phase, double pause_time);
 		void set_pause_time_using_arrive_phase(int arrive_phase, double pause_time);

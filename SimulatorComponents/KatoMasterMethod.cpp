@@ -152,7 +152,10 @@ namespace Method
 			Geography::LatLng previous_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase - 1).second;
 			Geography::LatLng now_real_user_position = *real_user->read_node_pos_info_of_phase(now_phase).second;
 			Geography::LatLng now_predicted_user_position = *predicted_user->read_node_pos_info_of_phase(now_phase).second;
-			
+
+			//そもそも，同じ場所にいたら，NO_CHANGE
+			if (now_predicted_user_position == now_real_user_position) return NO_CHANGE;
+
 			double real_user_dist = Geography::GeoCalculation::lambert_distance(*real_user->read_position_of_phase(now_phase - 1), *real_user->read_position_of_phase(now_phase));
 			double predicted_user_dist = Geography::GeoCalculation::lambert_distance(*predicted_user->read_position_of_phase(now_phase - 1), *predicted_user->read_position_of_phase(now_phase));
 
@@ -160,40 +163,33 @@ namespace Method
 			double predicted_uesr_rest_time = predicted_user->get_rest_pause_time_when_departing_using_pause_phase(now_phase - 1);
 
 			double real_user_speed = real_user_dist / (requirement->service_interval - real_user_rest_time);
-			double predicted_user_speed = predicted_user_dist / (requirement->service_interval - real_user_rest_time);
+			double predicted_user_speed = predicted_user_dist / (requirement->service_interval - predicted_uesr_rest_time);
 
-			
-			//もし同じ場所にいたら，NO_CHANGE
-			if (now_predicted_user_position == now_real_user_position) {
-				Tu = 0.0;
-				return NO_CHANGE;
+
+			//もしrest_time分を考慮して，逆算して，速度が同じなら，停止時間の変更と判断
+			if (real_user_speed == predicted_user_speed) {
+				return check_user_pause_time(now_phase);
 			}
 			else {
-				//もしrest_time分を考慮して，逆算して，速度が同じなら，停止時間の変更と判断
-				if (real_user_speed == predicted_user_speed) {
-					return check_user_pause_time(now_phase);
+				//realの方が速度が大きい場合
+				if (real_user_speed > predicted_user_speed) {
+					double change_time =
+						map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, real_user_speed)
+						- map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, predicted_user_speed);
+					Tu += change_time;
+					return FASTER_SPEED;
 				}
+				//predictedの方が速度が大きい場合
 				else {
-					//移動距離がrealのほうが大きいなら
-					if (real_user_dist > predicted_user_dist) {
-						//change_timeの差分を求める
-						//ここで，どれくらい速度が大きくなったかも求めてしまう．
-						//今はmapを参照しているけど，計算量に関わってきそうだから要検討
-						double real_speed = real_user_dist / requirement->service_interval;
-						Tu += map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase).first, real_user->get_poi().first, real_speed);
-						return FASTER_SPEED;
-					}
-					else {
-						//change_timeの差分を求める
-						//ここで，どれくらい速度が小さくなったかも求めてしまう．	
-						double real_speed = real_user_dist / requirement->service_interval;
-						Tu -= map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase).first, real_user->get_poi().first, real_speed);;
-						return SLOER_SPEED;
-					}
+					double change_time =
+						map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, real_user_speed)
+						- map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, predicted_user_speed);
+					Tu += change_time;
+					return SLOER_SPEED;
 				}
 			}
 		}
-
+		
 
 		///<summary>
 		/// ユーザの行動プラン変更の判断
@@ -425,9 +421,11 @@ namespace Method
 			if (Tu == 0.0) break;
 		}
 
+		changed_poi_num_id = 1;//一旦リセット
+
 		//停止時間が変更されたPOIの数だけ，次の経路を再計算
-		for(int i = 0; i < changed_poi_num_id; i++, visited_poi_id++) {
-			int revise_phase = revising_dummy->check_pause_condition(phase_id) ? phase_id : revising_dummy->get_any_arrive_phase(visited_poi_id);
+		for(int i = 0; i < changed_poi_num_id; i++, visited_poi_id++, changed_poi_num_id++) {
+			int revise_phase = revising_dummy->check_pause_condition(phase_id) && changed_poi_num_id == 1 ? phase_id : revising_dummy->get_any_arrive_phase(visited_poi_id);
 			recalculation_path(revising_dummy->get_any_poi(visited_poi_id).first, revising_dummy->get_any_poi(visited_poi_id + 1).first, revise_phase);
 		}
 

@@ -110,16 +110,20 @@ namespace Entity
 	std::pair<Graph::MapNodeIndicator, POSITION_TYPE> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_poi(int i)
 	{
 		int last_phase = trajectory->phase_count() - 1;
-		return i <= get_visited_pois_num() ? visited_pois_info_list.at(i).visited_poi : std::make_pair(trajectory->read_node_pos_info_of_phase(last_phase).first, *trajectory->read_node_pos_info_of_phase(last_phase).second);
+		return i <= get_visited_pois_num() 
+			? visited_pois_info_list.at(i).visited_poi : std::make_pair(trajectory->read_node_pos_info_of_phase(last_phase).first, *trajectory->read_node_pos_info_of_phase(last_phase).second);
 	}
 
 	///<summary>
 	/// Ÿ‚ÉŒü‚©‚¤POI‚Ìî•ñ‚ğæ“¾
+	/// ‚à‚µŸ‚Ì‚Ì—\’è–K–âPOI‚ª‚È‚©‚Á‚½ê‡‚ÍCÅIƒtƒF[ƒY‚Ìposition‚ğ•Ô‚è’l‚Æ‚·‚éD
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	VisitedPoiInfo PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_next_poi_info()
+	std::pair<Graph::MapNodeIndicator, POSITION_TYPE> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_next_poi()
 	{
-		return visited_pois_info_list.at(visited_pois_info_list_id + 1);
+		int last_phase = trajectory->phase_count() - 1;
+		return (visited_pois_info_list_id + 1) <= get_visited_pois_num()
+			? visited_pois_info_list.at(visited_pois_info_list_id + 1).visited_poi : std::make_pair(trajectory->read_node_pos_info_of_phase(last_phase).first, *trajectory->read_node_pos_info_of_phase(last_phase).second);
 	}
 	
 
@@ -162,7 +166,7 @@ namespace Entity
 	}
 
 	///<summary>
-	/// Ÿ‚É–K–â—\’è‚Ì’â~POI‚Ì“’…‚·‚éphases‚ğ‹‚ß‚éD
+	/// Ÿ‚É–K–â—\’è‚Ì–K–âPOI‚Ì’â~ƒtƒF[ƒY‚ğ‹‚ß‚éD
 	/// ’â~’†‚Ìê‡‚ÍCŒ»İphase‚ğ•Ô‚µCˆÚ“®’†‚Ìê‡‚ÍCŒü‚©‚Á‚Ä‚¢‚é–K–â’n“_‚Ì—\’è‚µ‚Ä‚¢‚é“’…ŠÔ‚É’l‚·‚éphase‚ğ•Ô‚·
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
@@ -172,8 +176,7 @@ namespace Entity
 	}
 
 	///<summary>
-	/// Ÿ‚É–K–â—\’è‚Ì’â~POI‚Ì“’…‚·‚éphases‚ğ‹‚ß‚éD
-	/// ’â~’†‚Ìê‡‚ÍCŒ»İphase‚ğ•Ô‚µCˆÚ“®’†‚Ìê‡‚ÍCŒü‚©‚Á‚Ä‚¢‚é–K–â’n“_‚Ì—\’è‚µ‚Ä‚¢‚é“’…ŠÔ‚É’l‚·‚éphase‚ğ•Ô‚·
+	/// ‘S‚Ä‚Ì–K–â—\’èPOI‚Ì’â~phase‚ğ‹‚ß‚éD
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	std::vector<int> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_all_pause_phases()
@@ -253,7 +256,7 @@ namespace Entity
 	/// –K–âPOI‚Ì’â~ŠÔ‚ğ•ÏX•s‰Â”\‚Èó‘Ô‚Å‹‚ß‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time() const
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time() const
 	{
 		return visited_pois_info_list.at(visited_pois_info_list_id).pause_time;
 	}
@@ -262,7 +265,7 @@ namespace Entity
 	/// –K–âPOI‚Ì’â~ŠÔ‚ğ•ÏX‰Â”\‚Èó‘Ô‚Å‹‚ß‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time()
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time()
 	{
 		return visited_pois_info_list.at(visited_pois_info_list_id).pause_time;
 	}
@@ -272,7 +275,7 @@ namespace Entity
 	/// –K–âPOI‚Ì’â~ŠÔ‚ğ•ÏX‰Â”\‚Èó‘Ô‚Å‹‚ß‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time_using_arrive_phase(int arrive_phase)
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time_using_arrive_phase(int arrive_phase)
 	{
 		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
 			if (iter->arrive_phase == arrive_phase) {
@@ -286,9 +289,9 @@ namespace Entity
 	/// i”Ô–Ú‚É–K–â—\’è‚Ì’â~ŠÔ‚ğ•ÏX‰Â”\‚Èó‘Ô‚Å‹‚ß‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_poi_pause_time(int i)
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_poi_pause_time(int i)
 	{
-		return visited_pois_info_list.at(i).pause_time;
+		return i <= get_visited_pois_num() ? visited_pois_info_list.at(i).pause_time : 0;
 	}
 
 	///<summary>
