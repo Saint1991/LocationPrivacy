@@ -172,6 +172,24 @@ namespace Entity
 	}
 
 	///<summary>
+	/// Ÿ‚É–K–â—\’è‚Ì’â~POI‚Ì“’…‚·‚éphases‚ğ‹‚ß‚éD
+	/// ’â~’†‚Ìê‡‚ÍCŒ»İphase‚ğ•Ô‚µCˆÚ“®’†‚Ìê‡‚ÍCŒü‚©‚Á‚Ä‚¢‚é–K–â’n“_‚Ì—\’è‚µ‚Ä‚¢‚é“’…ŠÔ‚É’l‚·‚éphase‚ğ•Ô‚·
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	std::vector<int> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_all_pause_phases()
+	{
+		std::vector<int> all_pause_phases;
+
+		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
+			for (std::vector<int>::iterator iter2 = iter->pause_phases.begin(); iter2 != iter->pause_phases.end(); iter2++) {
+				all_pause_phases.push_back(*iter2);
+			}
+		}
+
+		return all_pause_phases;
+	}
+
+	///<summary>
 	/// Ÿ‚É–K–â—\’è‚Ì’â~POI‚Ì“’…‚·‚éphase‚ğset‚·‚éD
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>

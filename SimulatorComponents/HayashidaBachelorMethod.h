@@ -31,9 +31,10 @@ namespace Method {
 
 		void make_predicted_user();
 		bool check_user_going_to_sheduled_POI();
-		void repredicted_user_trajectory();
+		void re_predicted_user_trajectory();
 
 		void re_setting_of_user_cross();
+		void re_traveling_salesman_problem();
 
 		//void initialize();
 		void adjust_dummy_positions();

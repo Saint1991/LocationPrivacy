@@ -68,8 +68,10 @@ namespace Entity
 
 		//pause_phaseに関するsetterとgetter
 		std::vector<int> get_pause_phases();
+		std::vector<int> get_all_pause_phases();
 		void set_pause_phases(int pause_phase);
 		void set_pause_phases_using_arrive_phase(int arrive_phase, int pause_phase);
+
 
 		//arrive_phaseに関するgetter.ただし，setはvisitedPOI登録時に設定を行うため不要．
 		int get_arrive_phase();

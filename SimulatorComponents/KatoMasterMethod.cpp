@@ -394,8 +394,8 @@ namespace Method
 		{
 			//停止中or向かっているPOIの停止時間を取得
 			double pause_time = revising_dummy->get_any_poi_pause_time(i);
-			//修正対象のフェーズを取得．現在停止中→現在のフェーズ，移動中→次の予定到着フェーズ
-			int revise_phase = revising_dummy->check_pause_condition(phase_id) ? phase_id : revising_dummy->get_any_arrive_phase(i);
+			//修正対象のフェーズを取得．現在停止中で，一回目の訂正→現在のフェーズ，移動中→次の予定到着フェーズ
+			int revise_phase = revising_dummy->check_pause_condition(phase_id) && changed_poi_num_id == 1 ? phase_id : revising_dummy->get_any_arrive_phase(i);
 
 			//最大変化量
 			double max_variable_value = calc_max_variable_pause_time(pause_time).first;
@@ -414,7 +414,7 @@ namespace Method
 				if (pause_time - min_variable_value < requirement->min_pause_time) change_time = requirement->min_pause_time - pause_time;
 			}
 
-			double new_pause_time = change_time + revising_dummy->get_pause_time();
+			double new_pause_time = change_time + pause_time;
 			
 			//change_timeを現在の残り停止時間に記録
 			revising_dummy->add_now_pause_time(revise_phase, change_time);
