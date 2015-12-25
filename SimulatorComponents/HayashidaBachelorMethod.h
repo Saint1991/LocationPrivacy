@@ -1,3 +1,10 @@
+#ifdef SIMULATORCOMPONENTS_EXPORTS
+#define HAYASHIDA_BACHELOR_METHOD_API __declspec(dllexport)
+#else
+#define HAYASHIDA_BACHELOR_METHOD_API __declspec(dllimport)
+#endif
+
+
 #pragma once
 #include "IProposedMethod.h"
 #include "BasicDbMap.h"
@@ -17,7 +24,7 @@ namespace Method {
 	///<summary>
 	/// 林田さん学部卒業論文の提案手法の実装
 	///</summary>
-	class HayashidaBachelorMethod : public KatoMasterMethod
+	class HAYASHIDA_BACHELOR_METHOD_API HayashidaBachelorMethod : public KatoMasterMethod
 	{
 	protected:
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user;

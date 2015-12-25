@@ -60,8 +60,15 @@ namespace Method
 	///</summary>
 	void HayashidaBachelorMethod::adjust_dummy_positions()
 	{
+		clear_visited_pois_info_list_id_of_users();//usersのvisited_pois_info_list_idのクリア
 		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++) {
 			for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++) {
+				revising_dummy = entities->get_dummy_by_id(dummy_id);
+				//ダミーのvisited_pois_info_list_idの更新
+				if ((phase_id - 1) == revising_dummy->get_pause_phases().back()) revising_dummy->increment_visited_pois_info_list_id();
+				//ユーザのvisited_pois_info_list_idの更新
+				increment_visited_pois_info_list_id_of_users(phase_id);
+				
 				if (!check_user_going_to_sheduled_POI()) {
 					repredicted_user_trajectory();
 					re_setting_of_user_cross();
@@ -111,7 +118,6 @@ namespace Method
 		Method::KatoBachelorMethod::decide_dummy_positions();
 
 		//ここでユーザの行動の予測やダミーの行動を修正する(林田さん卒論手法[Hayashida 14])
-		clear_visited_pois_info_list_id_of_users();//usersのvisited_pois_info_list_idのクリア
 		adjust_dummy_positions();
 		
 		//ここで計測を終了

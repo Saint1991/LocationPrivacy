@@ -59,8 +59,8 @@ namespace Entity
 		//訪問POI(visited_poi)に関するsetterとgetter
 		void set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position);
 		void set_crossing_position_of_phase(int phase, const Graph::MapNodeIndicator& node_id, Geography::LatLng position, const std::string& venue_name = "");//MobileEntityのオーバーライド
-		std::pair<Graph::MapNodeIndicator, Geography::LatLng> get_poi();
-		std::pair<Graph::MapNodeIndicator, Geography::LatLng> get_any_poi(int i);
+		std::pair<Graph::MapNodeIndicator, POSITION_TYPE> get_poi();
+		std::pair<Graph::MapNodeIndicator, POSITION_TYPE> get_any_poi(int i);
 		VisitedPoiInfo get_next_poi_info();
 		void clear_visited_poi_info();
 		void sort_pois_order_by_arrive_phase();

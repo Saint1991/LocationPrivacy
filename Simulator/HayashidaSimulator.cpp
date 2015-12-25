@@ -617,9 +617,12 @@ namespace Simulation
 	void HayashidaSimulator::make_real_user() {
 		//---------------------------POI訪問順序を決定---------------------------------------------
 		int phase_id = 0;
-
+		
 		//userのvisited_poisを用いて，始点がstart_poiの巡回セールスマン問題の解のうち，逆数の分布に従い，ある結果を抽出する．
-		std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi = the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(input_poi_list, ALPHA);
+		//std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi = the_power_alpha_of_the_reciprocal_of_the_ratio_of_the_optimal_distance(input_poi_list, ALPHA);
+		//↓デバッグ用．T.S.P.の最適解
+		std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi = traveling_salesman_problem(input_poi_list);
+
 
 		int dest_rest_time = 0;//phaseの到着時間と実際の到着時間の差分.最初だけ0
 		//最初の点を登録
@@ -885,7 +888,7 @@ namespace Simulation
 			*/
 
 			//林田さん卒論手法
-			Method::KatoMasterMethod hayashida_bachelor_method(map, user, *requirement, time_manager);
+			Method::HayashidaBachelorMethod hayashida_bachelor_method(map, user, *requirement, time_manager);
 			hayashida_bachelor_method.set_execution_callback(std::bind(&HayashidaSimulator::export_users_and_dummies_trajectory, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			hayashida_bachelor_method.run();
 		}

@@ -97,9 +97,20 @@ namespace Entity
 	/// Œ»İ’â~’†orŒ»İŒü‚©‚Á‚Ä‚¢‚éPOI‚ğæ“¾
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	std::pair<Graph::MapNodeIndicator, Geography::LatLng> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_poi()
+	std::pair<Graph::MapNodeIndicator, POSITION_TYPE> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_poi()
 	{
 		return visited_pois_info_list.at(visited_pois_info_list_id).visited_poi;
+	}
+
+	///<summary>
+	/// i”Ô–Ú‚É–K–â—\’è‚ÌPOI‚ğæ“¾
+	/// ‚à‚µi”Ô–Ú‚Ì—\’è–K–âPOI‚ª‚È‚©‚Á‚½ê‡‚ÍCÅIƒtƒF[ƒY‚Ìposition‚ğ•Ô‚è’l‚Æ‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	std::pair<Graph::MapNodeIndicator, POSITION_TYPE> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_poi(int i)
+	{
+		int last_phase = trajectory->phase_count() - 1;
+		return i <= get_visited_pois_num() ? visited_pois_info_list.at(i).visited_poi : std::make_pair(trajectory->read_node_pos_info_of_phase(last_phase).first, *trajectory->read_node_pos_info_of_phase(last_phase).second);
 	}
 
 	///<summary>
@@ -110,18 +121,7 @@ namespace Entity
 	{
 		return visited_pois_info_list.at(visited_pois_info_list_id + 1);
 	}
-
-
-	///<summary>
-	/// i”Ô–Ú‚É–K–â—\’è‚ÌPOI‚ğæ“¾
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	std::pair<Graph::MapNodeIndicator, Geography::LatLng> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_poi(int i)
-	{
-		return visited_pois_info_list.at(i).visited_poi;
-	}
-
-
+	
 
 	///<summary>
 	/// visited_poi_info‚Ìî•ñ‚ğƒNƒŠƒA‚·‚é

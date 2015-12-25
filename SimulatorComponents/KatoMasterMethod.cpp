@@ -108,7 +108,7 @@ namespace Method
 			if (predicted_user->check_pause_condition(now_phase) && real_user->check_pause_condition(now_phase)) {
 				return NO_CHANGE;
 			}
-			else if(predicted_user->check_pause_condition(now_phase) || real_user->check_pause_condition(now_phase)){
+			else if (predicted_user->check_pause_condition(now_phase) || real_user->check_pause_condition(now_phase)) {
 				//もしrealのほうが停止フラグが0で(出発していて)，predictが1なら,予定より早く出発
 				if (predicted_user->check_pause_condition(now_phase) == true && real_user->check_pause_condition(now_phase) == false) {
 					//change_timeの差分を求める
@@ -122,7 +122,8 @@ namespace Method
 				}
 			}
 			//両方フラグが0なら(速度変更からジャンプして飛んできた場合)，速度変更でなく，rest_time分をずれを検知
-			else {
+			else{
+				if (now_phase == 0) throw std::invalid_argument(" It must set pause time at init visited POI !! ");
 				double real_user_dist = Geography::GeoCalculation::lambert_distance(*real_user->read_position_of_phase(now_phase - 1), *real_user->read_position_of_phase(now_phase));
 				double predicted_user_dist = Geography::GeoCalculation::lambert_distance(*predicted_user->read_position_of_phase(now_phase - 1), *predicted_user->read_position_of_phase(now_phase));
 				//移動距離がrealのほうが大きいなら
@@ -343,26 +344,35 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_dummy_trajectory(int phase_id)
 	{
-		//poiに止まっている時
+		//全ての停止地点の到着時間を変更し，Tu分変更させる．
+		revise_dummy_pause_time(phase_id);
+		if (Tu != 0.0) revise_dummy_path(phase_id);
+		if (Tu != 0.0) revise_dummy_speed(phase_id);
+		if (Tu != 0.0) revise_dummy_visit_poi(phase_id);
+		
+		//visited_poi情報の更新
+		update_visited_pois_info_of_dummy();
+
+
+		/*
+		//加藤さんの修論手法のアルゴリズムでは，
+		//poiに停止している時と，現在移動中の時は別にして考えているけど，
+		//visited_pois_info_list_idを取得する時に，その2つは区別しているので，
+		//場合分けする必要はない(はず)
 		if (revising_dummy->check_pause_condition(phase_id)) {
-			//全ての停止地点の到着時間を変更し，Tu分変更させる．
 			revise_dummy_pause_time(phase_id);
 			if (Tu != 0.0) revise_dummy_path(phase_id);
 			if (Tu != 0.0) revise_dummy_speed(phase_id);
 			if (Tu != 0.0) revise_dummy_visit_poi(phase_id);
 		}
-		//現在移動中で，プランと同じpoiに向かっている場合，向かっているpoiに停止中だとして考える
 		else {
 			//全ての停止地点の到着時間を変更し，Tu分変更させる．
 			revise_dummy_pause_time(phase_id);
-			revise_dummy_path(phase_id);
-			revise_dummy_speed(phase_id);
-			if (Tu != 0) revise_dummy_visit_poi(phase_id);
-
+			if (Tu != 0.0)revise_dummy_path(phase_id);
+			if (Tu != 0.0) revise_dummy_speed(phase_id);
+			if (Tu != 0.0) revise_dummy_visit_poi(phase_id);
 		}
-
-		//visited_poi情報の更新
-		update_visited_pois_info_of_dummy();
+		*/
 	}
 
 
@@ -374,6 +384,7 @@ namespace Method
 	void KatoMasterMethod::revise_dummy_pause_time(int phase_id)
 	{
 		int changed_poi_num_id = 1;//停止時間が変更されたpoiの数を記録するためのid
+		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
 
 		//変更前のtrajectoryを保持
 
@@ -383,7 +394,8 @@ namespace Method
 		{
 			//停止中or向かっているPOIの停止時間を取得
 			double pause_time = revising_dummy->get_any_poi_pause_time(i);
-			double revise_phase = changed_poi_num_id == 1 ? phase_id : revising_dummy->get_any_arrive_phase(i);
+			//修正対象のフェーズを取得．現在停止中→現在のフェーズ，移動中→次の予定到着フェーズ
+			int revise_phase = revising_dummy->check_pause_condition(phase_id) ? phase_id : revising_dummy->get_any_arrive_phase(i);
 
 			//最大変化量
 			double max_variable_value = calc_max_variable_pause_time(pause_time).first;
@@ -414,8 +426,8 @@ namespace Method
 		}
 
 		//停止時間が変更されたPOIの数だけ，次の経路を再計算
-		for (int k = revising_dummy->get_visited_pois_info_list_id(); k < changed_poi_num_id; k++) {
-			recalculation_path(revising_dummy->get_any_poi(k).first, revising_dummy->get_any_poi(k +1).first, phase_id);
+		for(int i = 0; i < changed_poi_num_id; i++, visited_poi_id++) {
+			recalculation_path(revising_dummy->get_any_poi(visited_poi_id).first, revising_dummy->get_any_poi(visited_poi_id + 1).first, phase_id);
 		}
 
 		//変更されなかった分はコピーで対応
@@ -439,6 +451,7 @@ namespace Method
 	void KatoMasterMethod::revise_dummy_speed(int phase_id)
 	{
 		int changed_poi_num_id = 1;//停止時間が変更されたpoiの数を記録するためのid
+		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
 
 		//全停止時間分，ダミーの停止時間を修正する．
 		for (int i = revising_dummy->get_visited_pois_info_list_id(); i <= revising_dummy->get_visited_pois_num(); i++, changed_poi_num_id++)
@@ -482,8 +495,8 @@ namespace Method
 		}
 
 		//移動速度が変更されたPOIの数だけ，次の経路を再計算
-		for (int k = revising_dummy->get_visited_pois_info_list_id(); k < changed_poi_num_id; k++) {
-			recalculation_path(revising_dummy->get_any_poi(k).first, revising_dummy->get_any_poi(k + 1).first, phase_id);
+		for (int i = 0; i < changed_poi_num_id; i++, visited_poi_id++) {
+			recalculation_path(revising_dummy->get_any_poi(visited_poi_id).first, revising_dummy->get_any_poi(visited_poi_id + 1).first, phase_id);
 		}
 	}
 
@@ -506,8 +519,7 @@ namespace Method
 	{
 		double rest_pause_time = revising_dummy->get_now_pause_time(phase_id);
 		lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, requirement->service_interval);
-
-
+		
 		//現在phaseから，now_puase_timeが0以下になるまで，停止情報を登録
 		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 		{
@@ -613,14 +625,6 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_dummy_positions(int phase_id, entity_id dummy_id)
 	{
-		revising_dummy = entities->get_dummy_by_id(dummy_id);
-		//ダミーのvisited_pois_info_list_idの更新
-		entities->for_each_dummy([=](entity_id dummy_id, std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>>& dummy)
-		{
-			if ((phase_id - 1) == dummy->get_pause_phases().back()) dummy->increment_visited_pois_info_list_id();
-		});
-		//ユーザのvisited_pois_info_list_idの更新
-		increment_visited_pois_info_list_id_of_users(phase_id);
 		//ユーザの行動判定及びダミーの修正
 		if (check_going_same_poi_as_plan()) {
 			if (check_user_plan(phase_id) != NO_CHANGE) {
@@ -641,11 +645,17 @@ namespace Method
 
 		//ここが実行部分(各時刻のダミー位置を計算する)(加藤さん卒論手法)[Kato 13]
 		Method::KatoBachelorMethod::decide_dummy_positions();
-
-		//ここでユーザの行動の予測やダミーの行動を修正する(加藤さん修論手法)[Kato 14]
 		clear_visited_pois_info_list_id_of_users();//usersのvisited_pois_info_list_idのクリア
+		
+		//ここでユーザの行動の予測やダミーの行動を修正する(加藤さん修論手法)[Kato 14]
 		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++){
 			for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++){
+				revising_dummy = entities->get_dummy_by_id(dummy_id);
+				//ダミーのvisited_pois_info_list_idの更新
+				if ((phase_id - 1) == revising_dummy->get_pause_phases().back()) revising_dummy->increment_visited_pois_info_list_id();
+				//ユーザのvisited_pois_info_list_idの更新
+				increment_visited_pois_info_list_id_of_users(phase_id);
+				//ダミーの行動プランの修正
 				revise_dummy_positions(phase_id, dummy_id);
 			}
 		}
