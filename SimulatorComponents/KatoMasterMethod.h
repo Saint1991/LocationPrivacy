@@ -49,12 +49,12 @@ namespace Method {
 			bool check_on_the_path(int phase_id);
 
 		void update_user_plan(ChangeParameter check_parameter, int phase_id);
-			void modification_of_user_trajectory_when_LONGER_PAUSE_TIME(ChangeParameter check_parameter, int phase_id);//user‚Ì’â~ŠÔ‚ÌC³
-			void modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(ChangeParameter check_parameter, int phase_id);//user‚Ì’â~ŠÔ‚ÌC³
-			void modification_of_user_trajectory_when_PATH(ChangeParameter check_parameter, int phase_id);//user‚ÌˆÚ“®Œo˜H‚ÌC³
-			void modification_of_user_trajectory_when_FASTER_SPEED(ChangeParameter check_parameter, int phase_id);//user‚Ìs“®‘¬“x‚ÌC³
-			void modification_of_user_trajectory_when_SLOER_SPEED(ChangeParameter check_parameter, int phase_id);//user‚Ìs“®‘¬“x‚ÌC³
-			void modification_of_user_trajectory_when_VISIT_POI(ChangeParameter check_parameter, int phase_id);//user‚Ì’â~’n“_‚ÌC³
+			void modification_of_user_trajectory_when_LONGER_PAUSE_TIME(int phase_id);//user‚Ì’â~ŠÔ‚ÌC³
+			void modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(int phase_id);//user‚Ì’â~ŠÔ‚ÌC³
+			void modification_of_user_trajectory_when_PATH(int phase_id);//user‚ÌˆÚ“®Œo˜H‚ÌC³
+			void modification_of_user_trajectory_when_FASTER_SPEED(int phase_id);//user‚Ìs“®‘¬“x‚ÌC³
+			void modification_of_user_trajectory_when_SLOER_SPEED(int phase_id);//user‚Ìs“®‘¬“x‚ÌC³
+			void modification_of_user_trajectory_when_VISIT_POI(int phase_id);//user‚Ì’â~’n“_‚ÌC³
 
 		void revise_dummy_trajectory(int phase_id);//ƒ_ƒ~[‚Ìs“®ƒvƒ‰ƒ“‚ğC³‚·‚é
 			void revise_dummy_pause_time(int phase_id);//ƒ_ƒ~[‚Ì’â~ŠÔ‚ÌC³
@@ -62,7 +62,7 @@ namespace Method {
 			void revise_dummy_speed(int phase_id);//ƒ_ƒ~[‚Ìs“®‘¬“x‚ÌC³
 			void revise_dummy_visit_poi(int phase_id);//ƒ_ƒ~[‚Ì’â~’n“_‚ÌC³
 			
-		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int phase_id);
+		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int revise_phase);
 		void update_visited_pois_info_of_dummy();
 
 		void increment_visited_pois_info_list_id_of_users(int phase_id);

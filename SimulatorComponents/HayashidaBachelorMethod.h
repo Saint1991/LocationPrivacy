@@ -35,7 +35,7 @@ namespace Method {
 
 		void re_setting_of_user_cross();
 
-		void initialize();
+		//void initialize();
 		void adjust_dummy_positions();
 		//void evaluate();
 		//void export_results();

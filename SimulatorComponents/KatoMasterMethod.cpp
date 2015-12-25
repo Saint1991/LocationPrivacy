@@ -15,6 +15,8 @@ namespace Method
 		//input_userとreal_userの生成．この2つは変更しない
 		input_user = entities->get_user();
 		real_user = entities->get_user()->get_real_user();
+		//predicted_userのコピー．とりあえず今だけユーザごとコピーする形で
+		predicted_user = entities->get_user();
 	}
 
 	///<summary>
@@ -35,9 +37,7 @@ namespace Method
 		//std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> predicted_user_positions = predicted_user->get_trajectory()->get_positions();
 
 		//std::copy(input_user_positions->begin(), input_user_positions->end(), predicted_user_positions->begin());
-		
-		//とりあえず今だけこの形で
-		predicted_user = entities->get_user();
+	
 		return predicted_user;
 	}
 
@@ -244,22 +244,22 @@ namespace Method
 	{
 		switch (check_parameter) {
 		case LONGER_PAUSE_TIME:
-			modification_of_user_trajectory_when_LONGER_PAUSE_TIME(check_parameter, phase_id);
+			modification_of_user_trajectory_when_LONGER_PAUSE_TIME(phase_id);
 			break;
 		case SHORTER_PAUSE_TIME:
-			modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(check_parameter, phase_id);
+			modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(phase_id);
 			break;
 		case PATH:
-			modification_of_user_trajectory_when_PATH(check_parameter, phase_id);
+			modification_of_user_trajectory_when_PATH(phase_id);
 			break;
 		case FASTER_SPEED:
-			modification_of_user_trajectory_when_FASTER_SPEED(check_parameter, phase_id);
+			modification_of_user_trajectory_when_FASTER_SPEED(phase_id);
 			break;
 		case SLOER_SPEED:
-			modification_of_user_trajectory_when_SLOER_SPEED(check_parameter, phase_id);
+			modification_of_user_trajectory_when_SLOER_SPEED(phase_id);
 			break;
 		case VISIT_POI:
-			modification_of_user_trajectory_when_VISIT_POI(check_parameter, phase_id);
+			modification_of_user_trajectory_when_VISIT_POI(phase_id);
 			break;
 		}
 	}
@@ -267,7 +267,7 @@ namespace Method
 	///<summary>
 	/// ユーザの停止時間が予定より長い時のpredicted_userの修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_LONGER_PAUSE_TIME(ChangeParameter check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_LONGER_PAUSE_TIME(int phase_id)
 	{
 		if (Tu == requirement->service_interval) {
 			//trajectoryをずらすことで対応
@@ -289,7 +289,7 @@ namespace Method
 	///<summary>
 	/// ユーザの停止時間が予定より短い時のpredicted_userの修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(ChangeParameter check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(int phase_id)
 	{
 		if (Tu == requirement->service_interval) {
 			//trajectoryをずらすことで対応
@@ -306,7 +306,7 @@ namespace Method
 	///<summary>
 	/// ユーザのパスの修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_PATH(ChangeParameter check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_PATH(int phase_id)
 	{
 
 	}
@@ -314,7 +314,7 @@ namespace Method
 	///<summary>
 	/// ユーザの移動速度が予定より早い時の修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_FASTER_SPEED(ChangeParameter check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_FASTER_SPEED(int phase_id)
 	{
 		double real_user_speed = 0.0;
 
@@ -323,7 +323,7 @@ namespace Method
 	///<summary>
 	/// ユーザの移動速度が予定より遅い時の修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_SLOER_SPEED(ChangeParameter check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_SLOER_SPEED(int phase_id)
 	{
 
 	}
@@ -332,7 +332,7 @@ namespace Method
 	///<summary>
 	/// ユーザの停止位置の修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_VISIT_POI(ChangeParameter check_parameter, int phase_id)
+	void KatoMasterMethod::modification_of_user_trajectory_when_VISIT_POI(int phase_id)
 	{
 
 	}
@@ -410,8 +410,8 @@ namespace Method
 				if (max_variable_value + pause_time > requirement->max_pause_time) change_time = requirement->max_pause_time - pause_time;
 			}
 			else {
-				if (std::abs(Tu) < min_variable_value) change_time = min_variable_value;
-				if (min_variable_value + pause_time < requirement->min_pause_time) change_time = pause_time - requirement->min_pause_time;
+				if (std::abs(Tu) > min_variable_value) change_time = - min_variable_value;
+				if (pause_time - min_variable_value < requirement->min_pause_time) change_time = requirement->min_pause_time - pause_time;
 			}
 
 			double new_pause_time = change_time + revising_dummy->get_pause_time();
@@ -427,7 +427,8 @@ namespace Method
 
 		//停止時間が変更されたPOIの数だけ，次の経路を再計算
 		for(int i = 0; i < changed_poi_num_id; i++, visited_poi_id++) {
-			recalculation_path(revising_dummy->get_any_poi(visited_poi_id).first, revising_dummy->get_any_poi(visited_poi_id + 1).first, phase_id);
+			int revise_phase = revising_dummy->check_pause_condition(phase_id) ? phase_id : revising_dummy->get_any_arrive_phase(visited_poi_id);
+			recalculation_path(revising_dummy->get_any_poi(visited_poi_id).first, revising_dummy->get_any_poi(visited_poi_id + 1).first, revise_phase);
 		}
 
 		//変更されなかった分はコピーで対応
@@ -515,18 +516,18 @@ namespace Method
 	/// 1:現在の残り停止時間を基に，停止phaseを埋める
 	/// 2:
 	///</summary>
-	void KatoMasterMethod::recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int phase_id)
+	void KatoMasterMethod::recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int revise_phase)
 	{
-		double rest_pause_time = revising_dummy->get_now_pause_time(phase_id);
+		double rest_pause_time = revising_dummy->get_now_pause_time(revise_phase);
 		lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, requirement->service_interval);
 		
 		//現在phaseから，now_puase_timeが0以下になるまで，停止情報を登録
 		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 		{
-			phase_id++;
-			rest_pause_time -= requirement->service_interval;
-			revising_dummy->set_now_pause_time(phase_id, rest_pause_time);
-			revising_dummy->set_position_of_phase(phase_id, source, map->get_static_poi(source.id())->data->get_position());
+			revise_phase++;
+			rest_pause_time -= (double)requirement->service_interval;
+			revising_dummy->set_now_pause_time(revise_phase, rest_pause_time);
+			revising_dummy->set_position_of_phase(revise_phase, source, map->get_static_poi(source.id())->data->get_position());
 		}
 
 		std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path(source, destination);
@@ -535,8 +536,8 @@ namespace Method
 		//sourceからの距離
 		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
 		//速度はphaseで埋める前を参照しなければならないことに注意
-		double now_time = requirement->service_interval - revising_dummy->get_now_pause_time(phase_id);
-		double pause_position_speed = revising_dummy->get_starting_speed_using_pause_phase(phase_id);
+		double now_time = requirement->service_interval - revising_dummy->get_now_pause_time(revise_phase);
+		double pause_position_speed = revising_dummy->get_starting_speed_using_pause_phase(revise_phase);
 
 		double total_time_from_source_to_destination = map->calc_necessary_time(source, destination, pause_position_speed);
 		Graph::MapNodeIndicator nearest_position = source;
@@ -561,11 +562,11 @@ namespace Method
 
 			Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
 
-			if (phase_id == time_manager->phase_count() - 1) return;//残りのpathを決める時の終了条件
-			(phase_id)++;
-			revising_dummy->set_position_of_phase(phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
-			revising_dummy->set_now_speed(phase_id, pause_position_speed);
-
+			if (revise_phase == time_manager->phase_count() - 1) return;//残りのpathを決める時の終了条件
+			(revise_phase)++;
+			revising_dummy->set_position_of_phase(revise_phase, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
+			revising_dummy->set_now_speed(revise_phase, pause_position_speed);
+			revising_dummy->set_now_pause_time(revise_phase, 0.0);
 			now_time += requirement->service_interval;
 		}
 
@@ -575,8 +576,8 @@ namespace Method
 			= time_between_arrive_position_and_dest_position == requirement->service_interval ? 0 : time_between_arrive_position_and_dest_position;
 		//目的地の登録
 		//speedは別途設定のため不要
-		(phase_id)++;
-		revising_dummy->set_position_of_phase(phase_id, destination, map->get_static_poi(destination.id())->data->get_position());
+		(revise_phase)++;
+		revising_dummy->set_position_of_phase(revise_phase, destination, map->get_static_poi(destination.id())->data->get_position());
 
 	}
 
@@ -616,7 +617,7 @@ namespace Method
 	void KatoMasterMethod::initialize()
 	{
 		//ユーザの動きの変更→新しく作る．
-		predicted_user = copy_predicted_user_plan(input_user);
+		//predicted_user = copy_predicted_user_plan(input_user);
 	}
 
 

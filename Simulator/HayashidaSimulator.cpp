@@ -275,7 +275,7 @@ namespace Simulation
 
 		//•\Ž¦—p
 		std::for_each(all_tsp_solution.begin(), all_tsp_solution.end(), [](std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>& tsp) {
-			for (auto iter = tsp.first.begin(); iter != tsp.first.end(); iter++) std::cout << "Node ID : " << (*iter)->get_id() << " ¨ ";
+			for (auto iter = tsp.first.begin(); iter != tsp.first.end(); iter++) std::cout << "( Node ID : " << (*iter)->get_id() << " ) ¨ ";
 			std::cout << " distance : " << tsp.second << std::endl;
 		});
 
