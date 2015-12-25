@@ -41,7 +41,7 @@ namespace Graph
 		Tree(const Tree& t);
 		virtual ~Tree();
 
-		void initialize(std::shared_ptr<NODE_DATA> root_data = nullptr);
+		virtual void initialize(std::shared_ptr<NODE> root_node);
 
 		template <typename ITER_TYPE> ITER_TYPE root();
 		template <typename CONST_ITER_TYPE> CONST_ITER_TYPE const_root() const;

@@ -9,7 +9,6 @@
 namespace Evaluate
 {
 
-
 	///<summary>
 	/// 交差判定関連の処理をまとめたモジュール
 	/// USER_TYPEとDUMMY_TYPEはともに同じMobileEntityから派生したクラスである必要がある
@@ -35,7 +34,7 @@ namespace Evaluate
 		~CrossJudgementModule();
 		
 		std::vector<CrossInfo> get_all_cross_info_of_entity(Entity::entity_id id) const;
-		
+		std::vector<CrossInfo> get_all_cross_info_of_phase(int phase) const;
 	};
 }
 

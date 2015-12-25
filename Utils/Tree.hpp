@@ -2,12 +2,14 @@
 namespace Graph
 {
 
+
 	///<summary>
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	Tree<NODE, NODE_DATA, EDGE>::Tree() : node_collection(std::make_shared<Collection::IdentifiableCollection<node_id, NODE>>())
 	{
+
 	}
 
 	///<summary>
@@ -32,20 +34,18 @@ namespace Graph
 
 	}
 
-
+	
 	///<summary>
 	/// ルートノードを設定して木を初期化します
-	/// ルートノードの親ノードはID-1としている
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	void Tree<NODE, NODE_DATA, EDGE>::initialize(std::shared_ptr<NODE_DATA> root_data)
+	void Tree<NODE, NODE_DATA, EDGE>::initialize(std::shared_ptr<NODE> root)
 	{
-		node_id current_id = node_collection->size();
-		std::shared_ptr<NODE> node = std::make_shared<NODE>(current_id, -1, 0, root_data);
-		root_node = node;
-		node_collection->add(node);
+		node_collection->clear();
+		root_node = root;
+		node_collection->add(root);
 	}
-
+	
 
 	///<summary>
 	/// rootノードを指している状態でイテレータを取得する

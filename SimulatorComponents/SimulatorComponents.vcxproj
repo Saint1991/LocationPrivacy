@@ -163,10 +163,13 @@
     <ClInclude Include="KatoMasterMethod.h" />
     <ClInclude Include="MatsunoMethod.h" />
     <ClInclude Include="MizunoMethod.h" />
+    <ClInclude Include="ObservedTrajectoryNode.h" />
+    <ClInclude Include="ObservedTrajectoryStructure.h" />
     <ClInclude Include="PauseMobileEntity.h" />
     <ClInclude Include="PreferenceTree.h" />
     <ClInclude Include="PreferenceTreeNode.h" />
     <ClInclude Include="RevisablePauseMobileEntity.h" />
+    <ClInclude Include="SemanticCrossJudgementModule.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UserTrajectoryConverter.h" />
@@ -203,10 +206,13 @@
     <ClCompile Include="KatoMasterMethod.cpp" />
     <ClCompile Include="MatsunoMethod.cpp" />
     <ClCompile Include="MizunoMethod.cpp" />
+    <ClCompile Include="ObservedTrajectoryNode.cpp" />
+    <ClCompile Include="ObservedTrajectoryStructure.cpp" />
     <ClCompile Include="PauseMobileEntity.cpp" />
     <ClCompile Include="PreferenceTree.cpp" />
     <ClCompile Include="PreferenceTreeNode.cpp" />
     <ClCompile Include="RevisablePauseMobileEntity.cpp" />
+    <ClCompile Include="SemanticCrossJudgementModule.cpp" />
     <ClCompile Include="SimulatorComponents.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

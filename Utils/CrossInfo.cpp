@@ -15,7 +15,7 @@ namespace Evaluate
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	CrossInfo::CrossInfo(int phase, const std::vector<Entity::entity_id>& crossing_entities) : phase(phase), crossing_entities(crossing_entities)
+	CrossInfo::CrossInfo(int phase, Entity::entity_id id, const std::vector<Entity::entity_id>& crossing_entities) : phase(phase), id(id), crossing_entities(crossing_entities)
 	{
 	}
 

@@ -16,10 +16,11 @@ namespace Evaluate
 	{
 	public:
 		int phase;
+		Entity::entity_id id;
 		std::vector<Entity::entity_id> crossing_entities;
 
 		CrossInfo();
-		CrossInfo(int phase, const std::vector<Entity::entity_id>& crossing_entities);
+		CrossInfo(int phase, Entity::entity_id id, const std::vector<Entity::entity_id>& crossing_entities);
 		~CrossInfo();
 	};
 }

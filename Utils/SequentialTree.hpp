@@ -2,31 +2,37 @@
 namespace Graph
 {
 
-
 	///<summary>
 	/// コンストラクタ
 	///</summary>
 	template <typename NODE, typename DATA>
-	SequentialTree<NODE, DATA>::SequentialTree()
+	SequentialTree<NODE, DATA>::SequentialTree(std::shared_ptr<DATA> root_data) : Tree<NODE, DATA, BasicEdge>()
 	{
-		initialize();
+		Graph::node_id current_id = node_collection->size();
+		initialize(std::make_shared<NODE>(current_id, -1, 0, root_data));
 	}
 
 
 	///<summary>
-	/// コンストラクタ
+	/// デストラクタ
 	///</summary>
-	template <typename NODE, typename DATA>
-	SequentialTree<NODE, DATA>::SequentialTree(std::shared_ptr<DATA> root_data)
-	{
-		initialize(root_data);
-	}
-
 	template <typename NODE, typename DATA>
 	SequentialTree<NODE, DATA>::~SequentialTree()
 	{
 	}
 
+
+	///<summary>
+	/// ルートノードを指定して木を初期化する
+	/// ルートでは親ノードのIDは-1とする
+	/// そうでない場合はinvalid_argumentをスローする
+	///</summary>
+	template <typename NODE, typename DATA>
+	void SequentialTree<NODE, DATA>::initialize(std::shared_ptr<NODE> root_node)
+	{
+		if (root_node->get_parent() != -1) throw std::invalid_argument("Parent Node ID must be -1 for root Node");
+		Tree<NODE, DATA, BasicEdge>::initialize(root_node);
+	}
 
 	///<summary>
 	/// 最も長いシーケンスの長さを取得する
