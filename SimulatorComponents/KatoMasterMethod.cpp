@@ -426,6 +426,8 @@ namespace Method
 		//停止時間が変更されたPOIの数だけ，次の経路を再計算
 		for(int i = 0; i < changed_poi_num_id; i++, visited_poi_id++, changed_poi_num_id++) {
 			int revise_phase = revising_dummy->check_pause_condition(phase_id) && changed_poi_num_id == 1 ? phase_id : revising_dummy->get_any_arrive_phase(visited_poi_id);
+			if (revise_phase == time_manager->last_phase()) break;
+			//recalculation_pathの引数のrevise_phaseをポインタにするかどうかを検討
 			recalculation_path(revising_dummy->get_any_poi(visited_poi_id).first, revising_dummy->get_any_poi(visited_poi_id + 1).first, revise_phase);
 		}
 
@@ -518,7 +520,9 @@ namespace Method
 	{
 		double rest_pause_time = revising_dummy->get_now_pause_time(revise_phase);
 		lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, requirement->service_interval);
-		
+		//revise_phaseをインクリメントする前に保持しておく
+		double pause_position_speed = revising_dummy->get_starting_speed_using_pause_phase(revise_phase);
+
 		//現在phaseから，now_puase_timeが0以下になるまで，停止情報を登録
 		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 		{
@@ -535,8 +539,7 @@ namespace Method
 		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
 		//速度はphaseで埋める前を参照しなければならないことに注意
 		double now_time = requirement->service_interval - revising_dummy->get_now_pause_time(revise_phase);
-		double pause_position_speed = revising_dummy->get_starting_speed_using_pause_phase(revise_phase);
-
+		
 		double total_time_from_source_to_destination = map->calc_necessary_time(source, destination, pause_position_speed);
 		Graph::MapNodeIndicator nearest_position = source;
 		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．

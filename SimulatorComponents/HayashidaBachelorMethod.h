@@ -34,6 +34,7 @@ namespace Method {
 		void re_predicted_user_trajectory();
 
 		void re_setting_of_user_cross();
+		std::vector<std::pair<std::pair<entity_id, int>, double>> distance_between_user_and_dummies_at_pause_phases(std::vector<int> all_pause_phases);
 		void re_traveling_salesman_problem();
 
 		//void initialize();

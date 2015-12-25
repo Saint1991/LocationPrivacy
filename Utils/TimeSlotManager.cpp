@@ -97,11 +97,19 @@ namespace Time
 
 
 	///<summary>
-	/// ÅIPhase‚ğæ“¾‚·‚é
+	/// Phase”‚Ì‡Œv‚ğæ“¾‚·‚é
 	///</summary>
 	size_t TimeSlotManager::phase_count() const
 	{
 		return timeslots->size();
+	}
+
+	///<summary>
+	/// ÅIPhase‚ğæ“¾‚·‚é
+	///</summary>
+	size_t TimeSlotManager::last_phase() const
+	{
+		return phase_count() - 1;
 	}
 }
 

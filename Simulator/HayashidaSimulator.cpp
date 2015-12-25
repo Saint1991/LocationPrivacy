@@ -232,7 +232,7 @@ namespace Simulation
 	///</summary>
 	void HayashidaSimulator::input_visit_pois() {
 		//POIŒn—ñ‚ğì¬‚·‚éÛ‚ÌC‘I‘ğ”ÍˆÍ
-		Graph::Rectangle<Geography::LatLng> pois_range = map_boundary.transform_rect_of_latlang_to_x_times(0.5);
+		Graph::Rectangle<Geography::LatLng> pois_range = map_boundary.transform_rect_of_latlang_to_x_times(0.4);
 
 		std::vector<std::shared_ptr<Map::BasicPoi const>> random_pois_list = get_pois_list(pois_range);
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator iter = random_pois_list.begin();

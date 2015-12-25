@@ -71,7 +71,7 @@ namespace Method
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
 
-																										   //速度はphaseで埋める前を参照しなければならないことに注意
+			//速度はphaseで埋める前を参照しなければならないことに注意
 			double pause_position_speed = user->get_starting_speed();
 
 			//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
@@ -172,14 +172,43 @@ namespace Method
 		//全停止phaseを取得
 		std::vector<int> all_pause_phases = predicted_user->get_all_pause_phases();
 		
-		std::vector<double> candidate_cross_dummies;
+		//pair(pair(dummy_id, phase), distance)
+		std::vector<std::pair<std::pair<entity_id, int>, double>> candidate_cross_dummies_ordered_by_dist = distance_between_user_and_dummies_at_pause_phases(all_pause_phases);
 
+		//元々の交差予定回数分，設定を試みていく
+		for (int i = 0; i < original_cross_num; i++) {
+			for (auto iter = candidate_cross_dummies_ordered_by_dist.begin(); iter != candidate_cross_dummies_ordered_by_dist.end(); iter++) {
+
+			}
+		}
+
+	}
+
+
+	///<summary>
+	/// ユーザとユーザの全停止時間中に存在する全ダミーとの距離を計算
+	/// 距離の小さい順にソートして返す
+	/// pair(pair(dummy_id, phase), distance)
+	///</summary>
+	std::vector<std::pair<std::pair<Method::KatoBachelorMethod::entity_id, int>, double>> HayashidaBachelorMethod::distance_between_user_and_dummies_at_pause_phases(std::vector<int> all_pause_phases)
+	{
+		std::vector<std::pair<std::pair<entity_id, int>, double>> candidate_cross_dummies;
+
+		//ユーザとユーザの全停止時間中に存在する全ダミーとの距離を計算
 		for (std::vector<int>::iterator iter = all_pause_phases.begin(); iter != all_pause_phases.end(); iter++) {
 			for (entity_id dummy_id = 0; dummy_id < requirement->dummy_num; dummy_id++) {
 				//|user-dummy[dummy_id](*iter)|を計算するメソッド
+				double dist = map->shortest_distance(predicted_user->read_node_pos_info_of_phase(*iter).first, entities->get_dummy_by_id(dummy_id)->read_node_pos_info_of_phase(*iter).first);
+				candidate_cross_dummies.push_back(std::make_pair(std::make_pair(dummy_id, *iter), dist));
 			}
-
 		}
+		//距離の小さい順にソート
+		std::sort(candidate_cross_dummies.begin(), candidate_cross_dummies.end(),
+			[](std::pair<std::pair<entity_id, int>, double>& candidate1, std::pair<std::pair<entity_id, int>, double>& candidate2) {
+			return candidate1.second < candidate2.second;
+		});
+
+		return candidate_cross_dummies;
 	}
 
 	///<summary>
