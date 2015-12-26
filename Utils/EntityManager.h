@@ -47,6 +47,7 @@ namespace Entity
 		std::shared_ptr<DUMMY> find_dummy_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::vector<std::shared_ptr<DUMMY>> find_all_dummies_if(const std::function<bool(std::shared_ptr<DUMMY const>)>& compare);
 		std::shared_ptr<DUMMY const> read_dummy_by_id(entity_id id) const;
+		std::shared_ptr<MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE> const> read_entity_by_id(entity_id id) const;
 		std::vector<std::pair<entity_id, int>> get_entity_id_list_order_by_cross_count() const;
 		std::vector<entity_id> get_entities_cross_with(entity_id id) const;
 		size_t get_dummy_count() const;

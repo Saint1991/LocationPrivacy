@@ -48,6 +48,15 @@ namespace Graph
 	
 
 	///<summary>
+	/// 木に含まれるノード数を取得する
+	///</summary>
+	template <typename NODE, typename NODE_DATA, typename EDGE>
+	size_t Tree<NODE, NODE_DATA, EDGE>::node_count() const
+	{
+		return node_collection == nullptr ? 0 : node_collection->size();
+	}
+
+	///<summary>
 	/// rootノードを指している状態でイテレータを取得する
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>

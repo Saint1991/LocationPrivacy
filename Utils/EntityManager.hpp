@@ -122,6 +122,16 @@ namespace Entity
 		return nullptr;
 	}
 	
+
+	///<summary>
+	/// 読み専用で指定したエンティティを取得する
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
+	std::shared_ptr<MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE> const> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::read_entity_by_id(entity_id id) const
+	{
+		std::shared_ptr<MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE> const> entity = id == 0 ? user : read_dummy_by_id(id);
+		return entity;
+	}
 		
 	///<summary>
 	/// 交差回数の小さい順にエンティティIDを格納したリストを返します
