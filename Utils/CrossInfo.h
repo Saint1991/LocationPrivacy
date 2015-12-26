@@ -6,7 +6,7 @@
 #pragma once
 #include "MobileEntity.h"
 
-namespace Evaluate
+namespace Observer
 {
 
 	///<summary>

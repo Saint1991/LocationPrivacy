@@ -124,9 +124,6 @@
     <Filter Include="ソース ファイル\Evaluation">
       <UniqueIdentifier>{d94b9fc7-45a3-4f6d-931d-520a2c0660fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Evaluation">
-      <UniqueIdentifier>{20094aee-d356-46e2-a2bd-dad75319c09f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Graph\Routing\Modules">
       <UniqueIdentifier>{2206d76a-5dc5-4853-b6ca-51b7c5fafb77}</UniqueIdentifier>
     </Filter>
@@ -138,12 +135,6 @@
     </Filter>
     <Filter Include="ソース ファイル\Evaluation\MTC">
       <UniqueIdentifier>{5e86c6ec-83cf-4df5-8756-f350053d3e28}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Evaluation\AR">
-      <UniqueIdentifier>{f123f82c-2d22-41d1-8a99-a0df702d006c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Evaluation\MTC">
-      <UniqueIdentifier>{8869deb9-e272-4517-908f-1bbca2b23252}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Graph\Trajectory">
       <UniqueIdentifier>{b8136283-4daf-4caf-8a30-219cd960689a}</UniqueIdentifier>
@@ -162,6 +153,21 @@
     </Filter>
     <Filter Include="ソース ファイル\Graph\Utility">
       <UniqueIdentifier>{e66123e2-a5ca-49b6-8b73-ed9f83a89917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Observer">
+      <UniqueIdentifier>{68b89563-28ce-447e-9ef8-1c5bb42a7dc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Observer">
+      <UniqueIdentifier>{de464a59-6e9d-4739-8ab6-8fa16e151045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Evaluate">
+      <UniqueIdentifier>{20094aee-d356-46e2-a2bd-dad75319c09f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Evaluate\AR">
+      <UniqueIdentifier>{f123f82c-2d22-41d1-8a99-a0df702d006c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Evaluate\MTC">
+      <UniqueIdentifier>{8869deb9-e272-4517-908f-1bbca2b23252}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -367,16 +373,16 @@
       <Filter>ソース ファイル\Entity</Filter>
     </ClInclude>
     <ClInclude Include="IEvaluationModule.h">
-      <Filter>ヘッダー ファイル\Evaluation</Filter>
+      <Filter>ヘッダー ファイル\Evaluate</Filter>
     </ClInclude>
     <ClInclude Include="KatoMethodRequirement.h">
       <Filter>ヘッダー ファイル\Requirement</Filter>
     </ClInclude>
     <ClInclude Include="BaseEvaluationModule.h">
-      <Filter>ヘッダー ファイル\Evaluation</Filter>
+      <Filter>ヘッダー ファイル\Evaluate</Filter>
     </ClInclude>
     <ClInclude Include="Evaluator.h">
-      <Filter>ヘッダー ファイル\Evaluation</Filter>
+      <Filter>ヘッダー ファイル\Evaluate</Filter>
     </ClInclude>
     <ClInclude Include="RoutingClient.h">
       <Filter>ヘッダー ファイル\Graph\Routing</Filter>
@@ -406,16 +412,16 @@
       <Filter>ソース ファイル\Evaluation\AR</Filter>
     </ClInclude>
     <ClInclude Include="ARCountCalculationModule.h">
-      <Filter>ヘッダー ファイル\Evaluation\AR</Filter>
+      <Filter>ヘッダー ファイル\Evaluate\AR</Filter>
     </ClInclude>
     <ClInclude Include="ARSizeCalculationModule.h">
-      <Filter>ヘッダー ファイル\Evaluation\AR</Filter>
+      <Filter>ヘッダー ファイル\Evaluate\AR</Filter>
     </ClInclude>
     <ClInclude Include="ARSizeCalculationModule.hpp">
       <Filter>ソース ファイル\Evaluation\AR</Filter>
     </ClInclude>
     <ClInclude Include="MTCCalculationModule.h">
-      <Filter>ヘッダー ファイル\Evaluation\MTC</Filter>
+      <Filter>ヘッダー ファイル\Evaluate\MTC</Filter>
     </ClInclude>
     <ClInclude Include="SemanticTrajectory.h">
       <Filter>ヘッダー ファイル\Graph\Trajectory</Filter>
@@ -450,9 +456,6 @@
     <ClInclude Include="SequentialTreeNode.h">
       <Filter>ヘッダー ファイル\Graph\Tree</Filter>
     </ClInclude>
-    <ClInclude Include="CrossInfo.h">
-      <Filter>ヘッダー ファイル\Evaluation\MTC</Filter>
-    </ClInclude>
     <ClInclude Include="SequentialTree.hpp">
       <Filter>ソース ファイル\Graph\Tree</Filter>
     </ClInclude>
@@ -462,11 +465,20 @@
     <ClInclude Include="MobileEntity.hpp">
       <Filter>ソース ファイル\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="CrossJudgementModule.h">
-      <Filter>ヘッダー ファイル\Evaluation</Filter>
+    <ClInclude Include="ObservedTrajectoryNode.h">
+      <Filter>ヘッダー ファイル\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="ObservedTrajectoryStructure.h">
+      <Filter>ヘッダー ファイル\Observer</Filter>
     </ClInclude>
     <ClInclude Include="CrossJudgementModule.hpp">
-      <Filter>ソース ファイル\Evaluation\MTC</Filter>
+      <Filter>ソース ファイル\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossJudgementModule.h">
+      <Filter>ヘッダー ファイル\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossInfo.h">
+      <Filter>ヘッダー ファイル\Observer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -584,11 +596,17 @@
     <ClCompile Include="GraphUtility.cpp">
       <Filter>ソース ファイル\Graph\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="CrossInfo.cpp">
-      <Filter>ソース ファイル\Evaluation\MTC</Filter>
-    </ClCompile>
     <ClCompile Include="RevisableTrajectory.cpp">
       <Filter>ソース ファイル\Graph\Trajectory</Filter>
+    </ClCompile>
+    <ClCompile Include="ObservedTrajectoryNode.cpp">
+      <Filter>ソース ファイル\Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="ObservedTrajectoryStructure.cpp">
+      <Filter>ソース ファイル\Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="CrossInfo.cpp">
+      <Filter>ソース ファイル\Observer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
