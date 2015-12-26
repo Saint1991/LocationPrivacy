@@ -26,7 +26,7 @@ namespace Graph
 	/// ƒCƒ“ƒNƒŠƒƒ“ƒg
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	BreadthFirstConstIterator<NODE, NODE_DATA, EDGE>& BreadthFirstConstIterator<NODE, NODE_DATA, EDGE>::operator++()
+	BreadthFirstConstIterator<NODE, NODE_DATA, EDGE>& BreadthFirstConstIterator<NODE, NODE_DATA, EDGE>::operator++(int)
 	{
 		if (queue.size() == 0) return BreadthFirstIterator<NODE, NODE_DATA, EDGE>(-1, nullptr);
 		node_id id = queue.front();

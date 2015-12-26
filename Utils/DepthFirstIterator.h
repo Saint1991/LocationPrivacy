@@ -18,7 +18,7 @@ namespace Graph
 	
 	public:
 		DepthFirstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection);
-		DepthFirstIterator<NODE, NODE_DATA, EDGE>& operator++();
+		DepthFirstIterator<NODE, NODE_DATA, EDGE>& operator++(int);
 	};
 }
 

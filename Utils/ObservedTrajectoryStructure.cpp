@@ -70,9 +70,18 @@ namespace Observer
 	///</summary>
 	std::shared_ptr<ObservedTrajectoryStructure> ObservedTrajectoryStructure::sub_structure(Graph::node_id root_node_id) const
 	{
-		ObservedTrajectoryStructure::depth_first_const_iterator iter = ObservedTrajectoryStructure::depth_first_const_iterator(root_node_id, node_collection);
-
 		std::shared_ptr<ObservedTrajectoryStructure> ret = std::make_shared<ObservedTrajectoryStructure>();
+		
+		//[‚³—Dæ’Tõ‚ÅStructure‚ð’Tõ‚µCƒRƒs[‚·‚×‚«ƒm[ƒh‚ÌIDƒŠƒXƒg‚ðì¬
+		ret->root_node->connect_to(std::make_shared<Graph::BasicEdge>(root_node_id));
+		ObservedTrajectoryStructure::depth_first_const_iterator iter = ObservedTrajectoryStructure::depth_first_const_iterator(root_node_id, node_collection);
+		int depth_offset = iter->get_depth() - 1;
+		while (*iter != nullptr) {
+			Graph::node_id new_node_id = ret->node_collection->size();
+			std::shared_ptr<ObservedTrajectoryNode> node = std::make_shared<ObservedTrajectoryNode>(new_node_id, iter->get_depth() - depth_offset, std::make_shared<Graph::MapNodeIndicator>(*iter->data));
+			ret->node_collection->add(node);
+			iter++;
+		}
 		return ret;
 	}
 }

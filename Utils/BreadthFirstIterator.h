@@ -18,7 +18,7 @@ namespace Graph
 
 	public:
 		BreadthFirstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection);
-		BreadthFirstIterator<NODE, NODE_DATA, EDGE>& operator++();
+		BreadthFirstIterator<NODE, NODE_DATA, EDGE>& operator++(int);
 	};
 }
 
