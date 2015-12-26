@@ -26,14 +26,13 @@ namespace Graph
 	/// ƒCƒ“ƒNƒŠƒƒ“ƒg
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	DepthFirstIterator<NODE, NODE_DATA, EDGE> DepthFirstIterator<NODE, NODE_DATA, EDGE>::operator++()
+	DepthFirstIterator<NODE, NODE_DATA, EDGE>& DepthFirstIterator<NODE, NODE_DATA, EDGE>::operator++()
 	{
 		if (stack.size() == 0) return Tree<NODE, NODE_DATA, EDGE>::DepthFirstIterator(-1, nullptr);
 		node_id id = stack.top();
 		stack.pop();
 
-		Tree<NODE, NODE_DATA, EDGE>::DepthFirstIterator ret(id, node_collection);
-
+		node = node_collection->get_by_id(id);
 		node->rfor_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();
 			if (visited_node_ids.find(to) == visited_node_ids.end()) {
@@ -42,6 +41,6 @@ namespace Graph
 			}
 		});
 
-		return ret;
+		return *this;
 	}
 }

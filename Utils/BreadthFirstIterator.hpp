@@ -27,14 +27,13 @@ namespace Graph
 	/// ƒCƒ“ƒNƒŠƒƒ“ƒg
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
-	BreadthFirstIterator<NODE, NODE_DATA, EDGE> BreadthFirstIterator<NODE, NODE_DATA, EDGE>::operator++()
+	BreadthFirstIterator<NODE, NODE_DATA, EDGE>& BreadthFirstIterator<NODE, NODE_DATA, EDGE>::operator++()
 	{
 		if (queue.size() == 0) return BreadthFirstIterator<NODE, NODE_DATA, EDGE>(-1, nullptr);
 		node_id id = queue.front();
 		queue.pop();
 
-		BreadthFirstIterator<NODE, NODE_DATA, EDGE> ret(id, node_collection);
-
+		node = node_collection->get_by_id(id);
 		node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {
 			node_id to = edge->get_to();
 			if (visited_node_ids.find(to) == visited_node_ids.end()) {
@@ -43,7 +42,7 @@ namespace Graph
 			}
 		});
 
-		return ret;
+		return *this;
 	}
 }
 
