@@ -73,6 +73,15 @@ namespace Test
 			id = structure->find_node_id(Graph::MapNodeIndicator(6, Graph::NodeType::POI), 2);
 			Assert::AreEqual(-1L, id);
 		}
+
+		TEST_METHOD(ObservedTrajectoryStructure_substructure)
+		{
+			std::shared_ptr<Observer::ObservedTrajectoryStructure const> structure = create_sample_structure();
+			std::shared_ptr<Observer::ObservedTrajectoryStructure const> substructure = structure->sub_structure(5L);
+			
+			Assert::AreEqual(3u, substructure->trajectory_length());
+			Assert::AreEqual(7u, substructure->node_count());
+		}
 		
 	};
 }

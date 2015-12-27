@@ -47,6 +47,15 @@ namespace Observer
 		return depth;
 	}
 
+
+	///<summary>
+	/// Depth‚ğÄİ’è‚·‚é
+	///</summary>
+	void ObservedTrajectoryNode::set_depth(int depth)
+	{
+		this->depth = depth;
+	}
+
 	///<summary>
 	/// —tƒm[ƒh‚©‚Ç‚¤‚©”»’è‚·‚é
 	///</summary>

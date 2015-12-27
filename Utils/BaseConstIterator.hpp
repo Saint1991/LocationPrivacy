@@ -7,7 +7,7 @@ namespace Graph
 	///</summary>
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	BaseConstIterator<NODE, NODE_DATA, EDGE>::BaseConstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection) 
-		: node_collection(node_collection)
+		: node_collection(node_collection), node(nullptr)
 	{
 		if (node_collection != nullptr) node = node_collection->get_by_id(id);
 	}

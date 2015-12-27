@@ -27,7 +27,12 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	DepthFirstConstIterator<NODE, NODE_DATA, EDGE>& DepthFirstConstIterator<NODE, NODE_DATA, EDGE>::operator++(int)
 	{
-		if (stack.size() == 0) return DepthFirstConstIterator<NODE, NODE_DATA, EDGE>(-1, nullptr);
+		if (stack.size() == 0) {
+			node = nullptr;
+			node_collection = nullptr;
+			return *this;
+		}
+			
 		node_id id = stack.top();
 		stack.pop();
 

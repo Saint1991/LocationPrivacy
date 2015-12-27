@@ -111,7 +111,8 @@ namespace Observer
 		int depth_offset = iter->get_depth() - 1;
 		while (*iter != nullptr) {
 			Graph::node_id new_node_id = ret->node_collection->size();
-			std::shared_ptr<ObservedTrajectoryNode> node = std::make_shared<ObservedTrajectoryNode>(new_node_id, iter->get_depth() - depth_offset, std::make_shared<Graph::MapNodeIndicator>(*iter->data));
+			std::shared_ptr<ObservedTrajectoryNode> node = std::make_shared<ObservedTrajectoryNode>(**iter);
+			node->set_depth(iter->get_depth() - depth_offset);
 			ret->node_collection->add(node);
 			iter++;
 		}

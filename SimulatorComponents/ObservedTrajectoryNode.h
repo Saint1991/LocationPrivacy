@@ -24,6 +24,7 @@ namespace Observer
 		void count_up();
 		size_t get_count() const;
 		int get_depth() const;
+		void set_depth(int depth);
 
 		bool is_leaf() const;
 	};
