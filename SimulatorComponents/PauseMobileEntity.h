@@ -53,6 +53,7 @@ namespace Entity
 		virtual ~PauseMobileEntity();
 		
 		//–K–âPOI_ID(visited_pois_info_list_id)‚ÉŠÖ‚·‚ésetter‚Ægetter
+		void increment_visited_pois_info_list_id();
 		int get_visited_pois_info_list_id();
 		void clear_visited_pois_info_list_id();
 
@@ -127,11 +128,12 @@ namespace Entity
 		void raise_flag();
 		void take_down_flag();
 
-		void increment_visited_pois_info_list_id();
-
+		
 		//trajectoryæ“¾—p
 		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
 		
+		//Œğ·‰ñ””»’è—p
+		int get_cross_count_until_the_phase(int phase);
 		
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;

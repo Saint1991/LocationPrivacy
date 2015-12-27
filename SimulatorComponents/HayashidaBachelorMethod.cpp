@@ -164,21 +164,34 @@ namespace Method
 	/// 提案手法の核になる部分
 	/// ユーザの交差を再設定する
 	///</summary>
-	void HayashidaBachelorMethod::re_setting_of_user_cross()
+	void HayashidaBachelorMethod::re_setting_of_user_cross(int now_phase)
 	{
 		//元々のユーザの交差回数を記録(参照するユーザはプラン変更前のinput_userであることに注意)
-		int original_cross_num = input_user->get_cross_count();
+		//現在phaseまでの交差回数は考慮しないことに注意
+		int original_cross_num = input_user->get_cross_count() - input_user->get_cross_count_until_the_phase(now_phase);
 		
 		//全停止phaseを取得
 		std::vector<int> all_pause_phases = predicted_user->get_all_pause_phases();
 		
+		//ユーザとユーザの全停止時間中に存在する全ダミーとの距離を計算
+		//既に距離別にsort済み
 		//pair(pair(dummy_id, phase), distance)
 		std::vector<std::pair<std::pair<entity_id, int>, double>> candidate_cross_dummies_ordered_by_dist = distance_between_user_and_dummies_at_pause_phases(all_pause_phases);
 
 		//元々の交差予定回数分，設定を試みていく
 		for (int i = 0; i < original_cross_num; i++) {
 			for (auto iter = candidate_cross_dummies_ordered_by_dist.begin(); iter != candidate_cross_dummies_ordered_by_dist.end(); iter++) {
-
+				std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> target_dummy = entities->get_dummy_by_id(iter->first.first);
+				//対象ダミーがPOIにPOIに停止中の場合
+				if (target_dummy->read_node_pos_info_of_phase(iter->first.second).first.type() == Graph::POI)
+				{
+					//追跡可能性低下のための経路設定と同様な方法で，三通りに場合分け
+				}
+				//対象ダミーが対象phase中に訪問POI以外に存在している場合
+				else
+				{
+					//到達可能性がどの程度あるかどうかによるが，とりあえずシンプルに３つに場合分け
+				}
 			}
 		}
 
@@ -202,9 +215,11 @@ namespace Method
 				candidate_cross_dummies.push_back(std::make_pair(std::make_pair(dummy_id, *iter), dist));
 			}
 		}
-		//距離の小さい順にソート
+		//修正距離の小さい順にソート
+		//ただし，同じ修正距離の場合(POIに停止中)，phaseが早い方を優先
 		std::sort(candidate_cross_dummies.begin(), candidate_cross_dummies.end(),
 			[](std::pair<std::pair<entity_id, int>, double>& candidate1, std::pair<std::pair<entity_id, int>, double>& candidate2) {
+			if (candidate1.second == candidate2.second) return candidate1.first.second < candidate2.first.second;
 			return candidate1.second < candidate2.second;
 		});
 
@@ -245,7 +260,7 @@ namespace Method
 
 				if (!check_user_going_to_sheduled_POI()) {
 					re_predicted_user_trajectory();
-					re_setting_of_user_cross();
+					re_setting_of_user_cross(phase_id);
 				}
 				revise_dummy_positions(phase_id, dummy_id);
 			}

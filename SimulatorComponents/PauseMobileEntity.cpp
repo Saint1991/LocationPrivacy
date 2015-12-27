@@ -40,6 +40,16 @@ namespace Entity
 	}
 
 	///<summary>
+	/// visited_pois_info_list_idをインクリメントする
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::increment_visited_pois_info_list_id()
+	{
+		visited_pois_info_list_id++;
+	}
+
+
+	///<summary>
 	/// 訪問POI情報をk管理するIDを取得する
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
@@ -638,15 +648,6 @@ namespace Entity
 		return get_now_speed(now_phase) == 0.0 ? true : false;
 	}
 
-	///<summary>
-	/// visited_pois_info_list_idをインクリメントする
-	///</summary>
-	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::increment_visited_pois_info_list_id()
-	{
-		visited_pois_info_list_id++;
-	}
-
 
 	///<summary>
 	/// トラジェクトリデータを変更可能な状態で取得する
@@ -657,6 +658,18 @@ namespace Entity
 		return trajectory;
 	}
 
+	///<summary>
+	/// 指定したphaseまでの交差回数を求める
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_cross_count_until_the_phase(int phase)
+	{
+		int cross_count = 0;
+		for (int i = 0; i <= phase; i++) {
+			if (cross_flg->at(i) == true) cross_count++;
+		}
+		return cross_count;
+	}
 
 	///<summary>
 	/// 交差が設定されていないPhaseを全て取得する

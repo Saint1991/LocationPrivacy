@@ -33,7 +33,7 @@ namespace Method {
 		bool check_user_going_to_sheduled_POI();
 		void re_predicted_user_trajectory();
 
-		void re_setting_of_user_cross();
+		void re_setting_of_user_cross(int now_phase);
 		std::vector<std::pair<std::pair<entity_id, int>, double>> distance_between_user_and_dummies_at_pause_phases(std::vector<int> all_pause_phases);
 		void re_traveling_salesman_problem();
 
