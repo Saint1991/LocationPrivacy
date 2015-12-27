@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CrossInfo.h"
 
-namespace Observer
+namespace Evaluate
 {
 
 	///<summary>

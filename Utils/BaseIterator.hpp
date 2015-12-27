@@ -63,8 +63,13 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	void BaseIterator<NODE, NODE_DATA, EDGE>::add_child(std::shared_ptr<NODE> child)
 	{
-		node_collection->add(child);
-		node->connect_to(std::make_shared<Graph::BasicEdge>(child->get_id()));
+		Graph::node_id child_id = child->get_id();
+		if (!node_collection->contains(child_id)) {
+			node_collection->add(child);
+		}
+		if (!node->is_connecting_to(child_id)) {
+			node->connect_to(std::make_shared<EDGE>(child->get_id()));
+		}
 	}
 }
 

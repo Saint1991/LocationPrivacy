@@ -43,6 +43,12 @@
     <Filter Include="ヘッダー ファイル\Method">
       <UniqueIdentifier>{d2ca7d87-b4f7-41b3-b537-3cec621f0855}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Observer">
+      <UniqueIdentifier>{79c690ff-0b25-42b5-bdaa-7d57892aca5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Observer">
+      <UniqueIdentifier>{bad52056-5879-4f58-b9ee-6466663d146f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -120,6 +126,15 @@
     <ClInclude Include="DifferentMovementUser.h">
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="ObservedTrajectoryNode.h">
+      <Filter>ヘッダー ファイル\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="ObservedTrajectoryStructure.h">
+      <Filter>ヘッダー ファイル\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicObserver.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -196,6 +211,15 @@
     </ClCompile>
     <ClCompile Include="UserTrajectoryConverter.cpp">
       <Filter>ソース ファイル\User</Filter>
+    </ClCompile>
+    <ClCompile Include="ObservedTrajectoryNode.cpp">
+      <Filter>ソース ファイル\Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="ObservedTrajectoryStructure.cpp">
+      <Filter>ソース ファイル\Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicObserver.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

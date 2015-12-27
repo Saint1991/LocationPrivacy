@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicRoadTest.cpp" />
+    <ClCompile Include="ObservedTrajectoryStructureTest.cpp" />
     <ClCompile Include="PreferenceTreeTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="BasicDbMap.h" />
     <ClInclude Include="BasicMapNode.h" />
+    <ClInclude Include="BasicObserver.h" />
     <ClInclude Include="BasicPoi.h" />
     <ClInclude Include="BasicRoad.h" />
     <ClInclude Include="BasicUser.h" />
@@ -163,6 +164,8 @@
     <ClInclude Include="KatoMasterMethod.h" />
     <ClInclude Include="MatsunoMethod.h" />
     <ClInclude Include="MizunoMethod.h" />
+    <ClInclude Include="ObservedTrajectoryNode.h" />
+    <ClInclude Include="ObservedTrajectoryStructure.h" />
     <ClInclude Include="PauseMobileEntity.h" />
     <ClInclude Include="PreferenceTree.h" />
     <ClInclude Include="PreferenceTreeNode.h" />
@@ -175,6 +178,7 @@
   <ItemGroup>
     <ClCompile Include="BasicDbMap.cpp" />
     <ClCompile Include="BasicMapNode.cpp" />
+    <ClCompile Include="BasicObserver.cpp" />
     <ClCompile Include="BasicPoi.cpp" />
     <ClCompile Include="BasicRoad.cpp" />
     <ClCompile Include="BasicUser.cpp" />
@@ -203,6 +207,8 @@
     <ClCompile Include="KatoMasterMethod.cpp" />
     <ClCompile Include="MatsunoMethod.cpp" />
     <ClCompile Include="MizunoMethod.cpp" />
+    <ClCompile Include="ObservedTrajectoryNode.cpp" />
+    <ClCompile Include="ObservedTrajectoryStructure.cpp" />
     <ClCompile Include="PauseMobileEntity.cpp" />
     <ClCompile Include="PreferenceTree.cpp" />
     <ClCompile Include="PreferenceTreeNode.cpp" />

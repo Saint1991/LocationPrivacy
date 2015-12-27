@@ -28,7 +28,7 @@ namespace Graph
 	template <typename NODE, typename NODE_DATA, typename EDGE>
 	DepthFirstIterator<NODE, NODE_DATA, EDGE>& DepthFirstIterator<NODE, NODE_DATA, EDGE>::operator++(int)
 	{
-		if (stack.size() == 0) return Tree<NODE, NODE_DATA, EDGE>::DepthFirstIterator(-1, nullptr);
+		if (stack.size() == 0) return DepthFirstIterator<NODE, NODE_DATA, EDGE>(-1, nullptr);
 		node_id id = stack.top();
 		stack.pop();
 

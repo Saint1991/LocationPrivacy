@@ -2,11 +2,15 @@
 #include "stdafx.h"
 #include "Tree.h"
 #include "BaseConstIterator.h"
+#include "BasicEdge.h"
 
 namespace Graph
 {
 
-	template <typename NODE, typename NODE_DATA, typename EDGE>
+	///<summary>
+	/// Tree関連のイテレータ(add_childで現状BasicEdgeしか使えない)
+	///</summary>
+	template <typename NODE, typename NODE_DATA, typename EDGE = Graph::BasicEdge>
 	class BaseIterator : public BaseConstIterator<NODE, NODE_DATA, EDGE>
 	{		
 	public:

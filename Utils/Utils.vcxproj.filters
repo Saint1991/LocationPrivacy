@@ -154,12 +154,6 @@
     <Filter Include="ソース ファイル\Graph\Utility">
       <UniqueIdentifier>{e66123e2-a5ca-49b6-8b73-ed9f83a89917}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Observer">
-      <UniqueIdentifier>{68b89563-28ce-447e-9ef8-1c5bb42a7dc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Observer">
-      <UniqueIdentifier>{de464a59-6e9d-4739-8ab6-8fa16e151045}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Evaluate">
       <UniqueIdentifier>{20094aee-d356-46e2-a2bd-dad75319c09f}</UniqueIdentifier>
     </Filter>
@@ -465,20 +459,14 @@
     <ClInclude Include="MobileEntity.hpp">
       <Filter>ソース ファイル\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="ObservedTrajectoryNode.h">
-      <Filter>ヘッダー ファイル\Observer</Filter>
-    </ClInclude>
-    <ClInclude Include="ObservedTrajectoryStructure.h">
-      <Filter>ヘッダー ファイル\Observer</Filter>
-    </ClInclude>
-    <ClInclude Include="CrossJudgementModule.hpp">
-      <Filter>ソース ファイル\Observer</Filter>
+    <ClInclude Include="CrossInfo.h">
+      <Filter>ヘッダー ファイル\Evaluate\MTC</Filter>
     </ClInclude>
     <ClInclude Include="CrossJudgementModule.h">
-      <Filter>ヘッダー ファイル\Observer</Filter>
+      <Filter>ヘッダー ファイル\Evaluate\MTC</Filter>
     </ClInclude>
-    <ClInclude Include="CrossInfo.h">
-      <Filter>ヘッダー ファイル\Observer</Filter>
+    <ClInclude Include="CrossJudgementModule.hpp">
+      <Filter>ソース ファイル\Evaluation\MTC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -599,14 +587,8 @@
     <ClCompile Include="RevisableTrajectory.cpp">
       <Filter>ソース ファイル\Graph\Trajectory</Filter>
     </ClCompile>
-    <ClCompile Include="ObservedTrajectoryNode.cpp">
-      <Filter>ソース ファイル\Observer</Filter>
-    </ClCompile>
-    <ClCompile Include="ObservedTrajectoryStructure.cpp">
-      <Filter>ソース ファイル\Observer</Filter>
-    </ClCompile>
     <ClCompile Include="CrossInfo.cpp">
-      <Filter>ソース ファイル\Observer</Filter>
+      <Filter>ソース ファイル\Evaluation\MTC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

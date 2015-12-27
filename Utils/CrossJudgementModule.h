@@ -8,7 +8,7 @@
 #include "ObservedTrajectoryStructure.h"
 #include "ObservedTrajectoryNode.h"
 
-namespace Observer
+namespace Evaluate
 {
 
 	///<summary>
@@ -37,8 +37,6 @@ namespace Observer
 		
 		std::vector<CrossInfo> get_all_cross_info_of_entity(Entity::entity_id id) const;
 		std::vector<CrossInfo> get_all_cross_info_of_phase(int phase) const;
-
-		std::shared_ptr<Observer::ObservedTrajectoryStructure> create_observed_trajectory_structure() const;
 	};
 }
 

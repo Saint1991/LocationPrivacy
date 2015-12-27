@@ -22,6 +22,9 @@
     <Filter Include="ソース ファイル\Geography">
       <UniqueIdentifier>{5d6e5787-e1a5-42f0-89fa-4a264ba72918}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Observer">
+      <UniqueIdentifier>{558ca641-e179-4762-a4c4-05822c292ea6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -43,6 +46,9 @@
     </ClCompile>
     <ClCompile Include="PreferenceTreeTest.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ObservedTrajectoryStructureTest.cpp">
+      <Filter>ソース ファイル\Observer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#ifdef UTILS_EXPORTS
+#ifdef SIMULATORCOMPONENTS_EXPORTS
 #define OBSERVED_TRAJECTORY_NODE_API __declspec(dllexport)
 #else
 #define OBSERVED_TRAJECTORY_NODE_API __declspec(dllimport)

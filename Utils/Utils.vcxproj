@@ -249,8 +249,6 @@
     <ClInclude Include="MobileEntity.hpp" />
     <ClInclude Include="MTCCalculationModule.h" />
     <ClInclude Include="MySQLDb.h" />
-    <ClInclude Include="ObservedTrajectoryNode.h" />
-    <ClInclude Include="ObservedTrajectoryStructure.h" />
     <ClInclude Include="PoiData.h" />
     <ClInclude Include="PreferenceRequirement.h" />
     <ClInclude Include="SequentialTree.h" />
@@ -329,8 +327,6 @@
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="MTCCalculationModule.cpp" />
     <ClCompile Include="MySQLDb.cpp" />
-    <ClCompile Include="ObservedTrajectoryNode.cpp" />
-    <ClCompile Include="ObservedTrajectoryStructure.cpp" />
     <ClCompile Include="PoiData.cpp" />
     <ClCompile Include="PreferenceRequirement.cpp" />
     <ClCompile Include="QueryGenerateUtility.cpp" />
