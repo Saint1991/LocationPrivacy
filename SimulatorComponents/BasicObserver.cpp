@@ -61,7 +61,7 @@ namespace Observer
 				});
 				if (*child == nullptr) {
 					std::shared_ptr<ObservedTrajectoryNode> new_node = std::make_shared<ObservedTrajectoryNode>(trajectory_structure->node_count(), depth, std::make_shared<Graph::MapNodeIndicator>(current_node));
-					iter.add_child(new_node);
+					iter.add_child(new_node, 1.0);
 				}
 				else {
 					child->count_up();
@@ -75,7 +75,7 @@ namespace Observer
 			//着目するエンティティとその交差情報
 			std::shared_ptr<Entity::MobileEntity<Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>> const> entity = entities->read_entity_by_id(id);
 			std::vector<Evaluate::CrossInfo> cross_infos = module->get_all_cross_info_of_entity(id);
-
+			
 			//交差相手の辿ったノードへのパスがない場合はそれを作成する
 			for (std::vector<Evaluate::CrossInfo>::const_iterator cross_info = cross_infos.begin(); cross_info != cross_infos.end(); cross_info++) {
 
@@ -84,14 +84,25 @@ namespace Observer
 				Graph::MapNodeIndicator cross_node = entity->read_node_pos_info_of_phase(cross_phase).first;
 				ObservedTrajectoryStructure::base_iterator iter = trajectory_structure->find_node(cross_node, cross_info->phase);
 
-				//交差相手のノードを取得しtrajectory_nodeにエッジを追加
-				for (std::vector<Entity::entity_id>::const_iterator target_entity_id = cross_info->crossing_entities.begin(); target_entity_id != cross_info->crossing_entities.end(); target_entity_id++) {
+				Graph::node_id next_node_id = trajectory_structure->find_node_id(entity->read_node_pos_info_of_phase(cross_phase + 1).first, cross_phase + 1);
+				if (next_node_id == -1) throw std::invalid_argument("Node not found.");
+				
+				//交差相手のノードがどのPOIにいくつ移動するかを計算する
+				std::unordered_map<Graph::node_id, size_t> next_visit_map = { {next_node_id, 1U} };
+				std::vector<Entity::entity_id> crossing_entities = cross_info->crossing_entities;
+				for (std::vector<Entity::entity_id>::const_iterator target_entity_id = crossing_entities.begin(); target_entity_id !=crossing_entities.end(); target_entity_id++) {
+					next_node_id = trajectory_structure->find_node_id(entities->read_entity_by_id(id)->read_node_pos_info_of_phase(cross_phase + 1).first, cross_phase + 1);
+					if (next_node_id == -1) throw std::invalid_argument("Node not found.");
+					
+					if (next_visit_map.find(next_node_id) == next_visit_map.end()) next_visit_map.insert({ next_node_id, 1U });
+					else next_visit_map.at(next_node_id) += 1;
+				}
 
-					//エッジを張る先のノードのIDを取得(交差相手のcross_phase + 1の訪問場所)
-					Graph::MapNodeIndicator next_node = entities->read_entity_by_id(id)->read_node_pos_info_of_phase(cross_phase + 1).first;
-					Graph::node_id next_node_id = trajectory_structure->find_node_id(next_node, cross_phase + 1);
-
-					if (!iter->is_connecting_to(next_node_id)) iter->connect_to(std::make_shared<Graph::BasicEdge>(next_node_id));
+				//上の情報を元にエッジを張る
+				for (std::unordered_map<Graph::node_id, size_t>::const_iterator visit_count_iter = next_visit_map.begin(); visit_count_iter != next_visit_map.end(); visit_count_iter++) {
+					Graph::node_id to = visit_count_iter->first;
+					double probability = (double)visit_count_iter->second / crossing_entities.size();
+					iter->is_connecting_to(to) ? iter->get_edge_to(to)->set_flow(probability) : iter->flow_out_to(to, probability);
 				}
 			}
 		}

@@ -6,9 +6,9 @@ namespace Graph
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	template <typename NODE, typename NODE_DATA, typename EDGE>
-	BreadthFirstIterator<NODE, NODE_DATA, EDGE>::BreadthFirstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection) 
-		: BaseIterator<NODE, NODE_DATA, EDGE>(id, node_collection)
+	template <typename NODE, typename NODE_DATA, typename EDGE, typename EDGE_DATA>
+	BreadthFirstIterator<NODE, NODE_DATA, EDGE, EDGE_DATA>::BreadthFirstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection) 
+		: BaseIterator<NODE, NODE_DATA, EDGE, EDGE_DATA>(id, node_collection)
 	{
 		if (node != nullptr) {
 			visited_node_ids.insert(node->get_id());
@@ -26,8 +26,8 @@ namespace Graph
 	///<summary>
 	/// インクリメント
 	///</summary>
-	template <typename NODE, typename NODE_DATA, typename EDGE>
-	BreadthFirstIterator<NODE, NODE_DATA, EDGE>& BreadthFirstIterator<NODE, NODE_DATA, EDGE>::operator++(int)
+	template <typename NODE, typename NODE_DATA, typename EDGE, typename EDGE_DATA>
+	BreadthFirstIterator<NODE, NODE_DATA, EDGE, EDGE_DATA>& BreadthFirstIterator<NODE, NODE_DATA, EDGE, EDGE_DATA>::operator++(int)
 	{
 		if (queue.size() == 0) {
 			node = nullptr;

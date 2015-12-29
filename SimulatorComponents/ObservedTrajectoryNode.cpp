@@ -8,7 +8,7 @@ namespace Observer
 	/// コンストラクタ
 	///</summary>
 	ObservedTrajectoryNode::ObservedTrajectoryNode(Graph::node_id id, int depth, std::shared_ptr<Graph::MapNodeIndicator> map_node_id)
-		: Graph::Node<Graph::MapNodeIndicator, Graph::BasicEdge>(id, map_node_id), depth(depth), entity_count(1)
+		: Graph::Node<Graph::MapNodeIndicator, Graph::FlowEdge>(id, map_node_id), depth(depth), entity_count(1)
 	{
 	}
 
@@ -56,6 +56,18 @@ namespace Observer
 		this->depth = depth;
 	}
 
+
+	///<summary>
+	/// toのノードへ向かってFlowの量がflowのエッジを作成する
+	/// 既存のエッジの場合はflowの量をflowだけ増加させる
+	///</summary>
+	void ObservedTrajectoryNode::flow_out_to(Graph::node_id to, double flow)
+	{
+		std::shared_ptr<Graph::FlowEdge> edge = get_edge_to(to);
+		if (edge == nullptr) connect_to(std::make_shared<Graph::FlowEdge>(to, flow));
+		else edge->flow_in(flow);
+	}
+
 	///<summary>
 	/// 葉ノードかどうか判定する
 	///</summary>
@@ -63,7 +75,6 @@ namespace Observer
 	{
 		return get_connecting_node_list().size() == 0;
 	}
-
 
 }
 

@@ -7,7 +7,7 @@ namespace Observer
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	ObservedTrajectoryStructure::ObservedTrajectoryStructure() : Graph::Tree<ObservedTrajectoryNode, Graph::MapNodeIndicator, Graph::BasicEdge>()
+	ObservedTrajectoryStructure::ObservedTrajectoryStructure() : Graph::Tree<ObservedTrajectoryNode, Graph::MapNodeIndicator, Graph::FlowEdge, double>()
 	{
 		initialize(std::make_shared<ObservedTrajectoryNode>(0, 0, nullptr));
 	}
@@ -21,29 +21,13 @@ namespace Observer
 	}
 
 
-	void ObservedTrajectoryStructure::depth_first_trajectory_search(
-		size_t trajectory_length,
-		Collection::Sequence<Graph::MapNodeIndicator> sequence,
-		ObservedTrajectoryStructure::depth_first_const_iterator& iter,
-		const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>& trajectory)>& execute_function) const
-	{
-		if (sequence.size() == trajectory_length) {
-			execute_function(sequence);
-			return;
-		}
-
-		sequence.push_back(*iter->data);
-		iter++;
-		depth_first_trajectory_search(trajectory_length, sequence, iter, execute_function);
-	}
-
 	///<summary>
-	/// 指定した値でroot_nodeを取得する
+	/// 指定した値でroot_nodeを初期化
 	///</summary>
 	void ObservedTrajectoryStructure::initialize(std::shared_ptr<ObservedTrajectoryNode> root_node)
 	{
 		if (root_node->get_depth() != 0) throw std::invalid_argument("Depth of root node must be 0");
-		Graph::Tree<ObservedTrajectoryNode, Graph::MapNodeIndicator, Graph::BasicEdge>::initialize(root_node);
+		Graph::Tree<ObservedTrajectoryNode, Graph::MapNodeIndicator, Graph::FlowEdge, double>::initialize(root_node);
 	}
 
 
@@ -105,7 +89,7 @@ namespace Observer
 		std::shared_ptr<ObservedTrajectoryStructure> ret = std::make_shared<ObservedTrajectoryStructure>();
 
 		//深さ優先探索でStructureを探索し，コピーすべきノードのIDリストを作成
-		ret->root_node->connect_to(std::make_shared<Graph::BasicEdge>(root_node_id));
+		ret->root_node->connect_to(std::make_shared<Graph::FlowEdge>(root_node_id));
 		ObservedTrajectoryStructure::depth_first_const_iterator iter = ObservedTrajectoryStructure::depth_first_const_iterator(root_node_id, node_collection);
 		if (*iter == nullptr) return nullptr;
 		int depth_offset = iter->get_depth() - 1;
@@ -161,11 +145,62 @@ namespace Observer
 	///<summary>
 	/// 根から葉までの全てのパスについてexecute_functionを実行する
 	///</summary>
-	void ObservedTrajectoryStructure::for_each_possible_trajectory(const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>& trajectory)>& execute_function) const
+	void ObservedTrajectoryStructure::for_each_possible_trajectory(const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>&)>& execute_function) const
 	{
-		size_t depth = trajectory_length();
-		ObservedTrajectoryStructure::depth_first_const_iterator iter = const_root<ObservedTrajectoryStructure::depth_first_const_iterator>();
-		depth_first_trajectory_search(depth, Collection::Sequence<Graph::MapNodeIndicator>(), iter, execute_function);
+		size_t length = trajectory_length();
+		ObservedTrajectoryStructure::revisit_depth_first_const_iterator iter = const_root<ObservedTrajectoryStructure::revisit_depth_first_const_iterator>();
+		iter++;
+		
+		Collection::Sequence<Graph::MapNodeIndicator> trajectory;
+		while (*iter != nullptr) {
+			int phase = iter->get_depth() - 1;
+			if (phase == 0) trajectory.clear();
+			else trajectory = trajectory.subsequence(0, phase - 1);
+			trajectory.push_back(*iter->data);
+			if (trajectory.size() == length) execute_function(trajectory);
+			iter++;
+		}
+	}
+
+	
+	///<summary>
+	/// 取りうるトラジェクトリを全て取得する
+	///</summary>
+	std::vector<Collection::Sequence<Graph::MapNodeIndicator>> ObservedTrajectoryStructure::get_all_possible_trajectories() const
+	{
+		std::vector<Collection::Sequence<Graph::MapNodeIndicator>> trajectories;
+		for_each_possible_trajectory([&trajectories](const Collection::Sequence<Graph::MapNodeIndicator>& trajectory) {
+			trajectories.push_back(trajectory);
+		});
+		return trajectories;
+	}
+
+
+	///<summary>
+	/// trajectoryに該当するエンティティがその経路で移動した確率を算出する
+	/// 長さ0のトラジェクトリの場合は0.0になるので注意
+	///</summary>
+	double ObservedTrajectoryStructure::calc_probability_of_trajectory(const std::vector<Graph::MapNodeIndicator>& trajectory) const
+	{
+		if (trajectory.size() == 0) return 0.0;
+		double probability = 1.0;
+		
+		ObservedTrajectoryStructure::base_const_iterator iter = const_root<ObservedTrajectoryStructure::base_const_iterator>();
+
+		for (int phase = 0; phase < trajectory.size(); phase++) {
+			Graph::MapNodeIndicator node = trajectory.at(phase);
+			iter = iter.find_child_if([&node](std::shared_ptr<ObservedTrajectoryNode const> child) {
+				return *child->data == node;
+			});
+			if (*iter == nullptr) return 0.0;
+			if (phase < trajectory.size() - 1) {
+				Graph::MapNodeIndicator next_node = trajectory.at(phase + 1);
+				Graph::node_id next_node_id = find_node_id(next_node, phase + 1);
+				probability *= iter->get_static_edge_to(next_node_id)->get_flow();
+			}
+		}
+
+		return probability;
 	}
 }
 

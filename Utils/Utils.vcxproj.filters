@@ -468,6 +468,21 @@
     <ClInclude Include="CrossJudgementModule.hpp">
       <Filter>ソース ファイル\Evaluation\MTC</Filter>
     </ClInclude>
+    <ClInclude Include="RevisitDepthFirstConstIterator.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="RevisitDepthFirstConstIterator.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="RevisitDepthFirstIterator.h">
+      <Filter>ヘッダー ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="RevisitDepthFirstIterator.hpp">
+      <Filter>ソース ファイル\Graph\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowEdge.h">
+      <Filter>ヘッダー ファイル\Graph\Edge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -589,6 +604,9 @@
     </ClCompile>
     <ClCompile Include="CrossInfo.cpp">
       <Filter>ソース ファイル\Evaluation\MTC</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowEdge.cpp">
+      <Filter>ソース ファイル\Graph\Edge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

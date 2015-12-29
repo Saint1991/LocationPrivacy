@@ -7,11 +7,11 @@
 #pragma once
 #include "Node.h"
 #include "MapNodeIndicator.h"
-#include "BasicEdge.h"
+#include "FlowEdge.h"
 
 namespace Observer
 {
-	class OBSERVED_TRAJECTORY_NODE_API ObservedTrajectoryNode : public Graph::Node<Graph::MapNodeIndicator, Graph::BasicEdge>
+	class OBSERVED_TRAJECTORY_NODE_API ObservedTrajectoryNode : public Graph::Node<Graph::MapNodeIndicator, Graph::FlowEdge>
 	{
 	protected:
 		int depth;
@@ -26,6 +26,7 @@ namespace Observer
 		int get_depth() const;
 		void set_depth(int depth);
 
+		void flow_out_to(const Graph::node_id to, double flow = 1.0);
 		bool is_leaf() const;
 	};
 }

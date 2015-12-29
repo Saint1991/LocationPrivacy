@@ -56,11 +56,13 @@ namespace Collection
 	template <typename T>
 	Sequence<T> Sequence<T>::subsequence(int from, int to) const
 	{
-		std::vector<T> sub;
+		if (from == 0 && to == size() - 1) return *this;
+		
+		Sequence<T> sub;
 		for (int i = from; i <= to; i++) {
 			sub.push_back(at(i));
 		}
-		return Sequence<T>(sub);
+		return sub;
 	}
 
 	///<summary>

@@ -225,6 +225,7 @@
     <ClInclude Include="Evaluator.h" />
     <ClInclude Include="FileExportable.h" />
     <ClInclude Include="FileExporter.h" />
+    <ClInclude Include="FlowEdge.h" />
     <ClInclude Include="GeoCalculation.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="IEvaluationModule.h" />
@@ -251,6 +252,10 @@
     <ClInclude Include="MySQLDb.h" />
     <ClInclude Include="PoiData.h" />
     <ClInclude Include="PreferenceRequirement.h" />
+    <ClInclude Include="RevisitDepthFirstConstIterator.h" />
+    <ClInclude Include="RevisitDepthFirstConstIterator.hpp" />
+    <ClInclude Include="RevisitDepthFirstIterator.h" />
+    <ClInclude Include="RevisitDepthFirstIterator.hpp" />
     <ClInclude Include="SequentialTree.h" />
     <ClInclude Include="SequentialTree.hpp" />
     <ClInclude Include="SequentialTreeNode.h" />
@@ -318,6 +323,7 @@
     </ClCompile>
     <ClCompile Include="Evaluator.cpp" />
     <ClCompile Include="FileExporter.cpp" />
+    <ClCompile Include="FlowEdge.cpp" />
     <ClCompile Include="GeoCalculation.cpp" />
     <ClCompile Include="GraphUtility.cpp" />
     <ClCompile Include="Grid.cpp" />

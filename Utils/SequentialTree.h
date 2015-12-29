@@ -7,7 +7,7 @@
 namespace Graph
 {
 	template <typename NODE, typename DATA>
-	class SequentialTree : public Tree<NODE, DATA, BasicEdge>
+	class SequentialTree : public Tree<NODE, DATA, BasicEdge, nullptr_t>
 	{
 	static_assert(std::is_base_of<SequentialTreeNode<DATA>, NODE>::value, "Template type NODE must be derived from SequentialTreeNode");
 	public:

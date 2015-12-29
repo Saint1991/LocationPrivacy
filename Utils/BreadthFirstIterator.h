@@ -9,8 +9,8 @@ namespace Graph
 	///<summary>
 	/// 幅優先探索用イテレータ
 	///</summary>
-	template <typename NODE, typename NODE_DATA, typename EDGE>
-	class BreadthFirstIterator : public BaseIterator<NODE, NODE_DATA, EDGE>
+	template <typename NODE, typename NODE_DATA, typename EDGE, typename EDGE_DATA>
+	class BreadthFirstIterator : public BaseIterator<NODE, NODE_DATA, EDGE, EDGE_DATA>
 	{
 	protected:
 		std::set<node_id> visited_node_ids;
@@ -18,7 +18,7 @@ namespace Graph
 
 	public:
 		BreadthFirstIterator(node_id id, std::shared_ptr<Collection::IdentifiableCollection<node_id, NODE>> node_collection);
-		BreadthFirstIterator<NODE, NODE_DATA, EDGE>& operator++(int);
+		BreadthFirstIterator<NODE, NODE_DATA, EDGE, EDGE_DATA>& operator++(int);
 	};
 }
 

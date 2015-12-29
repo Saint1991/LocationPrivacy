@@ -11,6 +11,7 @@ namespace Observer
 
 	///<summary>
 	/// サービス利用観測者を表すクラス
+	/// ただしTrajectoryはPOI系列に限る
 	///</summary>
 	template <typename TRAJECTORY_TYPE = Graph::SemanticTrajectory<Geography::LatLng>, typename DUMMY_TYPE = Entity::Dummy<Geography::LatLng>, typename USER_TYPE = User::BasicUser<Geography::LatLng>>
 	class BasicObserver
