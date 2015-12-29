@@ -33,6 +33,8 @@ namespace Observer
 		std::shared_ptr<ObservedTrajectoryStructure> sub_structure(Graph::node_id root_node_id) const;
 		std::shared_ptr<ObservedTrajectoryStructure> sub_structure(const Graph::MapNodeIndicator& map_node_id, int phase) const;
 
+		std::vector<std::shared_ptr<ObservedTrajectoryNode const>> read_all_nodes_of_phase(int phase) const;
+
 		void depth_first_iteration(Graph::node_id start_node_id, const std::function<void(std::shared_ptr<ObservedTrajectoryNode>)>& execute_function);
 		void breadth_first_iteration(Graph::node_id start_node_id, const std::function<void(std::shared_ptr<ObservedTrajectoryNode>)>& execute_function);
 

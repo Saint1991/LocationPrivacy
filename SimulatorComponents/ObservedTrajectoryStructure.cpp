@@ -116,6 +116,19 @@ namespace Observer
 
 
 	///<summary>
+	/// Phaseに対応するノードを全て取得する
+	///</summary>
+	std::vector<std::shared_ptr<ObservedTrajectoryNode const>> ObservedTrajectoryStructure::read_all_nodes_of_phase(int phase) const
+	{
+		int depth = phase + 1;
+		std::vector<std::shared_ptr<ObservedTrajectoryNode const>> ret;
+		node_collection->foreach([&ret, &depth](std::shared_ptr<ObservedTrajectoryNode const> node) {
+			if (node->get_depth() == depth) ret.push_back(node);
+		});
+		return ret;
+	}
+
+	///<summary>
 	/// 深さ優先探索の順序通りにノードを取得し，それぞれのノードについてexecute_functionを実行する
 	///</summary>
 	void ObservedTrajectoryStructure::depth_first_iteration(Graph::node_id start_node_id, const std::function<void(std::shared_ptr<ObservedTrajectoryNode>)>& execute_function)

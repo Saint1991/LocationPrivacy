@@ -24,6 +24,7 @@ namespace Observer
 		std::unique_ptr<Evaluate::CrossJudgementModule<Map::BasicDbMap, Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>> module;
 		std::shared_ptr<Entity::EntityManager<Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE> const> entities;
 		std::shared_ptr<Map::BasicDbMap const> map;
+		std::shared_ptr<Observer::ObservedTrajectoryStructure> structure;
 	public:
 		BasicObserver(
 			std::shared_ptr<Map::BasicDbMap const> map,
@@ -33,7 +34,9 @@ namespace Observer
 		);
 		~BasicObserver();
 
-		std::shared_ptr<Observer::ObservedTrajectoryStructure> create_observed_trajectory_structure() const;
+		std::shared_ptr<Observer::ObservedTrajectoryStructure const> create_observed_trajectory_structure();
+		void for_each_possible_trajectory_probability_of_entity(Entity::entity_id id, const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>, double)>& execute_function);
+		void for_each_expected_trajectory_frequency(const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>, double)>& execute_function);
 	};
 
 	template class BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>;

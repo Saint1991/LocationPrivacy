@@ -14,7 +14,7 @@ namespace Observer
 		std::shared_ptr<Entity::EntityManager<Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE> const> entities,
 		double move_speed,
 		const std::function<bool(std::shared_ptr<Map::BasicDbMap const>, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, double, long)>& cross_rule
-	) : module(std::make_unique<Evaluate::CrossJudgementModule<Map::BasicDbMap, Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>>(map, entities, move_speed, cross_rule)), entities(entities), map(map)
+	) : module(std::make_unique<Evaluate::CrossJudgementModule<Map::BasicDbMap, Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>>(map, entities, move_speed, cross_rule)), entities(entities), map(map), structure(nullptr)
 	{
 	}
 
@@ -32,8 +32,10 @@ namespace Observer
 	/// トラジェクトリとその交差関係を基に観測されるすべてのトラジェクトリモデルを作成する
 	///</summary>
 	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
-	std::shared_ptr<ObservedTrajectoryStructure> BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::create_observed_trajectory_structure() const
+	std::shared_ptr<ObservedTrajectoryStructure const> BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::create_observed_trajectory_structure()
 	{
+		if (structure != nullptr) return structure;
+
 		std::shared_ptr<ObservedTrajectoryStructure> trajectory_structure = std::make_shared<ObservedTrajectoryStructure>();
 		ObservedTrajectoryStructure::base_iterator iter = trajectory_structure->root<ObservedTrajectoryStructure::base_iterator>();
 
@@ -106,7 +108,33 @@ namespace Observer
 				}
 			}
 		}
+
+		structure = trajectory_structure;
 		return trajectory_structure;
+	}
+
+
+	///<summary>
+	/// IDがidのエンティティが移動し得たトラジェクトリとその確率の組についてexecute_functionを実行する
+	///</summary>
+	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
+	void BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::for_each_possible_trajectory_probability_of_entity(Entity::entity_id id, const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>, double)>& execute_function)
+	{
+		if (structure == nullptr) create_observed_trajectory_structure();
+		std::shared_ptr<Entity::MobileEntity<Geography::LatLng, TRAJECTORY_TYPE> const> entity = entities->read_entity_by_id(id);
+		Graph::MapNodeIndicator first_node = entity->read_node_pos_info_of_phase(0).first;
+		std::shared_ptr<ObservedTrajectoryStructure const> sub = structure->sub_structure(first_node, 0);
+		sub->for_each_possible_trajectory([&execute_function, &sub](const Collection::Sequence<Graph::MapNodeIndicator>& trajectory) {
+			double probability = sub->calc_probability_of_trajectory(trajectory);
+			execute_function(trajectory, probability);
+		});
+	}
+
+	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
+	void BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::for_each_expected_trajectory_frequency(const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>, double)>& execute_function)
+	{
+		
+		
 	}
 }
 
