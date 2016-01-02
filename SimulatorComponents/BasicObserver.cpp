@@ -130,11 +130,20 @@ namespace Observer
 		});
 	}
 
+
+	///<summary>
+	/// 観測された情報から取りうるすべてのトラジェクトリについてexecute_functionを実行するその経路を辿ったエンティティ数 
+	///</summary>
 	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
 	void BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::for_each_expected_trajectory_frequency(const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>, double)>& execute_function)
 	{
-		
-		
+		if (structure == nullptr) create_observed_trajectory_structure();
+		std::unordered_map<Graph::MapNodeIndicator, size_t> first_node_entity_count_info = structure->get_entity_count_info_of_phase(0);
+		structure->for_each_possible_trajectory([&](const Collection::Sequence<Graph::MapNodeIndicator>& trajectory) {
+			double probability = structure->calc_probability_of_trajectory(trajectory);
+			size_t entity_count = first_node_entity_count_info.at(trajectory.at(0));
+			execute_function(trajectory, probability * entity_count);
+		});
 	}
 }
 

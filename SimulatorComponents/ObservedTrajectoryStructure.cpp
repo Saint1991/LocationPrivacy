@@ -190,6 +190,22 @@ namespace Observer
 
 
 	///<summary>
+	/// 指定したPhaseに各ノードに存在するエンティティ数を取得する
+	///</summary>
+	std::unordered_map<Graph::MapNodeIndicator, size_t> ObservedTrajectoryStructure::get_entity_count_info_of_phase(int phase) const
+	{
+		std::unordered_map<Graph::MapNodeIndicator, size_t> entity_count_info;
+		
+		std::vector<std::shared_ptr<ObservedTrajectoryNode const>> first_nodes = read_all_nodes_of_phase(phase);
+		for (std::vector<std::shared_ptr<ObservedTrajectoryNode const>>::const_iterator node = first_nodes.begin(); node != first_nodes.end(); node++) {
+			if (entity_count_info.find(*(*node)->data) == entity_count_info.end()) entity_count_info.insert(std::make_pair(*(*node)->data, 1U));
+			else entity_count_info.at(*(*node)->data) += 1;
+		} 
+
+		return entity_count_info;
+	}
+
+	///<summary>
 	/// trajectoryに該当するエンティティがその経路で移動した確率を算出する
 	/// 長さ0のトラジェクトリの場合は0.0になるので注意
 	///</summary>

@@ -40,6 +40,7 @@ namespace Observer
 
 		void for_each_possible_trajectory(const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>&)>& execute_function) const;
 		std::vector<Collection::Sequence<Graph::MapNodeIndicator>> get_all_possible_trajectories() const;
+		std::unordered_map<Graph::MapNodeIndicator, size_t> get_entity_count_info_of_phase(int phase) const;
 
 		double calc_probability_of_trajectory(const std::vector<Graph::MapNodeIndicator>& trajectory) const;
 	};

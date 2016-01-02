@@ -33,6 +33,21 @@ namespace Graph
 		bool operator==(const MapNodeIndicator& id) const;
 		bool operator!=(const MapNodeIndicator& id) const;
 	};
+
 }
+
+#pragma region Hash
+namespace std
+{
+	template <>
+	struct hash<Graph::MapNodeIndicator>
+	{
+		size_t operator()(const Graph::MapNodeIndicator& id) const
+		{
+			return (hash<Graph::node_id>()(id.id()) ^ (hash<Graph::NodeType>()(id.type()) << 1));
+		}
+	};
+}
+#pragma endregion MapNodeIndicator‚ðunordered_map‚ÌƒL[‚ÉŽw’è‚Å‚«‚é‚æ‚¤‚É‚·‚é
 
 
