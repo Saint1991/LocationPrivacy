@@ -145,5 +145,95 @@ namespace Observer
 			execute_function(trajectory, probability * entity_count);
 		});
 	}
+
+	///<summary>
+	/// AR-Countを計算する
+	///</summary>
+	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
+	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_ar_count(double required_anonymous_area) const
+	{
+		int achieve_count = 0;
+		std::shared_ptr<Time::TimeSlotManager const> timeslot = entities->read_timeslot();
+		timeslot->for_each_time([&](time_t time, long interval, int phase) {
+			double convex_hull_size = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
+			if (convex_hull_size >= required_anonymous_area) achieve_count++;
+		});
+		return (double)achieve_count / timeslot->phase_count();
+	}
+
+
+	///<summary>
+	/// ARSizeを計算する
+	///</summary>
+	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
+	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_ar_size(double required_anonymous_area) const
+	{
+		double size_sum = 0.0;
+		std::shared_ptr<Time::TimeSlotManager const> timeslot = entities->read_timeslot();
+		timeslot->for_each_time([&](time_t time, long interval, int phase) {
+			double convex_hull_size = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
+			size_sum += convex_hull_size;
+		});
+		return (double)size_sum / timeslot->phase_count() / required_anonymous_area;
+	}
+
+
+	///<summary>
+	/// POIの意味情報を考えない場合のMTCの計算 (最後まで達成できない場合の扱いをどうするかは要検討)
+	/// とりあえず、最後まで達成できなかったところは考慮しない仕様で実装
+	///</summary>
+	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
+	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_mtc_without_semantics() const
+	{
+		std::vector<std::vector<Evaluate::CrossInfo>> cross_infos;
+		std::shared_ptr<Time::TimeSlotManager const> timeslot = entities->read_timeslot();
+		for (int phase = 0; phase < timeslot->phase_count() - 1; phase++) {
+			cross_infos.push_back(module->get_all_cross_info_of_phase(phase));
+		}
+		
+		size_t confusion_count = 0;
+		double confusion_time_sum = 0.0;
+		for (int start_phase = 0; start_phase < timeslot->phase_count() - 1; start_phase++) {
+			double time_to_confusion = calc_time_to_confusion(cross_infos, start_phase);
+			if (time_to_confusion != -1.0) {
+				confusion_count++;
+				confusion_time_sum += time_to_confusion;
+			}
+		}
+
+		double mtc = confusion_time_sum / confusion_count;
+		return mtc;
+	}
+
+
+	///<summary>
+	/// ユーザが発見された時刻をstart_phaseとしたときのtime_to_confusionを計算する
+	///</summary>
+	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
+	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_time_to_confusion(const std::vector<std::vector<Evaluate::CrossInfo>>& cross_infos, int start_phase) const
+	{
+		std::shared_ptr<Time::TimeSlotManager const> timeslot = entities->read_timeslot();
+		
+		//各エンティティのユーザ確立
+		std::vector<double> probability_vector(entities->get_dummy_count() + 1, 0.0);
+		probability_vector.at(0) = 1.0;
+
+		double entoropy = 0.0;
+
+		//start_phaseからの各フェーズについて各エンティティのユーザ確立を更新していく
+		for (int phase = start_phase; phase < timeslot->phase_count() - 1; phase++) {
+			std::vector<Evaluate::CrossInfo> cross_info_of_phase = cross_infos.at(phase);
+			for (std::vector<Evaluate::CrossInfo>::const_iterator crosses = cross_info_of_phase.begin(); crosses != cross_info_of_phase.end(); crosses++) {
+				//着目するエンティティ
+				Entity::entity_id target_id = crosses->id;
+				//各交差対象のエンティティについて繰り返す
+				for (std::vector<Entity::entity_id>::const_iterator cross_target = crosses->crossing_entities.begin(); cross_target != crosses->crossing_entities.end(); cross_target++) {
+
+				}
+			}
+		}
+
+		return -1.0;
+	}
 }
 

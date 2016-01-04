@@ -40,7 +40,7 @@ namespace Simulation
 		int failed_count = 0;
 
 		//全トラジェクトリデータからユーザの嗜好の木を作成する
-
+		
 
 		for (std::list<std::shared_ptr<Requirement::PreferenceRequirement const>>::const_iterator iter = requirements.begin(); iter != requirements.end(); iter++) {
 			for (int current_trajectory_id = 0; current_trajectory_id < user_trajectories->size(); current_trajectory_id++) {
