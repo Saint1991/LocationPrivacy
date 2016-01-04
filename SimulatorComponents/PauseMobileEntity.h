@@ -55,7 +55,9 @@ namespace Entity
 		//訪問POI_ID(visited_pois_info_list_id)に関するsetterとgetter
 		void increment_visited_pois_info_list_id();
 		int get_visited_pois_info_list_id();
+		int get_visited_pois_info_list_id_at_certain_phase(int phase);
 		void clear_visited_pois_info_list_id();
+
 
 		//訪問POI(visited_poi)に関するsetterとgetter
 		void set_visited_poi_of_phase(int phase, const Graph::MapNodeIndicator& node_id, const Geography::LatLng& position);
@@ -69,6 +71,7 @@ namespace Entity
 
 		//pause_phaseに関するsetterとgetter
 		std::vector<int> get_pause_phases();
+		std::vector<int> get_all_pause_phases_since_current_phase(int current_phase);
 		std::vector<int> get_all_pause_phases();
 		void set_pause_phases(int pause_phase);
 		void set_pause_phases_using_arrive_phase(int arrive_phase, int pause_phase);
@@ -105,30 +108,25 @@ namespace Entity
 		void set_rest_pause_time_when_departing_using_arrive_phase(int arrive_phase, double rest_pause_time);
 		double get_rest_pause_time_when_departing_using_pause_phase(int pause_phase);
 
-
 		//到着時と出発時の余り時間のsetterとgetter
 		void set_dest_rest_time(double dest_rest_time);
 		void set_dest_rest_time_using_arrive_phase(int arrive_phase, double dest_rest_time);
 	
-
 		//現在情報のrest_pause_timeに関するsetterとgetter
-		int get_now_pause_time(int now_phase) const;
-		int get_now_pause_time(int now_phase);
+		double get_now_pause_time(int now_phase) const;
+		double get_now_pause_time(int now_phase);
 		void set_now_pause_time(int now_phase, double time);
-
 
 		//現在phaseにおける速度のsetterとgetter
 		double get_now_speed(int phase) const;
 		void set_now_speed(int phase, double speed);
 		void set_random_now_speed(int phase, double average_speed, double speed_range);
 				
-
 		//停止POIにいるかどうかのチェック用
 		bool check_pause_condition(int now_phase);
 		void raise_flag();
 		void take_down_flag();
 
-		
 		//trajectory取得用
 		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
 		

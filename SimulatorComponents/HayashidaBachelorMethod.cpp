@@ -48,7 +48,7 @@ namespace Method
 
 		double dest_rest_time = 0.0;//phaseの到着時間と実際の到着時間の差分.最初だけ0
 
-									//--------------二個目以降の点を決定．forで，確保したいpoiの個数分をループさせる-------------------
+		//--------------二個目以降の点を決定．forで，確保したいpoiの個数分をループさせる-------------------
 		for (int i = 1; i < POI_NUM; i++)
 		{
 			user->set_dest_rest_time(dest_rest_time);//到着時の余り分を登録
@@ -157,7 +157,7 @@ namespace Method
 			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
 		}
 		*/
-		std::cout << "Success Making Re-Predicted User" << std::endl;
+		std::cout << "Success Re-Predicting User Plan" << std::endl;
 	}
 
 	///<summary>
@@ -170,8 +170,8 @@ namespace Method
 		//現在phaseまでの交差回数は考慮しないことに注意
 		int original_cross_num = input_user->get_cross_count() - input_user->get_cross_count_until_the_phase(now_phase);
 		
-		//全停止phaseを取得
-		std::vector<int> all_pause_phases = predicted_user->get_all_pause_phases();
+		//現在phase以降の全停止phaseを取得
+		std::vector<int> all_pause_phases = predicted_user->get_all_pause_phases_since_current_phase(now_phase);
 		
 		//ユーザとユーザの全停止時間中に存在する全ダミーとの距離を計算
 		//既に距離別にsort済み
@@ -182,12 +182,27 @@ namespace Method
 		for (int i = 0; i < original_cross_num; i++) {
 			for (auto iter = candidate_cross_dummies_ordered_by_dist.begin(); iter != candidate_cross_dummies_ordered_by_dist.end(); iter++) {
 				std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> target_dummy = entities->get_dummy_by_id(iter->first.first);
-				//対象ダミーがPOIにPOIに停止中の場合
-				if (target_dummy->read_node_pos_info_of_phase(iter->first.second).first.type() == Graph::POI)
+				//対象ダミーが現在phaseにおいて，POIに停止中の場合
+				if (target_dummy->read_node_pos_info_of_phase(now_phase).first.type() == Graph::POI)
 				{
-					//追跡可能性低下のための経路設定と同様な方法で，三通りに場合分け
+					//
+					if (true) {
+						//追跡可能性低下のための経路設定と同様な方法で，三通りに場合分け
+						if (true) {
+
+						}
+						else if (true) {
+
+						}
+						else {
+
+						}
+					}
+					else {
+
+					}
 				}
-				//対象ダミーが対象phase中に訪問POI以外に存在している場合
+				//対象ダミーが現在phaseで訪問POI以外に存在している場合
 				else
 				{
 					//到達可能性がどの程度あるかどうかによるが，とりあえずシンプルに３つに場合分け

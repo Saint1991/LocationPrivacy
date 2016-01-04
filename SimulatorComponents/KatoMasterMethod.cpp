@@ -156,6 +156,7 @@ namespace Method
 			//そもそも，同じ場所にいたら，NO_CHANGE
 			if (now_predicted_user_position == now_real_user_position) return NO_CHANGE;
 
+			//線形補間したpositionでshortest_distanceを使うとエラーになるので注意
 			double real_user_dist = Geography::GeoCalculation::lambert_distance(*real_user->read_position_of_phase(now_phase - 1), *real_user->read_position_of_phase(now_phase));
 			double predicted_user_dist = Geography::GeoCalculation::lambert_distance(*predicted_user->read_position_of_phase(now_phase - 1), *predicted_user->read_position_of_phase(now_phase));
 
@@ -164,7 +165,6 @@ namespace Method
 
 			double real_user_speed = real_user_dist / (requirement->service_interval - real_user_rest_time);
 			double predicted_user_speed = predicted_user_dist / (requirement->service_interval - predicted_uesr_rest_time);
-
 
 			//もしrest_time分を考慮して，逆算して，速度が同じなら，停止時間の変更と判断
 			if (real_user_speed == predicted_user_speed) {
@@ -383,10 +383,10 @@ namespace Method
 		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
 
 		//変更前のtrajectoryを保持
-
+		
 
 		//全停止時間分，ダミーの停止時間を修正する．
-		for (int i = revising_dummy->get_visited_pois_info_list_id(); i <= revising_dummy->get_visited_pois_num(); i++, changed_poi_num_id++)
+		for (int i = revising_dummy->get_visited_pois_info_list_id(); i < revising_dummy->get_visited_pois_num(); i++, changed_poi_num_id++)
 		{
 			//停止中or向かっているPOIの停止時間を取得
 			double pause_time = revising_dummy->get_any_poi_pause_time(i);
@@ -420,20 +420,18 @@ namespace Method
 			Tu -= change_time;
 			if (Tu == 0.0) break;
 		}
-
-		changed_poi_num_id = 1;//一旦リセット
-
+				
 		//停止時間が変更されたPOIの数だけ，次の経路を再計算
-		for(int i = 0; i < changed_poi_num_id; i++, visited_poi_id++, changed_poi_num_id++) {
-			int revise_phase = revising_dummy->check_pause_condition(phase_id) && changed_poi_num_id == 1 ? phase_id : revising_dummy->get_any_arrive_phase(visited_poi_id);
+		for(int i = 0; i < changed_poi_num_id; i++, visited_poi_id++) {
+			//修正対象のフェーズを取得．現在停止中で，一回目の再計算→現在のフェーズ，移動中→次の予定到着フェーズ
+			int revise_phase = revising_dummy->check_pause_condition(phase_id) && i == 0 ? phase_id : revising_dummy->get_any_arrive_phase(visited_poi_id);
 			if (revise_phase == time_manager->last_phase()) break;
 			//recalculation_pathの引数のrevise_phaseをポインタにするかどうかを検討
 			recalculation_path(revising_dummy->get_any_poi(visited_poi_id).first, revising_dummy->get_any_poi(visited_poi_id + 1).first, revise_phase);
 		}
 
 		//変更されなかった分はコピーで対応
-
-		
+		//Tuがservice_intervalだった場合はコピーで対応したほうが計算が早いかも(というか早い)	
 	}
 	
 
@@ -514,12 +512,13 @@ namespace Method
 	///<summary>
 	/// ダミーの停止位置の修正
 	/// 1:現在の残り停止時間を基に，停止phaseを埋める
-	/// 2:
+	/// 2:pathを再計算(現在停止時間を0でセットし直すことに注意)
 	///</summary>
 	void KatoMasterMethod::recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int revise_phase)
 	{
 		double rest_pause_time = revising_dummy->get_now_pause_time(revise_phase);
 		lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, requirement->service_interval);
+		
 		//revise_phaseをインクリメントする前に保持しておく
 		double pause_position_speed = revising_dummy->get_starting_speed_using_pause_phase(revise_phase);
 
@@ -575,19 +574,20 @@ namespace Method
 		double time_between_arrive_position_and_dest_position = now_time - total_time_from_source_to_destination;
 		double dest_rest_time
 			= time_between_arrive_position_and_dest_position == requirement->service_interval ? 0 : time_between_arrive_position_and_dest_position;
+		
 		//目的地の登録
-		//speedは別途設定のため不要
+		//到着phaseも登録する！
 		(revise_phase)++;
 		revising_dummy->set_position_of_phase(revise_phase, destination, map->get_static_poi(destination.id())->data->get_position());
-
 	}
 
 	///<summary>
 	/// ダミーの訪問POI情報を更新する
+	/// pause_phases,
 	///</summary>
 	void KatoMasterMethod::update_visited_pois_info_of_dummy()
 	{
-		
+		//revising_dummy->
 	}
 
 	///<summary>
@@ -629,9 +629,10 @@ namespace Method
 	{
 		//ユーザの行動判定及びダミーの修正
 		if (check_going_same_poi_as_plan()) {
-			if (check_user_plan(phase_id) != NO_CHANGE) {
+			Method::KatoMasterMethod::ChangeParameter parmeter = check_user_plan(phase_id);
+			if (parmeter != NO_CHANGE) {
 				revise_dummy_trajectory(phase_id);//dummyの行動プランの更新
-				update_user_plan(check_user_plan(phase_id), phase_id);//次の停止地点の到着時間を予測し，ユーザの行動プランを更新
+				update_user_plan(parmeter, phase_id);//次の停止地点の到着時間を予測し，ユーザの行動プランを更新
 			}
 		}
 	}
