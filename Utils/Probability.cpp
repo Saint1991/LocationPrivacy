@@ -72,4 +72,20 @@ double Math::Probability::exponential_distribution(double lambda)
 }
 
 
+///<summary>
+/// 確率値が格納されているvectorに対し，エントロピーを計算する
+///</summary>
+double Math::Probability::calc_entropy(const std::vector<double>& probability_vector)
+{
+	double entropy = 0.0;
+	for (std::vector<double>::const_iterator prob = probability_vector.begin(); prob != probability_vector.end(); prob++) {
+		double probability = *prob;
+		if (probability < 0.0 || 1.0 < probability) throw std::invalid_argument("probability must be within the range [0, 1]");
+		if (probability != 0) {
+			entropy -= probability * std::log2(probability);
+		}
+	}
+	return entropy;
+}
+
 

@@ -4,6 +4,7 @@
 #include "SemanticTrajectory.h"
 #include "Dummy.h"
 #include "BasicUser.h"
+#include "Probability.h"
 
 namespace Observer
 {
@@ -20,7 +21,7 @@ namespace Observer
 		static_assert(std::is_base_of<Entity::MobileEntity<Geography::LatLng, TRAJECTORY_TYPE>, DUMMY_TYPE>::value, "DUMMY_TYPE must be derived from MobileEntity<LatLng, TRAJECTORY_TYPE>");
 		static_assert(std::is_base_of<Entity::MobileEntity<Geography::LatLng, TRAJECTORY_TYPE>, USER_TYPE>::value, "DUMMY_TYPE must be derived from MobileEntity<LatLng, TRAJECTORY_TYPE>");
 	private:
-		double calc_time_to_confusion(const std::vector<std::vector<Evaluate::CrossInfo>>& cross_infos, int start_phase) const;
+		double calc_time_to_confusion(const std::vector<std::vector<Evaluate::CrossInfo>>& cross_infos, int start_phase, double threshold = 1.0) const;
 
 	protected:
 		std::unique_ptr<Evaluate::CrossJudgementModule<Map::BasicDbMap, Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>> module;
@@ -43,7 +44,7 @@ namespace Observer
 		double calc_ar_count(double required_anonymous_area) const;
 		double calc_ar_size(double required_anonymous_area) const;
 
-		double calc_mtc_without_semantics() const;
+		double calc_mtc_without_semantics(double threshold = 1.0) const;
 	};
 
 	template class BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>;

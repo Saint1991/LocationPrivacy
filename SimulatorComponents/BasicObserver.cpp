@@ -103,7 +103,7 @@ namespace Observer
 				//上の情報を元にエッジを張る
 				for (std::unordered_map<Graph::node_id, size_t>::const_iterator visit_count_iter = next_visit_map.begin(); visit_count_iter != next_visit_map.end(); visit_count_iter++) {
 					Graph::node_id to = visit_count_iter->first;
-					double probability = (double)visit_count_iter->second / crossing_entities.size();
+					double probability = (double)visit_count_iter->second / next_visit_map.size();
 					iter->is_connecting_to(to) ? iter->get_edge_to(to)->set_flow(probability) : iter->flow_out_to(to, probability);
 				}
 			}
@@ -183,7 +183,7 @@ namespace Observer
 	/// とりあえず、最後まで達成できなかったところは考慮しない仕様で実装
 	///</summary>
 	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
-	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_mtc_without_semantics() const
+	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_mtc_without_semantics(double threshold) const
 	{
 		std::vector<std::vector<Evaluate::CrossInfo>> cross_infos;
 		std::shared_ptr<Time::TimeSlotManager const> timeslot = entities->read_timeslot();
@@ -194,7 +194,7 @@ namespace Observer
 		size_t confusion_count = 0;
 		double confusion_time_sum = 0.0;
 		for (int start_phase = 0; start_phase < timeslot->phase_count() - 1; start_phase++) {
-			double time_to_confusion = calc_time_to_confusion(cross_infos, start_phase);
+			double time_to_confusion = calc_time_to_confusion(cross_infos, start_phase, threshold);
 			if (time_to_confusion != -1.0) {
 				confusion_count++;
 				confusion_time_sum += time_to_confusion;
@@ -210,7 +210,7 @@ namespace Observer
 	/// ユーザが発見された時刻をstart_phaseとしたときのtime_to_confusionを計算する
 	///</summary>
 	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
-	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_time_to_confusion(const std::vector<std::vector<Evaluate::CrossInfo>>& cross_infos, int start_phase) const
+	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_time_to_confusion(const std::vector<std::vector<Evaluate::CrossInfo>>& cross_infos, int start_phase, double threshold) const
 	{
 		std::shared_ptr<Time::TimeSlotManager const> timeslot = entities->read_timeslot();
 		
@@ -222,14 +222,36 @@ namespace Observer
 
 		//start_phaseからの各フェーズについて各エンティティのユーザ確立を更新していく
 		for (int phase = start_phase; phase < timeslot->phase_count() - 1; phase++) {
+
+			//現状のprobability_vectorを一旦コピー
+			std::vector<double> probability_vector_copy;
+			std::copy(probability_vector.begin(), probability_vector.end(), std::back_inserter(probability_vector_copy));
+
 			std::vector<Evaluate::CrossInfo> cross_info_of_phase = cross_infos.at(phase);
 			for (std::vector<Evaluate::CrossInfo>::const_iterator crosses = cross_info_of_phase.begin(); crosses != cross_info_of_phase.end(); crosses++) {
+				
 				//着目するエンティティ
 				Entity::entity_id target_id = crosses->id;
-				//各交差対象のエンティティについて繰り返す
-				for (std::vector<Entity::entity_id>::const_iterator cross_target = crosses->crossing_entities.begin(); cross_target != crosses->crossing_entities.end(); cross_target++) {
+				Graph::MapNodeIndicator next_visit_node = entities->read_entity_by_id(target_id)->read_node_pos_info_of_phase(phase + 1).first;
+				
+				//配分する確率値
+				double probability_change = probability_vector_copy.at(target_id) / crosses->crossing_entities.size();
 
+				//交差相手のノードが自身と違うノードに移動するかチェックし，それに応じて自身の確率を配分
+				for (std::vector<Entity::entity_id>::const_iterator cross_target = crosses->crossing_entities.begin(); cross_target != crosses->crossing_entities.end(); cross_target++) {
+					Graph::MapNodeIndicator cross_target_next_visit_node = entities->read_entity_by_id(*cross_target)->read_node_pos_info_of_phase(phase + 1).first;
+					if (cross_target_next_visit_node != next_visit_node) {
+						probability_vector.at(target_id) -= probability_change;
+						probability_vector.at(*cross_target) += probability_change;
+					}
 				}
+			}
+
+			//エントロピーを計算し，thresholdを超えた場合は経過時刻をtime_to_confusionとして返す
+			double entropy = Math::Probability::calc_entropy(probability_vector);
+			if (entoropy >= threshold) {
+				double time_to_confusion = timeslot->time_of_phase(phase + 1) - timeslot->time_of_phase(start_phase);
+				return time_to_confusion;
 			}
 		}
 
