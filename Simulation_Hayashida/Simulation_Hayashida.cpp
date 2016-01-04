@@ -2,7 +2,6 @@
 //
 
 #include "stdafx.h"
-#include "PaisSimulator.h"
 #include "ISimulator.h"
 #include "BasicDbMap.h"
 #include "BasicUser.h"

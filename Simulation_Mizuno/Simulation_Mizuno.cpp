@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "PaisSimulator.h"
+#include "DeimSimulator.h"
 #include "ISimulator.h"
 #include "BasicDbMap.h"
 #include "BasicUser.h"
@@ -14,7 +14,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 
 	//‚±‚±‚ÅISimulator‚ðŽÀ‘•‚µ‚½ƒNƒ‰ƒX‚ðŽg‚¢•ª‚¯‚é
-	std::unique_ptr<Simulation::BaseSimulator> simulator	= std::make_unique<Simulation::PaisSimulator>();
+	std::unique_ptr<Simulation::BaseSimulator> simulator	= std::make_unique<Simulation::DeimSimulator>();
 	simulator->prepare();
 	simulator->run();
 	simulator->evaluate();

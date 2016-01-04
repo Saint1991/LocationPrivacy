@@ -39,7 +39,7 @@ namespace Simulation
 		std::shared_ptr<User::PreferenceTree> user_preference_tree;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree;
 
-		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
+		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary = {46.0, 122.0, 20.0, 154.0});
 		void create_trajectories();
 		void build_user_preference_tree();
 		virtual void make_requirement_list() = 0;

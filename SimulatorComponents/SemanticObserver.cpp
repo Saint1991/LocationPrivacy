@@ -46,4 +46,14 @@ namespace  Observer
 			}
 		});
 	}
+
+
+	///<summary>
+	/// Semantics‚ğl—¶‚µ‚½MTC‚ÌŒvZ (–¢À‘•)
+	///</summary>
+	template <typename DUMMY_TYPE, typename USER_TYPE>
+	double SemanticObserver<DUMMY_TYPE, USER_TYPE>::calc_mtc_with_semantics() const
+	{
+		return 0.0;
+	}
 }

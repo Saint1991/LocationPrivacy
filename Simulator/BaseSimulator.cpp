@@ -61,7 +61,7 @@ namespace Simulation
 		
 		//DB内マップ全域をカバーする範囲
 		Graph::Rectangle<Geography::LatLng> all_map_boundary(35.9, 139.4, 35.5, 141.0);
-		build_map(all_map_boundary);
+		if (map == nullptr) build_map(all_map_boundary);
 
 		size_t original_trajectory_count = trajectories->size();
 		std::unique_ptr<User::UserTrajectoryConverter> converter = std::make_unique<User::UserTrajectoryConverter>(map);
@@ -69,12 +69,7 @@ namespace Simulation
 		int progress = 1;
 		//作成したトラジェクトリから歩行部分のみを切り出す
 		for (std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>::const_iterator trajectory = trajectories->begin(); trajectory != trajectories->end(); trajectory++, progress++) {
-			
-			//該当部分の地図情報を読み込む
-			//Graph::Rectangle<Geography::LatLng> map_boundary = (*trajectory)->get_trajectory_boundary();
-			//build_map(map_boundary);
 
-			//std::unique_ptr<User::UserTrajectoryConverter> converter = std::make_unique<User::UserTrajectoryConverter>(map);
 			std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> converted_trajectory = converter->extract_walking_semantic_trajectory(*trajectory, TRAJECTORY_LENGTH_THRESHOLD, AVERAGE_SPEED);
 			if (converted_trajectory != nullptr) {
 				user_trajectories->push_back(converted_trajectory);
@@ -108,6 +103,7 @@ namespace Simulation
 	void BaseSimulator::prepare()
 	{
 		make_requirement_list();
+		build_map();
 		create_trajectories();
 		build_user_preference_tree();
 	}

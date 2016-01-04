@@ -48,11 +48,11 @@
     <ClInclude Include="BaseSimulator.h">
       <Filter>ヘッダー ファイル\Simulations\Mizuno</Filter>
     </ClInclude>
-    <ClInclude Include="PaisSimulator.h">
-      <Filter>ヘッダー ファイル\Simulations\Mizuno</Filter>
-    </ClInclude>
     <ClInclude Include="HayashidaSimulator.h">
       <Filter>ヘッダー ファイル\Simulations\hayashida</Filter>
+    </ClInclude>
+    <ClInclude Include="DeimSimulator.h">
+      <Filter>ヘッダー ファイル\Simulations\Mizuno</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -68,11 +68,11 @@
     <ClCompile Include="BaseSimulator.cpp">
       <Filter>ソース ファイル\Simulations\Mizuno</Filter>
     </ClCompile>
-    <ClCompile Include="PaisSimulator.cpp">
-      <Filter>ソース ファイル\Simulations\Mizuno</Filter>
-    </ClCompile>
     <ClCompile Include="HayashidaSimulator.cpp">
       <Filter>ソース ファイル\Simulations\Hayashida</Filter>
+    </ClCompile>
+    <ClCompile Include="DeimSimulator.cpp">
+      <Filter>ソース ファイル\Simulations\Mizuno</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

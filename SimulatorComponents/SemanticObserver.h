@@ -22,6 +22,7 @@ namespace Observer
 		~SemanticObserver();
 
 		void for_each_category_sequence_of_possible_trajectory(const std::function<void(const Collection::Sequence<std::string>&, double)>& execute_function) const;
+		double calc_mtc_with_semantics() const;
 	};
 }
 
