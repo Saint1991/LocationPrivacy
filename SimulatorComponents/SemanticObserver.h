@@ -1,3 +1,9 @@
+#ifdef SIMULATORCOMPONENTS_EXPORTS
+#define SEMANTIC_OBSERVER_API __declspec(dllexport)
+#else
+#define SEMANTIC_OBSERVER_API __declspec(dllimport)
+#endif
+
 #pragma once
 #include "BasicObserver.h"
 #include "SemanticTrajectory.h"
@@ -6,7 +12,7 @@
 namespace Observer
 {
 	template <typename DUMMY_TYPE, typename USER_TYPE>
-	class SemanticObserver : public BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, DUMMY_TYPE, USER_TYPE>
+	class SEMANTIC_OBSERVER_API SemanticObserver : public BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, DUMMY_TYPE, USER_TYPE>
 	{
 	protected:
 		std::shared_ptr<User::PreferenceTree const> observed_preference;
@@ -21,9 +27,11 @@ namespace Observer
 		);
 		~SemanticObserver();
 
-		void for_each_category_sequence_of_possible_trajectory(const std::function<void(const Collection::Sequence<std::string>&, double)>& execute_function) const;
+		void for_each_category_sequence_of_possible_trajectory(const std::function<void(const Collection::Sequence<std::string>&, double)>& execute_function);
 		double calc_mtc_with_semantics() const;
 	};
+
+	template class SemanticObserver<Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>;
 }
 
 

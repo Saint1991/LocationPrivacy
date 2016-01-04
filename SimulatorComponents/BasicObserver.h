@@ -1,3 +1,9 @@
+#ifdef SIMULATORCOMPONENTS_EXPORTS
+#define BASIC_OBSERVER_API __declspec(dllexport)
+#else
+#define BASIC_OBSERVER_API __declspec(dllimport)
+#endif
+
 #pragma once
 #include "CrossJudgementModule.h"
 #include "BasicDbMap.h"
@@ -15,7 +21,7 @@ namespace Observer
 	/// ‚½‚¾‚µTrajectory‚ÍPOIŒn—ñ‚ÉŒÀ‚é
 	///</summary>
 	template <typename TRAJECTORY_TYPE = Graph::SemanticTrajectory<Geography::LatLng>, typename DUMMY_TYPE = Entity::Dummy<Geography::LatLng>, typename USER_TYPE = User::BasicUser<Geography::LatLng>>
-	class BasicObserver
+	class BASIC_OBSERVER_API BasicObserver
 	{
 		static_assert(std::is_base_of<Graph::Trajectory<Geography::LatLng>, TRAJECTORY_TYPE>::value, "TRAJECTORY_TYPE must be derived from Trajectory<LatLng>");
 		static_assert(std::is_base_of<Entity::MobileEntity<Geography::LatLng, TRAJECTORY_TYPE>, DUMMY_TYPE>::value, "DUMMY_TYPE must be derived from MobileEntity<LatLng, TRAJECTORY_TYPE>");

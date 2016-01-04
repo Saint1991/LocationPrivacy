@@ -14,7 +14,7 @@ namespace  Observer
 		std::shared_ptr<User::PreferenceTree> preference,
 		double move_speed,
 		const std::function<bool(std::shared_ptr<Map::BasicDbMap const>, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, double, long)>& cross_rule
-		) : BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, DUMMY_TYPE, USER_TYPE>(map, entities, move_speed, cross_rule), preference(preference)
+		) : BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, DUMMY_TYPE, USER_TYPE>(map, entities, move_speed, cross_rule), observed_preference(preference)
 	{
 	}
 
@@ -34,7 +34,7 @@ namespace  Observer
 	/// ただし同一シーケンスでも一度で実行されるとは限らない点に注意
 	///</summary>
 	template <typename DUMMY_TYPE, typename USER_TYPE>
-	void SemanticObserver<DUMMY_TYPE, USER_TYPE>::for_each_category_sequence_of_possible_trajectory(const std::function<void(const Collection::Sequence<std::string>&, double)>& execute_function) const
+	void SemanticObserver<DUMMY_TYPE, USER_TYPE>::for_each_category_sequence_of_possible_trajectory(const std::function<void(const Collection::Sequence<std::string>&, double)>& execute_function)
 	{
 		for_each_expected_trajectory_frequency([&](const Collection::Sequence<Graph::MapNodeIndicator>& trajectory, double expected_frequency) {
 			Collection::Sequence<std::string> category_sequence;
