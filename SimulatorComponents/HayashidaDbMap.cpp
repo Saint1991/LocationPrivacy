@@ -31,7 +31,7 @@ namespace Map {
 	///<summary>
 	/// NODE_TYPE‚ªOTHER‚Å‚ ‚éŒ»İ’n‚©‚çˆê”Ô‹ß‚¢Node‚ğ•Ô‚·D
 	///</summary>
-	std::shared_ptr<BasicMapNode const> HayashidaDbMap::get_nearest_node_of_now_position(Geography::LatLng now_pos)
+	std::shared_ptr<Graph::MapNodeIndicator> HayashidaDbMap::get_nearest_node_of_now_position(Geography::LatLng& now_pos) const
 	{
 		int length = 0.00000001;
 		Graph::Rectangle<Geography::LatLng> rect(now_pos.lat() + length, now_pos.lng() - length, now_pos.lat() - length, now_pos.lng());
@@ -48,7 +48,7 @@ namespace Map {
 			return dist1 < dist2;
 		});
 
-		return nearest_poi.front();
+		return std::make_shared<Graph::MapNodeIndicator>(nearest_poi.front()->get_id(), Graph::NodeType::INTERSECTION);
 	}
 	
 	///<summary>

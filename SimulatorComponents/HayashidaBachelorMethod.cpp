@@ -231,6 +231,37 @@ namespace Method
 	///<summary>
 	/// 提案手法の核になる部分
 	/// ユーザの交差を再設定する
+		/*パターン１
+		現在フェーズが移動中で，設定時も移動中：
+		現在→設定場所，設定場所でmin止まる→次のPOI
+
+		パターン２
+		現在がPOI停止中で，設定時は移動中
+		現在いるPOIの最後の停止フェーズ→設定場所，設定場所でmin止まる→次のPOI
+
+		パターン３
+		現在がPOI停止中で，設定時もPOI停止中
+		現在いるPOIの最後の停止フェーズ→設定場所，設定場所でmin止まる→次のPOI
+
+		パターン４
+		現在がPOI停止中で，設定時も同じPOIに停止中
+		設定無理
+
+		パターン５
+		現在が移動中で，設定時はPOIに停止中
+		現在→設定場所，設定場所でmin止まる→次のPOI
+
+		------------------ - 以下は現在フェーズが寄与しないパターン→prevのprevが現在フェーズより大きい------------------------------
+		パターン６
+		設定フェーズが移動中
+		前回のPOI→設定場所，設定場所でmin止まる→次のPOI
+
+		パターン７
+		設定フェーズで停止中
+		前回のPOI→設定場所，設定場所でmin止まる→次のPOI
+
+		※いずれの場合も，次のPOIが最終フェーズになるときはnextでエラーになるので，注意！！
+		*/
 	///</summary>
 	void HayashidaBachelorMethod::re_setting_of_user_cross(int now_phase)
 	{
@@ -249,32 +280,151 @@ namespace Method
 		//元々の交差予定回数分，設定を試みていく
 		for (int i = 0; i < original_cross_num; i++) {
 			for (auto iter = candidate_cross_dummies_ordered_by_dist.begin(); iter != candidate_cross_dummies_ordered_by_dist.end(); iter++) {
-				std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> target_dummy = entities->get_dummy_by_id(iter->first.first);
+				//対象エンティティとフェーズを取得
 				int target_phase = iter->first.second;
+				std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> target_dummy = entities->get_dummy_by_id(iter->first.first);
+				Graph::MapNodeIndicator target_pos = predicted_user->get_trajectory()->get_visited_node_id(target_phase);
+				
 				//到達可能性がどの程度あるかどうかによるが，とりあえず愚直に場合分け
-				//対象ダミーが設定phaseにおいて，POIに停止中の場合
+				//対象ダミーが設定phaseにおいて，POIに停止中の場合(pattern 3,4,5,7)
 				if (target_dummy->check_pause_condition(target_phase)) {
-					//直前のPOIの最終停止フェーズがnow_phase以上かどうかで場合分け
+					//直前のPOIの最終停止フェーズがnow_phase以上かどうかで場合分けを行う
+				
 					//現在フェーズが寄与する場合
 					if (target_dummy->get_prev_phase_when_visiting_poi(target_dummy->get_prev_phase_when_visiting_poi(target_phase) - 1) <= now_phase)
 					{
-						//現在フェーズが停止中
+						//現在フェーズが停止中(pattern3,4)
 						if (target_dummy->check_pause_condition(now_phase)) {
+							int departing_phase = target_dummy->get_next_phase_when_visiting_poi(now_phase);
+							int next_phase = target_dummy->get_next_poi_arrive_phase_when_pausing(now_phase);
 
+							Graph::MapNodeIndicator now_pos = target_dummy->get_trajectory()->get_visited_node_id(departing_phase);
+							Graph::MapNodeIndicator next_pos = target_dummy->get_trajectory()->get_visited_node_id(next_phase);
+
+							//現在位置と設定位置が同じ場合はそもそも交差は出来ない．
+							if (now_pos == target_phase) continue;
+
+							//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
+							double previous_time_limit = time_manager->time_of_phase(target_phase) - time_manager->time_of_phase(departing_phase);;
+							double next_time_limit = time_manager->time_of_phase(next_phase) - time_manager->time_of_phase(target_phase) - requirement->min_pause_time;
+ 
+							//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
+							if (previous_time_limit < 0 || next_time_limit < 0) continue;
+							if (!map->is_reachable(now_pos, target_pos, target_dummy->get_now_speed(departing_phase + 1), previous_time_limit)
+								|| !map->is_reachable(target_pos, next_pos, target_dummy->get_now_speed(now_phase + 1), next_time_limit)) {
+								continue;
+							}
 						}
-						//現在フェーズが移動中
+						//現在フェーズが移動中(pattern 5)
 						else {
+							int next_phase = target_dummy->get_next_poi_arrive_phase_when_pausing(now_phase);
 
+							//現在フェーズはOTHERSなはずなので，一番近い点を補完する
+							Graph::MapNodeIndicator now_pos = *map->get_nearest_node_of_now_position(*target_dummy->get_trajectory()->get_positions()->at(now_phase));
+							Graph::MapNodeIndicator next_pos = target_dummy->get_trajectory()->get_visited_node_id(next_phase);
+							
+							//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
+							double previous_time_limit = time_manager->time_of_phase(target_phase) - time_manager->time_of_phase(now_phase);;
+							double next_time_limit = time_manager->time_of_phase(next_phase) - time_manager->time_of_phase(target_phase) - requirement->min_pause_time;
+
+							//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
+							if (previous_time_limit < 0 || next_time_limit < 0) continue;
+							if (!map->is_reachable(now_pos, target_pos, target_dummy->get_now_speed(now_phase), previous_time_limit)
+								|| !map->is_reachable(target_pos, next_pos, target_dummy->get_now_speed(now_phase), next_time_limit)) {
+								continue;
+							}
 						}
 					}
+					//現在フェーズが寄与しない場合(pattern 7)
 					else
 					{
+						int prev_phase = target_dummy->get_prev_poi_arrive_phase_when_pausing(now_phase);
+						int next_phase = target_dummy->get_next_poi_arrive_phase_when_pausing(now_phase);
 
+						Graph::MapNodeIndicator prev_pos = target_dummy->get_trajectory()->get_visited_node_id(prev_phase);
+						Graph::MapNodeIndicator next_pos = target_dummy->get_trajectory()->get_visited_node_id(next_phase);
+												
+						//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
+						double previous_time_limit = time_manager->time_of_phase(target_phase) - time_manager->time_of_phase(prev_phase);
+						double next_time_limit = time_manager->time_of_phase(next_phase) - time_manager->time_of_phase(target_phase) - requirement->min_pause_time;
+
+						//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
+						if (previous_time_limit < 0 || next_time_limit < 0) continue;
+						if (!map->is_reachable(prev_pos, target_pos, target_dummy->get_now_speed(prev_phase + 1), previous_time_limit)
+							|| !map->is_reachable(target_pos, next_pos, target_dummy->get_now_speed(next_phase - 1), next_time_limit)) {
+							continue;
+						}
 					}
 				}
-				//対象ダミーが現在phaseで訪問POI以外に存在している場合
+				//対象ダミーが現在phaseで訪問POI以外に存在している場合(pattern 1,2,6)
 				else {
+					//現在フェーズが寄与する場合
+					if (target_dummy->get_prev_phase_when_visiting_poi(target_dummy->get_prev_phase_when_visiting_poi(target_phase) - 1) <= now_phase)
+					{
+						//現在フェーズが停止中(pattern 2 ≒ pattern 3)
+						if (target_dummy->check_pause_condition(now_phase))
+						{
+							//現在フェーズが停止中(pattern3,4)
+							if (target_dummy->check_pause_condition(now_phase)) {
+								int departing_phase = target_dummy->get_next_phase_when_visiting_poi(now_phase);
+								int next_phase = target_dummy->get_next_poi_arrive_phase_when_pausing(now_phase);
 
+								Graph::MapNodeIndicator now_pos = target_dummy->get_trajectory()->get_visited_node_id(departing_phase);
+								Graph::MapNodeIndicator next_pos = target_dummy->get_trajectory()->get_visited_node_id(next_phase);
+
+								//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
+								double previous_time_limit = time_manager->time_of_phase(target_phase) - time_manager->time_of_phase(departing_phase);;
+								double next_time_limit = time_manager->time_of_phase(next_phase) - time_manager->time_of_phase(target_phase) - requirement->min_pause_time;
+
+								//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
+								if (previous_time_limit < 0 || next_time_limit < 0) continue;
+								if (!map->is_reachable(now_pos, target_pos, target_dummy->get_now_speed(departing_phase + 1), previous_time_limit)
+									|| !map->is_reachable(target_pos, next_pos, target_dummy->get_now_speed(now_phase + 1), next_time_limit)) {
+									continue;
+								}
+							}
+						}
+						//現在フェーズが移動中(pattern 1 ≒　pattern 5)
+						else
+						{
+							int next_phase = target_dummy->get_next_phase_when_visiting_poi(now_phase);
+
+							//現在フェーズはOTHERSなはずなので，一番近い点を補完する
+							Graph::MapNodeIndicator now_pos = *map->get_nearest_node_of_now_position(*target_dummy->get_trajectory()->get_positions()->at(now_phase));
+							Graph::MapNodeIndicator next_pos = target_dummy->get_trajectory()->get_visited_node_id(next_phase);
+
+							//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
+							double previous_time_limit = time_manager->time_of_phase(target_phase) - time_manager->time_of_phase(now_phase);;
+							double next_time_limit = time_manager->time_of_phase(next_phase) - time_manager->time_of_phase(target_phase) - requirement->min_pause_time;
+
+							//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
+							if (previous_time_limit < 0 || next_time_limit < 0) continue;
+							if (!map->is_reachable(now_pos, target_pos, target_dummy->get_now_speed(now_phase), previous_time_limit)
+								|| !map->is_reachable(target_pos, next_pos, target_dummy->get_now_speed(now_phase), next_time_limit)) {
+								continue;
+							}
+						}
+					}
+					//現在フェーズが寄与しない(pattern 6 ≒　pattern7)
+					else 
+					{
+						int prev_phase = target_dummy->get_prev_phase_when_visiting_poi(now_phase);
+						int next_phase = target_dummy->get_next_phase_when_visiting_poi(now_phase);
+
+						Graph::MapNodeIndicator prev_pos = target_dummy->get_trajectory()->get_visited_node_id(prev_phase);
+						Graph::MapNodeIndicator next_pos = target_dummy->get_trajectory()->get_visited_node_id(next_phase);
+
+						//time_limitはpreviousでの停止時間を考慮しなければならないことに注意
+						double previous_time_limit = time_manager->time_of_phase(target_phase) - time_manager->time_of_phase(prev_phase);
+						double next_time_limit = time_manager->time_of_phase(next_phase) - time_manager->time_of_phase(target_phase) - requirement->min_pause_time;
+
+						//共有場所に到達可能ならその位置を設定し，到達不能ならばもう一度別のフェーズを検討
+						if (previous_time_limit < 0 || next_time_limit < 0) continue;
+						if (!map->is_reachable(prev_pos, target_pos, target_dummy->get_now_speed(prev_phase + 1), previous_time_limit)
+							|| !map->is_reachable(target_pos, next_pos, target_dummy->get_now_speed(next_phase - 1), next_time_limit)) {
+							continue;
+						}
+					}
 				}
 			}
 		}

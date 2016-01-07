@@ -61,7 +61,7 @@ namespace Map
 			);
 		virtual ~HayashidaDbMap();
 		
-		std::shared_ptr<BasicMapNode const> get_nearest_node_of_now_position(Geography::LatLng now_pos);
+		std::shared_ptr<Graph::MapNodeIndicator> get_nearest_node_of_now_position(Geography::LatLng& now_pos) const;
 		path_info search_random_path(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold);
 		path_info get_random_path_info(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
 		void build_rtree_index_of_node();
