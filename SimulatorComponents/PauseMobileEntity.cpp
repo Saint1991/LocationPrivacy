@@ -5,10 +5,18 @@
 namespace Entity
 {
 
+
 	///<summary>
 	/// コンストラクタ
 	///</summary>
 	VisitedPoiInfo::VisitedPoiInfo()
+	{
+	}
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	VisitedPoiInfo::VisitedPoiInfo(std::pair<Graph::MapNodeIndicator, Geography::LatLng> visited_poi, std::vector<int> pause_phases, int arrive_phase, double pause_time, double starting_speed, double rest_pause_time_when_departing, double dest_rest_time)
 	{
 	}
 
@@ -18,6 +26,18 @@ namespace Entity
 	VisitedPoiInfo::~VisitedPoiInfo()
 	{
 	}
+
+	///<summary>
+	/// 出力データの取得
+	///</summary>
+	std::unordered_map<std::string, std::string> VisitedPoiInfo::get_export_data() const
+	{
+		std::unordered_map<std::string, std::string> ret = {
+			{POI_ID, std::to_string(visited_poi.first.id())}
+		};
+		return ret;
+	}
+
 
 	///<summary>
 	/// コンストラクタ
@@ -37,6 +57,15 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::~PauseMobileEntity()
 	{
+	}
+
+	///<summary>
+	/// visited_pois_info_list_idをインクリメントする
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	std::vector<VisitedPoiInfo> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_visited_poi_info_list()
+	{
+		return visited_pois_info_list;
 	}
 
 	///<summary>
@@ -133,11 +162,11 @@ namespace Entity
 	/// もしi番目の予定訪問POIがなかった場合は，最終フェーズのpositionを返り値とする．
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	std::pair<Graph::MapNodeIndicator, POSITION_TYPE> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_poi(int i)
+	std::pair<Graph::MapNodeIndicator, POSITION_TYPE> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_visited_poi(int id)
 	{
 		int last_phase = trajectory->phase_count() - 1;
-		return i < get_visited_pois_num() 
-			? visited_pois_info_list.at(i).visited_poi : std::make_pair(trajectory->read_node_pos_info_of_phase(last_phase).first, *trajectory->read_node_pos_info_of_phase(last_phase).second);
+		return id < get_visited_pois_num() 
+			? visited_pois_info_list.at(id).visited_poi : std::make_pair(trajectory->read_node_pos_info_of_phase(last_phase).first, *trajectory->read_node_pos_info_of_phase(last_phase).second);
 	}
 
 	///<summary>
@@ -296,10 +325,10 @@ namespace Entity
 	/// 訪問POIが既にない場合は，最終フェーズを返す
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_arrive_phase(int i)
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_arrive_phase_of_any_visited_poi(int id)
 	{
-		return i < get_visited_pois_num()
-			? visited_pois_info_list.at(i).arrive_phase : trajectory->phase_count() - 1;
+		return id < get_visited_pois_num()
+			? visited_pois_info_list.at(id).arrive_phase : trajectory->phase_count() - 1;
 	}
 
 
@@ -340,9 +369,9 @@ namespace Entity
 	/// i番目に訪問予定の停止時間を変更可能な状態で求める
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_any_poi_pause_time(int i)
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_pause_time_of_any_visited_poi(int id)
 	{
-		return i < get_visited_pois_num() ? visited_pois_info_list.at(i).pause_time : 0;
+		return id < get_visited_pois_num() ? visited_pois_info_list.at(id).pause_time : 0;
 	}
 
 	///<summary>
@@ -545,6 +574,15 @@ namespace Entity
 	}
 
 	///<summary>
+	/// POIを出発時の速度をarrive_phaseを用いて取得する
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_starting_speed_of_any_visited_poi(int id)
+	{
+		return visited_pois_info_list.at(id).starting_speed;
+	}
+
+	///<summary>
 	/// POI出発時の余り時間を登録
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
@@ -584,6 +622,14 @@ namespace Entity
 		throw std::invalid_argument("Not Found");
 	}
 	
+	///<summary>
+	/// POI出発時の余り時間を,arrive_phaseを用いて登録
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_rest_pause_time_when_departing_of_any_visited_poi(int id)
+	{
+		return visited_pois_info_list.at(id).rest_pause_time_when_departing;
+	}
 
 	///<summary>
 	/// POI到着時の余り時間を登録
@@ -612,6 +658,14 @@ namespace Entity
 		throw std::invalid_argument("Not Found");
 	}
 
+	///<summary>
+	/// 任意のPOIにおけるPOI到着時の余り時間を取得
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_dest_rest_time_of_any_visited_poi(int id)
+	{
+		return visited_pois_info_list.at(id).dest_rest_time;
+	}
 
 	///<summary>
 	/// 現在phaseの残り停止時間を，変更不可能な状態で求める．
@@ -629,6 +683,15 @@ namespace Entity
 	double PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_now_pause_time(int now_phase)
 	{
 		return now_pause_time_list.at(now_phase);
+	}
+
+	///<summary>
+	/// 現在phaseの残り停止時間を，変更可能な状態で求める．
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	std::vector<double> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_now_pause_time_list()
+	{
+		return now_pause_time_list;
 	}
 
 	///<summary>
@@ -737,4 +800,88 @@ namespace Entity
 		return not_set_phases.at(generator.uniform_distribution(0, not_set_phases.size() - 1));
 	}
 
+	///<summary>
+	/// phase_idの直前のPOIのphaseを求める
+	/// phase_id時に停止している場合は，そのPOIにおける到着時間を求める．
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_prev_phase_when_visiting_poi(int phase_id)
+	{
+		if (trajectory->get_visited_node_id(phase_id).type() == Graph::POI) {
+			std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin() + phase_id;
+			while ((*iter).type() != Graph::POI) phase_id--;
+			phase_id++;
+		}
+		else {
+			std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin() + phase_id;
+			while ((*iter).type() == Graph::POI) phase_id--;
+		}
+		return phase_id;
+	}
+
+	///<summary>
+	/// phase_idの直後のPOIのphaseを求める
+	/// phase_id時に停止している場合は，そのPOIにおける到着時間を求める．
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_next_phase_when_visiting_poi(int phase_id)
+	{
+		if (trajectory->get_visited_node_id(phase_id).type() == Graph::POI) {
+			std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin() + phase_id;
+			while ((*iter).type() != Graph::POI) phase_id++;
+			phase_id--;
+		}
+		else {
+			std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin() + phase_id;
+			while ((*iter).type() == Graph::POI) phase_id++;
+		}
+		return phase_id;
+	}
+		
+
+	/*
+	///<summary>
+	/// 時系列順にすべてのPhase, 時刻，位置についてexecute_functionを実行する
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>)>& execute_function) const
+	{
+		timeslot->for_each_time([this, &execute_function](time_t time, long interval, int phase) {
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
+			execute_function(phase, time, position);
+		});
+	}
+
+
+	///<summary>
+	/// 時系列順に各Phase, 前Phaseからの経過時刻, Stateについてexecute_functionを実行する
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::foreach_state(const std::function<void(int, long, const Graph::MapNodeIndicator&, std::shared_ptr<TrajectoryState<POSITION_TYPE> const>)>& execute_function) const
+	{
+		timeslot->for_each_time([this, &execute_function](time_t time, long interval, int phase) {
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
+			std::string venue_name = venue_names->at(phase);
+			Graph::MapNodeIndicator visited_node = visited_node_ids->at(phase);
+			execute_function(phase, interval, visited_node, std::make_shared<TrajectoryState<POSITION_TYPE> const>(time, position, venue_name));
+		});
+	}
+	
+
+	///<summary>
+	/// ファイルエクスポート用訪問POIを取得する
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	std::list<std::shared_ptr<IO::FileExportable const>> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_export_data() const
+	{
+		std::list<std::shared_ptr<IO::FileExportable const>> ret;
+		trajectory->read_timeslot()->for_each_time([this, &ret](time_t time, long interval, int phase) {
+			std::shared_ptr<POSITION_TYPE const> position = positions->at(phase);
+			std::string venue_name = venue_names->at(phase);
+			std::shared_ptr<IO::FileExportable const> data = std::make_shared<TrajectoryState<POSITION_TYPE> const>(time, position, venue_name);
+			ret.push_back(data);
+		});
+		return ret;
+	}
+	*/
 }

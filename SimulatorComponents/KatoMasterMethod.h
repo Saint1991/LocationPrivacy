@@ -62,7 +62,7 @@ namespace Method {
 			void revise_dummy_speed(int phase_id);//ダミーの行動速度の修正
 			void revise_dummy_visit_poi(int phase_id);//ダミーの停止地点の修正
 			
-		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int revise_phase);
+		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int *revise_phase, int visited_poi_id);
 		void update_visited_pois_info_of_dummy();
 
 		void increment_visited_pois_info_list_id_of_users(int phase_id);

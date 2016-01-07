@@ -270,7 +270,7 @@ namespace Method
 		int phase = requirement->interval_of_base_phase;
 		const int GRID_TOTAL_NUM = CELL_NUM_ON_SIDE*CELL_NUM_ON_SIDE;//グリッドの数
 
-																	 //各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
+		//各グリッドの各フェイズにおけるentitiesの数を記憶するためのtable(動的配列)の作成
 		std::vector<std::vector<int>> entities_num_table(GRID_TOTAL_NUM, std::vector<int>((time_manager->phase_count() / requirement->interval_of_base_phase), 0));
 
 		//あるphaseにおける各セルに存在するユーザ及び生成済みダミーの移動経路(停止地点)の数
@@ -290,7 +290,7 @@ namespace Method
 			grid = make_grid(requirement->required_anonymous_area, *center, CELL_NUM_ON_SIDE);//phaseごとにグリッドを作成
 			grid_list.at(grid_list_id) = grid;//あるphaseのGrid.grud_list_idで何回目かのgrid生成かを記録する
 
-											  //あるphaseの全てのセルの，エンティティ数を計算(表の列を計算することに相当)
+			//あるphaseの全てのセルの，エンティティ数を計算(表の列を計算することに相当)
 			for (std::vector<Graph::Rectangle<Geography::LatLng>>::iterator iter = grid_list.at(grid_list_id).begin(); iter != grid_list.at(grid_list_id).end(); iter++, cell_id++)
 			{
 				entities_num_table.at(cell_id).at(grid_list_id) = entities->get_entity_count_within_boundary(phase, *iter);
@@ -376,8 +376,6 @@ namespace Method
 	}
 
 
-
-
 	///<summary>
 	/// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 	///</summary>
@@ -387,7 +385,6 @@ namespace Method
 		std::vector<std::pair<Entity::entity_id, int>> entity_list_order_by_cross = entities->get_entity_id_list_order_by_cross_count();
 		for (std::vector<std::pair<Entity::entity_id, int>>::const_iterator iter = entity_list_order_by_cross.begin(); iter != entity_list_order_by_cross.end(); iter++)
 		{
-
 			//未生成のダミーのものはスキップ
 			if (iter->first >= dummy_id) continue;
 

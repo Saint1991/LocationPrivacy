@@ -24,7 +24,8 @@ namespace Map
 	
 	public:
 		typedef std::pair<std::vector<Graph::MapNodeIndicator>, double> path_info;
-		
+		typedef std::pair<Graph::MapNodeIndicator, std::shared_ptr<Geography::LatLng const>> node_pos_info;
+
 		HayashidaDbMap(std::shared_ptr<Graph::IRoutingModule<BasicMapNode, BasicRoad>> routing_method,
 			const std::string& setting_file_path,
 			const std::string& db_name,
@@ -35,6 +36,7 @@ namespace Map
 			);
 		virtual ~HayashidaDbMap();
 		
+		std::shared_ptr<BasicPoi const> get_nearest_node_of_now_position(Geography::LatLng now_pos);
 		path_info search_random_path(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold);
 		path_info get_random_path_info(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
 	};

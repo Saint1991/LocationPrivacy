@@ -27,7 +27,23 @@ namespace Map {
 	HayashidaDbMap::~HayashidaDbMap()
 	{
 	}
-	
+
+	///<summary>
+	/// NODE_TYPEがOTHERである現在地から一番近いPOIを返す．
+	///</summary>
+	std::shared_ptr<BasicPoi const> HayashidaDbMap::get_nearest_node_of_now_position(Geography::LatLng now_pos)
+	{
+		int length = 0.000000001;
+		Graph::Rectangle<Geography::LatLng> rect(now_pos.lat() + length, now_pos.lng() - length, now_pos.lat() - length, now_pos.lng());
+
+		std::vector<std::shared_ptr<BasicPoi const>> nearest_poi = find_pois_within_boundary(rect);
+		while (!nearest_poi.empty()) {
+			rect.transform_rect_of_latlang_to_x_times(1.01);
+			nearest_poi = find_pois_within_boundary(rect);
+		}
+
+		return nearest_poi.front();
+	}
 	
 	///<summary>
 	/// randomパスを一つ生成

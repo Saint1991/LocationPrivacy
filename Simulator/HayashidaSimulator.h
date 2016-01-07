@@ -39,7 +39,7 @@ namespace Simulation
 		static constexpr int MAX_PAUSE_TIME = 600;//途中目的地設定の関係でmin_pause_timeの2.5倍以上で設定する！
 		static constexpr int MIN_PAUSE_TIME = 200;//SERVICE_INTERVALより大きくする！最初の匿名領域設定の間隔よりは短く！！
 		static constexpr int SERVICE_INTERVAL = 90;
-		static constexpr int POI_NUM = 3;
+		static constexpr int POI_NUM = 6;
 		static constexpr int ALPHA = 1;//tspの最適解に対する距離比の指数．大きいほど，最適解を選びやすい
 		static constexpr double BASE_LAT = 35.655;//出発地の目安の緯度．全POIの平均値
 		static constexpr double BASE_LNG = 139.700;//出発地の目安の経度．全POIの平均値
@@ -70,6 +70,10 @@ namespace Simulation
 		void set_path_between_poi_of_predicted_user(std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi, std::vector<Graph::MapNodeIndicator>::iterator& path_iter, Graph::MapNodeIndicator& nearest_position, double pause_position_speed, double service_interval, double *distance, int *phase_id);
 		void set_pause_time_and_phases_of_visited_POI_of_predicted_user(int *phase_id, double rest_pause_time, int total_pause_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
 
+		//void last_behavior_of_predicted_user(int phase_id);
+		//void pause_until_last_phase(int phase_id);
+		//void go_to_random_position(int phase_id);
+
 
 		void input_visit_pois();
 		std::vector<std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>> all_traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois);
@@ -91,6 +95,8 @@ namespace Simulation
 		void make_requirement_list();
 		
 	public:
+		std::vector<std::shared_ptr<Map::BasicPoi const>> read_input_poi_list() const;
+
 		HayashidaSimulator(const Graph::Rectangle<Geography::LatLng>& map_boundary);
 		virtual ~HayashidaSimulator();
 		void prepare();

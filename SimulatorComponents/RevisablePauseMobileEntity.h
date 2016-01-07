@@ -23,16 +23,39 @@ namespace Entity
 		RevisablePauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
 		~RevisablePauseMobileEntity();
 
+		//’â~ƒtƒF[ƒY‚ÌC³
+		void revise_pause_phases(int start_pause_phase, int num);
+		void revise_pause_phases_of_any_visited_poi(int start_pause_phase, int num, int id);
+		void add_pause_phases(int num, int phase);
+		void remove_pause_phases(int num, int phase);
+
+		//“’…phase‚ÌC³
+		void revise_arrive_phase(int arrive_phase);
+		void revise_arrive_phase_of_any_visited_poi(int arrive_phase, int id);
+		void revise_all_arrive_phase();
+
+
 		//’â~ŠÔ‚ÌC³
 		void revise_pause_time(double new_pause_time);
 		void revise_pause_time_using_pause_phase(double new_pause_time, int phase);
-		
+		void revise_pause_time_of_any_visited_poi(double new_pause_time, int id);
+
 		//Œ»İ‚Ì’â~ŠÔ‚ÌC³
 		void add_now_pause_time(int now_phase, double change_time);
 		void revise_now_pause_time(int phase_id, double new_pause_time);
-		
+		void revise_now_pause_time_of_any_visited_poi(double new_pause_time, int id);
+
 		//o”­‘¬“x‚ÌC³
 		void revise_starting_speed(double speed);
+		
+
+		//o”­‚Ì—]‚èŠÔ‚ÌC³
+
+
+		//“’…‚Ì—]‚èŠÔ‚ÌC³
+		void revise_dest_rest_time(double dest_rest_time);
+		void revise_dest_rest_time_of_any_visited_poi(double dest_rest_time, int id);
+
 
 		//Œ»İ‚ÌˆÚ“®‘¬“x‚ÌC³
 		void revise_now_speed(int phase, double speed);

@@ -49,8 +49,8 @@ namespace Graph
 	template <typename POSITION_TYPE>
 	void RevisableTrajectory<POSITION_TYPE>::insert_positions_to_trajectory(int phase_id, int insert_num)
 	{
-		positions->insert(positions->begin()+ phase_id, insert_num, positions->at(phase_id));
 		for (int i = 0; i < insert_num; i++) positions->pop_back();
+		positions->insert(positions->begin()+ phase_id, insert_num, positions->at(phase_id));
 	}
 
 
@@ -70,14 +70,28 @@ namespace Graph
 	/// トラジェクトリのコピーを行う
 	///</summary>
 	template <typename POSITION_TYPE>
-	void RevisableTrajectory<POSITION_TYPE>::copy_trajectory(RevisableTrajectory<POSITION_TYPE>& copied_trajectory)
+	void RevisableTrajectory<POSITION_TYPE>::copy_trajectory(int start_phase, RevisableTrajectory<POSITION_TYPE>& copied_trajectory)
 	{
-		/*
-		for (std::vector<std::shared_ptr<POSITION_TYPE const>>::iterator iter = copied_trajectory->positions->begin(); iter != copied_trajectory->positions->end(); iter++) {
-			this->positions->push_back(std::const_pointer_cast<POSITION_TYPE>(*iter));
-		}
-		*/
-		
+		if (start_phase == (this->phase_count() - 1)) return;
+		start_phase++;
+		std::copy(copied_trajectory.get_positions()->begin() + start_phase, copied_trajectory.get_positions()->end(), this->positions->begin() + start_phase);
 	}
 
+	///<summary>
+	/// phase_idのnode-idを求める
+	///</summary>
+	template <typename POSITION_TYPE>
+	Graph::MapNodeIndicator RevisableTrajectory<POSITION_TYPE>::get_visited_node_id(int phase_id)
+	{
+		return visited_node_ids->at(phase_id);
+	}
+
+	///<summary>
+	/// 訪問POIのIDリストを返す
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::vector<Graph::MapNodeIndicator> RevisableTrajectory<POSITION_TYPE>::read_visited_node_ids()
+	{
+		return *visited_node_ids;
+	}
 }

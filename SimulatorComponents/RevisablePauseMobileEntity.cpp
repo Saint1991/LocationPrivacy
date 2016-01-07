@@ -22,6 +22,94 @@ namespace Entity
 
 	///<summary>
 	/// pause_time‚ğC³‚·‚éD
+	/// C³‚·‚é‘O‚ÉCˆê’Upop‚µCƒŠƒZƒbƒg‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_pause_phases(int start_pause_phase, int num)
+	{
+		while (!visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.empty()) visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.pop_back();
+		for (int i = 0; i < num; start_pause_phase++) visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.push_back(start_pause_phase);
+	}
+
+	
+	///<summary>
+	/// ”CˆÓ‚Ì–K–âPOI‚Ìpause_time‚ğC³‚·‚éD
+	/// Œ»İ’â~’†‚Ìê‡‚ÍC“’…ƒtƒF[ƒY‚©‚çŒ»İƒtƒF[ƒY‚Ü‚Å•âŠ®‚·‚é‚±‚Æ‚ğ–Y‚ê‚¸‚É
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_pause_phases_of_any_visited_poi(int start_pause_phase, int num, int id)
+	{
+		while (!visited_pois_info_list.at(id).pause_phases.empty()) visited_pois_info_list.at(id).pause_phases.pop_back();
+		if (check_pause_condition(start_pause_phase)) {
+			for (int i = visited_pois_info_list.at(id).arrive_phase; i < start_pause_phase; i++) visited_pois_info_list.at(id).pause_phases.push_back(i);
+		}
+		for (int i = 0; i < num; i++, start_pause_phase++) visited_pois_info_list.at(id).pause_phases.push_back(start_pause_phase);
+	}
+
+	///<summary>
+	/// pause_phases‚ğnumŒÂ•ª‰ÁZ‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::add_pause_phases(int num, int phase)
+	{
+		//‘S•”ƒCƒ“ƒNƒŠƒƒ“ƒg‚³‚¹‚ÄCŒ»İ‚Ì’–ÚˆÊ’u‚ÌÅ‰‚É‘}“ü
+		for (int id = visited_pois_info_list_id; id < get_visited_pois_num(); id++) {
+			for (auto iter = visited_pois_info_list.at(id).pause_phases.begin(); iter != visited_pois_info_list.at(id).pause_phases.end(); iter++) {
+				(*iter) += num;
+			}
+		}
+		auto it = visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.begin();
+		it = visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.insert(it, phase);
+	}
+
+	///<summary>
+	/// pause_phases‚ğnumŒÂ•ªŒ¸Z‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::remove_pause_phases(int num, int phase)
+	{
+		//‘S•”ƒfƒNƒŠƒƒ“ƒg‚³‚¹‚ÄCŒ»İ‚Ì’–ÚˆÊ’u‚ÌÅ‰‚É‘}“ü
+		for (int id = visited_pois_info_list_id; id < get_visited_pois_num(); id++) {
+			for (auto iter = visited_pois_info_list.at(id).pause_phases.begin(); iter != visited_pois_info_list.at(id).pause_phases.end(); iter++) {
+				(*iter) -= num;
+			}
+		}
+		auto it = visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.begin();
+		visited_pois_info_list.at(visited_pois_info_list_id).pause_phases.erase(it);
+	}
+
+	///<summary>
+	/// “’…phase‚ğC³‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_arrive_phase(int arrive_phase)
+	{
+		visited_pois_info_list.at(visited_pois_info_list_id).arrive_phase = arrive_phase;
+	}
+
+	///<summary>
+	/// ”CˆÓ‚Ì–K–âPOI‚Ì“’…phase‚ğC³‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_arrive_phase_of_any_visited_poi(int arrive_phase, int id)
+	{
+		visited_pois_info_list.at(id).arrive_phase = arrive_phase;
+	}
+
+	///<summary>
+	/// ‘S–K–â—\’èPOI‚Ì“’…phase‚ğC³‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_all_arrive_phase()
+	{
+		for (int id = 0; id < get_visited_pois_num(); id++) {
+			visited_pois_info_list.at(id).arrive_phase = visited_pois_info_list.at(id).pause_phases.front();
+		}
+	}
+
+
+	///<summary>
+	/// pause_time‚ğC³‚·‚éD
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_pause_time(double new_pause_time)
@@ -43,9 +131,18 @@ namespace Entity
 		throw std::invalid_argument("Not Found");
 	}
 
+	///<summary>
+	/// ‚ ‚é–K–âPOI‚É‚¨‚¯‚épause_time‚ğC³‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_pause_time_of_any_visited_poi(double new_pause_time, int id)
+	{
+		visited_pois_info_list.at(id).pause_time = new_pause_time;
+	}
+
 
 	///<summary>
-	/// now_pause_tim‚ğchange_time•ª‘Œ¸‚³‚¹‚éD
+	/// now_pause_time‚ğchange_time•ª‘Œ¸‚³‚¹‚éD
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::add_now_pause_time(int now_phase, double change_time)
@@ -63,17 +160,30 @@ namespace Entity
 	
 	///<summary>
 	/// now_pause_time_list‚ğphase_id‚Ü‚ÅC³‚·‚éD
+	/// Œ»İ’â~’†‚©‚Ânew_puase_time‚ªƒT[ƒrƒX—˜—pŠÔŠu‚æ‚è‘å‚«‚©‚Á‚½‚çCŒ»İ’â~POI‚ÌC³‚ÅC
+	/// ‚»‚¤‚Å‚È‚¢ê‡‚ÍC¡Œü‚©‚Á‚Ä‚¢‚éPOI‚Ì’â~ŠÔ‚ÌC³
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_now_pause_time(int phase_id, double new_pause_time)
 	{
-		//Œ»İ’â~’†‚©‚Ânew_puase_time‚ªƒT[ƒrƒX—˜—pŠÔŠu‚æ‚è‘å‚«‚©‚Á‚½‚çCŒ»İ’â~POI‚ÌC³‚ÅC‚»‚¤‚Å‚È‚¢ê‡‚ÍC¡Œü‚©‚Á‚Ä‚¢‚éPOI‚Ì’â~ŠÔ‚ÌC³
 		double service_interval = trajectory->find_phase_of_time(1) - trajectory->find_phase_of_time(0);
 		int init_pause_phase = get_now_speed(phase_id) == 0.0 && get_now_pause_time(phase_id) > service_interval ? get_arrive_phase_using_pause_phase(phase_id) : get_arrive_phase();
 		for (int i = init_pause_phase; i <= phase_id; i++) {
 			now_pause_time_list.at(i) += new_pause_time;
 		}
 	}
+
+	///<summary>
+	/// ”CˆÓ‚Ì–K–âPOI‚Ìnow_pause_time_list‚ğC³‚·‚éD
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_now_pause_time_of_any_visited_poi(double new_pause_time, int id)
+	{
+
+	}
+
+
+
 
 	///<summary>
 	/// o”­‘¬“x‚ÌC³D
@@ -83,6 +193,25 @@ namespace Entity
 	{
 		visited_pois_info_list.at(visited_pois_info_list_id).starting_speed = speed;
 	}
+
+	///<summary>
+	/// POI“’…‚Ì—]‚èŠÔ‚ğC³‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_dest_rest_time(double dest_rest_time)
+	{
+		visited_pois_info_list.at(visited_pois_info_list_id).dest_rest_time = dest_rest_time;
+	}
+
+	///<summary>
+	/// ”CˆÓ‚ÌPOI“’…‚Ì—]‚èŠÔ‚ğC³‚·‚é
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_dest_rest_time_of_any_visited_poi(double dest_rest_time, int id)
+	{
+		visited_pois_info_list.at(id).dest_rest_time = dest_rest_time;
+	}
+
 
 	///<summary>
 	/// Œ»İ‚Ì‘¬“x‚ÌC³D

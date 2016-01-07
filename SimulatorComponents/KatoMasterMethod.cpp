@@ -271,6 +271,12 @@ namespace Method
 			
 			//停止時間の修正を行う．
 			predicted_user->revise_now_pause_time(phase_id, Tu);
+
+			//pause_phasesの更新
+			predicted_user->add_pause_phases(1, phase_id);
+
+			//arrive_phaseの更新
+			predicted_user->revise_all_arrive_phase();
 		}
 		else {
 			//停止時間の修正を行う．
@@ -380,18 +386,17 @@ namespace Method
 	void KatoMasterMethod::revise_dummy_pause_time(int phase_id)
 	{
 		int changed_poi_num_id = 1;//停止時間が変更されたpoiの数を記録するためのid
-		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
-
-		//変更前のtrajectoryを保持
 		
-
+		//変更前のtrajectoryを保持
+		std::shared_ptr<Graph::RevisableTrajectory<>> prev_trajectory = revising_dummy->get_trajectory();
+		
 		//全停止時間分，ダミーの停止時間を修正する．
-		for (int i = revising_dummy->get_visited_pois_info_list_id(); i < revising_dummy->get_visited_pois_num(); i++, changed_poi_num_id++)
+		for (int id = revising_dummy->get_visited_pois_info_list_id(); id < revising_dummy->get_visited_pois_num(); id++, changed_poi_num_id++)
 		{
 			//停止中or向かっているPOIの停止時間を取得
-			double pause_time = revising_dummy->get_any_poi_pause_time(i);
+			double pause_time = revising_dummy->get_pause_time_of_any_visited_poi(id);
 			//修正対象のフェーズを取得．現在停止中で，一回目の訂正→現在のフェーズ，移動中→次の予定到着フェーズ
-			int revise_phase = revising_dummy->check_pause_condition(phase_id) && changed_poi_num_id == 1 ? phase_id : revising_dummy->get_any_arrive_phase(i);
+			int revise_phase = revising_dummy->check_pause_condition(phase_id) && changed_poi_num_id == 1 ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(id);
 
 			//最大変化量
 			double max_variable_value = calc_max_variable_pause_time(pause_time).first;
@@ -415,23 +420,30 @@ namespace Method
 			//change_timeを現在の残り停止時間に記録
 			revising_dummy->add_now_pause_time(revise_phase, change_time);
 			//停止時間を登録
-			revising_dummy->revise_pause_time(new_pause_time);
+			revising_dummy->revise_pause_time_of_any_visited_poi(new_pause_time, id);
 			
 			Tu -= change_time;
 			if (Tu == 0.0) break;
 		}
-				
+
+		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
+		int revise_phase = revising_dummy->check_pause_condition(phase_id) ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(visited_poi_id);
+
 		//停止時間が変更されたPOIの数だけ，次の経路を再計算
-		for(int i = 0; i < changed_poi_num_id; i++, visited_poi_id++) {
+		for(int num = 0; num < changed_poi_num_id; num++, visited_poi_id++) {
 			//修正対象のフェーズを取得．現在停止中で，一回目の再計算→現在のフェーズ，移動中→次の予定到着フェーズ
-			int revise_phase = revising_dummy->check_pause_condition(phase_id) && i == 0 ? phase_id : revising_dummy->get_any_arrive_phase(visited_poi_id);
 			if (revise_phase == time_manager->last_phase()) break;
 			//recalculation_pathの引数のrevise_phaseをポインタにするかどうかを検討
-			recalculation_path(revising_dummy->get_any_poi(visited_poi_id).first, revising_dummy->get_any_poi(visited_poi_id + 1).first, revise_phase);
+			//最後のphaseのNODE_TYPEは，おそらくOHTERになるから，だめ？
+			recalculation_path(revising_dummy->get_any_visited_poi(visited_poi_id).first, revising_dummy->get_any_visited_poi(visited_poi_id + 1).first, &revise_phase, visited_poi_id);
+			if (visited_poi_id + 1 == revising_dummy->get_visited_pois_num()) break;
 		}
 
-		//変更されなかった分はコピーで対応
-		//Tuがservice_intervalだった場合はコピーで対応したほうが計算が早いかも(というか早い)	
+		//変更されなかった分はprev_trajectoryをcopyさせる	
+		revising_dummy->get_trajectory()->copy_trajectory(revise_phase, *prev_trajectory);
+		//POI情報も同時に移植(copy)
+		
+
 	}
 	
 
@@ -450,17 +462,14 @@ namespace Method
 	void KatoMasterMethod::revise_dummy_speed(int phase_id)
 	{
 		int changed_poi_num_id = 1;//停止時間が変更されたpoiの数を記録するためのid
-		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
-
+		
 		//全停止時間分，ダミーの停止時間を修正する．
-		for (int i = revising_dummy->get_visited_pois_info_list_id(); i <= revising_dummy->get_visited_pois_num(); i++, changed_poi_num_id++)
+		for (int id = revising_dummy->get_visited_pois_info_list_id(); id <= revising_dummy->get_visited_pois_num(); id++, changed_poi_num_id++)
 		{
-			int changed_poi_num_id = 1;//停止時間が変更されたpoiの数を記録するためのid
-						
 			//停止中or向かっているPOIの停止時間を取得
-			double distance = map->shortest_distance(revising_dummy->get_any_poi(i).first, revising_dummy->get_any_poi(i + 1).first);
+			double distance = map->shortest_distance(revising_dummy->get_any_visited_poi(id).first, revising_dummy->get_any_visited_poi(id + 1).first);
 			int end_pause_phase_of_now_poi = revising_dummy->get_pause_phases().back() + 1;
-			double new_speed = distance / (time_manager->time_of_phase(revising_dummy->get_any_arrive_phase(i + 1)) + Tu - time_manager->time_of_phase(end_pause_phase_of_now_poi));
+			double new_speed = distance / (time_manager->time_of_phase(revising_dummy->get_arrive_phase_of_any_visited_poi(id + 1)) + Tu - time_manager->time_of_phase(end_pause_phase_of_now_poi));
 			double prev_speed = revising_dummy->get_starting_speed();
 				
 			//速度の変化分
@@ -493,10 +502,17 @@ namespace Method
 			if (change_speed == 0.0) break;		
 		}
 
+		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
+		int revise_phase = revising_dummy->check_pause_condition(phase_id) ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(visited_poi_id);
+
 		//移動速度が変更されたPOIの数だけ，次の経路を再計算
-		for (int i = 0; i < changed_poi_num_id; i++, visited_poi_id++) {
-			recalculation_path(revising_dummy->get_any_poi(visited_poi_id).first, revising_dummy->get_any_poi(visited_poi_id + 1).first, phase_id);
+		for (int num = 0; num < changed_poi_num_id; num++, visited_poi_id++) {
+			if (revise_phase == time_manager->last_phase()) break;
+			recalculation_path(revising_dummy->get_any_visited_poi(visited_poi_id).first, revising_dummy->get_any_visited_poi(visited_poi_id + 1).first, &phase_id, visited_poi_id);
+			if (visited_poi_id + 1 == revising_dummy->get_visited_pois_num()) break;
 		}
+
+
 	}
 
 
@@ -514,45 +530,48 @@ namespace Method
 	/// 1:現在の残り停止時間を基に，停止phaseを埋める
 	/// 2:pathを再計算(現在停止時間を0でセットし直すことに注意)
 	///</summary>
-	void KatoMasterMethod::recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int revise_phase)
+	void KatoMasterMethod::recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int *revise_phase, int visited_poi_id)
 	{
-		double rest_pause_time = revising_dummy->get_now_pause_time(revise_phase);
+		double rest_pause_time = revising_dummy->get_now_pause_time(*revise_phase);
 		lldiv_t variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, requirement->service_interval);
 		
-		//revise_phaseをインクリメントする前に保持しておく
-		double pause_position_speed = revising_dummy->get_starting_speed_using_pause_phase(revise_phase);
+		//POI出発時の移動速度は，revise_phaseをインクリメントする前に保持しておく
+		double starting_speed = revising_dummy->get_starting_speed_using_pause_phase(*revise_phase);
+
+		//pause_phasesの修正
+		revising_dummy->revise_pause_phases_of_any_visited_poi(*revise_phase, variable_of_converted_pause_time_to_phase.quot + 1, visited_poi_id);
 
 		//現在phaseから，now_puase_timeが0以下になるまで，停止情報を登録
 		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++)
 		{
-			revise_phase++;
+			(*revise_phase)++;
 			rest_pause_time -= (double)requirement->service_interval;
-			revising_dummy->set_now_pause_time(revise_phase, rest_pause_time);
-			revising_dummy->set_position_of_phase(revise_phase, source, map->get_static_poi(source.id())->data->get_position());
+			revising_dummy->set_now_pause_time(*revise_phase, rest_pause_time);
+			revising_dummy->set_position_of_phase(*revise_phase, source, map->get_static_poi(source.id())->data->get_position());
 		}
-
+		
 		std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path(source, destination);
 		std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
 
 		//sourceからの距離
 		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
 		//速度はphaseで埋める前を参照しなければならないことに注意
-		double now_time = requirement->service_interval - revising_dummy->get_now_pause_time(revise_phase);
+		double now_time = requirement->service_interval - revising_dummy->get_now_pause_time(*revise_phase);
 		
-		double total_time_from_source_to_destination = map->calc_necessary_time(source, destination, pause_position_speed);
+		double total_time_from_source_to_destination = map->calc_necessary_time(source, destination, starting_speed);
 		Graph::MapNodeIndicator nearest_position = source;
 		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
 		while (now_time < total_time_from_source_to_destination)
 		{
 			//最初は停止時間をphaseに換算したときの余り分をdistanceとして，最短路の中で一番近いintersectionを探し，線形補間する．
 			//double total_path_length = map->shortest_distance(source, *path_iter);
-			while (now_time > map->calc_necessary_time(source, *path_iter, pause_position_speed))
+			while (now_time > map->calc_necessary_time(source, *path_iter, starting_speed))
 			{
 				nearest_position = *path_iter;
 				path_iter++;
 			}
 
-			double distance = now_time * pause_position_speed;
+			double distance = now_time * starting_speed;
 			double distance_between_nearest_intersection_and_arrive_position = distance - map->shortest_distance(source, nearest_position);
 			Geography::LatLng nearest_latlng
 				= nearest_position.type() == Graph::NodeType::POI ? map->get_static_poi(nearest_position.id())->data->get_position() : *map->get_static_node(nearest_position.id())->data;
@@ -562,11 +581,12 @@ namespace Method
 
 			Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
 
-			if (revise_phase == time_manager->phase_count() - 1) return;//残りのpathを決める時の終了条件
-			(revise_phase)++;
-			revising_dummy->set_position_of_phase(revise_phase, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
-			revising_dummy->set_now_speed(revise_phase, pause_position_speed);
-			revising_dummy->set_now_pause_time(revise_phase, 0.0);
+			if (*revise_phase == time_manager->phase_count() - 1) return;//残りのpathを決める時の終了条件
+			//以下，停止位置に関する情報を登録
+			(*revise_phase)++;
+			revising_dummy->set_position_of_phase(*revise_phase, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
+			revising_dummy->set_now_speed(*revise_phase, starting_speed);
+			revising_dummy->set_now_pause_time(*revise_phase, 0.0);
 			now_time += requirement->service_interval;
 		}
 
@@ -576,9 +596,12 @@ namespace Method
 			= time_between_arrive_position_and_dest_position == requirement->service_interval ? 0 : time_between_arrive_position_and_dest_position;
 		
 		//目的地の登録
-		//到着phaseも登録する！
-		(revise_phase)++;
-		revising_dummy->set_position_of_phase(revise_phase, destination, map->get_static_poi(destination.id())->data->get_position());
+		//登録情報(到着phase,dest_rest_time)を更新
+		(*revise_phase)++;
+		revising_dummy->set_position_of_phase(*revise_phase, destination, map->get_static_poi(destination.id())->data->get_position());
+		revising_dummy->revise_dest_rest_time_of_any_visited_poi(dest_rest_time, visited_poi_id + 1);
+		revising_dummy->revise_arrive_phase_of_any_visited_poi(*revise_phase, visited_poi_id + 1);
+		revising_dummy->set_now_pause_time(*revise_phase, revising_dummy->get_pause_time_of_any_visited_poi(visited_poi_id + 1) - dest_rest_time);
 	}
 
 	///<summary>
@@ -587,7 +610,22 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::update_visited_pois_info_of_dummy()
 	{
-		//revising_dummy->
+		/*
+		std::vector<Entity::VisitedPoiInfo> visited_poi_list = revising_dummy->get_visited_poi_info_list();
+		int id = 0;
+		int phase_id = 0;
+		int num = 0;
+		//pause_phasesの更新
+		for (std::vector<double>::iterator iter = revising_dummy->get_now_pause_time_list().begin(); *iter != 0.0; iter++) {
+			if (*iter != 0.0) {
+				int start_phase = std::distance(revising_dummy->get_now_pause_time_list().begin(), iter);
+
+			}
+			revising_dummy->revise_pause_phases();
+			if (*(iter + 1) == 0.0) {}
+
+		}
+		*/
 	}
 
 	///<summary>

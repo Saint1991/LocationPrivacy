@@ -279,6 +279,12 @@ namespace Simulation
 			std::cout << " distance : " << tsp.second << std::endl;
 		});
 
+		//ファイル出力用
+		std::ofstream ofs("C:/Users/Shuhei/Desktop/Result_Path/tsp_distance.txt");
+		std::for_each(all_tsp_solution.begin(), all_tsp_solution.end(), [&ofs](std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>& tsp) {
+			ofs << tsp.second << std::endl;
+		});
+
 		return all_tsp_solution;
 	}
 
@@ -750,9 +756,13 @@ namespace Simulation
 	{
 		static constexpr auto REAL_USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/real_user_trajectory";
 		static constexpr auto PREDICTED_USER_TRAJECTORY_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/predicted_user_trajectory";
+		static constexpr auto REAL_USER_VISITED_POIS_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/real_user_visited_pois.txt";
+		static constexpr auto PREDICTED_USER_VISITED_POIS_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/predicted_user_visited_pois.txt";
+		static constexpr auto DUMMIES_VISITED_POIS_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/dummies_visited_pois.txt";
 		static constexpr auto DUMMY_TRAJECTORT_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/dummy_trajectory";
+		static constexpr auto AR_OUT_PATH = "C:/Users/Shuhei/Desktop/Result_Path/AR.txt";
 
-		std::list<std::pair<std::string, std::string>> export_name_map = {
+		std::list<std::pair<std::string, std::string>> export_name_map_of_entities = {
 			{ Geography::LatLng::LATITUDE, "緯度" },
 			{ Geography::LatLng::LONGITUDE, "経度" },
 			//{ Graph::TrajectoryState<>::TIME, "タイムスタンプ" },
@@ -762,24 +772,50 @@ namespace Simulation
 		};
 
 		//実際のユーザトラジェクトリのエクスポート
-		IO::FileExporter real_user_exporter(export_name_map, REAL_USER_TRAJECTORY_OUT_PATH);
+		IO::FileExporter real_user_exporter(export_name_map_of_entities, REAL_USER_TRAJECTORY_OUT_PATH);
 		std::list<std::shared_ptr<IO::FileExportable const>> real_user_trajectory = entities->get_user()->get_real_user()->read_trajectory()->get_export_data();
 		real_user_exporter.export_lines(real_user_trajectory);
 
+
 		//予測したユーザトラジェクトリのエクスポート
-		IO::FileExporter predicted_user_exporter(export_name_map, PREDICTED_USER_TRAJECTORY_OUT_PATH);
+		IO::FileExporter predicted_user_exporter(export_name_map_of_entities, PREDICTED_USER_TRAJECTORY_OUT_PATH);
 		std::list<std::shared_ptr<IO::FileExportable const>> predicted_user_trajectory = entities->get_user()->read_trajectory()->get_export_data();
 		predicted_user_exporter.export_lines(predicted_user_trajectory);
 		
+
+		/*
+		//実際のユーザの訪問POIのエクスポート
+		std::ofstream ofs_of_real_user_visited_pois(REAL_USER_VISITED_POIS_OUT_PATH);
+		for (int id = 0; real_user->get_visited_pois_num(); id++) {
+			Graph::node_id poi_id = entities->get_user()->get_real_user()->get_any_visited_poi(id).first.id();
+			ofs_of_real_user_visited_pois << poi_id << std::endl;
+		}
+		
+		//予想ユーザの訪問POIのエクスポート
+		std::ofstream ofs_of_predicted_user_visited_pois(REAL_USER_VISITED_POIS_OUT_PATH);
+		for (int id = 0; real_user->get_visited_pois_num(); id++) {
+			Graph::node_id poi_id = entities->get_user()->get_predicted_user()->get_any_visited_poi(id).first.id();
+			ofs_of_predicted_user_visited_pois << poi_id << std::endl;
+		}
+
+		//全ダミーの訪問POIのエクスポート
+		std::ofstream ofs_of_dummies_visited_pois(DUMMIES_VISITED_POIS_OUT_PATH);
+		for (int dummy_id = 1; dummy_id < requirement->dummy_num; dummy_id++) {
+			for (int id = 0; real_user->get_visited_pois_num(); id++) {
+				Graph::node_id poi_id = entities->get_dummy_by_id(dummy_id)->get_any_visited_poi(id).first.id();
+				ofs_of_dummies_visited_pois << poi_id << std::endl;
+			}
+			ofs_of_dummies_visited_pois << "?n";
+		}
 
 		//各ダミーのエクスポート
 		for (int dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++) {
 			std::shared_ptr<Entity::RevisablePauseMobileEntity<> const> dummy = entities->read_dummy_by_id(dummy_id);
 			std::list<std::shared_ptr<IO::FileExportable const>> dummy_trajectory = dummy->read_trajectory()->get_export_data();
-			IO::FileExporter dummy_exporter(export_name_map, DUMMY_TRAJECTORT_OUT_PATH + std::to_string(dummy_id));
+			IO::FileExporter dummy_exporter(export_name_map_of_entities, DUMMY_TRAJECTORT_OUT_PATH + std::to_string(dummy_id));
 			dummy_exporter.export_lines(dummy_trajectory);
 		}
-	
+		*/
 
 		//AR系の評価
 		int achive_count = 0;
@@ -792,10 +828,20 @@ namespace Simulation
 		}
 		double ar_count = (double)achive_count / phase_count;
 		double ar_size = achive_size / phase_count;
-		std::cout << "AR-Count: " << std::to_string(ar_count) << std::endl;
-		std::cout << "AR-Size: " << std::to_string(ar_size) << "m^2" << std::endl;
+
+		std::ofstream ofs(AR_OUT_PATH);
+		ofs << "AR-Count: " << std::to_string(ar_count) << std::endl;
+		ofs << "AR-Size: " << std::to_string(ar_size) << "m^2" << std::endl;
 
 
+	}
+
+	///<summary>
+	/// input_listを読み取り専用で取得
+	///</summary>
+	std::vector<std::shared_ptr<Map::BasicPoi const>> HayashidaSimulator::read_input_poi_list() const
+	{
+		return input_poi_list;
 	}
 
 	///<summary>
@@ -896,6 +942,7 @@ namespace Simulation
 
 	///<summary>
 	/// 評価部分実装
+	/// ここにMapとUserだけ使って出来る実験があれば実装する
 	///</summary>
 	void HayashidaSimulator::evaluate()
 	{

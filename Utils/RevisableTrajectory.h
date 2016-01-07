@@ -24,7 +24,9 @@ namespace Graph
 
 		void insert_positions_to_trajectory(int phase_id, int insert_num);
 		void delete_positions_to_trajectory(int phase_id, int delete_num);
-		void copy_trajectory(RevisableTrajectory<POSITION_TYPE>& copied_trajectory);
+		void copy_trajectory(int start_phase, RevisableTrajectory<POSITION_TYPE>& copied_trajectory);
+		Graph::MapNodeIndicator get_visited_node_id(int phase_id);
+		std::vector<Graph::MapNodeIndicator> read_visited_node_ids();
 	};
 
 	template class RevisableTrajectory<Geography::LatLng>;
