@@ -837,7 +837,31 @@ namespace Entity
 		}
 		return phase_id;
 	}
-		
+	
+	///<summary>
+	/// Œ»İ’â~’†‚ÌPOI‚ÌŸ‚Ì–K–â—\’èPOI‚Ì“’…ƒtƒF[ƒY‚ğæ“¾‚·‚éD
+	/// Œ»İ’â~’†‚Å‚È‚¢ê‡‚Íinvalid_argument
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_prev_poi_arrive_phase_when_pausing(int phase_id)
+	{
+		if (!check_pause_condition(phase_id)) throw std::invalid_argument("This Method is used by pausing entity!!");
+		return get_prev_phase_when_visiting_poi(get_prev_phase_when_visiting_poi(phase_id) - 1);
+	}
+
+
+	///<summary>
+	/// Œ»İ’â~’†‚ÌPOI‚ÌŸ‚Ì–K–â—\’èPOI‚Ì“’…ƒtƒF[ƒY‚ğæ“¾‚·‚éD
+	/// Œ»İ’â~’†‚Å‚È‚¢ê‡‚Íinvalid_argument
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_next_poi_arrive_phase_when_pausing(int phase_id)
+	{
+		if (!check_pause_condition(phase_id)) throw std::invalid_argument("This Method is used by pausing entity!!");
+		return get_next_phase_when_visiting_poi(get_next_phase_when_visiting_poi(phase_id) + 1);
+	}
+
+
 
 	/*
 	///<summary>

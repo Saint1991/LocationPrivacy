@@ -250,21 +250,29 @@ namespace Method
 		for (int i = 0; i < original_cross_num; i++) {
 			for (auto iter = candidate_cross_dummies_ordered_by_dist.begin(); iter != candidate_cross_dummies_ordered_by_dist.end(); iter++) {
 				std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> target_dummy = entities->get_dummy_by_id(iter->first.first);
-				if (true) {
-					//対象ダミーが現在phaseにおいて，POIに停止中の場合
-					if (target_dummy->check_pause_condition(now_phase))
+				int target_phase = iter->first.second;
+				//到達可能性がどの程度あるかどうかによるが，とりあえず愚直に場合分け
+				//対象ダミーが設定phaseにおいて，POIに停止中の場合
+				if (target_dummy->check_pause_condition(target_phase)) {
+					//直前のPOIの最終停止フェーズがnow_phase以上かどうかで場合分け
+					//現在フェーズが寄与する場合
+					if (target_dummy->get_prev_phase_when_visiting_poi(target_dummy->get_prev_phase_when_visiting_poi(target_phase) - 1) <= now_phase)
 					{
+						//現在フェーズが停止中
+						if (target_dummy->check_pause_condition(now_phase)) {
 
+						}
+						//現在フェーズが移動中
+						else {
+
+						}
 					}
-					//対象ダミーが現在phaseで訪問POI以外に存在している場合
 					else
 					{
-						//到達可能性がどの程度あるかどうかによるが，とりあえずシンプルに３つに場合分け
+
 					}
 				}
-				else if (true) {
-
-				}
+				//対象ダミーが現在phaseで訪問POI以外に存在している場合
 				else {
 
 				}

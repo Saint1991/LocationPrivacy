@@ -29,18 +29,24 @@ namespace Map {
 	}
 
 	///<summary>
-	/// NODE_TYPEがOTHERである現在地から一番近いPOIを返す．
+	/// NODE_TYPEがOTHERである現在地から一番近いNodeを返す．
 	///</summary>
-	std::shared_ptr<BasicPoi const> HayashidaDbMap::get_nearest_node_of_now_position(Geography::LatLng now_pos)
+	std::shared_ptr<BasicMapNode const> HayashidaDbMap::get_nearest_node_of_now_position(Geography::LatLng now_pos)
 	{
-		int length = 0.000000001;
+		int length = 0.00000001;
 		Graph::Rectangle<Geography::LatLng> rect(now_pos.lat() + length, now_pos.lng() - length, now_pos.lat() - length, now_pos.lng());
 
-		std::vector<std::shared_ptr<BasicPoi const>> nearest_poi = find_pois_within_boundary(rect);
+		std::vector<std::shared_ptr<BasicMapNode const>> nearest_poi = find_nodes_within_boundary(rect);
 		while (!nearest_poi.empty()) {
 			rect.transform_rect_of_latlang_to_x_times(1.01);
-			nearest_poi = find_pois_within_boundary(rect);
+			nearest_poi = find_nodes_within_boundary(rect);
 		}
+		
+		std::sort(nearest_poi.begin(), nearest_poi.end(), [&](std::shared_ptr<BasicMapNode const>& node1, std::shared_ptr<BasicMapNode const>& node2) {
+			double dist1 = Geography::GeoCalculation::lambert_distance(now_pos, Geography::LatLng(node1->data->lat(), node1->data->lng()));
+			double dist2 = Geography::GeoCalculation::lambert_distance(now_pos, Geography::LatLng(node2->data->lat(), node2->data->lng()));
+			return dist1 < dist2;
+		});
 
 		return nearest_poi.front();
 	}
@@ -215,6 +221,49 @@ namespace Map {
 		if (ret_distance == Graph::NO_CONNECTION) ret_route = { Graph::MapNodeIndicator(-1, Graph::NodeType::INVALID) };
 		
 		return std::make_pair(ret_route, ret_distance);
+	}
+
+	///<summary>
+	/// R-Treeのインデックスを構築する
+	///</summary>
+	void HayashidaDbMap::build_rtree_index_of_node()
+	{
+		boost::geometry::index::quadratic<16> param;
+		MyNodeAdapter adapter;
+		rtree_index_of_node = std::make_unique<rtree>(param, adapter);
+
+		node_collection->foreach([&](rtree_value node) {
+			rtree_index_of_node->insert(node);
+		});
+	}
+
+	///<summary>
+	/// 領域内に含まれるNode一覧を取得する
+	///</summary>
+	std::vector<std::shared_ptr<BasicMapNode const>> HayashidaDbMap::find_nodes_within_boundary(const box& boundary) const
+	{
+		std::vector<rtree_value> ret;
+		rtree_index_of_node->query(index::intersects(boundary), std::back_inserter(ret));
+		return ret;
+	}
+
+
+	///<summary>
+	/// 領域内に含まれるNode一覧を取得する
+	///</summary>
+	std::vector<std::shared_ptr<BasicMapNode const>> HayashidaDbMap::find_nodes_within_boundary(const Graph::Rectangle<>& boundary) const
+	{
+		box query_box(point(boundary.left, boundary.bottom), point(boundary.right, boundary.top));
+		return find_nodes_within_boundary(query_box);
+	}
+
+	///<summary>
+	/// 領域内に含まれるNode一覧を取得する
+	///</summary>
+	std::vector<std::shared_ptr<BasicMapNode const>> HayashidaDbMap::find_nodes_within_boundary(const Graph::Rectangle<Geography::LatLng>& boundary) const
+	{
+		box query_box(point(boundary.left, boundary.bottom), point(boundary.right, boundary.top));
+		return find_nodes_within_boundary(query_box);
 	}
 }
 

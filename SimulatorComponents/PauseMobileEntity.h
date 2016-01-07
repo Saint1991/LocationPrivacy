@@ -152,7 +152,8 @@ namespace Entity
 
 		int get_prev_phase_when_visiting_poi(int phase_id);
 		int get_next_phase_when_visiting_poi(int phase_id);
-
+		int get_prev_poi_arrive_phase_when_pausing(int phase_id);
+		int get_next_poi_arrive_phase_when_pausing(int phase_id);
 
 		//ファイル出力用
 		//virtual void foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>)>& execute_function) const;
