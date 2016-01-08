@@ -43,6 +43,27 @@ namespace Graph
 	}
 
 	///<summary>
+	/// idと同じ位置が登録されている最初のフェーズを返す
+	///</summary>
+	template <typename POSITION_TYPE>
+	int RevisableTrajectory<POSITION_TYPE>::last_phase()
+	{
+		return timeslot->last_phase();
+	}
+
+	///<summary>
+	/// idと同じ位置が登録されている最初のフェーズを返す
+	///</summary>
+	template <typename POSITION_TYPE>
+	int RevisableTrajectory<POSITION_TYPE>::search_phase_same_id(Graph::MapNodeIndicator& id)
+	{
+		for (auto iter = visited_node_ids->begin(); iter != visited_node_ids->end(); iter++) {
+			if ((*iter).id() == id.id()) return std::distance(visited_node_ids->begin(),iter);
+		}
+	}
+
+
+	///<summary>
 	/// positionsに，insert_num分だけ，停止phaseを挿入する．
 	/// insert_num分だけ，削除を行う．
 	///</summary>
@@ -70,11 +91,11 @@ namespace Graph
 	/// トラジェクトリのコピーを行う
 	///</summary>
 	template <typename POSITION_TYPE>
-	void RevisableTrajectory<POSITION_TYPE>::copy_trajectory(int start_phase, RevisableTrajectory<POSITION_TYPE>& copied_trajectory)
+	void RevisableTrajectory<POSITION_TYPE>::copy_trajectory(int copied_phase, int copying_phase, RevisableTrajectory<POSITION_TYPE>& copied_trajectory)
 	{
-		if (start_phase == (this->phase_count() - 1)) return;
-		start_phase++;
-		std::copy(copied_trajectory.get_positions()->begin() + start_phase, copied_trajectory.get_positions()->end(), this->positions->begin() + start_phase);
+		if (copying_phase == this->last_phase()) return;
+		int last_copied_phase = copied_phase + (copied_trajectory.last_phase() - copying_phase);
+		std::copy(copied_trajectory.get_positions()->begin() + copied_phase, copied_trajectory.get_positions()->begin() + last_copied_phase, this->positions->begin() + copying_phase);
 	}
 
 	///<summary>

@@ -279,29 +279,29 @@ namespace Method
 				Graph::MapNodeIndicator target_pos = predicted_user->get_trajectory()->get_visited_node_id(target_phase);
 				
 				//スコープ確保のため，現在フェーズが起用しない場合についてはif文の外に出しておく
-				int prev_phase = target_dummy->get_prev_poi_arrive_phase_when_pausing(target_phase);
-				int next_phase = target_dummy->get_next_poi_arrive_phase_when_pausing(target_phase);
+				int prev_phase = target_dummy->get_poi_init_pause_phase_when_pausing(target_phase);
+				int next_phase = target_dummy->get_poi_last_pause_phase_when_pausing(target_phase);
 				Graph::MapNodeIndicator prev_pos = target_dummy->get_trajectory()->get_visited_node_id(prev_phase);
 				Graph::MapNodeIndicator next_pos = target_dummy->get_trajectory()->get_visited_node_id(next_phase);
 				Math::Probability generator;
 				double speed_at_target_phase = generator.uniform_distribution(requirement->average_speed_of_dummy - 0.5 * requirement->speed_range_of_dummy, requirement->average_speed_of_dummy + 0.5 * requirement->speed_range_of_dummy);
 
 				//現在フェーズが寄与しない場合
-				if (target_dummy->get_prev_phase_when_visiting_poi(target_dummy->get_prev_phase_when_visiting_poi(target_phase) - 1) > now_phase){
+				if (target_dummy->get_prev_poi_depart_phase_when_moving(target_dummy->get_prev_poi_depart_phase_when_moving(target_phase) - 1) > now_phase){
 					//対象フェーズで移動中？
 					if (!target_dummy->isPause(target_phase)) {
-						prev_phase = target_dummy->get_prev_phase_when_visiting_poi(target_phase);
-						next_phase = target_dummy->get_next_phase_when_visiting_poi(target_phase);
+						prev_phase = target_dummy->get_prev_poi_depart_phase_when_moving(target_phase);
+						next_phase = target_dummy->get_next_poi_arrive_phase_when_moving(target_phase);
 					}
 				}
 				//現在フェーズが寄与する場合
 				else {
 					//現在フェーズが停止中
 					if (target_dummy->isPause(now_phase)) {
-						prev_phase = target_dummy->get_next_phase_when_visiting_poi(now_phase);
+						prev_phase = target_dummy->get_next_poi_arrive_phase_when_moving(now_phase);
 						//対象フェーズが停止しているか否かで場合分け
 						next_phase =
-							target_dummy->isPause(target_phase) ? target_dummy->get_next_poi_arrive_phase_when_pausing(target_phase) : target_dummy->get_next_phase_when_visiting_poi(target_phase);
+							target_dummy->isPause(target_phase) ? target_dummy->get_poi_last_pause_phase_when_pausing(target_phase) : target_dummy->get_next_poi_arrive_phase_when_moving(target_phase);
 
 						prev_pos = target_dummy->get_trajectory()->get_visited_node_id(prev_phase);
 						next_pos = target_dummy->get_trajectory()->get_visited_node_id(next_phase);
@@ -313,7 +313,7 @@ namespace Method
 					else {
 						prev_phase = now_phase;
 						next_phase =
-							target_dummy->isPause(target_phase) ? target_dummy->get_next_poi_arrive_phase_when_pausing(target_phase) : target_dummy->get_next_phase_when_visiting_poi(target_phase);
+							target_dummy->isPause(target_phase) ? target_dummy->get_poi_last_pause_phase_when_pausing(target_phase) : target_dummy->get_next_poi_arrive_phase_when_moving(target_phase);
 
 						//現在フェーズはOTHERSなはずなので，一番近い点を補完する
 						prev_pos = *map->get_nearest_node_of_now_position(*target_dummy->get_trajectory()->get_positions()->at(now_phase));
@@ -341,7 +341,7 @@ namespace Method
 			}
 		}
 		
-		std::cout << "Success Re-Setting Cross" << std::endl;
+		std::cout << "Success Re-Setting Cross!!" << std::endl;
 	}
 
 	///<summary>
@@ -401,7 +401,7 @@ namespace Method
 	}
 
 	///<summary>
-	///
+	///ダミーの経路計算時に停止フェーズを登録する
 	///</summary>
 	void HayashidaBachelorMethod::set_now_pause_time_and_phase(entity_id target_dummy_id, Graph::MapNodeIndicator& target_pos, Graph::MapNodeIndicator& next_pos, int *phase_id, double *dest_rest_time, int next_phase, int target_phase, double speed) {
 		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> target_dummy = entities->get_dummy_by_id(target_dummy_id);

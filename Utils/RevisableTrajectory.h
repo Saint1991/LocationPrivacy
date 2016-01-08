@@ -22,9 +22,11 @@ namespace Graph
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE const>>> read_positions() const;
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE>>> get_positions();
 
+		int last_phase();
+		int search_phase_same_id(Graph::MapNodeIndicator& id);
 		void insert_positions_to_trajectory(int phase_id, int insert_num);
 		void delete_positions_to_trajectory(int phase_id, int delete_num);
-		void copy_trajectory(int start_phase, RevisableTrajectory<POSITION_TYPE>& copied_trajectory);
+		void copy_trajectory(int copied_phase, int copying_phase, RevisableTrajectory<POSITION_TYPE>& copied_trajectory);
 		Graph::MapNodeIndicator get_visited_node_id(int phase_id);
 		std::vector<Graph::MapNodeIndicator> read_visited_node_ids();
 	};

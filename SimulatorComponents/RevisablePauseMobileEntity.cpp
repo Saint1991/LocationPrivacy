@@ -143,10 +143,13 @@ namespace Entity
 
 	///<summary>
 	/// now_pause_timeをchange_time分増減させる．
+	/// 残り時間が負になる場合があるので，各プログラムで場合分けしなければならないことに注意
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::add_now_pause_time(int now_phase, double change_time)
 	{
+		now_pause_time_list.at(now_phase) += change_time;
+		/*
 		if (now_pause_time_list.at(now_phase) >= 0) {
 			now_pause_time_list.at(now_phase) += change_time;
 		}
@@ -156,6 +159,7 @@ namespace Entity
 			set_now_pause_time(now_phase, 0.0);
 			set_rest_pause_time_when_departing(rest_time);
 		}
+		*/
 	}
 	
 	///<summary>

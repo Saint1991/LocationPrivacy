@@ -133,14 +133,13 @@ namespace Entity
 
 		//現在phaseにおける速度のsetterとgetter
 		double get_now_speed(int phase) const;
+		std::vector<double> get_now_speed_list();
 		void set_now_speed(int phase, double speed);
 		void set_random_now_speed(int phase, double average_speed, double speed_range);
-				
+		
 		//停止POIにいるかどうかのチェック用
 		bool isPause(int now_phase);
-		void raise_flag();
-		void take_down_flag();
-
+		
 		//trajectory取得用
 		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
 		
@@ -150,10 +149,10 @@ namespace Entity
 		std::vector<int> find_cross_not_set_phases_of_poi() const;
 		int randomly_pick_cross_not_set_phase_of_poi() const;
 
-		int get_prev_phase_when_visiting_poi(int phase_id);
-		int get_next_phase_when_visiting_poi(int phase_id);
-		int get_prev_poi_arrive_phase_when_pausing(int phase_id);
-		int get_next_poi_arrive_phase_when_pausing(int phase_id);
+		int get_prev_poi_depart_phase_when_moving(int phase_id);
+		int get_next_poi_arrive_phase_when_moving(int phase_id);
+		int get_poi_init_pause_phase_when_pausing(int phase_id);
+		int get_poi_last_pause_phase_when_pausing(int phase_id);
 
 		//ファイル出力用
 		//virtual void foreach(const std::function<void(int, time_t, std::shared_ptr<POSITION_TYPE const>)>& execute_function) const;
