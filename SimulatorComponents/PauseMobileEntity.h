@@ -137,7 +137,7 @@ namespace Entity
 		void set_random_now_speed(int phase, double average_speed, double speed_range);
 				
 		//停止POIにいるかどうかのチェック用
-		bool check_pause_condition(int now_phase);
+		bool isPause(int now_phase);
 		void raise_flag();
 		void take_down_flag();
 

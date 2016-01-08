@@ -40,7 +40,7 @@ namespace Entity
 	void RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::revise_pause_phases_of_any_visited_poi(int start_pause_phase, int num, int id)
 	{
 		while (!visited_pois_info_list.at(id).pause_phases.empty()) visited_pois_info_list.at(id).pause_phases.pop_back();
-		if (check_pause_condition(start_pause_phase)) {
+		if (isPause(start_pause_phase)) {
 			for (int i = visited_pois_info_list.at(id).arrive_phase; i < start_pause_phase; i++) visited_pois_info_list.at(id).pause_phases.push_back(i);
 		}
 		for (int i = 0; i < num; i++, start_pause_phase++) visited_pois_info_list.at(id).pause_phases.push_back(start_pause_phase);

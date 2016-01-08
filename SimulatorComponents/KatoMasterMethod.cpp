@@ -82,13 +82,13 @@ namespace Method
 	{
 		//止まっている→停止時間の変更or停止地点の変更
 		//もし片方でも停止していたら→停止時間変更の判断
-		if (predicted_user->check_pause_condition(now_phase) || real_user->check_pause_condition(now_phase)) {
+		if (predicted_user->isPause(now_phase) || real_user->isPause(now_phase)) {
 			return check_user_pause_time(now_phase);
 		}
 		//動いていたら，
 		else {
 			//もし線形補間した線の上に位置していたら
-			if (check_on_the_path(now_phase)) {
+			if (is_on_the_path(now_phase)) {
 				return check_user_speed(now_phase);
 			}
 			else {
@@ -105,12 +105,12 @@ namespace Method
 		KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_pause_time(int now_phase)
 		{
 			//もしプラン通り停止していたら(両者の停止フラグが１)，NO_CHANGE
-			if (predicted_user->check_pause_condition(now_phase) && real_user->check_pause_condition(now_phase)) {
+			if (predicted_user->isPause(now_phase) && real_user->isPause(now_phase)) {
 				return NO_CHANGE;
 			}
-			else if (predicted_user->check_pause_condition(now_phase) || real_user->check_pause_condition(now_phase)) {
+			else if (predicted_user->isPause(now_phase) || real_user->isPause(now_phase)) {
 				//もしrealのほうが停止フラグが0で(出発していて)，predictが1なら,予定より早く出発
-				if (predicted_user->check_pause_condition(now_phase) == true && real_user->check_pause_condition(now_phase) == false) {
+				if (predicted_user->isPause(now_phase) == true && real_user->isPause(now_phase) == false) {
 					//change_timeの差分を求める
 					Tu -= requirement->service_interval;
 					return SHORTER_PAUSE_TIME;
@@ -218,7 +218,7 @@ namespace Method
 		/// ダミーがパス上に存在するかどうかをチェック
 		/// predicted_userの現停止POIから次の停止POIまでの経路を取ってきて，その直線上に乗っているかどうかをチェック
 		///</summary>
-		bool KatoMasterMethod::check_on_the_path(int phase_id)
+		bool KatoMasterMethod::is_on_the_path(int phase_id)
 		{
 			Graph::MapNodeIndicator source;
 			Graph::MapNodeIndicator destination;
@@ -240,22 +240,22 @@ namespace Method
 	{
 		switch (check_parameter) {
 		case LONGER_PAUSE_TIME:
-			modification_of_user_trajectory_when_LONGER_PAUSE_TIME(phase_id);
+			revise_user_trajectory_when_LONGER_PAUSE_TIME(phase_id);
 			break;
 		case SHORTER_PAUSE_TIME:
-			modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(phase_id);
+			revise_user_trajectory_when_SHORTER_PAUSE_TIME(phase_id);
 			break;
 		case PATH:
-			modification_of_user_trajectory_when_PATH(phase_id);
+			revise_user_trajectory_when_PATH(phase_id);
 			break;
 		case FASTER_SPEED:
-			modification_of_user_trajectory_when_FASTER_SPEED(phase_id);
+			revise_user_trajectory_when_FASTER_SPEED(phase_id);
 			break;
 		case SLOER_SPEED:
-			modification_of_user_trajectory_when_SLOER_SPEED(phase_id);
+			revise_user_trajectory_when_SLOER_SPEED(phase_id);
 			break;
 		case VISIT_POI:
-			modification_of_user_trajectory_when_VISIT_POI(phase_id);
+			revise_user_trajectory_when_VISIT_POI(phase_id);
 			break;
 		}
 	}
@@ -263,7 +263,7 @@ namespace Method
 	///<summary>
 	/// ユーザの停止時間が予定より長い時のpredicted_userの修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_LONGER_PAUSE_TIME(int phase_id)
+	void KatoMasterMethod::revise_user_trajectory_when_LONGER_PAUSE_TIME(int phase_id)
 	{
 		if (Tu == requirement->service_interval) {
 			//trajectoryをずらすことで対応
@@ -291,7 +291,7 @@ namespace Method
 	///<summary>
 	/// ユーザの停止時間が予定より短い時のpredicted_userの修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_SHORTER_PAUSE_TIME(int phase_id)
+	void KatoMasterMethod::revise_user_trajectory_when_SHORTER_PAUSE_TIME(int phase_id)
 	{
 		if (Tu == requirement->service_interval) {
 			//trajectoryをずらすことで対応
@@ -308,7 +308,7 @@ namespace Method
 	///<summary>
 	/// ユーザのパスの修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_PATH(int phase_id)
+	void KatoMasterMethod::revise_user_trajectory_when_PATH(int phase_id)
 	{
 
 	}
@@ -316,7 +316,7 @@ namespace Method
 	///<summary>
 	/// ユーザの移動速度が予定より早い時の修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_FASTER_SPEED(int phase_id)
+	void KatoMasterMethod::revise_user_trajectory_when_FASTER_SPEED(int phase_id)
 	{
 		double real_user_speed = 0.0;
 
@@ -325,7 +325,7 @@ namespace Method
 	///<summary>
 	/// ユーザの移動速度が予定より遅い時の修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_SLOER_SPEED(int phase_id)
+	void KatoMasterMethod::revise_user_trajectory_when_SLOER_SPEED(int phase_id)
 	{
 
 	}
@@ -334,7 +334,7 @@ namespace Method
 	///<summary>
 	/// ユーザの停止位置の修正
 	///</summary>
-	void KatoMasterMethod::modification_of_user_trajectory_when_VISIT_POI(int phase_id)
+	void KatoMasterMethod::revise_user_trajectory_when_VISIT_POI(int phase_id)
 	{
 
 	}
@@ -396,7 +396,7 @@ namespace Method
 			//停止中or向かっているPOIの停止時間を取得
 			double pause_time = revising_dummy->get_pause_time_of_any_visited_poi(id);
 			//修正対象のフェーズを取得．現在停止中で，一回目の訂正→現在のフェーズ，移動中→次の予定到着フェーズ
-			int revise_phase = revising_dummy->check_pause_condition(phase_id) && changed_poi_num_id == 1 ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(id);
+			int revise_phase = revising_dummy->isPause(phase_id) && changed_poi_num_id == 1 ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(id);
 
 			//最大変化量
 			double max_variable_value = calc_max_variable_pause_time(pause_time).first;
@@ -427,7 +427,7 @@ namespace Method
 		}
 
 		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
-		int revise_phase = revising_dummy->check_pause_condition(phase_id) ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(visited_poi_id);
+		int revise_phase = revising_dummy->isPause(phase_id) ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(visited_poi_id);
 
 		//停止時間が変更されたPOIの数だけ，次の経路を再計算
 		for(int num = 0; num < changed_poi_num_id; num++, visited_poi_id++) {
@@ -503,7 +503,7 @@ namespace Method
 		}
 
 		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
-		int revise_phase = revising_dummy->check_pause_condition(phase_id) ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(visited_poi_id);
+		int revise_phase = revising_dummy->isPause(phase_id) ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(visited_poi_id);
 
 		//移動速度が変更されたPOIの数だけ，次の経路を再計算
 		for (int num = 0; num < changed_poi_num_id; num++, visited_poi_id++) {

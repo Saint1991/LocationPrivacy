@@ -27,7 +27,6 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE = Graph::SemanticTrajectory<POSITION_TYPE>>
 	class MobileEntity : public Identifiable<entity_id>
 	{
-	
 	protected:
 		std::shared_ptr<TRAJECTORY_TYPE> trajectory;
 		std::shared_ptr<std::vector<bool>> cross_flg;

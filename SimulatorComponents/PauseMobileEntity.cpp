@@ -231,8 +231,7 @@ namespace Entity
 	}
 
 	///<summary>
-	/// 次に訪問予定の訪問POIの停止フェーズを求める．
-	/// 停止中の場合は，現在phaseを返し，移動中の場合は，向かっている訪問地点の予定している到着時間に値するphaseを返す
+	/// 現在フェーズまでの全停止時間を求める．
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	std::vector<int> PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_all_pause_phases_since_current_phase(int current_phase)
@@ -745,7 +744,7 @@ namespace Entity
 	/// 現在速度が0の場合停止と判断
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	bool PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::check_pause_condition(int now_phase)
+	bool PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::isPause(int now_phase)
 	{
 		return get_now_speed(now_phase) == 0.0 ? true : false;
 	}
@@ -845,7 +844,7 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_prev_poi_arrive_phase_when_pausing(int phase_id)
 	{
-		if (!check_pause_condition(phase_id)) throw std::invalid_argument("This Method is used by pausing entity!!");
+		if (!isPause(phase_id)) throw std::invalid_argument("This Method is used by pausing entity!!");
 		return get_prev_phase_when_visiting_poi(get_prev_phase_when_visiting_poi(phase_id) - 1);
 	}
 
@@ -857,7 +856,7 @@ namespace Entity
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_next_poi_arrive_phase_when_pausing(int phase_id)
 	{
-		if (!check_pause_condition(phase_id)) throw std::invalid_argument("This Method is used by pausing entity!!");
+		if (!isPause(phase_id)) throw std::invalid_argument("This Method is used by pausing entity!!");
 		return get_next_phase_when_visiting_poi(get_next_phase_when_visiting_poi(phase_id) + 1);
 	}
 
