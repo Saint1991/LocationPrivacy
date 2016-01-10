@@ -49,7 +49,10 @@ namespace Method
 		void decide_base_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の基準地点および基準地点到着時間の決定
 		void decide_share_positions_and_arrive_time(int dummy_id);// 生成中ダミー(k番目)の共有地点および共有地点到着時間の決定
 		void decide_destination_on_the_way(int dummy_id);// 生成中ダミー(k番目)の移動経路の決定
-	
+		void last_behavior_until_last_phase_of_dummy(int phase_id, double dest_rest_time);
+		void go_to_other_position(int phase_id, double dest_rest_time);
+		void pause_until_last_phase(int phase_id, double dest_rest_time);
+
 		bool check_dest_positon_flag();
 		void raise_dest_position_flag();
 		void take_down_dest_position_flag();

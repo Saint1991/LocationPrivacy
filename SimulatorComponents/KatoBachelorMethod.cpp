@@ -173,6 +173,7 @@ namespace Method
 			(*phase_id)++;
 			creating_dummy->set_pause_phases_using_arrive_phase(arrive_phase, *phase_id);
 			rest_pause_time -= requirement->service_interval;
+			//if (rest_pause_time < 0.0) rest_pause_time = 0.0;
 			creating_dummy->set_now_pause_time(*phase_id, rest_pause_time);
 			creating_dummy->set_position_of_phase(*phase_id, source, map->get_static_poi(source.id())->data->get_position());
 		}
@@ -609,13 +610,31 @@ namespace Method
 		}
 
 		//シュミレーション終了までの残りの停止位置を適当に決める
+		last_behavior_until_last_phase_of_dummy(phase_id, dest_rest_time);
+	}
+
+	///<summary>
+	/// ダミーの最終フェーズまでの振る舞い
+	///</summary>
+	void KatoBachelorMethod::last_behavior_until_last_phase_of_dummy(int phase_id, double dest_rest_time) {
+		//go_to_other_position(phase_id, dest_rest_time);
+		pause_until_last_phase(phase_id, dest_rest_time);
+		
+	}
+
+	///<summary>
+	/// 途中目的地設定をしているかどうかをチェック
+	///</summary>
+	void KatoBachelorMethod::go_to_other_position(int phase_id, double dest_rest_time) {
+		//シュミレーション終了までの残りの停止位置を適当に決める
 		//複数に設定したほうが良いが，とりあえず，最終地点のみ
-		while (phase_id < time_manager->phase_count() - 1)
+		while (phase_id < time_manager->last_phase())
 		{
+			Math::Probability generator;
 			Entity::MobileEntity<Geography::LatLng>::node_pos_info now_poi = creating_dummy->read_node_pos_info_of_phase(phase_id);
 
 			double length_of_rect = 0.001;//適切な範囲の緯度経度の選択幅を書く
-			double rest_phase_time = time_manager->time_of_phase(time_manager->phase_count() - 1) - time_manager->time_of_phase(phase_id);
+			double rest_phase_time = time_manager->time_of_phase(time_manager->last_phase()) - time_manager->time_of_phase(phase_id);
 			//もし残り時間が，最大停止時間よりも小さい場合は，停止で埋めてしまう
 			if ((rest_phase_time - requirement->max_pause_time) < 0) {
 				int rest_phases = time_manager->phase_count() - 1 - phase_id;
@@ -655,6 +674,40 @@ namespace Method
 		}
 	}
 
+	///<summary>
+	/// 最後まで停止で埋める
+	///</summary>
+	void KatoBachelorMethod::pause_until_last_phase(int phase_id, double dest_rest_time) {
+		while (phase_id < time_manager->last_phase())
+		{
+			int rest_phases = time_manager->phase_count() - 1 - phase_id;
+			Entity::MobileEntity<Geography::LatLng>::node_pos_info now_poi = creating_dummy->read_node_pos_info_of_phase(phase_id);
+
+			double length_of_rect = 0.001;//適切な範囲の緯度経度の選択幅を書く
+			double rest_phase_time = time_manager->time_of_phase(time_manager->phase_count() - 1) - time_manager->time_of_phase(phase_id);
+			//もし残り時間が，最大停止時間よりも小さい場合は，停止で埋めてしまう
+			if ((rest_phase_time - requirement->max_pause_time) < 0) {
+				int rest_phases = time_manager->last_phase() - phase_id;
+				//停止時間のセット
+				creating_dummy->set_pause_time_using_arrive_phase(phase_id, rest_phase_time);
+				//dest_rest_timeのセット
+				creating_dummy->set_dest_rest_time_using_arrive_phase(phase_id, dest_rest_time);
+				set_pause_time_and_phases_of_dummy_visited_POI(&phase_id, rest_phase_time, rest_phases, now_poi.first);
+				return;
+			}
+			else {
+				//decided_positionの停止時間を決める
+				Math::Probability generator;
+				double pause_time_at_decided_position = generator.uniform_distribution(requirement->min_pause_time, requirement->max_pause_time);
+
+				//停止時間のセット
+				creating_dummy->set_pause_time_using_arrive_phase(phase_id, pause_time_at_decided_position);
+				//dest_rest_timeのセット
+				creating_dummy->set_dest_rest_time_using_arrive_phase(phase_id, dest_rest_time);
+				set_pause_time_and_phases_of_dummy_visited_POI(&phase_id, rest_phase_time, rest_phases, now_poi.first);
+			}
+		}
+	}
 
 	///<summary>
 	/// 途中目的地設定をしているかどうかをチェック

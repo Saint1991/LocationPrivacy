@@ -9,10 +9,6 @@ namespace Simulation
 	HayashidaSimulator::HayashidaSimulator(const Graph::Rectangle<Geography::LatLng>& boundary) 
 		: ISimulator<Map::HayashidaDbMap, Entity::DifferentMovementUser<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>(), map_boundary(boundary)
 	{
-		time_manager = create_time_manager();//time_managerの生成
-		user = std::make_shared<Entity::DifferentMovementUser<Geography::LatLng>>(0, time_manager);
-		real_user = user->get_real_user();
-		predicted_user = user->get_predicted_user();
 	}
 
 	///<summary>
@@ -116,15 +112,102 @@ namespace Simulation
 
 		for (int i = 0; i < total_pause_phase; i++)
 		{
-			if (*phase_id == time_manager->phase_count() - 1) break;
+			if (*phase_id == time_manager->last_phase()) break;
 			(*phase_id)++;
 			user->set_pause_phases(*phase_id);
 			rest_pause_time -= SERVICE_INTERVAL;
+			if (rest_pause_time < 0) rest_pause_time = 0.0;
 			user->set_now_pause_time(*phase_id, rest_pause_time);
 			user->set_position_of_phase(*phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
 		}
 	}
 	
+	///<summary>
+	/// ユーザの，最後の訪問予定POI到達後の最終フェーズまでの振る舞い
+	///</summary>
+	void HayashidaSimulator::last_behavior_of_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi)
+	{
+		pause_until_last_phase_of_user(phase_id, dest_rest_time, now_poi);
+		//go_to_random_position_of_user(phase_id, dest_rest_time, now_poi);
+	}
+
+	///<summary>
+	/// 最後のフェーズまで停止を続ける
+	///</summary>
+	void HayashidaSimulator::pause_until_last_phase_of_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi)
+	{
+		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
+		user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+		user->set_dest_rest_time(dest_rest_time);
+
+		double rest_pause_time = user->get_pause_time() - dest_rest_time;
+		lldiv_t last_variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
+
+		user->set_rest_pause_time_when_departing(last_variable_of_converted_pause_time_to_phase.rem);
+		//停止時間分，各phaseに停止場所と停止phaseを登録
+		set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
+
+	}
+
+	///<summary>
+	/// どこか一点ランダムに位置を決定し，そこに向かって進む．
+	///</summary>
+	void HayashidaSimulator::go_to_random_position_of_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi)
+	{
+		Math::Probability generator;
+		//最終地点は少し遠くにとる(1.5倍～2倍)．ただし，マップの限界範囲に注意
+		double last_distance = 1.4 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_now_speed(phase_id);
+
+		//次の候補点の範囲を求める
+		Geography::LatLng center = map_boundary.center();
+		double last_angle = Geography::GeoCalculation::lambert_azimuth_angle((*now_poi)->data->get_position(), center);
+		Geography::LatLng last_candidate_poi_position_range
+			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
+
+		Graph::Rectangle<Geography::LatLng> last_range(last_candidate_poi_position_range.lat() + 0.001, last_candidate_poi_position_range.lng(), last_candidate_poi_position_range.lat(), last_candidate_poi_position_range.lng() + 0.001);
+
+		std::vector<std::shared_ptr<Map::BasicPoi const>> last_candidate_pois_list = get_pois_list(last_range);
+		//次のPOIの決定
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator last_poi = last_candidate_pois_list.begin();
+
+
+		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
+		user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+		user->set_dest_rest_time(dest_rest_time);
+
+
+		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
+		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), user->get_now_speed(phase_id));
+		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
+
+		//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
+		double rest_pause_time = user->get_pause_time() - dest_rest_time;
+		lldiv_t last_variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
+
+		user->set_rest_pause_time_when_departing(last_variable_of_converted_pause_time_to_phase.rem);
+
+		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
+
+		//停止時間分，各phaseに停止場所と停止phaseを登録
+		set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
+
+		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
+																									//速度はphaseで埋める前を参照しなければならないことに注意
+		double last_pause_position_speed = user->get_starting_speed();
+
+		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
+		double distance = (SERVICE_INTERVAL - last_variable_of_converted_pause_time_to_phase.rem) * last_pause_position_speed;
+		double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*last_poi)->get_id());
+
+		Graph::MapNodeIndicator last_nearest_position = (*now_poi)->get_id();
+
+		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
+		//last_phaseまで埋める！
+		while (phase_id != (time_manager->phase_count() - 1)) {
+			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
+		}
+	}
+
 
 	///<summary>
 	/// 最短路の中で一番近いintersectionを探し，線形補間する． 
@@ -171,11 +254,97 @@ namespace Simulation
 			(*phase_id)++;
 			real_user->set_pause_phases(*phase_id);
 			rest_pause_time -= SERVICE_INTERVAL;
+			if (rest_pause_time < 0.0) rest_pause_time = 0.0;
 			real_user->set_now_pause_time(*phase_id, rest_pause_time);
 			real_user->set_position_of_phase(*phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
 		}
 	}
 
+	///<summary>
+	/// ユーザの，最後の訪問予定POI到達後の最終フェーズまでの振る舞い
+	///</summary>
+	void HayashidaSimulator::last_behavior_of_real_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi)
+	{
+		pause_until_last_phase_of_user(phase_id, dest_rest_time, now_poi);
+		//go_to_random_position_of_real_user(phase_id, dest_rest_time, now_poi);
+	}
+
+	///<summary>
+	/// 最後のフェーズまで停止を続ける
+	///</summary>
+	void HayashidaSimulator::pause_until_last_phase_of_real_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi)
+	{
+		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
+		real_user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+		real_user->set_dest_rest_time(dest_rest_time);
+
+		double rest_pause_time = real_user->get_pause_time() - dest_rest_time;
+		lldiv_t last_variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
+
+		real_user->set_rest_pause_time_when_departing(last_variable_of_converted_pause_time_to_phase.rem);
+		//停止時間分，各phaseに停止場所と停止phaseを登録
+		set_pause_time_and_phases_of_visited_POI_of_real_user(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
+
+	}
+
+	///<summary>
+	/// どこか一点ランダムに位置を決定し，そこに向かって進む．
+	///</summary>
+	void HayashidaSimulator::go_to_random_position_of_real_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi)
+	{
+		Math::Probability generator;
+		//最終地点は少し遠くにとる(1.5倍～2倍)．ただし，マップの限界範囲に注意
+		double last_distance = 1.4 * (end_time - time_manager->time_of_phase(phase_id)) * real_user->get_now_speed(phase_id);
+
+		//次の候補点の範囲を求める
+		Geography::LatLng center = map_boundary.center();
+		double last_angle = Geography::GeoCalculation::lambert_azimuth_angle((*now_poi)->data->get_position(), center);
+		Geography::LatLng last_candidate_poi_position_range
+			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
+
+		Graph::Rectangle<Geography::LatLng> last_range(last_candidate_poi_position_range.lat() + 0.001, last_candidate_poi_position_range.lng(), last_candidate_poi_position_range.lat(), last_candidate_poi_position_range.lng() + 0.001);
+
+		std::vector<std::shared_ptr<Map::BasicPoi const>> last_candidate_pois_list = get_pois_list(last_range);
+		//次のPOIの決定
+		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator last_poi = last_candidate_pois_list.begin();
+
+		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
+		real_user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
+		real_user->set_dest_rest_time(dest_rest_time);
+
+
+		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
+		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), real_user->get_now_speed(phase_id));
+		int next_arrive_time = moving_time_between_poi_and_next_poi + real_user->get_pause_time();
+
+		//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
+		double rest_pause_time = real_user->get_pause_time() - dest_rest_time;
+		lldiv_t last_variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
+
+		real_user->set_rest_pause_time_when_departing(last_variable_of_converted_pause_time_to_phase.rem);
+
+		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
+
+		//停止時間分，各phaseに停止場所と停止phaseを登録
+		set_pause_time_and_phases_of_visited_POI_of_real_user(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
+
+		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
+																									//速度はphaseで埋める前を参照しなければならないことに注意
+		double last_pause_position_speed = real_user->get_starting_speed();
+
+		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
+		double distance = (SERVICE_INTERVAL - last_variable_of_converted_pause_time_to_phase.rem) * last_pause_position_speed;
+		double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*last_poi)->get_id());
+
+		Graph::MapNodeIndicator last_nearest_position = (*now_poi)->get_id();
+
+		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
+		//last_phaseまで埋める！
+		while (phase_id != (time_manager->phase_count() - 1)) {
+			set_path_between_poi_of_real_user(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
+		}
+
+	}
 
 	///<summary>
 	/// 最短路の中で一番近いintersectionを探し，線形補間する． 
@@ -221,10 +390,13 @@ namespace Simulation
 			(*phase_id)++;
 			predicted_user->set_pause_phases(*phase_id);
 			rest_pause_time -= SERVICE_INTERVAL;
+			if (rest_pause_time < 0.0) rest_pause_time = 0.0;
 			predicted_user->set_now_pause_time(*phase_id, rest_pause_time);
 			predicted_user->set_position_of_phase(*phase_id, (*now_poi)->get_id(), (*now_poi)->data->get_position());
 		}
 	}
+
+
 
 
 	///<summary>
@@ -427,58 +599,8 @@ namespace Simulation
 		}
 
 		//---------------------------------end_timeまで適当に経路を決める！---------------------------------------------------
-
-		//最終地点は少し遠くにとる(1.5倍～2倍)．ただし，マップの限界範囲に注意
-		double last_distance = 1.4 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_starting_speed();
-
-		//次の候補点の範囲を求める
-		Geography::LatLng center = map_boundary.center();
-		double last_angle = Geography::GeoCalculation::lambert_azimuth_angle((*now_poi)->data->get_position(), center);
-		Geography::LatLng last_candidate_poi_position_range
-			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
-
-		Graph::Rectangle<Geography::LatLng> last_range(last_candidate_poi_position_range.lat() + 0.001, last_candidate_poi_position_range.lng(), last_candidate_poi_position_range.lat(), last_candidate_poi_position_range.lng() + 0.001);
-
-		std::vector<std::shared_ptr<Map::BasicPoi const>> last_candidate_pois_list = get_pois_list(last_range);
-		//次のPOIの決定
-		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator last_poi = last_candidate_pois_list.begin();
+		last_behavior_of_user(phase_id, dest_rest_time, now_poi);
 		
-		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
-		user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
-		user->set_dest_rest_time(dest_rest_time);
-
-		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), user->get_starting_speed());
-		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
-
-		
-		//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
-		double rest_pause_time = user->get_pause_time() - dest_rest_time;
-		lldiv_t last_variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
-		
-		//出発時の余り時間を登録
-		user->set_rest_pause_time_when_departing(last_variable_of_converted_pause_time_to_phase.rem);
-
-		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
-
-		//停止時間分，各phaseに停止場所と移動速度(0)を登録
-		set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
-
-		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
-		//速度はphaseで埋める前を参照しなければならないことに注意
-		double last_pause_position_speed = user->get_starting_speed();
-
-		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
-		double distance = (SERVICE_INTERVAL - last_variable_of_converted_pause_time_to_phase.rem) * last_pause_position_speed;
-		double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*last_poi)->get_id());
-
-		Graph::MapNodeIndicator last_nearest_position = (*now_poi)->get_id();
-
-		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
-		//last_phaseまで埋める！
-		while (phase_id != (time_manager->phase_count() - 1)) {
-			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
-		}
-
 		std::cout << "Success Creating Random User" << std::endl;
 	}
 
@@ -498,6 +620,7 @@ namespace Simulation
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator now_poi = order_visited_poi.first.begin();
 		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator next_poi = order_visited_poi.first.begin() + 1;
 
+		
 		user->set_visited_poi_of_phase(phase_id, Graph::MapNodeIndicator((*now_poi)->get_id()), (*now_poi)->data->get_position());
 		user->set_random_starting_speed_at_poi(AVERAGE_SPEED, RANGE_OF_SPEED);
 		
@@ -559,58 +682,7 @@ namespace Simulation
 
 		//---------------------------------end_timeまで適当に経路を決める！---------------------------------------------------
 
-		Math::Probability generator;
-		//最終地点は少し遠くにとる(1.5倍～2倍)．ただし，マップの限界範囲に注意
-		double last_distance = 1.4 * (end_time - time_manager->time_of_phase(phase_id)) * user->get_now_speed(phase_id);
-
-		//次の候補点の範囲を求める
-		Geography::LatLng center = map_boundary.center();
-		double last_angle = Geography::GeoCalculation::lambert_azimuth_angle((*now_poi)->data->get_position(), center);
-		Geography::LatLng last_candidate_poi_position_range
-			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
-	
-		Graph::Rectangle<Geography::LatLng> last_range(last_candidate_poi_position_range.lat() + 0.001, last_candidate_poi_position_range.lng(), last_candidate_poi_position_range.lat(), last_candidate_poi_position_range.lng() + 0.001);
-
-		std::vector<std::shared_ptr<Map::BasicPoi const>> last_candidate_pois_list = get_pois_list(last_range);
-		//次のPOIの決定
-		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator last_poi = last_candidate_pois_list.begin();
-
-
-		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
-		user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
-		user->set_dest_rest_time(dest_rest_time);
-
-
-		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
-		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), user->get_now_speed(phase_id));
-		int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
-		
-		//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
-		double rest_pause_time = user->get_pause_time() - dest_rest_time;
-		lldiv_t last_variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
-		
-		user->set_rest_pause_time_when_departing(last_variable_of_converted_pause_time_to_phase.rem);
-
-		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
-
-		//停止時間分，各phaseに停止場所と停止phaseを登録
-		set_pause_time_and_phases_of_visited_POI(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
-
-		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
-		//速度はphaseで埋める前を参照しなければならないことに注意
-		double last_pause_position_speed = user->get_starting_speed();
-
-		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
-		double distance = (SERVICE_INTERVAL - last_variable_of_converted_pause_time_to_phase.rem) * last_pause_position_speed;
-		double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*last_poi)->get_id());
-
-		Graph::MapNodeIndicator last_nearest_position = (*now_poi)->get_id();
-
-		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
-		//last_phaseまで埋める！
-		while (phase_id != (time_manager->phase_count() - 1)) {
-			set_path_between_poi(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
-		}
+		last_behavior_of_user(phase_id, dest_rest_time, now_poi);
 
 		std::cout << "Success Creating predicted User" << std::endl;
 	}
@@ -693,59 +765,8 @@ namespace Simulation
 		}
 
 		//---------------------------------end_timeまで適当に経路を決める！---------------------------------------------------
-
-		Math::Probability generator;
-		//最終地点は少し遠くにとる(1.5倍～2倍)．ただし，マップの限界範囲に注意
-		double last_distance = 1.4 * (end_time - time_manager->time_of_phase(phase_id)) * real_user->get_now_speed(phase_id);
-
-		//次の候補点の範囲を求める
-		Geography::LatLng center = map_boundary.center();
-		double last_angle = Geography::GeoCalculation::lambert_azimuth_angle((*now_poi)->data->get_position(), center);
-		Geography::LatLng last_candidate_poi_position_range
-			= Geography::GeoCalculation::calc_translated_point((*now_poi)->data->get_position(), last_distance, last_angle);
-
-		Graph::Rectangle<Geography::LatLng> last_range(last_candidate_poi_position_range.lat() + 0.001, last_candidate_poi_position_range.lng(), last_candidate_poi_position_range.lat(), last_candidate_poi_position_range.lng() + 0.001);
-
-		std::vector<std::shared_ptr<Map::BasicPoi const>> last_candidate_pois_list = get_pois_list(last_range);
-		//次のPOIの決定
-		std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator last_poi = last_candidate_pois_list.begin();
-
-		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
-		real_user->set_random_pause_time(phase_id, MIN_PAUSE_TIME, MAX_PAUSE_TIME);
-		real_user->set_dest_rest_time(dest_rest_time);
-
-
-		//現在地の停止時間をランダムで設定し，現地点の出発地の速度で，次のPOIまでの最短路で移動した時の時間を求める．
-		double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*last_poi)->get_id(), real_user->get_now_speed(phase_id));
-		int next_arrive_time = moving_time_between_poi_and_next_poi + real_user->get_pause_time();
-
-		//停止時間をphaseに換算し，pause_timeと最短路経路からpathを決定していく
-		double rest_pause_time = real_user->get_pause_time() - dest_rest_time;
-		lldiv_t last_variable_of_converted_pause_time_to_phase = std::lldiv(rest_pause_time, SERVICE_INTERVAL);
-
-		real_user->set_rest_pause_time_when_departing(last_variable_of_converted_pause_time_to_phase.rem);
-
-		std::vector<Graph::MapNodeIndicator> last_shortests_path = map->get_shortest_path((*now_poi)->get_id(), (*last_poi)->get_id());
-
-		//停止時間分，各phaseに停止場所と停止phaseを登録
-		set_pause_time_and_phases_of_visited_POI_of_real_user(&phase_id, rest_pause_time, last_variable_of_converted_pause_time_to_phase.quot, now_poi);
-
-		std::vector<Graph::MapNodeIndicator>::iterator last_path_iter = last_shortests_path.begin();//pathを検索するためのindex
-		//速度はphaseで埋める前を参照しなければならないことに注意
-		double last_pause_position_speed = real_user->get_starting_speed();
-
-		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
-		double distance = (SERVICE_INTERVAL - last_variable_of_converted_pause_time_to_phase.rem) * last_pause_position_speed;
-		double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*last_poi)->get_id());
-
-		Graph::MapNodeIndicator last_nearest_position = (*now_poi)->get_id();
-
-		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
-		//last_phaseまで埋める！
-		while (phase_id != (time_manager->phase_count() - 1)) {
-			set_path_between_poi_of_real_user(now_poi, last_path_iter, last_nearest_position, last_pause_position_speed, SERVICE_INTERVAL, &distance, &phase_id);
-		}
-
+		last_behavior_of_real_user(phase_id, dest_rest_time, now_poi);
+		
 		std::cout << "Success Creating Real User" << std::endl;
 	}
 	
@@ -861,10 +882,11 @@ namespace Simulation
 	{
 		input_visit_pois();
 
-		make_real_user();
-
 		make_predicted_user();
 
+		make_real_user();
+
+		
 		predicted_user = user;
 
 		//make_random_movement_user();

@@ -4,8 +4,6 @@
 
 namespace Entity
 {
-
-
 	///<summary>
 	/// コンストラクタ
 	///</summary>
@@ -48,6 +46,15 @@ namespace Entity
 		now_pause_time_list(std::vector<double>(timeslot->phase_count(), 0)),
 		now_speed_list(std::vector<double>(timeslot->phase_count(), 0)),
 		visited_pois_info_list_id(0)
+	{
+	}
+
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<TRAJECTORY_TYPE> trajectory, std::vector<VisitedPoiInfo> visited_pois_info_list, std::vector<double>& now_pause_time_list, std::vector<double>& now_speed_list)
+		: MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>(id, trajectory), visited_pois_info_list(visited_pois_info_list), now_pause_time_list(now_pause_time_list), now_speed_list(now_speed_list), visited_pois_info_list_id(0)
 	{
 	}
 
@@ -413,6 +420,21 @@ namespace Entity
 				iter->pause_phases.push_back(arrive_phase);
 				iter->pause_time = pause_time;
 				return;
+			}
+		}
+		throw std::invalid_argument("Not Found");
+	}
+
+
+	///<summary>
+	/// 訪問POI情報に，double型の停止時間と到着phaseをsetする
+	///</summary>
+	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
+	void PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::set_pause_time_using_pause_phases(int pause_phase, double pause_time)
+	{
+		for (std::vector<VisitedPoiInfo>::iterator iter = visited_pois_info_list.begin(); iter != visited_pois_info_list.end(); iter++) {
+			for (std::vector<int>::iterator iter2 = iter->pause_phases.begin(); iter2 != iter->pause_phases.end(); iter2++) {
+				if (*iter2 == pause_phase) iter->pause_time = pause_time;
 			}
 		}
 		throw std::invalid_argument("Not Found");
@@ -810,39 +832,32 @@ namespace Entity
 	}
 
 	///<summary>
-	/// phase_idの直前のPOIのphaseを求める
-	/// phase_id時に停止している場合は，そのPOIにおける到着時間を求める．
+	///直前の訪問POIの最後の停止フェーズを求める
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_prev_poi_depart_phase_when_moving(int phase_id)
 	{
-		if (trajectory->get_visited_node_id(phase_id).type() == Graph::POI) {
-			std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin() + phase_id;
-			while ((*iter).type() != Graph::POI) phase_id--;
-			phase_id++;
-		}
-		else {
-			std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin() + phase_id;
-			while ((*iter).type() == Graph::POI) phase_id--;
+		if (isPause(phase_id)) throw std::invalid_argument("This Method is used by moving entity!!");
+		std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin() + phase_id;
+		while ((*iter).type() != Graph::POI) {
+			phase_id--;
+			iter--;
 		}
 		return phase_id;
 	}
 
 	///<summary>
-	/// phase_idの直後のPOIのphaseを求める
-	/// phase_id時に停止している場合は，そのPOIにおける到着時間を求める．
+	/// 現在向かっているPOIの到着時間を求める．
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_next_poi_arrive_phase_when_moving(int phase_id)
 	{
-		if (trajectory->get_visited_node_id(phase_id).type() == Graph::POI) {
-			std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin() + phase_id;
-			while ((*iter).type() != Graph::POI) phase_id++;
-			phase_id--;
-		}
-		else {
-			std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin() + phase_id;
-			while ((*iter).type() == Graph::POI) phase_id++;
+		if (isPause(phase_id)) throw std::invalid_argument("This Method is used by moving entity!!");
+		std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin();
+		std::advance(iter, phase_id);
+		while ((*iter).type() != Graph::POI) {
+			phase_id++;
+			iter++;
 		}
 		return phase_id;
 	}
@@ -856,10 +871,13 @@ namespace Entity
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_poi_init_pause_phase_when_pausing(int phase_id)
 	{
 		if (!isPause(phase_id)) throw std::invalid_argument("This Method is used by pausing entity!!");
-		int init_phase_of_poi = get_poi_init_pause_phase_when_pausing(phase_id);
-		
-		return init_phase_of_poi != 0 ?
-			get_prev_poi_depart_phase_when_moving(init_phase_of_poi - 1) : 0;
+		std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin();
+		std::advance(iter, phase_id);
+		while ((*iter).type() != Graph::POI) {
+			phase_id--;
+			iter--;
+		}
+		return phase_id+1;
 	}
 
 
@@ -872,10 +890,13 @@ namespace Entity
 	int PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::get_poi_last_pause_phase_when_pausing(int phase_id)
 	{
 		if (!isPause(phase_id)) throw std::invalid_argument("This Method is used by pausing entity!!");
-		int last_phase_of_poi = get_poi_last_pause_phase_when_pausing(phase_id);
-		
-		return last_phase_of_poi != trajectory->last_phase() ?
-			get_next_poi_arrive_phase_when_moving(last_phase_of_poi + 1) : last_phase_of_poi;
+		std::vector<Graph::MapNodeIndicator>::iterator iter = trajectory->read_visited_node_ids().begin();
+		std::advance(iter, phase_id);
+		while ((*iter).type() != Graph::POI) {
+			phase_id++;
+			iter++;
+		}
+		return phase_id-1;
 	}
 
 

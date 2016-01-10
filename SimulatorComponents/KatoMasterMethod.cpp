@@ -16,6 +16,7 @@ namespace Method
 		input_user = entities->get_user();
 		real_user = entities->get_user()->get_real_user();
 		//predicted_userのコピー．とりあえず今だけユーザごとコピーする形で
+		//get_predicted_userをRevisable型にすると，おそらく可能
 		predicted_user = entities->get_user();
 	}
 
@@ -174,16 +175,16 @@ namespace Method
 				//realの方が速度が大きい場合
 				if (real_user_speed > predicted_user_speed) {
 					double change_time =
-						map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, real_user_speed)
-						- map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, predicted_user_speed);
+						map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, real_user->get_next_poi().first, real_user_speed)
+						- map->calc_necessary_time(predicted_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, predicted_user_speed);
 					Tu += change_time;
 					return FASTER_SPEED;
 				}
 				//predictedの方が速度が大きい場合
 				else {
 					double change_time =
-						map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, real_user_speed)
-						- map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, predicted_user_speed);
+						map->calc_necessary_time(predicted_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, predicted_user_speed)
+						- map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, real_user->get_next_poi().first, real_user_speed);
 					Tu += change_time;
 					return SLOER_SPEED;
 				}
@@ -245,14 +246,16 @@ namespace Method
 		case SHORTER_PAUSE_TIME:
 			revise_user_trajectory_when_SHORTER_PAUSE_TIME(phase_id);
 			break;
-		case PATH:
-			revise_user_trajectory_when_PATH(phase_id);
-			break;
+
 		case FASTER_SPEED:
 			revise_user_trajectory_when_FASTER_SPEED(phase_id);
 			break;
 		case SLOER_SPEED:
 			revise_user_trajectory_when_SLOER_SPEED(phase_id);
+			break;
+
+		case PATH:
+			revise_user_trajectory_when_PATH(phase_id);
 			break;
 		case VISIT_POI:
 			revise_user_trajectory_when_VISIT_POI(phase_id);
@@ -340,12 +343,24 @@ namespace Method
 	}
 
 
-
 	///<summary>
 	/// ダミーの行動プランを修正する
 	///</summary>
 	void KatoMasterMethod::revise_dummy_trajectory(int phase_id)
 	{
+		revise_dummy_pause_time(phase_id);
+		if (Tu != 0.0) revise_dummy_path(phase_id);
+		if (Tu != 0.0) revise_dummy_speed(phase_id);
+		if (Tu != 0.0) revise_dummy_visit_poi(phase_id);
+
+		/*		
+		//加藤さんの修論手法のアルゴリズムでは，
+		//poiに停止している時と，現在移動中の時は別にして考えているけど，
+		//visited_pois_info_list_idを取得する時に，その2つは区別しているので，
+		//場合分けする必要はない(はず)
+		//全ての停止地点の到着時間を変更し，Tu分変更させる．
+		//visited_poi情報の更新
+		update_visited_pois_info_of_dummy();
 		if (revising_dummy->isPause(phase_id)) {
 			revise_dummy_pause_time(phase_id);
 			if (Tu != 0.0) revise_dummy_path(phase_id);
@@ -359,24 +374,7 @@ namespace Method
 			if (Tu != 0.0) revise_dummy_speed(phase_id);
 			if (Tu != 0.0) revise_dummy_visit_poi(phase_id);
 		}
-		
-		
-
-		/*
-		//加藤さんの修論手法のアルゴリズムでは，
-		//poiに停止している時と，現在移動中の時は別にして考えているけど，
-		//visited_pois_info_list_idを取得する時に，その2つは区別しているので，
-		//場合分けする必要はない(はず)
-		//全ての停止地点の到着時間を変更し，Tu分変更させる．
-		revise_dummy_pause_time(phase_id);
-		if (Tu != 0.0) revise_dummy_path(phase_id);
-		if (Tu != 0.0) revise_dummy_speed(phase_id);
-		if (Tu != 0.0) revise_dummy_visit_poi(phase_id);
-
-		//visited_poi情報の更新
-		update_visited_pois_info_of_dummy();
 		*/
-
 		
 	}
 
@@ -432,7 +430,7 @@ namespace Method
 				= revising_dummy->isPause(phase_id) 
 				? revising_dummy->get_now_pause_time(revising_dummy->get_prev_poi_depart_phase_when_moving(phase_id))
 				: revising_dummy->get_now_pause_time(revising_dummy->get_next_poi_arrive_phase_when_moving(phase_id));
-						
+			
 			//最大変化量
 			double max_variable_value = calc_max_variable_pause_time(pause_time).first;
 			double min_variable_value = calc_max_variable_pause_time(pause_time).second;
@@ -488,23 +486,55 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_dummy_speed(int phase_id)
 	{
-		int changed_poi_num_id = 1;//停止時間が変更されたpoiの数を記録するためのid
-		
+		int changed_poi_num_id = 0;
+
+		//変更前のtrajectoryとスピードリストと停止時間リストを保持
+		std::shared_ptr<Graph::RevisableTrajectory<>> prev_trajectory = revising_dummy->get_trajectory();
+		std::vector<double> prev_now_speed_list = revising_dummy->get_now_speed_list();
+		std::vector<double> prev_now_pause_time_list = revising_dummy->get_now_pause_time_list();
+
+		//修正対象のフェーズを取得．現在停止中→現在のフェーズ，移動中→次の予定到着フェーズ
+		int revise_phase = revising_dummy->isPause(phase_id) ? phase_id : revising_dummy->get_next_poi_arrive_phase_when_moving(phase_id);
+		int next_poi_arrive_phase = revising_dummy->get_next_poi_arrive_phase_when_moving((revising_dummy->get_poi_last_pause_phase_when_pausing(revise_phase) + 1));
+
+		//プログラムを組みやすいように，予め，出発速度と停止時間を抽出しておく
+		std::vector<double> speed_list;
+		int phase = revise_phase;
+		phase = revising_dummy->get_poi_last_pause_phase_when_pausing(phase);
+		while (phase != time_manager->last_phase()) {
+			phase++;
+			speed_list.push_back(revising_dummy->get_now_speed(phase));
+			phase = revising_dummy->get_next_poi_arrive_phase_when_moving(phase);
+			phase = revising_dummy->get_poi_last_pause_phase_when_pausing(phase);
+		}
+
+		std::vector<double> pause_time_list;
+		int phase2 = time_manager->last_phase();
+		phase2 = revising_dummy->get_poi_init_pause_phase_when_pausing(phase2);
+		while (phase2 <= revise_phase) {
+			phase2--;
+			pause_time_list.push_back(revising_dummy->get_now_pause_time(phase2));
+			phase2 = revising_dummy->get_prev_poi_depart_phase_when_moving(phase2);
+			phase2 = revising_dummy->get_poi_init_pause_phase_when_pausing(phase2);
+		}
+
 		//全停止時間分，ダミーの停止時間を修正する．
-		for (int id = revising_dummy->get_visited_pois_info_list_id(); id <= revising_dummy->get_visited_pois_num(); id++, changed_poi_num_id++)
+		for (int id = revise_phase; id < time_manager->last_phase(); changed_poi_num_id++)
 		{
-			//停止中or向かっているPOIの停止時間を取得
-			double distance = map->shortest_distance(revising_dummy->get_any_visited_poi(id).first, revising_dummy->get_any_visited_poi(id + 1).first);
-			int end_pause_phase_of_now_poi = revising_dummy->get_pause_phases().back() + 1;
-			double new_speed = distance / (time_manager->time_of_phase(revising_dummy->get_arrive_phase_of_any_visited_poi(id + 1)) + Tu - time_manager->time_of_phase(end_pause_phase_of_now_poi));
-			double prev_speed = revising_dummy->get_starting_speed();
-				
+			double distance = map->shortest_distance(revising_dummy->get_trajectory()->get_visited_node_id(revise_phase), revising_dummy->get_trajectory()->get_visited_node_id(next_poi_arrive_phase));
+			double time_between_visited_poi = time_manager->time_of_phase(next_poi_arrive_phase) - time_manager->time_of_phase(revise_phase);
+
+			double new_speed = distance / (time_between_visited_poi + Tu);
+			double check = revising_dummy->get_now_speed(next_poi_arrive_phase - 1);//prevと現在速度の関係性をチェック
+			double prev_speed = revising_dummy->get_now_speed(next_poi_arrive_phase - 1);
+
 			//速度の変化分
 			double variable_speed = new_speed - prev_speed;
 
 			//最大変化量・最小変化量
 			double max_variable_speed = calc_max_variable_speed(new_speed).first;
 			double min_variable_speed = calc_max_variable_speed(new_speed).second;
+
 			//最大最小速度
 			double max_speed = requirement->average_speed_of_dummy + 0.5 * requirement->speed_range_of_dummy;
 			double min_speed = requirement->average_speed_of_dummy - 0.5 * requirement->speed_range_of_dummy;
@@ -522,24 +552,21 @@ namespace Method
 				if (change_speed < min_speed) change_speed = min_speed;
 			}
 			//change_timeを現在の残り停止時間に記録
-			revising_dummy->revise_starting_speed(change_speed);
-			//移動速度を登録
-			revising_dummy->revise_now_speed(phase_id, change_speed);
+			recalculation_path(revising_dummy->get_trajectory()->get_visited_node_id(revise_phase), revising_dummy->get_trajectory()->get_visited_node_id(next_poi_arrive_phase), &revise_phase, change_speed, pause_time_list.at(changed_poi_num_id));
+
 			change_speed -= new_speed;
-			if (change_speed == 0.0) break;		
+			if (change_speed == 0.0) break;
 		}
 
-		int visited_poi_id = revising_dummy->get_visited_pois_info_list_id();//現在注目してる訪問POI-ID
-		int revise_phase = revising_dummy->isPause(phase_id) ? phase_id : revising_dummy->get_arrive_phase_of_any_visited_poi(visited_poi_id);
+		//変更されなかった分はprev_trajectoryをcopyさせる	
+		//同じ位置をコピーするために，その位置を示すフェーズを取得
+		int same_phase = prev_trajectory->search_phase_same_id(revising_dummy->get_trajectory()->get_visited_node_id(revise_phase));
+		int last_copied_phase = same_phase + revising_dummy->get_trajectory()->last_phase() - revise_phase;
+		revising_dummy->get_trajectory()->copy_trajectory(revise_phase, same_phase, *prev_trajectory);
 
-		//移動速度が変更されたPOIの数だけ，次の経路を再計算
-		for (int num = 0; num < changed_poi_num_id; num++, visited_poi_id++) {
-			if (revise_phase == time_manager->last_phase()) break;
-			recalculation_path(revising_dummy->get_any_visited_poi(visited_poi_id).first, revising_dummy->get_any_visited_poi(visited_poi_id + 1).first, &phase_id, 0,0);
-			if (visited_poi_id + 1 == revising_dummy->get_visited_pois_num()) break;
-		}
-
-
+		//now_speed_listとnow_pause_listのコピーも行う
+		std::copy(prev_now_speed_list.begin() + same_phase, prev_now_speed_list.begin() + last_copied_phase, revising_dummy->get_now_speed_list().begin() + revise_phase);
+		std::copy(prev_now_pause_time_list.begin() + same_phase, prev_now_pause_time_list.begin() + last_copied_phase, revising_dummy->get_now_pause_time_list().begin() + revise_phase);
 	}
 
 

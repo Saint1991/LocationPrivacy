@@ -43,7 +43,7 @@ namespace Entity
 	/// ユーザ，ダミーを表すのに用いるクラス (MobileEntityから派生)
 	///</summary>
 	template <typename POSITION_TYPE = Geography::LatLng, typename TRAJECTORY_TYPE = Graph::RevisableTrajectory<POSITION_TYPE>>
-	class PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>
+	class  PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>
 	{
 	protected:
 		std::vector<VisitedPoiInfo> visited_pois_info_list;
@@ -57,6 +57,7 @@ namespace Entity
 		
 	public:
 		PauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
+		PauseMobileEntity(entity_id id, std::shared_ptr<TRAJECTORY_TYPE> trajectory, std::vector<VisitedPoiInfo> visited_pois_info_list,std::vector<double>& now_pause_time_list, std::vector<double>& now_speed_list);
 		virtual ~PauseMobileEntity();
 		
 		//全ての訪問POI情報に関するsetterとgetter
@@ -85,7 +86,6 @@ namespace Entity
 		void set_pause_phases(int pause_phase);
 		void set_pause_phases_using_arrive_phase(int arrive_phase, int pause_phase);
 
-
 		//arrive_phaseに関するgetter.ただし，setはvisitedPOI登録時に設定を行うため不要．
 		int get_arrive_phase();
 		int get_arrive_phase_using_pause_phase(int pause_phase);
@@ -99,6 +99,7 @@ namespace Entity
 		void set_pause_time(int phase, int pause_time);
 		void set_pause_time(int phase, double pause_time);
 		void set_pause_time_using_arrive_phase(int arrive_phase, double pause_time);
+		void set_pause_time_using_pause_phases(int pause_phase, double pause_time);
 		void set_random_pause_time(int phase, int min, int max);
 		void set_random_pause_time(int phase, double min, double max);
 		void set_random_pause_time_using_arrive_phase(int arrive_phase, int phase, double min, double max);
