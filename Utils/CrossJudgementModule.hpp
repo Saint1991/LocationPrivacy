@@ -13,6 +13,7 @@ namespace Evaluate
 		const std::function<bool(std::shared_ptr<MAP_TYPE const>, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, double, long)>& cross_rule
 		) : map(map), entities(entities), move_speed(move_speed), cross_rule(cross_rule)
 	{
+		if (cross_rule == nullptr) this->cross_rule = std::bind(&CrossJudgementModule::basic_cross_rule, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7);
 	}
 
 

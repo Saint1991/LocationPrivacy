@@ -37,27 +37,12 @@ namespace Simulation
 	void DeimSimulator::run()
 	{
 
-		int failed_count = 0;
-
 		for (std::list<std::shared_ptr<Requirement::PreferenceRequirement const>>::const_iterator iter = requirements.begin(); iter != requirements.end(); iter++) {
 			for (current_trajectory_id = 0; current_trajectory_id < user_trajectories->size(); current_trajectory_id++) {
 			
 				//対象のユーザトラジェクトリ
 				std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> user_trajectory = user_trajectories->at(current_trajectory_id);
 				std::shared_ptr<Time::TimeSlotManager const> timeslot = user_trajectory->read_timeslot();
-				
-				////読み込む地図の領域
-				//Graph::Rectangle<Geography::LatLng> map_boundary = user_trajectory->get_trajectory_boundary();
-				//map_boundary = Map::BasicDbMap::calc_map_boundary(map_boundary);
-				
-				////地図の読み込み
-				//build_map(map_boundary);
-
-				User::UserTrajectoryConverter converter(map);
-
-				//トラジェクトリ変換
-				std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> converted_trajectory = converter.extract_walking_semantic_trajectory(user_trajectory, TRAJECTORY_LENGTH_THRESHOLD, AVERAGE_SPEED);
-				if (converted_trajectory == nullptr) continue;
 
 				//可観測な嗜好の木のコピー
 				std::shared_ptr<User::PreferenceTree> observed_preference_tree_copy = std::make_shared<User::PreferenceTree>(*observed_preference_tree);
@@ -71,29 +56,19 @@ namespace Simulation
 					Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>
 				>> proposed = std::make_shared<Method::MizunoMethod>(map, user, observed_preference_tree_copy, *iter, timeslot);
 				
+
+				//松野手法版のインスタンス化 (松野手法では，Tu中でサポートが一定値以上の遷移のみ行うがまぁ回数で切っていいか...)
+
 				//各トラジェクトリに対して手法を適用した後のコールバック
 				proposed->set_execution_callback(std::bind(&DeimSimulator::each_trajectory_end_callback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+				//提案手法の起動
+				proposed->run();
 				
-				try {
-					//提案手法の起動
-					proposed->run();
-				}
-				catch (Framework::TrajectoryNotFoundException &e) {
-					std::cout << e.what() << std::endl;
-					failed_count++;
-				}
-				
-
-				//今だけ
-				break;
 			}
 
 			//今だけ
 			break;
 		}
-
-		double fail_rate = failed_count / user_trajectories->size();
-		std::cout << "Fail Rate: " << std::to_string(fail_rate) << std::endl;
 	}
 
 	///<summary>

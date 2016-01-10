@@ -41,7 +41,7 @@ namespace User
 	/// 読出しに失敗した場合はnullptrが返る
 	///</summary>
 	template <>
-	std::shared_ptr<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id, int trajectory_length_threshold, int min_interval)
+	std::shared_ptr<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id, int trajectory_length_threshold, int min_interval, bool use_relative_time)
 	{
 		std::stringstream query;
 		query << "SELECT venue_id, timestamp, category_id, latitude, longitude, venue_name, category_name  FROM " << user_table_name << " INNER JOIN " << venue_table_name << " ON " << user_table_name << ".venue_id = " << venue_table_name << ".id WHERE user_id = " << user_id << " ORDER BY timestamp ASC;";
@@ -75,7 +75,7 @@ namespace User
 			
 				if (division_rule(timestamp , previous_time)) {
 					if (times != nullptr && times->size() >= trajectory_length_threshold) {
-						std::shared_ptr<Time::TimeSlotManager const> timeslot = std::make_shared<Time::TimeSlotManager const>(std::move(times));
+						std::shared_ptr<Time::TimeSlotManager const> timeslot = std::make_shared<Time::TimeSlotManager const>(std::move(times), use_relative_time);
 						std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> trajectory = std::make_shared<Graph::SemanticTrajectory<Geography::LatLng>>(timeslot, std::move(node_ids), std::move(positions), std::move(category_sequence), std::move(venue_names), std::move(category_names));
 						ret->push_back(trajectory);
 					}
@@ -105,7 +105,7 @@ namespace User
 	/// データベースからTrajectoryを読み出す
 	///</summary>
 	template <>
-	std::shared_ptr<std::vector<std::shared_ptr<Graph::Trajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::Trajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id, int trajectory_length_threshold, int min_interval)
+	std::shared_ptr<std::vector<std::shared_ptr<Graph::Trajectory<Geography::LatLng>>>> DbTrajectoryLoader<Graph::Trajectory<Geography::LatLng>>::load_trajectories(unsigned int user_id, int trajectory_length_threshold, int min_interval, bool use_relative_time)
 	{
 		std::stringstream query;
 		query << "SELECT venue_id, timestamp, latitude, longitude, venue_name FROM " << user_table_name << " INNER JOIN " << venue_table_name << " ON " << user_table_name << ".venue_id = " << venue_table_name << ".id WHERE user_id = " << user_id << " ORDER BY timestamp ASC;";
@@ -136,7 +136,7 @@ namespace User
 				
 				if (division_rule(timestamp, previous_time)) {
 					if (times != nullptr && times->size() >= trajectory_length_threshold) {
-						timeslot = std::make_shared<Time::TimeSlotManager const>(std::move(times));
+						timeslot = std::make_shared<Time::TimeSlotManager const>(std::move(times), use_relative_time);
 						std::shared_ptr<Graph::Trajectory<Geography::LatLng>> trajectory = std::make_shared<Graph::Trajectory<Geography::LatLng>>(std::move(timeslot), std::move(node_ids), std::move(positions), std::move(venue_names));
 						ret->push_back(trajectory);
 					}

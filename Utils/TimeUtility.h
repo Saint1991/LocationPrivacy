@@ -23,6 +23,7 @@ namespace Time
 		TIME_UTILITY_API static std::string date(time_t time);
 		TIME_UTILITY_API static int interval(const std::string& time1, const std::string& time2);
 		TIME_UTILITY_API static std::string forward(const std::string& time, time_t forward_time);
+		TIME_UTILITY_API static std::string mysql_timestamp(time_t time);
 	};
 }
 

@@ -133,6 +133,15 @@ namespace Graph
 
 
 	///<summary>
+	/// phaseにおけるvenueの名前を取得する
+	///</summary>
+	template <typename POSITION_TYPE>
+	std::string Trajectory<POSITION_TYPE>::get_venue_name_of_phase(int phase) const
+	{
+		return venue_names->at(phase);
+	}
+
+	///<summary>
 	/// 指定したPhaseにおける位置とノードのIDを取得する
 	///</summary>
 	template <typename POSITION_TYPE>

@@ -254,7 +254,7 @@ namespace Method
 			//カテゴリシーケンスと共有地点候補を基に基準の点を一つ定める
 			std::pair<int, Graph::MapNodeIndicator> basis = determine_point_basis(category_sequence, cross);
 
-			//基準の点を基にトラジェクトリ生成の嗜好を繰り返す
+			//基準の点を基にトラジェクトリ生成の試行を繰り返す
 			int iteration_count = 0;
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>> trajectory = nullptr;
 			for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL; i++) {
@@ -265,7 +265,6 @@ namespace Method
 			if (trajectory == nullptr) {
 				continue;
 			}
-			std::cout << std::to_string(iteration_count) << std::endl;
 
 			//ここでトラジェクトリに対してスコアを計算してretに追加する
 			double trajectory_score = 0.0;

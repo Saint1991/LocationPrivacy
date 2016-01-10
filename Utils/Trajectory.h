@@ -64,6 +64,8 @@ namespace Graph
 		std::shared_ptr<POSITION_TYPE const> position_of_phase(int phase) const;
 		std::shared_ptr<POSITION_TYPE const> position_at(time_t time) const;
 
+		std::string get_venue_name_of_phase(int phase) const;
+
 		node_pos_info read_node_pos_info_of_phase(int phase) const;
 		node_pos_info  read_node_pos_info_at(time_t time) const;
 		

@@ -33,7 +33,7 @@ namespace User
 	public:
 		DbTrajectoryLoader(std::function<bool(const std::string&, const std::string&)> division_rule, const std::string& setting_file_path, const std::string& db_name = "map_tokyo", const std::string& user_table_name = "checkins", const std::string& venue_table_name = "pois");
 		~DbTrajectoryLoader();
-		std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>> load_trajectories(unsigned int user_id, int trajectory_length_threshold = 0, int min_interval = 120);
+		std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>> load_trajectories(unsigned int user_id, int trajectory_length_threshold = 0, int min_interval = 120, bool use_relative_time = true);
 	};
 
 	template class DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>>;

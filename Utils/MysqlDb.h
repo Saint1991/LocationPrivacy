@@ -38,6 +38,7 @@ namespace Db
 		sql::ResultSet* raw_query(const std::string& query);
 		const std::list<std::string> get_databases();
 		const std::list<std::string> get_tables();
+		sql::PreparedStatement* prepare(const std::string& query);
 
 		///‚±‚±‚ç‚Ö‚ñ‚Í—vÄŒŸ“¢
 		bool create_table(const Db::TableStructure& table_info);

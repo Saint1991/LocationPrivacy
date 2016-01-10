@@ -171,6 +171,20 @@ namespace Db
 
 
 	///<summary>
+	/// queryをコンパイルしてPreparedStatementを取得する
+	///</summary>
+	sql::PreparedStatement* MySQLDb::prepare(const std::string& query)
+	{
+		sql::PreparedStatement* ret = nullptr;
+		
+		if (!connection->isValid()) {
+			if (connection->reconnect()) ret = connection->prepareStatement(query);
+		}
+		else ret = connection->prepareStatement(query);
+		return ret;
+	}
+
+	///<summary>
 	/// CREATE TABLEを実行するユーティリティ
 	/// 失敗した場合はfalseを返す
 	///</summary>

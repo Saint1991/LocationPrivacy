@@ -28,6 +28,7 @@ namespace User
 
 		std::shared_ptr<Graph::Trajectory<Geography::LatLng>> extract_walking_trajectory(std::shared_ptr<Graph::Trajectory<Geography::LatLng> const> original_trajectory, size_t min_trajectory_length, double max_speed) const;
 		std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> extract_walking_semantic_trajectory(std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng> const> original_trajectory, size_t min_trajectory_length, double max_speed) const;
+		std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> convert_to_walking_semantic_trajectory(std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng> const> original_trajectory, double max_speed) const;
 	};
 
 }

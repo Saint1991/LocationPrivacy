@@ -119,5 +119,36 @@ namespace Time
 		ret << newtime_str.substr(0, 4) << "-" << newtime_str.substr(4, 2) << "-" << newtime_str.substr(6, 2) << " " << newtime_str.substr(8, 2) << ":" << newtime_str.substr(10, 2) << ":" << newtime_str.substr(12, 2);
 		return ret.str();
 	}
+
+
+	///<summary>
+	/// time_tからMySQLのタイムスタンプ文字列に変換する
+	///</summary>
+	std::string TimeUtility::mysql_timestamp(time_t time)
+	{
+		tm tm_now;
+		errno_t result = localtime_s(&tm_now, &time);
+
+		std::stringstream timestamp;
+		int year = tm_now.tm_year + 1900;
+
+		char month[3];
+		sprintf_s(month, 3, "%02d", tm_now.tm_mon + 1);
+
+		char day[3];
+		sprintf_s(day, 3, "%02d", tm_now.tm_mday);
+
+		char hour[3];
+		sprintf_s(hour, 3, "%02d", tm_now.tm_hour);
+
+		char min[3];
+		sprintf_s(min, 3, "%02d", tm_now.tm_min);
+
+		char sec[3];
+		sprintf_s(sec, 3, "%02d", tm_now.tm_sec);
+
+		timestamp << year << "-" << month << "-" << day << " " << hour << ":" << min << ":" << sec;
+		return timestamp.str();
+	}
 }
 
