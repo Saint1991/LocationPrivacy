@@ -53,8 +53,13 @@ namespace Entity
 	/// コンストラクタ
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::PauseMobileEntity(entity_id id, std::shared_ptr<TRAJECTORY_TYPE> trajectory, std::vector<VisitedPoiInfo> visited_pois_info_list, std::vector<double>& now_pause_time_list, std::vector<double>& now_speed_list)
-		: MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>(id, trajectory), visited_pois_info_list(visited_pois_info_list), now_pause_time_list(now_pause_time_list), now_speed_list(now_speed_list), visited_pois_info_list_id(0)
+	PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>::PauseMobileEntity(
+		entity_id id, 
+		std::shared_ptr<TRAJECTORY_TYPE> trajectory, 
+		std::vector<VisitedPoiInfo> visited_pois_info_list,
+		std::vector<double>& now_pause_time_list, 
+		std::vector<double>& now_speed_list
+	) : MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>(id, trajectory), visited_pois_info_list(visited_pois_info_list), now_pause_time_list(now_pause_time_list), now_speed_list(now_speed_list), visited_pois_info_list_id(0)
 	{
 	}
 

@@ -17,6 +17,8 @@ namespace Graph
 	{
 	public:
 		RevisableTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot);
+		RevisableTrajectory(std::shared_ptr<Time::TimeSlotManager const> timeslot, std::shared_ptr<std::vector<Graph::MapNodeIndicator>> node_ids, std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE const>>> positions, std::shared_ptr<std::vector<std::string>> venue_names = nullptr);
+
 		~RevisableTrajectory();
 
 		std::shared_ptr<std::vector<std::shared_ptr<POSITION_TYPE const>>> read_positions() const;

@@ -14,7 +14,7 @@ namespace Entity
 {
 	typedef unsigned int entity_id;
 
-	class VisitedPoiInfo : public IO::FileExportable
+	class PAUSE_MOBILE_ENTITY_API VisitedPoiInfo : public IO::FileExportable
 	{
 	public:
 		static constexpr char* TIME = "time";
@@ -43,7 +43,7 @@ namespace Entity
 	/// ユーザ，ダミーを表すのに用いるクラス (MobileEntityから派生)
 	///</summary>
 	template <typename POSITION_TYPE = Geography::LatLng, typename TRAJECTORY_TYPE = Graph::RevisableTrajectory<POSITION_TYPE>>
-	class  PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>
+	class PAUSE_MOBILE_ENTITY_API PauseMobileEntity : public MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>
 	{
 	protected:
 		std::vector<VisitedPoiInfo> visited_pois_info_list;

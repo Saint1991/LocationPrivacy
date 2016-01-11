@@ -120,6 +120,9 @@
     <ClInclude Include="DifferentMovementUser.h">
       <Filter>ヘッダー ファイル\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="CreateUserModule.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -196,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="UserTrajectoryConverter.cpp">
       <Filter>ソース ファイル\User</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateUserModule.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

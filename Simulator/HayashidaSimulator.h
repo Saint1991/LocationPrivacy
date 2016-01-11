@@ -36,6 +36,8 @@ namespace Simulation
 
 		static constexpr double AVERAGE_SPEED = 1.5;
 		static constexpr double RANGE_OF_SPEED = 0.5;
+		static constexpr double MAX_SPEED = AVERAGE_SPEED + 0.5 * RANGE_OF_SPEED;
+		static constexpr double MIN_SPEED = AVERAGE_SPEED - 0.5 * RANGE_OF_SPEED;
 		static constexpr int MAX_PAUSE_TIME = 600;//途中目的地設定の関係でmin_pause_timeの2.5倍以上で設定する！
 		static constexpr int MIN_PAUSE_TIME = 200;//SERVICE_INTERVALより大きくする！最初の匿名領域設定の間隔よりは短く！！
 		static constexpr int SERVICE_INTERVAL = 90;
@@ -89,7 +91,7 @@ namespace Simulation
 
 		
 		void make_random_movement_user();//全要素の入力を前提
-		void make_predicted_user();
+		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> create_artificial_user(std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi);
 		void make_real_user();
 		void make_same_predicted_user_as_real_user();
 
