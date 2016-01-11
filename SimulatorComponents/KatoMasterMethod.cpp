@@ -13,11 +13,9 @@ namespace Method
 		real_user(nullptr), predicted_user(nullptr),Tu(0.0)
 	{
 		//input_userとreal_userの生成．この2つは変更しない
-		input_user = entities->get_user();
+		input_user = entities->get_user()->get_predicted_user();
 		real_user = entities->get_user()->get_real_user();
-		//predicted_userのコピー．とりあえず今だけユーザごとコピーする形で
-		//get_predicted_userをRevisable型にすると，おそらく可能
-		predicted_user = entities->get_user();
+		//predicted_user = entities->get_user()->get_predicted_user();
 	}
 
 	///<summary>
@@ -34,10 +32,6 @@ namespace Method
 	///</summary>
 	std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> KatoMasterMethod::copy_predicted_user_plan(std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> input_user)
 	{
-		//std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> input_user_positions = input_user->get_trajectory()->get_positions();
-		//std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng>>> predicted_user_positions = predicted_user->get_trajectory()->get_positions();
-
-		//std::copy(input_user_positions->begin(), input_user_positions->end(), predicted_user_positions->begin());
 	
 		return predicted_user;
 	}
@@ -708,8 +702,6 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::initialize()
 	{
-		//ユーザの動きの変更→新しく作る．
-		//predicted_user = copy_predicted_user_plan(input_user);
 	}
 
 

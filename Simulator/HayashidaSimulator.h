@@ -65,25 +65,7 @@ namespace Simulation
 		
 		void set_path_between_poi(std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi, std::vector<Graph::MapNodeIndicator>::iterator& path_iter, Graph::MapNodeIndicator& nearest_position, double pause_position_speed, double service_interval, double *distance, int *phase_id);
 		void set_pause_time_and_phases_of_visited_POI(int *phase_id, double rest_pause_time, int total_pause_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-		void last_behavior_of_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-		void pause_until_last_phase_of_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-		void go_to_random_position_of_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-
-
-		void set_path_between_poi_of_real_user(std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi, std::vector<Graph::MapNodeIndicator>::iterator& path_iter, Graph::MapNodeIndicator& nearest_position, double pause_position_speed, double service_interval, double *distance, int *phase_id);
-		void set_pause_time_and_phases_of_visited_POI_of_real_user(int *phase_id, double rest_pause_time, int total_pause_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-		void last_behavior_of_real_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-		void pause_until_last_phase_of_real_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-		void go_to_random_position_of_real_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-
-		void set_path_between_poi_of_predicted_user(std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi, std::vector<Graph::MapNodeIndicator>::iterator& path_iter, Graph::MapNodeIndicator& nearest_position, double pause_position_speed, double service_interval, double *distance, int *phase_id);
-		void set_pause_time_and_phases_of_visited_POI_of_predicted_user(int *phase_id, double rest_pause_time, int total_pause_phase, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-		void last_behavior_of_predicted_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-		void pause_until_last_phase_of_predicted_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-		void go_to_random_position_of_predicted_user(int phase_id, double dest_rest_time, std::vector<std::shared_ptr<Map::BasicPoi const>>::iterator& now_poi);
-
 		
-
 		void input_visit_pois();
 		std::vector<std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>> all_traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois);
 		std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> traveling_salesman_problem(std::vector<std::shared_ptr<Map::BasicPoi const>>& visited_pois);
@@ -92,8 +74,8 @@ namespace Simulation
 		
 		void make_random_movement_user();//‘S—v‘f‚Ì“ü—Í‚ð‘O’ñ
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> create_artificial_user(std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi);
-		void make_real_user();
 		void make_same_predicted_user_as_real_user();
+
 
 		void export_users_and_dummies_trajectory(std::shared_ptr<Entity::EntityManager<Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Entity::DifferentMovementUser<Geography::LatLng>>> entities, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::Timer> timer);
 		void export_MTC();

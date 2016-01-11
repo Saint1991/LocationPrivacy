@@ -10,7 +10,7 @@ namespace Method
 	///</summary>
 	KatoBachelorMethod::KatoBachelorMethod(std::shared_ptr<Map::HayashidaDbMap const> map, std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
 		: Framework::IProposedMethod<Map::HayashidaDbMap, Entity::DifferentMovementUser<Geography::LatLng>, Entity::RevisablePauseMobileEntity<Geography::LatLng>, Requirement::KatoMethodRequirement, Geography::LatLng, Graph::RevisableTrajectory<Geography::LatLng>>(map, user, requirement, time_manager),
-		grid_list(std::vector<Grid>((time_manager->phase_count() / requirement->interval_of_base_phase))),
+		grid_list(std::vector<Grid>(time_manager->phase_count() / requirement->interval_of_base_phase)),
 		creating_dummy(nullptr), flag_of_dest_position(0)
 	{
 	}
@@ -33,7 +33,7 @@ namespace Method
 		double grid_length = std::sqrt(grid_area);//grid全体の一辺の長さ．匿名領域の√
 		double cell_length = grid_length / cell_num_on_side;//セル一つ分の長方形の長さ
 
-															//長さ(cell_length)を緯度経度の単位に変換
+		//長さ(cell_length)を緯度経度の単位に変換
 		double length_translated_lat = Geography::GeoCalculation::calc_translated_point(center, cell_length, M_PI_2 * 3).lat() - center.lat();
 		double length_translated_lng = Geography::GeoCalculation::calc_translated_point(center, cell_length, 0).lng() - center.lng();
 
@@ -169,7 +169,7 @@ namespace Method
 		//停止phaseは停止時間を決めるときに既にひとつ設定しているので，total_pause_phase - 1であることに注意 
 		for (int i = 0; i < total_pause_phase; i++)
 		{
-			if (*phase_id == time_manager->phase_count() - 1) return;
+			if (*phase_id == time_manager->last_phase()) return;
 			(*phase_id)++;
 			creating_dummy->set_pause_phases_using_arrive_phase(arrive_phase, *phase_id);
 			rest_pause_time -= requirement->service_interval;
@@ -230,7 +230,7 @@ namespace Method
 
 			Geography::LatLng arrive_position = Geography::GeoCalculation::calc_translated_point(nearest_latlng, distance_between_nearest_intersection_and_arrive_position, angle);
 
-			if (*phase_id == time_manager->phase_count() - 1) return;//残りのpathを決める時の終了条件
+			if (*phase_id == time_manager->last_phase()) return;//残りのpathを決める時の終了条件
 			(*phase_id)++;
 			creating_dummy->set_now_speed(*phase_id, pause_position_speed);
 			creating_dummy->set_position_of_phase(*phase_id, Graph::MapNodeIndicator(Graph::NodeType::OTHERS, Graph::NodeType::OTHERS), arrive_position);
@@ -684,7 +684,7 @@ namespace Method
 			Entity::MobileEntity<Geography::LatLng>::node_pos_info now_poi = creating_dummy->read_node_pos_info_of_phase(phase_id);
 
 			double length_of_rect = 0.001;//適切な範囲の緯度経度の選択幅を書く
-			double rest_phase_time = time_manager->time_of_phase(time_manager->phase_count() - 1) - time_manager->time_of_phase(phase_id);
+			double rest_phase_time = time_manager->time_of_phase(time_manager->last_phase()) - time_manager->time_of_phase(phase_id);
 			//もし残り時間が，最大停止時間よりも小さい場合は，停止で埋めてしまう
 			if ((rest_phase_time - requirement->max_pause_time) < 0) {
 				int rest_phases = time_manager->last_phase() - phase_id;

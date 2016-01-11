@@ -34,7 +34,7 @@ namespace Method
 		typedef std::vector<Graph::Rectangle<Geography::LatLng>> Grid;
 		std::vector<Grid> grid_list;
 		int flag_of_dest_position;//途中目的地設定中か否かを示すフラグ
-				
+		
 		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> creating_dummy;
 		
 		//メソッド
