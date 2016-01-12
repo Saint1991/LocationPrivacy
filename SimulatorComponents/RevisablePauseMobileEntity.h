@@ -21,6 +21,7 @@ namespace Entity
 	{
 	public:
 		RevisablePauseMobileEntity(entity_id id, std::shared_ptr<Time::TimeSlotManager const> timeslot);
+		RevisablePauseMobileEntity(entity_id id, std::shared_ptr<TRAJECTORY_TYPE> trajectory, std::vector<VisitedPoiInfo> visited_pois_info_list, std::vector<double>& now_pause_time_list, std::vector<double>& now_speed_list);
 		~RevisablePauseMobileEntity();
 
 		//’â~ƒtƒF[ƒY‚ÌC³
@@ -62,8 +63,10 @@ namespace Entity
 
 		//trajectory‚ÌC³
 		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
-		void revise_path();
-		void recalculation_path(const Graph::MapNodeIndicator& source, const Graph::MapNodeIndicator& destination, int phase_id);
+
+		//Œ»İ‘¬“x‚Æ’â~ŠÔ‚Ì‘}“ü
+		void insert_speed_list_and_pause_time(int phase_id, int insert_num = 1);
+		void delete_speed_list_and_pause_time(int phase_id, int delete_num = 1);
 	};
 
 	//–¾¦“I“Áê‰»

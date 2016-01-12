@@ -9,13 +9,14 @@ namespace Method
 	/// これにSimulatorで作成した各種入力への参照を渡す
 	///</summary>
 	KatoMasterMethod::KatoMasterMethod(std::shared_ptr<Map::HayashidaDbMap const> map, std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user, std::shared_ptr<Requirement::KatoMethodRequirement const> requirement, std::shared_ptr<Time::TimeSlotManager> time_manager)
-		: KatoBachelorMethod(map, user, requirement, time_manager),
-		real_user(nullptr), predicted_user(nullptr),Tu(0.0)
+		: KatoBachelorMethod(map, user, requirement, time_manager),Tu(0.0)
 	{
 		//input_userとreal_userの生成．この2つは変更しない
 		input_user = entities->get_user()->get_predicted_user();
 		real_user = entities->get_user()->get_real_user();
-		//predicted_user = entities->get_user()->get_predicted_user();
+
+		//predicted_userを変更させていく
+		predicted_user = entities->get_user()->get_predicted_user();
 	}
 
 	///<summary>
@@ -99,7 +100,7 @@ namespace Method
 		///</summary>
 		KatoMasterMethod::ChangeParameter KatoMasterMethod::check_user_pause_time(int now_phase)
 		{
-			//もしプラン通り停止していたら(両者の停止フラグが１)，NO_CHANGE
+			//もしプラン通り停止していたら，NO_CHANGE
 			if (predicted_user->isPause(now_phase) && real_user->isPause(now_phase)) {
 				return NO_CHANGE;
 			}
@@ -118,6 +119,7 @@ namespace Method
 			}
 			//両方フラグが0なら(速度変更からジャンプして飛んできた場合)，速度変更でなく，rest_time分をずれを検知
 			else{
+				throw std::invalid_argument("This situation can't happen!!");
 				if (now_phase == 0) throw std::invalid_argument(" It must set pause time at init visited POI !! ");
 				double real_user_dist = Geography::GeoCalculation::lambert_distance(*real_user->read_position_of_phase(now_phase - 1), *real_user->read_position_of_phase(now_phase));
 				double predicted_user_dist = Geography::GeoCalculation::lambert_distance(*predicted_user->read_position_of_phase(now_phase - 1), *predicted_user->read_position_of_phase(now_phase));
@@ -151,17 +153,10 @@ namespace Method
 			//そもそも，同じ場所にいたら，NO_CHANGE
 			if (now_predicted_user_position == now_real_user_position) return NO_CHANGE;
 
-			//線形補間したpositionでshortest_distanceを使うとエラーになるので注意
-			double real_user_dist = Geography::GeoCalculation::lambert_distance(*real_user->read_position_of_phase(now_phase - 1), *real_user->read_position_of_phase(now_phase));
-			double predicted_user_dist = Geography::GeoCalculation::lambert_distance(*predicted_user->read_position_of_phase(now_phase - 1), *predicted_user->read_position_of_phase(now_phase));
+			//実際には差分で計算する必要があるが，実装上は値を参照しても同義
+			double real_user_speed = real_user->get_now_speed(now_phase);
+			double predicted_user_speed = predicted_user->get_now_speed(now_phase);
 
-			double real_user_rest_time = real_user->get_rest_pause_time_when_departing_using_pause_phase(now_phase - 1);
-			double predicted_uesr_rest_time = predicted_user->get_rest_pause_time_when_departing_using_pause_phase(now_phase - 1);
-
-			double real_user_speed = real_user_dist / (requirement->service_interval - real_user_rest_time);
-			double predicted_user_speed = predicted_user_dist / (requirement->service_interval - predicted_uesr_rest_time);
-
-			//もしrest_time分を考慮して，逆算して，速度が同じなら，停止時間の変更と判断
 			if (real_user_speed == predicted_user_speed) {
 				return check_user_pause_time(now_phase);
 			}
@@ -169,17 +164,17 @@ namespace Method
 				//realの方が速度が大きい場合
 				if (real_user_speed > predicted_user_speed) {
 					double change_time =
-						map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, real_user->get_next_poi().first, real_user_speed)
-						- map->calc_necessary_time(predicted_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, predicted_user_speed);
+						map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, real_user->read_node_pos_info_of_phase(real_user->get_next_poi_arrive_phase_when_moving(now_phase)).first, real_user_speed)
+						- map->calc_necessary_time(predicted_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->read_node_pos_info_of_phase(predicted_user->get_next_poi_arrive_phase_when_moving(now_phase)).first, predicted_user_speed);
 					Tu += change_time;
 					return FASTER_SPEED;
 				}
 				//predictedの方が速度が大きい場合
 				else {
 					double change_time =
-						map->calc_necessary_time(predicted_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->get_next_poi().first, predicted_user_speed)
-						- map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, real_user->get_next_poi().first, real_user_speed);
-					Tu += change_time;
+						map->calc_necessary_time(predicted_user->read_node_pos_info_of_phase(now_phase - 1).first, predicted_user->read_node_pos_info_of_phase(predicted_user->get_next_poi_arrive_phase_when_moving(now_phase)).first, predicted_user_speed)
+						- map->calc_necessary_time(real_user->read_node_pos_info_of_phase(now_phase - 1).first, real_user->read_node_pos_info_of_phase(real_user->get_next_poi_arrive_phase_when_moving(now_phase)).first, real_user_speed);
+						Tu += change_time;
 					return SLOER_SPEED;
 				}
 			}
@@ -262,26 +257,9 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_user_trajectory_when_LONGER_PAUSE_TIME(int phase_id)
 	{
-		if (Tu == requirement->service_interval) {
-			//trajectoryをずらすことで対応
-			predicted_user->get_trajectory()->insert_positions_to_trajectory(phase_id, 1);
-			
-			//停止時間の修正を行う．
-			predicted_user->revise_now_pause_time(phase_id, Tu);
-
-			//pause_phasesの更新
-			predicted_user->add_pause_phases(1, phase_id);
-
-			//arrive_phaseの更新
-			predicted_user->revise_all_arrive_phase();
-		}
-		else {
-			//停止時間の修正を行う．
-			predicted_user->revise_now_pause_time(phase_id, Tu);
-
-			//経路を再計算
-			//recalculation_path(phase_id);
-		}
+		//trajectoryとspeed,pause_timeをそれぞれずらすことで対応
+		predicted_user->get_trajectory()->insert_positions_to_trajectory(phase_id, 1);
+		predicted_user->insert_speed_list_and_pause_time(phase_id, 1);		
 	}
 
 
@@ -290,16 +268,9 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_user_trajectory_when_SHORTER_PAUSE_TIME(int phase_id)
 	{
-		if (Tu == requirement->service_interval) {
-			//trajectoryをずらすことで対応
-			predicted_user->get_trajectory()->delete_positions_to_trajectory(phase_id, 1);
-
-			//停止時間の修正を行う．
-			predicted_user->revise_now_pause_time(phase_id, Tu);
-		}
-		else {
-			//経路を再計算
-		}
+		//trajectoryとspeed,pause_timeをずらすことで対応
+		predicted_user->get_trajectory()->delete_positions_to_trajectory(phase_id);
+		predicted_user->delete_speed_list_and_pause_time(phase_id);
 	}
 
 	///<summary>
@@ -315,7 +286,7 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_user_trajectory_when_FASTER_SPEED(int phase_id)
 	{
-		double real_user_speed = 0.0;
+		double real_user_speed = real_user->get_now_speed(phase_id);
 
 	}
 
@@ -324,7 +295,7 @@ namespace Method
 	///</summary>
 	void KatoMasterMethod::revise_user_trajectory_when_SLOER_SPEED(int phase_id)
 	{
-
+		revise_user_trajectory_when_FASTER_SPEED(phase_id);
 	}
 
 
@@ -422,7 +393,7 @@ namespace Method
 			//現状，dest_timeを考慮していないから，実際の停止時間より若干短くなっている．
 			double pause_time 
 				= revising_dummy->isPause(phase_id) 
-				? revising_dummy->get_now_pause_time(revising_dummy->get_prev_poi_depart_phase_when_moving(phase_id))
+				? revising_dummy->get_now_pause_time(revising_dummy->get_poi_init_pause_phase_when_pausing(phase_id))
 				: revising_dummy->get_now_pause_time(revising_dummy->get_next_poi_arrive_phase_when_moving(phase_id));
 			
 			//最大変化量
@@ -457,7 +428,8 @@ namespace Method
 		//同じ位置をコピーするために，その位置を示すフェーズを取得
 		int same_phase = prev_trajectory->search_phase_same_id(revising_dummy->get_trajectory()->get_visited_node_id(revise_phase));
 		int last_copied_phase = same_phase + revising_dummy->get_trajectory()->last_phase() - revise_phase;
-		revising_dummy->get_trajectory()->copy_trajectory(revise_phase, same_phase, *prev_trajectory);
+		int laset_phase = prev_trajectory->get_positions()->size();
+		//revising_dummy->get_trajectory()->copy_trajectory(revise_phase, laset_phase, same_phase, laset_phase, *prev_trajectory);
 		
 		//now_speed_listとnow_pause_listのコピーも行う
 		std::copy(prev_now_speed_list.begin() + same_phase, prev_now_speed_list.begin() + last_copied_phase, revising_dummy->get_now_speed_list().begin() + revise_phase);
@@ -556,7 +528,8 @@ namespace Method
 		//同じ位置をコピーするために，その位置を示すフェーズを取得
 		int same_phase = prev_trajectory->search_phase_same_id(revising_dummy->get_trajectory()->get_visited_node_id(revise_phase));
 		int last_copied_phase = same_phase + revising_dummy->get_trajectory()->last_phase() - revise_phase;
-		revising_dummy->get_trajectory()->copy_trajectory(revise_phase, same_phase, *prev_trajectory);
+		int last_phase = prev_trajectory->get_positions()->size() - 1;
+		//revising_dummy->get_trajectory()->copy_trajectory(revise_phase, last_phase, same_phase, last_phase, *prev_trajectory);
 
 		//now_speed_listとnow_pause_listのコピーも行う
 		std::copy(prev_now_speed_list.begin() + same_phase, prev_now_speed_list.begin() + last_copied_phase, revising_dummy->get_now_speed_list().begin() + revise_phase);
@@ -734,14 +707,14 @@ namespace Method
 		clear_visited_pois_info_list_id_of_users();//usersのvisited_pois_info_list_idのクリア
 		
 		//ここでユーザの行動の予測やダミーの行動を修正する(加藤さん修論手法)[Kato 14]
-		for (int phase_id = 0; phase_id < time_manager->phase_count(); phase_id++){
+		for (int phase_id = 0; phase_id < real_user->get_trajectory()->phase_count(); phase_id++){
 			for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++){
 				revising_dummy = entities->get_dummy_by_id(dummy_id);
 				//ダミーのvisited_pois_info_list_idの更新
 				if ((phase_id - 1) == revising_dummy->get_pause_phases().back()) revising_dummy->increment_visited_pois_info_list_id();
 				//ユーザのvisited_pois_info_list_idの更新
 				increment_visited_pois_info_list_id_of_users(phase_id);
-				//ダミーの行動プランの修正
+				//ダミーとユーザの行動プランの修正
 				revise_dummy_positions(phase_id, dummy_id);
 			}
 		}

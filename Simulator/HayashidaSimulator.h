@@ -56,7 +56,7 @@ namespace Simulation
 		std::vector<std::shared_ptr<Map::BasicPoi const>> input_poi_list;
 		std::shared_ptr<Entity::DifferentMovementUser<Geography::LatLng>> user;
 		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> real_user;
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> predicted_user;
+		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> predicted_user;
 
 
 		//メソッド
@@ -73,7 +73,7 @@ namespace Simulation
 
 		
 		void make_random_movement_user();//全要素の入力を前提
-		std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> create_artificial_user(std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi);
+		std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> create_artificial_user(std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>& order_visited_poi);
 		void make_same_predicted_user_as_real_user();
 
 

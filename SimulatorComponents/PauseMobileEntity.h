@@ -144,6 +144,7 @@ namespace Entity
 		//trajectoryæ“¾—p
 		std::shared_ptr<TRAJECTORY_TYPE> get_trajectory();
 		
+
 		//Œğ·‰ñ””»’è—p
 		int get_cross_count_until_the_phase(int phase);
 		

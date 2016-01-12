@@ -39,6 +39,7 @@ namespace Method
 		
 		//メソッド
 		std::vector<Graph::Rectangle<Geography::LatLng>> make_grid(double grid_area, const Geography::LatLng& center, int cell_num_on_side);//Gridの作成
+		std::shared_ptr<Geography::LatLng const> get_average_position(int phase) const;
 		std::vector<int> get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_num_table, int start, int end);//各セルのフェーズトータルのエンティティの数
 		std::vector<int> get_total_num_of_each_cell_at_all_phase(std::vector<std::vector<int>>& entities_num_table);//各セルのフェーズトータルのエンティティの数
 		std::list<std::pair<int, int>> get_cell_id_list_order_by_entities_num(std::vector<int>& total_entity_num) const;

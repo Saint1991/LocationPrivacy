@@ -68,6 +68,35 @@ namespace Method
 
 
 	///<summary>
+	/// 指定したPhaseにおける位置確定済みエンティティの平均位置を取得する
+	///</summary>
+	std::shared_ptr<Geography::LatLng const> KatoBachelorMethod::get_average_position(int phase) const
+	{
+		double x = 0.0;
+		double y = 0.0;
+
+		std::shared_ptr<Geography::LatLng const> position = entities->get_user()->get_predicted_user()->read_position_of_phase(phase);
+		x += position->x();
+		y += position->y();
+		int fixed_count = 1;
+
+		for (size_t dummy_id = 1; dummy_id <= entities->get_dummy_count(); dummy_id++) {
+			position = entities->get_dummy_by_id(dummy_id)->read_position_of_phase(phase);
+			if (position != nullptr) {
+				fixed_count++;
+				x += position->x();
+				y += position->y();
+			}
+		}
+
+		x /= fixed_count;
+		y /= fixed_count;
+
+		std::shared_ptr<Geography::LatLng const> ret = std::make_shared<Geography::LatLng const>(y, x);
+		return ret;
+	}
+
+	///<summary>
 	/// グリッドテーブルのstartからendまでのエンティティの合計を取得
 	///</summary>
 	std::vector<int> KatoBachelorMethod::get_total_num_of_each_cell_at_interval_phase(std::vector<std::vector<int>>& entities_num_table, int start, int end) {
@@ -166,8 +195,7 @@ namespace Method
 		int arrive_phase = *phase_id;
 		creating_dummy->set_now_pause_time(*phase_id, rest_pause_time);
 
-		//停止phaseは停止時間を決めるときに既にひとつ設定しているので，total_pause_phase - 1であることに注意 
-		for (int i = 0; i < total_pause_phase; i++)
+		for (int i = 0; i <= total_pause_phase; i++)
 		{
 			if (*phase_id == time_manager->last_phase()) return;
 			(*phase_id)++;
@@ -204,9 +232,9 @@ namespace Method
 		double pause_position_speed = creating_dummy->get_starting_speed_using_arrive_phase(*phase_id - variable_of_converted_pause_time_to_phase.quot);//停止位置の出発速度を保持しておく
 
 		//sourceからの距離
-		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
-		//速度はphaseで埋める前を参照しなければならないことに注意
-		double now_time = requirement->service_interval - variable_of_converted_pause_time_to_phase.rem;
+		//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとする
+		//double now_time = requirement->service_interval - variable_of_converted_pause_time_to_phase.rem;
+		double now_time = requirement->service_interval;
 		double total_time_from_source_to_destination = map->calc_necessary_time(source, destination, pause_position_speed);
 		Graph::MapNodeIndicator nearest_position = source;
 		//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
@@ -278,7 +306,7 @@ namespace Method
 		//横がセルのid，縦がphaseを表す動的２次元配列で記憶
 		//phase_intervalの間隔で記録していく
 		//k-2個目までのtableを作っておいて，k-1個目を＋１して更新すればより効率が良い
-		std::shared_ptr<Geography::LatLng const> center = entities->get_average_position_of_phase(phase);//中心位置を求める
+		std::shared_ptr<Geography::LatLng const> center = get_average_position(phase);//中心位置を求める
 		Grid grid = make_grid(requirement->required_anonymous_area, *center, CELL_NUM_ON_SIDE);//phaseごとにグリッドを作成
 		int grid_list_id = 0;
 		int cell_id = 0;//セルのid
@@ -287,7 +315,7 @@ namespace Method
 		while (phase <= end_phase)
 		{
 			cell_id = 0;//セルのidのリセット
-			center = entities->get_average_position_of_phase(phase);//中心位置を求める
+			center = get_average_position(phase);//中心位置を求める
 			grid = make_grid(requirement->required_anonymous_area, *center, CELL_NUM_ON_SIDE);//phaseごとにグリッドを作成
 			grid_list.at(grid_list_id) = grid;//あるphaseのGrid.grud_list_idで何回目かのgrid生成かを記録する
 

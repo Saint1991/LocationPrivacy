@@ -22,7 +22,7 @@ namespace Entity
 		entity_id id, 
 		std::shared_ptr<Time::TimeSlotManager const> timeslot,
 		std::shared_ptr<PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>> real_user, 
-		std::shared_ptr<PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>> predicted_user
+		std::shared_ptr<RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>> predicted_user
 	) : RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>(id, timeslot), real_user(real_user), predicted_user(predicted_user)
 	{
 	}
@@ -49,7 +49,7 @@ namespace Entity
 	/// prediceted_user‚ğæ“¾‚·‚é
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE>
-	std::shared_ptr<PauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>> DifferentMovementUser<POSITION_TYPE, TRAJECTORY_TYPE>::get_predicted_user()
+	std::shared_ptr<RevisablePauseMobileEntity<POSITION_TYPE, TRAJECTORY_TYPE>> DifferentMovementUser<POSITION_TYPE, TRAJECTORY_TYPE>::get_predicted_user()
 	{
 		return predicted_user;
 	}

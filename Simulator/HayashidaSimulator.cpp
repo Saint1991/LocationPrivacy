@@ -338,14 +338,14 @@ namespace Simulation
 	///<summary>
 	/// input_poisを基に，T.S.P.を用い，予想ユーザを作成する．
 	///</summary>
-	std::shared_ptr<Entity::PauseMobileEntity<Geography::LatLng>> HayashidaSimulator::create_artificial_user(std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double> order_visited_poi) {
+	std::shared_ptr<Entity::RevisablePauseMobileEntity<Geography::LatLng>> HayashidaSimulator::create_artificial_user(std::pair<std::vector<std::shared_ptr<Map::BasicPoi const>>, double>& order_visited_poi) {
 		int phase_id = 0;
 		Math::Probability generator;
 
-		//以下の4つのリストを作って，コンストラクタにつっこむ
-		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng const>>> positions;
-		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> visited_node_ids;
-		std::shared_ptr<std::vector<std::string>> venue_names;
+		//以下のリストを作って，コンストラクタにつっこむ
+		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng const>>> positions = std::make_shared<std::vector<std::shared_ptr<Geography::LatLng const>>>();
+		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> visited_node_ids	= std::make_shared<std::vector<Graph::MapNodeIndicator>>();
+		std::shared_ptr<std::vector<std::string>> venue_names = std::make_shared<std::vector<std::string>>();
 		std::vector<double> now_speed_list;
 		std::vector<double> current_pause_time_list;
 		
@@ -368,7 +368,7 @@ namespace Simulation
 
 		//visited_poi_infoに	情報を登録
 		visited_poi_info.visited_poi = std::make_pair(Graph::MapNodeIndicator((*now_poi)->get_id(), Graph::POI), (*now_poi)->data->get_position());
-		for (int phase = phase_id; phase < variable_of_converted_pause_time_to_phase.quot; phase++) visited_poi_info.pause_phases.push_back(phase);
+		for (int id = 0; id <= variable_of_converted_pause_time_to_phase.quot; id++) visited_poi_info.pause_phases.push_back(phase_id + id);
 		visited_poi_info.arrive_phase = phase_id;
 		visited_poi_info.pause_time = pause_time;
 		visited_poi_info.starting_speed = speed;
@@ -377,9 +377,9 @@ namespace Simulation
 		visited_pois_info_list.push_back(visited_poi_info);
 		
 		//位置，node_ids, venue_name，停止時間，停止フェーズを登録
-		for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++, phase_id++)
+		for (int i = 0; i <= variable_of_converted_pause_time_to_phase.quot + 1; i++, phase_id++)
 		{
-			positions->push_back(std::make_shared<Geography::LatLng>((*now_poi)->data->get_position()));
+			positions->push_back(std::make_shared<Geography::LatLng const>((*now_poi)->data->get_position()));
 			visited_node_ids->push_back(Graph::MapNodeIndicator((*now_poi)->get_id(), Graph::POI));
 			venue_names->push_back((*now_poi)->name());
 
@@ -392,23 +392,23 @@ namespace Simulation
 
 		//--------------二個目以降の点を決定．forで，確保したいpoiの個数分をループさせる-------------------
 		for (int i = 1; i < POI_NUM; i++)
-		{			
-			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), user->get_now_speed(phase_id));
-			int next_arrive_time = moving_time_between_poi_and_next_poi + user->get_pause_time();
+		{	
+
+			double moving_time_between_poi_and_next_poi = map->calc_necessary_time((*now_poi)->get_id(), (*next_poi)->get_id(), speed);
+			double next_arrive_time = moving_time_between_poi_and_next_poi + pause_time;
 						
 			std::vector<Graph::MapNodeIndicator> shortests_path_between_pois = map->get_shortest_path((*now_poi)->get_id(), (*next_poi)->get_id());
 			std::vector<Graph::MapNodeIndicator>::iterator path_iter = shortests_path_between_pois.begin();//pathを検索するためのindex
 			
 			//最初だけ停止時間をphaseに換算した時の余りをtimeとし，それ以外はservice_intervalをtimeとして，現在地から求めたい地点のdistanceを計算
-			double distance = (SERVICE_INTERVAL - variable_of_converted_pause_time_to_phase.rem) * speed;
+			//double distance = (SERVICE_INTERVAL - variable_of_converted_pause_time_to_phase.rem) * speed;
+			double distance = SERVICE_INTERVAL * speed;
 			double distance_between_now_and_next_poi = map->shortest_distance((*now_poi)->get_id(), (*next_poi)->get_id());
 
 			Graph::MapNodeIndicator nearest_position = (*now_poi)->get_id();
 
 			//pathを作成．場所は一番近いintersection同士で線形補間する．MapNodeIndicatorのTypeはINVALIDとする．
 			while (distance < distance_between_now_and_next_poi) {
-				phase_id++;
-				
 				//最短路の中で一番近いintersectionを探し，線形補間する．		
 				while (distance > map->shortest_distance((*now_poi)->get_id(), *path_iter))
 				{
@@ -416,7 +416,6 @@ namespace Simulation
 					path_iter++;
 				}
 
-				//if (*distance != map->shortest_distance((*now_poi)->get_id(), *path_iter)) {
 				double distance_between_start_and_nearest_position = map->shortest_distance((*now_poi)->get_id(), nearest_position);
 				double distance_between_nearest_intersection_and_arrive_position = distance - distance_between_start_and_nearest_position;
 
@@ -436,13 +435,11 @@ namespace Simulation
 				current_pause_time_list.push_back(0.0);
 				
 				distance += SERVICE_INTERVAL * speed;
-				
+				phase_id++;				
 			}
 			//destinationのところまで補完できたら，rest_timeを保持しておく！
 			double distance_between_arrive_position_and_dest_position = distance - distance_between_now_and_next_poi;
-			phase_id++;
 			
-
 			//次の情報を色々決める
 			pause_time = generator.uniform_distribution(MIN_PAUSE_TIME, MAX_PAUSE_TIME);
 			speed = generator.uniform_distribution(MIN_SPEED, MAX_SPEED);
@@ -452,8 +449,9 @@ namespace Simulation
 
 
 			//visited_poi_infoに	情報を登録
-			visited_poi_info.visited_poi = std::make_pair(Graph::MapNodeIndicator((*now_poi)->get_id(), Graph::POI), (*now_poi)->data->get_position());
-			for (int phase = phase_id; phase < variable_of_converted_pause_time_to_phase.quot; phase++) visited_poi_info.pause_phases.push_back(phase);
+			visited_poi_info.visited_poi = std::make_pair(Graph::MapNodeIndicator((*next_poi)->get_id(), Graph::POI), (*next_poi)->data->get_position());
+			while (!visited_poi_info.pause_phases.empty()) visited_poi_info.pause_phases.pop_back();
+			for (int id = 0; id <= variable_of_converted_pause_time_to_phase.quot; id++) visited_poi_info.pause_phases.push_back(phase_id + id);
 			visited_poi_info.arrive_phase = phase_id;
 			visited_poi_info.pause_time = pause_time;
 			visited_poi_info.starting_speed = speed;
@@ -463,11 +461,11 @@ namespace Simulation
 
 
 			//位置，node_ids, venue_name，停止時間，停止フェーズを登録
-			for (int i = 0; i < variable_of_converted_pause_time_to_phase.quot; i++, phase_id++)
+			for (int i = 0; i <= variable_of_converted_pause_time_to_phase.quot; i++, phase_id++)
 			{
-				positions->push_back(std::make_shared<Geography::LatLng>((*now_poi)->data->get_position()));
-				visited_node_ids->push_back(Graph::MapNodeIndicator((*now_poi)->get_id(), Graph::POI));
-				venue_names->push_back((*now_poi)->name());
+				positions->push_back(std::make_shared<Geography::LatLng>((*next_poi)->data->get_position()));
+				visited_node_ids->push_back(Graph::MapNodeIndicator((*next_poi)->get_id(), Graph::POI));
+				venue_names->push_back((*next_poi)->name());
 
 				now_speed_list.push_back(0.0);
 				current_pause_time_list.push_back(rest_pause_time);
@@ -480,15 +478,15 @@ namespace Simulation
 		//最後にtimeslotsの作成＋end_timeの作成
 		std::unique_ptr<std::vector<time_t>> timeslots = std::make_unique<std::vector<time_t>>();
 		int time = 0;
-		for (int id = 0; id < phase_id; time += SERVICE_INTERVAL) {
+		for (int id = 0; id < phase_id; id++, time += SERVICE_INTERVAL) {
 			timeslots->push_back(time);
 		}
 		std::shared_ptr<Time::TimeSlotManager const> timeslot = std::make_shared<Time::TimeSlotManager>(std::move(timeslots));
-		end_time = time;
+		end_time = time - SERVICE_INTERVAL;
 
 		std::shared_ptr<Graph::RevisableTrajectory<Geography::LatLng>> trajectory
 			= std::make_shared<Graph::RevisableTrajectory<Geography::LatLng>>(timeslot, visited_node_ids, positions, venue_names);
-		return std::make_shared<Entity::PauseMobileEntity<Geography::LatLng>>(0, trajectory, visited_pois_info_list, current_pause_time_list, now_speed_list);
+		return std::make_shared<Entity::RevisablePauseMobileEntity<Geography::LatLng>>(0, trajectory, visited_pois_info_list, current_pause_time_list, now_speed_list);
 	}
 
 	
