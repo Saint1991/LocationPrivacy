@@ -56,5 +56,20 @@ namespace Graph
 	{
 		return _id != id.id() || _type != id.type();
 	}
+
+	#pragma region Export
+	///<summary>
+	/// ファイル出力向けのハッシュデータを作成します．
+	///</summary>
+	std::unordered_map<std::string, std::string> MapNodeIndicator::get_export_data() const
+	{
+		std::unordered_map<std::string, std::string> ret = {
+			{ NODE_ID, std::to_string(_id) },
+			{ NODE_TYPE, std::to_string(_type) }
+		};
+		return ret;
+	}
+
+	#pragma endregion Export関係
 }
 

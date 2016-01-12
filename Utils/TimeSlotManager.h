@@ -29,6 +29,7 @@ namespace Time
 		time_t time_of_phase(int phase) const;
 		size_t find_phase_of_time(time_t time) const;
 		size_t phase_count() const;
+		size_t last_phase() const;
 	};
 }
 

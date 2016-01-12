@@ -153,6 +153,7 @@
     <ClInclude Include="BasicPoi.h" />
     <ClInclude Include="BasicRoad.h" />
     <ClInclude Include="BasicUser.h" />
+    <ClInclude Include="CreateUserModule.h" />
     <ClInclude Include="DbTrajectoryLoader.h" />
     <ClInclude Include="DbNodeCollectionFactory.h" />
     <ClInclude Include="DbPoiCollectionFactory.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="BasicPoi.cpp" />
     <ClCompile Include="BasicRoad.cpp" />
     <ClCompile Include="BasicUser.cpp" />
+    <ClCompile Include="CreateUserModule.cpp" />
     <ClCompile Include="DbTrajectoryLoader.cpp" />
     <ClCompile Include="DbNodeCollectionFactory.cpp" />
     <ClCompile Include="DbPoiCollectionFactory.cpp" />

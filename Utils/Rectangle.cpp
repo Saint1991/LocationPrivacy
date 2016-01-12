@@ -50,6 +50,40 @@ namespace Graph {
 
 
 	///<summary>
+	/// rectの各辺をx倍に変換したものを返す
+	/// 緯度経度Ver.
+	///</summary>
+	template <>
+	Rectangle<Geography::LatLng> Rectangle<Geography::LatLng>::transform_rect_of_latlang_to_x_times(double x) const
+	{
+		if (x == 0.0) throw std::invalid_argument("X must not be 0.0");
+
+		Geography::LatLng center_position = center();
+
+		double transformed_height = height() * x;
+		double transformed_width = width() * x;
+
+		double top = Geography::GeoCalculation::calc_translated_point(center_position, transformed_height / 2, M_PI_2 * 3).lat();;
+		double left = Geography::GeoCalculation::calc_translated_point(center_position, transformed_width / 2, M_PI).lng();
+		double bottom = Geography::GeoCalculation::calc_translated_point(center_position, transformed_height / 2, M_PI_2).lat();;
+		double right = Geography::GeoCalculation::calc_translated_point(center_position, transformed_width / 2, 0).lng();
+		
+		return Graph::Rectangle<Geography::LatLng>(top, left, bottom, right);
+	}
+
+	///<summary>
+	/// rectの各辺をx倍に変換したものを返す
+	/// CoordinateVer.
+	///</summary>
+	template <>
+	Rectangle<Coordinate> Rectangle<Coordinate>::transform_rect_of_coordinate_to_x_times(double x) const
+	{
+		if (x == 0.0) throw std::invalid_argument("X must not be 0.0");
+		return Graph::Rectangle<Coordinate>(top * x, left * x, bottom * x, right * x);
+	}
+
+
+	///<summary>
 	/// Coordinateの場合のWidth計算
 	///</summary>
 	template <>
@@ -92,6 +126,14 @@ namespace Graph {
 		return Geography::GeoCalculation::lambert_distance(topleft, bottomleft);
 	}
 
+	///<summary>
+	/// LatLngの場合の中心点を求める
+	///</summary>
+	template <>
+	Geography::LatLng Rectangle<Geography::LatLng>::center() const
+	{
+		return Geography::LatLng((top + bottom) / 2, (left + right) / 2);
+	}
 
 	///<summary>
 	/// 面積の計算

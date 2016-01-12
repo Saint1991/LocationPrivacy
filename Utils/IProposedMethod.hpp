@@ -10,7 +10,7 @@ namespace Framework
 		std::shared_ptr<MAP_TYPE const> map, std::shared_ptr<USER_TYPE> user, std::shared_ptr<REQUIREMENT_TYPE const> requirement, std::shared_ptr<Time::TimeSlotManager const> time_manager
 	) : map(map), requirement(requirement),timer(std::make_shared<Time::Timer>()), time_manager(time_manager)
 	{
-		size_t dummy_num = this->requirement->dummy_num;
+		 size_t dummy_num = this->requirement->dummy_num;
 		entities = std::make_shared<Entity::EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>>(user, dummy_num, time_manager);
 	}
 
