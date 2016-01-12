@@ -98,6 +98,10 @@ namespace Evaluate
 			for (Entity::entity_id target_id = 0; target_id <= entities->get_dummy_count(); target_id++) {
 				if (id == target_id) continue;
 				
+				#ifdef DETAIL_PROGRESS
+				std::cout << "CrossCheck " << std::to_string(id) << " with " << std::to_string(target_id) << " at phase " << std::to_string(phase) << std::endl;
+				#endif
+
 				std::shared_ptr<Entity::MobileEntity<POSITION_TYPE, TRAJECTORY_TYPE> const> target_entity = entities->read_entity_by_id(target_id);
 				Graph::MapNodeIndicator current_target_node = target_entity->read_node_pos_info_of_phase(phase).first;
 				Graph::MapNodeIndicator next_target_node = target_entity->read_node_pos_info_of_phase(phase + 1).first;

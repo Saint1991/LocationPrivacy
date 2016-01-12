@@ -18,6 +18,8 @@ namespace Collection
 		void for_each_gram(const std::function<void(const_iterator, const_iterator)>& execute_function) const;
 		void for_each_prefix(const std::function<void(iterator, iterator)>& execute_function);
 		void for_each_prefix(const std::function<void(const_iterator,const_iterator)>& execute_function) const;
+
+		friend Sequence<T> concat(const Sequence<T>& seq1, const Sequence<T>& seq2);
 	};
 }
 

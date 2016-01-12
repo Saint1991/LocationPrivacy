@@ -8,7 +8,7 @@ namespace Observer
 	/// コンストラクタ
 	///</summary>
 	ObservedTrajectoryNode::ObservedTrajectoryNode(Graph::node_id id, int depth, std::shared_ptr<Graph::MapNodeIndicator> map_node_id)
-		: Graph::Node<Graph::MapNodeIndicator, Graph::FlowEdge>(id, map_node_id), depth(depth), entity_count(1)
+		: Graph::Node<Graph::MapNodeIndicator, Graph::FlowEdge>(id, map_node_id), depth(depth), entity_count(0)
 	{
 	}
 

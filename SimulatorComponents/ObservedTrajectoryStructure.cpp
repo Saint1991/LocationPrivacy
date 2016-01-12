@@ -40,7 +40,8 @@ namespace Observer
 		int depth = phase + 1;
 		Collection::IdentifiableCollection<Graph::node_id, Observer::ObservedTrajectoryNode>::iterator iter = std::find_if(node_collection->begin(), node_collection->end(), [id, depth](std::shared_ptr<Identifiable<Graph::node_id>> element) {
 			std::shared_ptr<Observer::ObservedTrajectoryNode> node = std::dynamic_pointer_cast<Observer::ObservedTrajectoryNode>(element);
-			return node != nullptr && *node->data == id && depth == node->get_depth();
+			bool is_ret_node = node != nullptr && node->data != nullptr && *node->data == id && depth == node->get_depth();
+			return is_ret_node;
 		});
 
 		return iter == node_collection->end() ? ObservedTrajectoryStructure::base_iterator(-1, nullptr) : ObservedTrajectoryStructure::base_iterator((*iter)->get_id(), node_collection);
@@ -56,7 +57,8 @@ namespace Observer
 		int depth = phase + 1;
 		Collection::IdentifiableCollection<Graph::node_id, Observer::ObservedTrajectoryNode>::iterator iter = std::find_if(node_collection->begin(), node_collection->end(), [id, depth](std::shared_ptr<Identifiable<Graph::node_id>> element) {
 			std::shared_ptr<Observer::ObservedTrajectoryNode> node = std::dynamic_pointer_cast<Observer::ObservedTrajectoryNode>(element);
-			return node != nullptr && node->data != nullptr && *node->data == id && depth == node->get_depth();
+			bool is_ret_node = node != nullptr && node->data != nullptr && *node->data == id && depth == node->get_depth();
+			return is_ret_node;
 		});
 
 		return iter == node_collection->end() ? -1 : (*iter)->get_id();
@@ -225,7 +227,11 @@ namespace Observer
 			if (phase < trajectory.size() - 1) {
 				Graph::MapNodeIndicator next_node = trajectory.at(phase + 1);
 				Graph::node_id next_node_id = find_node_id(next_node, phase + 1);
-				probability *= iter->get_static_edge_to(next_node_id)->get_flow();
+				std::shared_ptr<Graph::FlowEdge const> edge = iter->get_static_edge_to(next_node_id);
+				if (edge == nullptr || edge->get_static_data() == nullptr) {
+					std::cout << "Error Occured - " << std::to_string(next_node_id) << std::endl;
+				}
+				probability *= edge->get_flow();
 			}
 		}
 

@@ -118,4 +118,16 @@ namespace Collection
 			execute_function(iter, end() - 1);
 		}
 	}
+
+	///<summary>
+	/// seq1‚ÌŒã‚Éseq2‚ð˜AŒ‹‚µ‚½Sequence‚ð•Ô‚·
+	///</summary>
+	template <typename T>
+	Sequence<T> concat(const Collection::Sequence<T>& seq1, const Collection::Sequence<T>& seq2)
+	{
+		Sequence<T> ret;
+		std::copy(seq1.begin(), seq1.end(), std::back_inserter(ret));
+		std::copy(seq2.begin(), seq2.end(), std::back_inserter(ret));
+		return ret;
+	}
 }

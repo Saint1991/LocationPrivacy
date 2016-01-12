@@ -83,4 +83,12 @@ namespace IO
 		}
 	}
 
+
+	///<summary>
+	/// ディレクトリの作成
+	///</summary>
+	bool FileExporter::mkdir(const char* path)
+	{
+		return CreateDirectoryA(path, NULL);
+	}
 }

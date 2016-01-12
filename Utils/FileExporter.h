@@ -40,6 +40,7 @@ namespace IO
 		void export_line(std::unordered_map<std::string, std::string> name_value_pairs);
 		void export_line(std::shared_ptr<FileExportable const> data);	
 		void export_lines(std::list<std::shared_ptr<FileExportable const>> data_list);
+		static bool mkdir(const char* path);
 	};
 }
 

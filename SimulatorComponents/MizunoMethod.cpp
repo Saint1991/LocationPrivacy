@@ -81,7 +81,12 @@ namespace Method
 		for (int current_dummy_id = 1; current_dummy_id <= num_of_group_a_dummy; current_dummy_id++) {
 			
 			//ユーザの嗜好の木に含まれる各プレフィックスについてカテゴリシーケンスとスコアの組を計算する
-			std::vector<sequence_score_set> sequence_scores = calc_sequence_score_set(current_dummy_id);
+			std::vector<sequence_score_set> all_sequence_scores = calc_sequence_score_set(current_dummy_id);
+			
+			//時間がかかりすぎるので，Top30のみ使用
+			int k = min(all_sequence_scores.size(), 30);
+			std::vector<sequence_score_set> sequence_scores(all_sequence_scores.begin(), all_sequence_scores.begin() + k);
+
 
 			//実際の経路の生成
 			std::vector<trajectory_score_set> trajectory_scores = calc_trajectory_score_set(current_dummy_id, sequence_scores);
@@ -139,60 +144,58 @@ namespace Method
 		std::vector<sequence_score_set> ret;
 
 		// 今回のトラジェクトリが嗜好の木の最大長より長い場合，プレフィックスの最大長の長さのものを対象とする．
-		size_t max_depth = preference_tree->max_depth();
-		size_t usable_prefix_length = min(max_depth, user_trajectory->phase_count());
+		size_t target_prefix_length = user_trajectory->phase_count();
+		
+		//score_prefの最大値を求める
+		double max_score_pref = 0.0;
+		preference_tree->for_each_prefix(target_prefix_length, [&](const Collection::Sequence<User::category_id>& prefix, double sup_u) {
+			double sup_o = observed_preference_tree_copy->get_support_of(prefix);
+			double score_pref = preference_based_score(sup_u, sup_o);
+			if (max_score_pref < score_pref) max_score_pref = score_pref;
+		});
 
-		for (int prefix_length = usable_prefix_length - 0; prefix_length <= usable_prefix_length; prefix_length++) {
-			
-			//真の嗜好の木に含まれるすべてのPrefixについて
-			preference_tree->for_each_prefix(prefix_length, [&](const Collection::Sequence<User::category_id>& prefix, double sup_u) {
-				
-				//Score_{pref}の計算
-				double sup_o = observed_preference_tree->get_support_of(prefix);
-				double sup_o_cp = observed_preference_tree_copy->get_support_of(prefix);
-				double score_pref = preference_based_score(sup_u, sup_o_cp);
+		//真の嗜好の木に含まれるすべてのPrefixについて
+		preference_tree->for_each_prefix(target_prefix_length, [&](const Collection::Sequence<User::category_id>& prefix, double sup_u) {
 
-				//Score_{cross}の計算
-				for (int target_entity_id = 0; target_entity_id < current_dummy_id; target_entity_id++) {
+			//Score_{pref}の計算
+			double sup_o = observed_preference_tree_copy->get_support_of(prefix);
+			double score_pref = preference_based_score(sup_u, sup_o) / max_score_pref;
+
+			//Score_{cross}の計算
+			for (int target_entity_id = 0; target_entity_id < current_dummy_id; target_entity_id++) {
+
+				std::shared_ptr<Entity::MobileEntity<Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>> const> target_entity = entities->read_entity_by_id(target_entity_id);
+				std::shared_ptr<Graph::SemanticTrajectory<> const> trajectory = target_entity->read_trajectory();
+				Collection::Sequence<Entity::category_id> target_sequence = trajectory->get_category_sequence();
+
+				for (int target_phase = 0; target_phase < time_manager->phase_count(); target_phase++) {
+
+					//交差の時刻と相手
+					Entity::cross_target cross = std::make_pair(target_phase, target_entity_id);
 					
-					std::shared_ptr<Entity::Dummy<>> target_entity = target_entity_id == 0 ? entities->get_user() : entities->get_dummy_by_id(target_entity_id);
-					std::shared_ptr<Graph::SemanticTrajectory<> const> trajectory = target_entity->read_trajectory();
-					Collection::Sequence<Entity::category_id> target_sequence = trajectory->get_category_sequence();
-					
-					for (int target_phase = 0; target_phase < time_manager->phase_count(); target_phase++) {
-						
-						double score_cross = 0.0;
-						int delta = target_sequence.subsequence(0, target_phase) == prefix.subsequence(0, target_phase) ? 1 : 0;
-						Entity::cross_target cross = Entity::NOTHING; 
-						if (delta != 0) {
+					//n_share(t)の計算
+					int n_share_t = entities->get_total_cross_count_of_phase(target_phase);
+					//n_share(ei)の計算
+					int n_share_e = target_entity->get_cross_count();
 
-							//交差の時刻と相手
-							cross = std::make_pair(target_phase, target_entity_id);
-							
-							//交差相手のサポート
-							double sup_e_cp = observed_preference_tree_copy->get_support_of(target_sequence);
+					//distroの計算
+					Collection::Sequence<Entity::category_id> combined_sequence1 = Collection::concat<Entity::category_id>(target_sequence.subsequence(0, target_phase), prefix.subsequence(target_phase + 1, prefix.size() - 1));
+					Collection::Sequence<Entity::category_id> combined_sequence2 = Collection::concat<Entity::category_id>(prefix.subsequence(0, target_phase), target_sequence.subsequence(target_phase + 1, prefix.size() - 1));
+					double sup_u_es = preference_tree->get_support_of(combined_sequence1);
+					double sup_u_se = preference_tree->get_support_of(combined_sequence2);
+					double sup_u_e = preference_tree->get_support_of(target_sequence);
+					double distro = (sup_u + sup_u_es) / (sup_u_e + sup_u_se + sup_u + sup_u_es)  ;
 
-							//n_share(t)の計算
-							int n_share = entities->get_total_cross_count_of_phase(target_phase);
+					// Score_Crossの計算
+					double score_cross = cross_based_score(n_share_t, n_share_e, distro);
+					if (score_cross == 0.0) cross = Entity::NOTHING;
 
-							//交差が設定されているエンティティのサポートの合計値の計算
-							double sup_sum = 0.0;
-							std::vector<Entity::entity_id> cross_entities = entities->get_entities_cross_with(target_entity_id);
-							for (std::vector<Entity::entity_id>::const_iterator target_entity_id = cross_entities.begin(); target_entity_id != cross_entities.end(); target_entity_id++) {
-								Collection::Sequence<Entity::category_id> target_sequence = entities->read_dummy_by_id(*target_entity_id)->read_trajectory()->get_category_sequence(0, prefix_length - 1);
-								sup_sum += observed_preference_tree->get_support_of(target_sequence);
-							}
-							// Score_Crossの計算
-							score_cross = cross_based_score(delta, n_share, sup_o, sup_e_cp, sup_sum);
-						}
-						
-						//負のものの対応は保留で一旦正のもののみ採用
-						double score = total_sequence_score(score_pref, score_cross);
-						ret.push_back(std::make_pair(std::make_pair(prefix, cross), score));
-					}
+					// 合わせたスコアを計算し，追加する
+					double score = total_sequence_score(score_pref, score_cross);
+					ret.push_back(std::make_pair(std::make_pair(prefix, cross), score));
 				}
-			});
-		}
+			}
+		});
 
 		return ret;
 	}
@@ -218,9 +221,9 @@ namespace Method
 	///<summary>
 	/// Score_crossの計算式
 	///</summary>
-	double MizunoMethod::cross_based_score(int delta, int n_share, double sup_o, double sup_e, double sup_sum)
+	double MizunoMethod::cross_based_score(int n_share_t, int n_share_e, double distro)
 	{
-		return delta == 0 ? 0.0 : (1.0 / (1.0 + n_share)) * sup_o * sup_e / (1.0 + sup_sum);
+		return distro / (1 + n_share_t + n_share_e);
 	}
 
 
@@ -244,41 +247,35 @@ namespace Method
 		//実際の経路の生成
 		for (std::vector<sequence_score_set>::const_iterator iter = sequence_scores.begin(); iter != sequence_scores.end(); iter++) {
 			
-			double score = iter->second;
 			Collection::Sequence<User::category_id> category_sequence = iter->first.first;
+			double score = iter->second;
 			Entity::cross_target cross = iter->first.second;
+
 			if (category_sequence.size() < time_manager->phase_count()) {
 				for (int i = 0; i < time_manager->phase_count() - category_sequence.size(); i++) category_sequence.push_back(User::ANY);
 			}
 			
-			//カテゴリシーケンスと共有地点候補を基に基準の点を一つ定める
-			std::pair<int, Graph::MapNodeIndicator> basis = determine_point_basis(category_sequence, cross);
-
-			//基準の点を基にトラジェクトリ生成の試行を繰り返す
-			int iteration_count = 0;
+			//カテゴリシーケンスと共有地点候補を基に基準の点を一つ定め，それを基準に経路を生成
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>> trajectory = nullptr;
-			for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL; i++) {
+			std::pair<int, Graph::MapNodeIndicator> basis = determine_point_basis(category_sequence, cross);
+			for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL && trajectory == nullptr; i++) {
 				trajectory = create_trajectory(current_dummy_id, basis, category_sequence);
-				iteration_count = i;
-				if (trajectory != nullptr) break;
 			}
-			if (trajectory == nullptr) {
-				continue;
-			}
+			
+			if (trajectory == nullptr) continue;
 
 			//ここでトラジェクトリに対してスコアを計算してretに追加する
 			double trajectory_score = 0.0;
-			int achive_count = 0;
-			double setting_anonymous_area = setting_anonymous_areas->at(current_dummy_id - 1);
+			double size_sum = 0.0;
 			for (int phase = 0; phase < time_manager->phase_count(); phase++) {
 				std::vector<std::shared_ptr<Geography::LatLng const>> positions = entities->get_all_fixed_positions_of_phase(phase);
 				std::shared_ptr<Geography::LatLng const> new_pos = std::make_shared<Geography::LatLng const>(map->get_static_poi(trajectory->at(phase).id())->get_point());
 				positions.push_back(new_pos);
 				double ar_size = positions.size() > 2 ? Geography::GeoCalculation::calc_convex_hull_size(positions) : Geography::GeoCalculation::lambert_distance(*positions.at(0), *positions.at(1));
-				if (ar_size >= setting_anonymous_area) achive_count++;
+				size_sum += ar_size;
 			}
-			trajectory_score = (double)achive_count / time_manager->phase_count() * score;
-			if (is_all_sequence_score_negative) trajectory_score *= score;
+			trajectory_score = score * size_sum;
+			if (is_all_sequence_score_negative) trajectory_score = size_sum;
 			ret.push_back(std::make_pair(std::make_pair(*trajectory, cross), trajectory_score));
 		}
 
@@ -304,7 +301,7 @@ namespace Method
 
 		//共有地点が設定できていた場合
 		if (cross != Entity::NOTHING) {
-			point_basis = cross.second == 0 ? entities->get_user()->read_node_pos_info_of_phase(cross.first).first : entities->read_dummy_by_id(cross.second)->read_node_pos_info_of_phase(cross.first).first;
+			point_basis = entities->read_entity_by_id(cross.second)->read_node_pos_info_of_phase(cross.first).first;
 		}
 
 		//共有地点が設定できなかった場合

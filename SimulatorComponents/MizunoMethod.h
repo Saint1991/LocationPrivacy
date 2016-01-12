@@ -21,7 +21,7 @@ namespace Method
 	{
 	private:
 		//スコアリングのパラメータ
-		static constexpr double B = 0.1;
+		static constexpr double B = 0.3;
 		//進行方向に沿わせる制限の角度θ
 		static constexpr double THETA = M_PI_2;
 		//経路生成の試行回数の上限
@@ -53,7 +53,7 @@ namespace Method
 		std::vector<sequence_score_set> calc_sequence_score_set(Entity::entity_id current_dummy_id);
 		double total_sequence_score(double score_pref, double score_cross);
 		double preference_based_score(double sup_u, double sup_o);
-		double cross_based_score(int delta, int n_share, double sup_o, double sup_e, double sup_sum);
+		double cross_based_score(int n_share_t, int n_share_e, double distro);
 
 		//経路決定関連のメソッド
 		std::vector<trajectory_score_set> calc_trajectory_score_set(Entity::entity_id current_dummy_id, const std::vector<sequence_score_set>& sequence_scores);

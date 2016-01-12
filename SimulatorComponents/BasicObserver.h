@@ -27,12 +27,14 @@ namespace Observer
 		static_assert(std::is_base_of<Entity::MobileEntity<Geography::LatLng, TRAJECTORY_TYPE>, DUMMY_TYPE>::value, "DUMMY_TYPE must be derived from MobileEntity<LatLng, TRAJECTORY_TYPE>");
 		static_assert(std::is_base_of<Entity::MobileEntity<Geography::LatLng, TRAJECTORY_TYPE>, USER_TYPE>::value, "DUMMY_TYPE must be derived from MobileEntity<LatLng, TRAJECTORY_TYPE>");
 	private:
-		double calc_time_to_confusion(const std::vector<std::vector<Evaluate::CrossInfo>>& cross_infos, int start_phase, double threshold = 1.0) const;
+		double calc_time_to_confusion(std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> cross_infos, int start_phase, double threshold = 1.0);
+		std::vector<Evaluate::CrossInfo> get_cross_info_of_entity(Entity::entity_id id);
 
 	protected:
 		std::unique_ptr<Evaluate::CrossJudgementModule<Map::BasicDbMap, Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>> module;
 		std::shared_ptr<Entity::EntityManager<Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE> const> entities;
 		std::shared_ptr<Map::BasicDbMap const> map;
+		std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> cross_infos;
 		std::shared_ptr<Observer::ObservedTrajectoryStructure> structure;
 	public:
 		BasicObserver(
@@ -43,6 +45,7 @@ namespace Observer
 		);
 		~BasicObserver();
 
+		std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> calc_cross_info();
 		std::shared_ptr<Observer::ObservedTrajectoryStructure const> create_observed_trajectory_structure();
 		void for_each_possible_trajectory_probability_of_entity(Entity::entity_id id, const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>, double)>& execute_function);
 		void for_each_expected_trajectory_frequency(const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>, double)>& execute_function);
@@ -50,7 +53,7 @@ namespace Observer
 		double calc_ar_count(double required_anonymous_area) const;
 		double calc_ar_size(double required_anonymous_area) const;
 
-		double calc_mtc_without_semantics(double threshold = 1.0) const;
+		double calc_mtc_without_semantics(double threshold = 1.0);
 	};
 
 	template class BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>;
