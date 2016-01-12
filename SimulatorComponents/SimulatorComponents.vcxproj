@@ -184,7 +184,6 @@
     <ClCompile Include="BasicPoi.cpp" />
     <ClCompile Include="BasicRoad.cpp" />
     <ClCompile Include="BasicUser.cpp" />
-    <ClCompile Include="CreateUserModule.cpp" />
     <ClCompile Include="DbTrajectoryLoader.cpp" />
     <ClCompile Include="DbNodeCollectionFactory.cpp" />
     <ClCompile Include="DbPoiCollectionFactory.cpp" />
