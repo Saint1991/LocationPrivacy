@@ -80,7 +80,10 @@ double Math::Probability::calc_entropy(const std::vector<double>& probability_ve
 	double entropy = 0.0;
 	for (std::vector<double>::const_iterator prob = probability_vector.begin(); prob != probability_vector.end(); prob++) {
 		double probability = *prob;
-		if (probability < 0.0 || 1.0 < probability) throw std::invalid_argument("probability must be within the range [0, 1]");
+		if (probability < -0.00001 || 1.0001 < probability) {
+			std::cout << std::to_string(probability) << std::endl;
+			throw std::invalid_argument("probability must be within the range [0, 1] " + std::to_string(probability));
+		}
 		if (probability != 0) {
 			entropy -= probability * std::log2(probability);
 		}

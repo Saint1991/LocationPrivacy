@@ -24,6 +24,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Simulation_Hayashida", "Sim
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UserTrajectoryCreation", "UserTrajectoryCreation\UserTrajectoryCreation.vcxproj", "{FBACD602-1B94-4455-A0CC-261B988B1CC2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DistanceMapCreation", "DistanceMapCreation\DistanceMapCreation.vcxproj", "{BFA4A872-93B2-4DE8-8982-900D7313F316}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -106,6 +108,14 @@ Global
 		{FBACD602-1B94-4455-A0CC-261B988B1CC2}.Release|Win32.Build.0 = Release|Win32
 		{FBACD602-1B94-4455-A0CC-261B988B1CC2}.Release|x64.ActiveCfg = Release|x64
 		{FBACD602-1B94-4455-A0CC-261B988B1CC2}.Release|x64.Build.0 = Release|x64
+		{BFA4A872-93B2-4DE8-8982-900D7313F316}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFA4A872-93B2-4DE8-8982-900D7313F316}.Debug|Win32.Build.0 = Debug|Win32
+		{BFA4A872-93B2-4DE8-8982-900D7313F316}.Debug|x64.ActiveCfg = Debug|x64
+		{BFA4A872-93B2-4DE8-8982-900D7313F316}.Debug|x64.Build.0 = Debug|x64
+		{BFA4A872-93B2-4DE8-8982-900D7313F316}.Release|Win32.ActiveCfg = Release|Win32
+		{BFA4A872-93B2-4DE8-8982-900D7313F316}.Release|Win32.Build.0 = Release|Win32
+		{BFA4A872-93B2-4DE8-8982-900D7313F316}.Release|x64.ActiveCfg = Release|x64
+		{BFA4A872-93B2-4DE8-8982-900D7313F316}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

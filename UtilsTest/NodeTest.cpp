@@ -31,7 +31,7 @@ namespace UtilsTest
 			Assert::IsTrue(node.connect_to(std::make_shared<Graph::Edge<Graph::BasicPathData>>(1L, std::make_shared<BasicPathData>(0.3))));
 			Assert::IsTrue(node.is_connecting_to(1L));
 			Assert::IsTrue(node.disconnect_from(1L));
-			Assert::AreEqual(0U, node.get_connecting_node_list().size());
+			Assert::AreEqual(0U, (unsigned int)node.get_connecting_node_list().size());
 			node.for_each_edge([](std::shared_ptr<Graph::Edge<Graph::BasicPathData> const>) {
 
 			});
@@ -97,7 +97,7 @@ namespace UtilsTest
 			Assert::IsTrue(node1.connect_to(path1));
 			Assert::IsTrue(node1.connect_to(path2));
 			Assert::IsFalse(node1.connect_to(path1));
-			Assert::AreEqual(2U, node1.get_connecting_node_list().size());
+			Assert::AreEqual(2U, (unsigned int)node1.get_connecting_node_list().size());
 		}
 		
 		TEST_METHOD(Node_disconnect_from)
@@ -114,7 +114,7 @@ namespace UtilsTest
 			Assert::IsFalse(node1.disconnect_from(3L));
 
 			Assert::AreEqual(2L, *(node1.get_connecting_node_list().begin()));
-			Assert::AreEqual(1U, node1.get_connecting_node_list().size());
+			Assert::AreEqual(1U, (unsigned int)node1.get_connecting_node_list().size());
 		}
 
 		TEST_METHOD(Node_is_connecting_to)

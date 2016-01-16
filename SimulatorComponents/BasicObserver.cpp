@@ -89,15 +89,14 @@ namespace Observer
 				//次の訪問地点をエンティティ数1で子ノードとして接続する
 				//既存のノードの場合はエンティティ数をカウントアップする
 				Graph::MapNodeIndicator current_node = entity->read_node_pos_info_of_phase(phase).first;
-				ObservedTrajectoryStructure::base_iterator child = iter.find_child_if([&current_node](std::shared_ptr<ObservedTrajectoryNode const> node) {
-					return *node->data == current_node;
-				});
+				ObservedTrajectoryStructure::base_iterator child = trajectory_structure->find_node(current_node, phase);
 				if (*child == nullptr) {
 					std::shared_ptr<ObservedTrajectoryNode> new_node = std::make_shared<ObservedTrajectoryNode>(trajectory_structure->node_count(), depth, std::make_shared<Graph::MapNodeIndicator>(current_node));
 					new_node->count_up();
 					iter.add_child(new_node, 1.0);
 				}
 				else {
+					iter->connect_to(std::make_shared<Graph::FlowEdge>(child->get_id(), 1.0));
 					child->count_up();
 				}
 			}
@@ -211,6 +210,7 @@ namespace Observer
 		timeslot->for_each_time([&](time_t time, long interval, int phase) {
 			double convex_hull_size = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
 			size_sum += convex_hull_size;
+			std::cout << std::to_string(convex_hull_size) << " m^2" << std::endl;
 		});
 		return (double)size_sum / timeslot->phase_count() / required_anonymous_area;
 	}

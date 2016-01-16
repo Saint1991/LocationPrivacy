@@ -47,6 +47,14 @@ namespace Map
 
 
 	///<summary>
+	/// LatLng‚ğæ“¾‚·‚é
+	///</summary>
+	Geography::LatLng BasicMapNode::get_point() const
+	{
+		return *data;
+	}
+
+	///<summary>
 	/// to‚É‘Î‚µ‚Ä‹——£distance‚ÌƒGƒbƒW‚ğì¬
 	///</summary>
 	bool BasicMapNode::connect_to(Graph::node_id to, double distance)

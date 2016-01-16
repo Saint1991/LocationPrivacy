@@ -61,7 +61,7 @@ namespace Test
 		{
 			std::shared_ptr<Observer::ObservedTrajectoryStructure const> structure = create_sample_structure();
 			size_t actual = structure->trajectory_length();
-			Assert::AreEqual(4u, actual);
+			Assert::AreEqual(4u, (unsigned int)actual);
 		}
 
 		
@@ -79,8 +79,8 @@ namespace Test
 			std::shared_ptr<Observer::ObservedTrajectoryStructure const> structure = create_sample_structure();
 			std::shared_ptr<Observer::ObservedTrajectoryStructure const> substructure = structure->sub_structure(5L);
 			
-			Assert::AreEqual(3u, substructure->trajectory_length());
-			Assert::AreEqual(7u, substructure->node_count());
+			Assert::AreEqual(3u, (unsigned int)substructure->trajectory_length());
+			Assert::AreEqual(7u, (unsigned int)substructure->node_count());
 		}
 
 		TEST_METHOD(ObservedTrajectoryStructure_for_each_possible_trajectory)

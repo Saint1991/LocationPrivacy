@@ -59,7 +59,7 @@ namespace Graph
 			queue->pop();
 
 			//‚à‚µÅ¬ƒRƒXƒg‚ªdistance_threshold‚ð’´‚¦‚Ä‚¢‚éê‡‚Í’Tõ‚ð‘Å‚¿Ø‚é
-			if (d > distance_threshold) break;
+			if (d > distance_threshold || v == to) break;
 			
 			std::shared_ptr<NODE const> node = node_collection->read_by_id(target.second);
 			node->for_each_edge([&](std::shared_ptr<EDGE const> edge) {

@@ -49,7 +49,7 @@ namespace UtilsTest
 			Logger::WriteMessage(log.c_str());
 			Assert::AreEqual(expected, actual, DISTANCE_ACCURACY * expected);
 		}
-		
+
 		//êºîˆå§Ç©ÇÁóùçHäwê}èëäŸÇ‹Ç≈ÇÃãóó£(m)
 		TEST_METHOD(GeoCalculation_haversine_distance)
 		{
@@ -85,7 +85,7 @@ namespace UtilsTest
 		{
 			LatLng nishio_lab(34.818292, 135.522105);
 			LatLng library(34.822295, 135.522794);
-			double actual = Math::AngleUtility::convert_to_degree(GeoCalculation::lambert_azimuth_angle(nishio_lab, library)); 
+			double actual = Math::AngleUtility::convert_to_degree(GeoCalculation::lambert_azimuth_angle(nishio_lab, library));
 			double expected = 278.078125;
 
 			double error = expected - actual;
@@ -123,10 +123,10 @@ namespace UtilsTest
 			Assert::AreEqual(expected, actual, ANGLE_ACCURACY);
 		}
 
-		TEST_METHOD(GeoCalculation_lambert_azimuth_angle4) 
+		TEST_METHOD(GeoCalculation_lambert_azimuth_angle4)
 		{
 			LatLng nishio_lab(34.818292, 135.522105);
-			LatLng dental_hospital (34.819728, 135.520848);
+			LatLng dental_hospital(34.819728, 135.520848);
 			double actual = Math::AngleUtility::convert_to_degree(GeoCalculation::lambert_azimuth_angle(nishio_lab, dental_hospital));
 			double expected = 234.17522;
 
@@ -151,13 +151,26 @@ namespace UtilsTest
 			LatLng nishio_lab(34.818254802266, 135.522127777588);
 			double distance = 100;
 			double azimuth_angle = Math::AngleUtility::convert_to_radian(315.0);
-			
+
 			LatLng translated = GeoCalculation::calc_translated_point(nishio_lab, distance, azimuth_angle);
 			std::string log = "(Lat, Lng) = (" + std::to_string(translated.lat()) + ", " + std::to_string(translated.lng()) + ")";
 			Logger::WriteMessage(log.c_str());
 
 			Assert::AreEqual(34.818892193240, translated.lat(), 5.0E-4);
 			Assert::AreEqual(135.522900666056, translated.lng(), 5.0E-4);
+		}
+
+		TEST_METHOD(GeoCalculation_calc_convex_hull_size)
+		{
+			std::vector<std::shared_ptr<Geography::LatLng const>> points = {
+				std::make_shared<Geography::LatLng const>(35.5, 139.5),
+				std::make_shared<Geography::LatLng const>(35.5, 139.6),
+				std::make_shared<Geography::LatLng const>(35.6, 139.5),
+				std::make_shared<Geography::LatLng const>(35.6, 139.6),
+				std::make_shared<Geography::LatLng const>(35.55, 139.55)
+			};
+			double size = Geography::GeoCalculation::calc_convex_hull_size(points);
+
 		}
 	};
 }

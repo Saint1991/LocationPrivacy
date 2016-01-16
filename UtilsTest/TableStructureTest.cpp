@@ -79,10 +79,10 @@ namespace UtilsTest
 			Db::Column column2(column_name2, type2, options2);
 			Assert::IsTrue(table2.add_column(column2));
 
-			Assert::AreEqual(1U, table.get_primary_keys()->size());
-			Assert::AreEqual(1U, table.get_column_list()->size());
-			Assert::AreEqual(2U, table2.get_primary_keys()->size());
-			Assert::AreEqual(2U, table2.get_column_list()->size());
+			Assert::AreEqual(1U, (unsigned int)table.get_primary_keys()->size());
+			Assert::AreEqual(1U, (unsigned int)table.get_column_list()->size());
+			Assert::AreEqual(2U, (unsigned int)table2.get_primary_keys()->size());
+			Assert::AreEqual(2U, (unsigned int)table2.get_column_list()->size());
 
 			Logger::WriteMessage(table.to_string().c_str());
 			Logger::WriteMessage(table2.to_string().c_str());
@@ -161,13 +161,13 @@ namespace UtilsTest
 			Assert::IsFalse(table.add_primary_key(std::string("name")));
 
 			//‚±‚±‚Ü‚Å‚Å‚ÍTable‚ÌPrimaryKeys‚Íname1‚Â‚Ì‚Í‚¸
-			Assert::AreEqual(1U, table.get_primary_keys()->size());
+			Assert::AreEqual(1U, (unsigned int)table.get_primary_keys()->size());
 			std::list<std::string>::const_iterator iter = table.get_primary_keys()->begin();
 			Assert::AreEqual(std::string("name"), *iter);
 
 			//age‚ğPRIMARY KEY‚É’Ç‰Á‚µ‚Ä‚İ‚é
 			Assert::IsTrue(table.add_primary_key("age"));
-			Assert::AreEqual(2U, table.get_primary_keys()->size());
+			Assert::AreEqual(2U, (unsigned int)table.get_primary_keys()->size());
 		}
 
 		TEST_METHOD(TableStructure_add_column) 
@@ -182,16 +182,16 @@ namespace UtilsTest
 
 			Assert::IsTrue(table.add_column(column1));
 			auto column_list = table.get_column_list();
-			Assert::AreEqual(1U, column_list->size());
+			Assert::AreEqual(1U, (unsigned int)column_list->size());
 			Db::Column column = *column_list->begin();
 			Assert::AreEqual(std::string("name"), column.column_name);
 			Assert::AreEqual(std::string("VARCHAR(16)"), column.data_type);
-			Assert::AreEqual(0U, column.default_value.length());
-			Assert::AreEqual(0U, column.options->size());
+			Assert::AreEqual(0U, (unsigned int)column.default_value.length());
+			Assert::AreEqual(0U, (unsigned int)column.options->size());
 			
 			Assert::IsFalse(table.add_column(column1));
 			column_list = table.get_column_list();
-			Assert::AreEqual(1U, column_list->size());
+			Assert::AreEqual(1U, (unsigned int)column_list->size());
 			Assert::IsTrue(column1 == *column_list->begin());
 		}
 

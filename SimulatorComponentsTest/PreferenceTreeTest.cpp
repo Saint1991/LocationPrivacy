@@ -18,7 +18,9 @@ namespace Test
 			preference->add_sequence_counter({ "B", "C", "D" });
 
 			double actual = preference->get_support_of({ "A" });
-			Assert::AreEqual(2.0 / 3.0, actual);
+			Assert::AreEqual(0.0, actual);
+			actual = preference->get_support_of({ "A, B" });
+			Assert::AreEqual(1.0 / 3.0, actual);
 			
 			actual = preference->get_support_of({ "B", "C", "D" });
 			Assert::AreEqual(1.0 / 3.0, actual);

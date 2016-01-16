@@ -21,6 +21,7 @@ namespace Simulation
 	static_assert(std::is_base_of<Requirement::BasicRequirement, REQUIREMENT_TYPE>::value, "template type REQUIREMENT_TYPE must be derived from BasicRequirement");
 	
 	protected:
+		std::string simulation_start_time;
 		std::shared_ptr<MAP_TYPE> map;
 		std::shared_ptr<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>> user_trajectories;
 		std::shared_ptr<USER_TYPE> user;
@@ -30,6 +31,8 @@ namespace Simulation
 		virtual void build_map(const Graph::Rectangle<Geography::LatLng>& boundary) = 0;
 		virtual void create_trajectories() = 0;
 		virtual void make_requirement_list() = 0;
+
+		
 
 	public:
 		ISimulator() : user_trajectories(std::make_shared<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>>()) {}

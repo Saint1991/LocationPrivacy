@@ -21,14 +21,14 @@ namespace Method
 	{
 	private:
 		//スコアリングのパラメータ
-		static constexpr double B = 0.3;
+		static constexpr double B = 0.8;
 		//進行方向に沿わせる制限の角度θ
 		static constexpr double THETA = M_PI_2;
 		//経路生成の試行回数の上限
 		static constexpr int MAX_TRAJECTORY_CREATION_TRIAL = 1000;
 		
 		//最小停止時間(2分)
-		static constexpr int MIN_PAUSE_TIME = 15;
+		static constexpr int MIN_PAUSE_TIME = 0;
 
 		
 		//設定匿名領域
@@ -57,7 +57,7 @@ namespace Method
 
 		//経路決定関連のメソッド
 		std::vector<trajectory_score_set> calc_trajectory_score_set(Entity::entity_id current_dummy_id, const std::vector<sequence_score_set>& sequence_scores);
-		std::pair<int, Graph::MapNodeIndicator> determine_point_basis(const Collection::Sequence<User::category_id>& category_sequence, const Entity::cross_target& cross);
+		std::pair<int, Graph::MapNodeIndicator> determine_point_basis(const Collection::Sequence<User::category_id>& category_sequence, const Entity::cross_target& cross, Entity::entity_id current_dummy_id);
 		#pragma endregion GroupAのダミー生成用メソッド
 		
 		#pragma region GroupB

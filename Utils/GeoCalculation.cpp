@@ -139,7 +139,7 @@ std::vector<std::shared_ptr<Graph::Coordinate const>> convert_to_cartesian(const
 	
 	if (iter != point_list.end()) {
 		iter++;
-		ret.push_back(std::make_shared<Graph::Coordinate const>(0U, 0.0, 0.0));
+		ret.push_back(std::make_shared<Graph::Coordinate const>(0.0, 0.0, 0U));
 	}
 
 	unsigned int id = 1;
@@ -151,7 +151,7 @@ std::vector<std::shared_ptr<Graph::Coordinate const>> convert_to_cartesian(const
 		double distance = Geography::dist(*reference_point, **iter);
 		double azimuth_angle = Geography::angle(*reference_point, **iter);
 		Graph::Vector2d position_vector = Graph::Vector2dFactory::create_by_polar(distance, azimuth_angle);
-		ret.push_back(std::make_shared<Graph::Coordinate const>(id++, position_vector.x(), position_vector.y()));
+		ret.push_back(std::make_shared<Graph::Coordinate const>(position_vector.x(), position_vector.y(), id++));
 	}
 
 	return ret;

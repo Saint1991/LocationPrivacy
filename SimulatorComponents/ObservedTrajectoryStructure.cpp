@@ -228,9 +228,6 @@ namespace Observer
 				Graph::MapNodeIndicator next_node = trajectory.at(phase + 1);
 				Graph::node_id next_node_id = find_node_id(next_node, phase + 1);
 				std::shared_ptr<Graph::FlowEdge const> edge = iter->get_static_edge_to(next_node_id);
-				if (edge == nullptr || edge->get_static_data() == nullptr) {
-					std::cout << "Error Occured - " << std::to_string(next_node_id) << std::endl;
-				}
 				probability *= edge->get_flow();
 			}
 		}

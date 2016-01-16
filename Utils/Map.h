@@ -67,7 +67,7 @@ namespace Graph
 		void load(const Graph::Rectangle<Geography::LatLng>& boundary);
 
 
-		shortest_path_info get_shortest_path_info(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
+		virtual shortest_path_info get_shortest_path_info(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
 		double shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
 		RouteInfo<PATH> get_shortest_route_info_between_intersections(const node_id& from, const node_id& to, double distance_threshold = DBL_MAX) const;
 		std::vector<MapNodeIndicator> get_shortest_path(const MapNodeIndicator& source, const MapNodeIndicator& destination, double distance_threshold = DBL_MAX) const;

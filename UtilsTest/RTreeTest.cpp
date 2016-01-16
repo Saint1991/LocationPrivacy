@@ -76,7 +76,7 @@ namespace RtreeTest
 			box query_box(point(0, 0), point(2, 2));
 			std::vector<point_value> result_s;
 			rtree.query(bgi::intersects(query_box), std::back_inserter(result_s));
-			Assert::AreEqual(2U, result_s.size());
+			Assert::AreEqual(2U, (unsigned int)result_s.size());
 		}
 	};
 }

@@ -25,6 +25,7 @@ namespace Map
 
 		double lat() const;
 		double lng() const;
+		Geography::LatLng get_point() const;
 
 		bool connect_to(Graph::node_id, double distance);
 		bool connect_to(std::shared_ptr<BasicRoad> road);

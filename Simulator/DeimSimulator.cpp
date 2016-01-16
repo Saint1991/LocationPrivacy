@@ -19,7 +19,7 @@ namespace Simulation
 	void DeimSimulator::make_requirement_list()
 	{
 		requirements = {
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 2, 1.0, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 1.0, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.9, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.8, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.7, AVERAGE_SPEED, 1.0),
@@ -36,6 +36,7 @@ namespace Simulation
 
 	void DeimSimulator::run()
 	{
+		simulation_start_time = Time::TimeUtility::current_timestamp();
 
 		for (std::list<std::shared_ptr<Requirement::PreferenceRequirement const>>::const_iterator iter = requirements.begin(); iter != requirements.end(); iter++) {
 			for (current_trajectory_id = 0; current_trajectory_id < user_trajectories->size(); current_trajectory_id++) {
@@ -71,7 +72,7 @@ namespace Simulation
 	void DeimSimulator::each_trajectory_end_callback(std::shared_ptr<Entity::EntityManager<Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>, Entity::Dummy<>, User::BasicUser<>>> entities, std::shared_ptr<Requirement::PreferenceRequirement const> requirement, std::shared_ptr<Time::Timer> timer)
 	{
 		std::stringstream export_path;
-		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << Time::TimeUtility::current_timestamp();
+		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
 		IO::FileExporter::mkdir(export_path.str().c_str());
 
 		export_path << "/" << requirement->dummy_num << "-" << (int)requirement->required_anonymous_area << "-" << (int)(requirement->required_preference_conservation * 100);
@@ -111,11 +112,6 @@ namespace Simulation
 		
 		double ar_size = observer->calc_ar_size(requirement->required_anonymous_area);
 		std::cout << "AR-Size: " << std::to_string(ar_size) << "m^2" << std::endl;
-		
-		//可観測な木の更新
-		observer->for_each_category_sequence_of_possible_trajectory([&](const Collection::Sequence<User::category_id>& sequence, double expected_frequency) {
-			observed_preference_tree->add_sequence_counter(sequence, expected_frequency);
-		});
 
 		//MTCの評価
 		double mtc1 = observer->calc_mtc_without_semantics();
@@ -124,15 +120,19 @@ namespace Simulation
 		double mtc2 = observer->calc_mtc_with_semantics();
 		std::cout << "MTC2: " << std::to_string(mtc2) << "sec" << std::endl;
 
-		
+		//可観測な木の更新
+		observer->for_each_category_sequence_of_possible_trajectory([&](const Collection::Sequence<User::category_id>& sequence, double expected_frequency) {
+			observed_preference_tree->add_sequence_counter(sequence, expected_frequency);
+		});
 
 		double similarity = User::similarity(*user_preference_tree, *observed_preference_tree);
+		std::cout << "Similarity: " << std::to_string(similarity) << std::endl;
 		similarity_vector_proposed.push_back(similarity);
 	}
 
 	void DeimSimulator::evaluate()
 	{
-		
+
 	}
 
 	void DeimSimulator::export_evaluation_result()

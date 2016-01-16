@@ -83,8 +83,8 @@ namespace Method
 			//ユーザの嗜好の木に含まれる各プレフィックスについてカテゴリシーケンスとスコアの組を計算する
 			std::vector<sequence_score_set> all_sequence_scores = calc_sequence_score_set(current_dummy_id);
 			
-			//時間がかかりすぎるので，Top30のみ使用
-			int k = min(all_sequence_scores.size(), 30);
+			//時間がかかりすぎるので，Top25のみ使用
+			int k = min(all_sequence_scores.size(), 25);
 			std::vector<sequence_score_set> sequence_scores(all_sequence_scores.begin(), all_sequence_scores.begin() + k);
 
 
@@ -174,9 +174,9 @@ namespace Method
 					Entity::cross_target cross = std::make_pair(target_phase, target_entity_id);
 					
 					//n_share(t)の計算
-					int n_share_t = entities->get_total_cross_count_of_phase(target_phase);
+					int n_share_t = std::pow(entities->get_total_cross_count_of_phase(target_phase), 1.0);
 					//n_share(ei)の計算
-					int n_share_e = target_entity->get_cross_count();
+					int n_share_e = std::pow(target_entity->get_cross_count(), 2.0);
 
 					//distroの計算
 					Collection::Sequence<Entity::category_id> combined_sequence1 = Collection::concat<Entity::category_id>(target_sequence.subsequence(0, target_phase), prefix.subsequence(target_phase + 1, prefix.size() - 1));
@@ -257,7 +257,7 @@ namespace Method
 			
 			//カテゴリシーケンスと共有地点候補を基に基準の点を一つ定め，それを基準に経路を生成
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>> trajectory = nullptr;
-			std::pair<int, Graph::MapNodeIndicator> basis = determine_point_basis(category_sequence, cross);
+			std::pair<int, Graph::MapNodeIndicator> basis = determine_point_basis(category_sequence, cross, current_dummy_id);
 			for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL && trajectory == nullptr; i++) {
 				trajectory = create_trajectory(current_dummy_id, basis, category_sequence);
 			}
@@ -277,6 +277,7 @@ namespace Method
 			trajectory_score = score * size_sum;
 			if (is_all_sequence_score_negative) trajectory_score = size_sum;
 			ret.push_back(std::make_pair(std::make_pair(*trajectory, cross), trajectory_score));
+			if (ret.size() >= 5) return ret;
 		}
 
 		return ret;
@@ -287,7 +288,7 @@ namespace Method
 	/// 経路中の一点を定める
 	/// 交差が設定できていた場合は，設定された共有地点を，されていない場合は時刻0の時点にグリッドを用いてエンティティが均一になるようにランダムな基準点を決定する
 	///</summary>
-	std::pair<int, Graph::MapNodeIndicator> MizunoMethod::determine_point_basis(const Collection::Sequence<User::category_id>& category_sequence, const Entity::cross_target& cross)
+	std::pair<int, Graph::MapNodeIndicator> MizunoMethod::determine_point_basis(const Collection::Sequence<User::category_id>& category_sequence, const Entity::cross_target& cross, Entity::entity_id current_dummy_id)
 	{
 
 		std::random_device rd;
@@ -308,6 +309,7 @@ namespace Method
 		//9×9のグリッド領域を生成し，エンティティが最小の地点から一点決定する
 		else {
 			//phase 0における決定済みエンティティの位置のリスト
+			std::cout << "point_basis not set on dummy" << current_dummy_id << std::endl;
 			phase_basis = 0;
 			std::vector<std::shared_ptr<Geography::LatLng const>> fixed_positions = entities->get_all_fixed_positions_of_phase(phase_basis);
 
@@ -441,11 +443,11 @@ namespace Method
 		Graph::MapNodeIndicator point_basis = basis.second;
 		std::vector<double> reachable_distance_list(basis.first);
 		for (int phase = basis.first - 1; 0 <= phase; phase--) {
-			double speed = prob.gaussian_distribution(requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+			double speed = prob.uniform_distribution(requirement->average_speed_of_dummy - requirement->speed_range_of_dummy, requirement->average_speed_of_dummy + requirement->speed_range_of_dummy);
 			time_t next_time = time_manager->time_of_phase(phase + 1);
 			time_t current_time = time_manager->time_of_phase(phase);
 			int interval = next_time - current_time;
-			reachable_distance_list.at(basis.first - 1 - phase) = max(0.0, speed * 1000.0 * (interval - MIN_PAUSE_TIME) / 3600.0);
+			reachable_distance_list.at(phase) = max(0.0, speed * 1000.0 * (interval - MIN_PAUSE_TIME) / 3600.0);
 		}
 		Collection::Sequence<User::category_id> sequence = category_sequence.subsequence(0, basis.first - 1);
 		
@@ -513,6 +515,7 @@ namespace Method
 		reachable_distance_list = std::vector<double>(time_manager->phase_count() - basis.first - 1);
 		for (int phase = basis.first + 1; phase < time_manager->phase_count(); phase++) {
 			double speed = prob.gaussian_distribution(requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+			speed = min(speed, requirement->average_speed_of_dummy, requirement->average_speed_of_dummy + requirement->speed_range_of_dummy / 2);
 			time_t previous_time = time_manager->time_of_phase(phase - 1);
 			time_t current_time = time_manager->time_of_phase(phase);
 			int interval = current_time - previous_time;

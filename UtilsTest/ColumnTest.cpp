@@ -64,7 +64,7 @@ namespace UtilsTest
 			Logger::WriteMessage(column2.to_string().c_str());
 
 			column2.options->push_back("UNIQUE");
-			Assert::AreEqual(2U, column1.options->size());
+			Assert::AreEqual(2U, (unsigned int)column1.options->size());
 			Logger::WriteMessage(column2.to_string().c_str());
 						
 		}

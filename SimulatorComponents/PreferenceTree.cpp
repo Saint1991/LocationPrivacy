@@ -113,8 +113,9 @@ namespace User
 				next_node = base_iterator(new_id, node_collection);
 			}
 			current_node = next_node;
-			current_node->count_up(add_num);
+			//current_node->count_up(add_num);
 		}
+		current_node->count_up(add_num);
 	}
 
 
@@ -154,17 +155,18 @@ namespace User
 				target_node->count_up(-support * trajectory_count);
 			});
 		}
-
-		int prefix_count = 0;
 		double total_error = 0.0;
 		max_depth = t.max_depth();
 		for (int depth = 1; depth <= max_depth; depth++) {
-			t.for_each_prefix(depth, [&prefix_count, &total_error](const Collection::Sequence<category_id>& prefix, double support) {
-				prefix_count++;
+			t.for_each_prefix(depth, [&total_error](const Collection::Sequence<category_id>& prefix, double support) {
 				total_error += std::abs(support);
 			});
 		}
-		return total_error / prefix_count;
+		if (total_error > 2) {
+			std::cout << "Distance: " << std::to_string(total_error) << std::endl;
+		}
+
+		return total_error;
 	}
 
 
@@ -173,6 +175,6 @@ namespace User
 	///</summary>
 	double similarity(const User::PreferenceTree& t1, const User::PreferenceTree& t2)
 	{
-		return 1.0 - distance(t1, t2);
+		return 1.00 - distance(t1, t2) / 2.0;
 	}
 }

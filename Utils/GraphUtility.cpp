@@ -81,7 +81,10 @@ double Graph::GraphUtility::calc_convex_hull_size(std::vector<std::shared_ptr<Gr
 	double size = 0.0;
 	for (unsigned int i = 0; i < convex_hull_points.size(); i++) {
 		unsigned j = i + 1 == convex_hull_points.size() ? 0 : i + 1;
-		size += Graph::cross_product(Graph::Vector2d(*convex_hull_points.at(i)), Graph::Vector2d(*convex_hull_points.at(j)));
+		Graph::Vector2d v1 = Graph::Vector2d(*convex_hull_points.at(i));
+		Graph::Vector2d v2 = Graph::Vector2d(*convex_hull_points.at(j));
+		double current_size = Graph::cross_product(v1, v2);
+		size += current_size;
  	}
 
 	return 0.5 * std::abs(size);
