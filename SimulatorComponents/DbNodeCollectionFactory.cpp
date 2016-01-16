@@ -27,7 +27,7 @@ namespace Map
 	///</summary>
 	void DbNodeCollectionFactory::create_nodes(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		if (!db->use(db_name)) return;
+		db->use(db_name);
 		std::stringstream query;
 		query << "SELECT node_id, latitude, longitude FROM " << node_table << " WHERE longitude BETWEEN " << boundary.left << " AND " << boundary.right << " AND "<< "latitude BETWEEN " << boundary.bottom << " AND " << boundary.top <<" ORDER BY node_id ASC;";
 		sql::ResultSet* result = db->raw_query(query.str());
@@ -48,7 +48,7 @@ namespace Map
 	///</summary>
 	void DbNodeCollectionFactory::set_connectivities(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		if (!db->use(db_name)) return;
+		db->use(db_name);
 		std::stringstream query;
 		std::stringstream in;
 		in << "(SELECT DISTINCT(node_id) FROM " << node_table << " WHERE latitude BETWEEN " << boundary.bottom << " AND " << boundary.top << " AND longitude BETWEEN " << boundary.left << " AND " << boundary.right << ")";

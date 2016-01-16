@@ -53,7 +53,7 @@ namespace Method
 		std::vector<sequence_score_set> calc_sequence_score_set(Entity::entity_id current_dummy_id);
 		double total_sequence_score(double score_pref, double score_cross);
 		double preference_based_score(double sup_u, double sup_o);
-		double cross_based_score(int n_share_t, int n_share_e, double distro);
+		double cross_based_score(int n_share_t, int n_share_e, double distro, int delta);
 
 		//経路決定関連のメソッド
 		std::vector<trajectory_score_set> calc_trajectory_score_set(Entity::entity_id current_dummy_id, const std::vector<sequence_score_set>& sequence_scores);

@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -19,33 +19,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{38AC6421-8D7F-44FE-8E47-6EBE726E015E}</ProjectGuid>
+    <ProjectGuid>{BFA4A872-93B2-4DE8-8982-900D7313F316}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Utils</RootNamespace>
+    <RootNamespace>DistanceMapCreation</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -54,86 +54,60 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Utils;$(IncludePath)</IncludePath>
-    <IntDir>$(Configuration)\($ProjectName)\</IntDir>
-    <ReferencePath>$(VC_ReferencesPath_x86)</ReferencePath>
-    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Utils;$(IncludePath)</IncludePath>
-    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <ReferencePath>$(VC_ReferencesPath_x86);$(SolutionDir)mysql_connector\lib\opt\$(Platform)\$(Configuration)\</ReferencePath>
-    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UTILS_EXPORTS;%(PreprocessorDefinitions);CPPCONN_PUBLIC_FUNC=;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);CPPCONN_PUBLIC_FUNC=</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)mysql_connector\include</AdditionalIncludeDirectories>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(SolutionDir)Utils;$(SolutionDir)mysql_connector\include;$(SolutionDir)SimulatorComponents</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(SolutionDir)mysql_connector\lib\opt\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);libmysql.lib;mysqlcppconn-static.lib</AdditionalDependencies>
     </Link>
-    <PreBuildEvent>
-      <Command>copy "$(SolutionDir)mysql_connector\lib\opt\$(Platform)\libmysql.dll" $(windir)</Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UTILS_EXPORTS;%(PreprocessorDefinitions);CPPCONN_PUBLIC_FUNC=;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);CPPCONN_PUBLIC_FUNC=;CPPCONN_PUBLIC_FUNC=</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)mysql_connector\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Utils;$(SolutionDir)SimulatorComponents;%(AdditionalIncludeDirectories);$(SolutionDir)mysql_connector\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(SolutionDir)mysql_connector\lib\opt\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);libmysql.lib;mysqlcppconn-static.lib</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>copy "$(SolutionDir)mysql_connector\lib\opt\$(Platform)\libmysql.dll" $(windir)</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -142,24 +116,16 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UTILS_EXPORTS;%(PreprocessorDefinitions);CPPCONN_PUBLIC_FUNC=;_SCL_SECURE_NO_WARNINGS;DETAIL_PROGRESS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CPPCONN_PUBLIC_FUNC=</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)mysql_connector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <SuppressStartupBanner>false</SuppressStartupBanner>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(SolutionDir)Utils;$(SolutionDir)SimulatorComponents;$(SolutionDir)mysql_connector\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)mysql_connector\lib\opt\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);mysqlcppconn-static.lib;libmysql.lib</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PreBuildEvent>
-      <Command>copy "$(SolutionDir)mysql_connector\lib\opt\$(Platform)\libmysql.dll" $(windir)</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -168,201 +134,44 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UTILS_EXPORTS;%(PreprocessorDefinitions);CPPCONN_PUBLIC_FUNC=</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CPPCONN_PUBLIC_FUNC=</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)mysql_connector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Utils;$(SolutionDir)SimulatorComponents;%(AdditionalIncludeDirectories);$(SolutionDir)mysql_connector\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)mysql_connector\lib\opt\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);libmysql.lib;mysqlcppconn-static.lib</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PreBuildEvent>
-      <Command>copy "$(SolutionDir)mysql_connector\lib\opt\$(Platform)\libmysql.dll" $(windir)</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AngleUtility.h" />
-    <ClInclude Include="ARSizeCalculationModule.h" />
-    <ClInclude Include="ARCountCalculationModule.h" />
-    <ClInclude Include="ARCountCalculationModule.hpp" />
-    <ClInclude Include="BaseConstIterator.h" />
-    <ClInclude Include="BaseConstIterator.hpp" />
-    <ClInclude Include="BaseEvaluationModule.h" />
-    <ClInclude Include="BaseIterator.h" />
-    <ClInclude Include="BaseIterator.hpp" />
-    <ClInclude Include="BasicEdge.h" />
-    <ClInclude Include="BasicGeoNodeData.h" />
-    <ClInclude Include="BasicPathData.h" />
-    <ClInclude Include="BasicPoiData.h" />
-    <ClInclude Include="BasicRequirement.h" />
-    <ClInclude Include="BreadthFirstConstIterator.h" />
-    <ClInclude Include="BreadthFirstConstIterator.hpp" />
-    <ClInclude Include="BreadthFirstIterator.h" />
-    <ClInclude Include="BreadthFirstIterator.hpp" />
-    <ClInclude Include="Coordinate.h" />
-    <ClInclude Include="CrossInfo.h" />
-    <ClInclude Include="CrossJudgementModule.h" />
-    <ClInclude Include="CrossJudgementModule.hpp" />
-    <ClInclude Include="DbSettings.h" />
-    <ClInclude Include="DbSettingsFileLoader.h" />
-    <ClInclude Include="DepthFirstConstIterator.h" />
-    <ClInclude Include="DepthFirstConstIterator.hpp" />
-    <ClInclude Include="DepthFirstIterator.h" />
-    <ClInclude Include="DepthFirstIterator.hpp" />
-    <ClInclude Include="Dijkstra.h" />
-    <ClInclude Include="Dijkstra.hpp" />
-    <ClInclude Include="Edge.h" />
-    <ClInclude Include="Edge.hpp" />
-    <ClInclude Include="EntityManager.h" />
-    <ClInclude Include="EntityManager.hpp" />
-    <ClInclude Include="Evaluator.h" />
-    <ClInclude Include="FileExportable.h" />
-    <ClInclude Include="FileExporter.h" />
-    <ClInclude Include="FlowEdge.h" />
-    <ClInclude Include="GeoCalculation.h" />
-    <ClInclude Include="Grid.h" />
-    <ClInclude Include="IEvaluationModule.h" />
-    <ClInclude Include="IProposedMethod.h" />
-    <ClInclude Include="IProposedMethod.hpp" />
-    <ClInclude Include="GraphUtility.h" />
-    <ClInclude Include="Bindable.h" />
-    <ClInclude Include="Bindable.hpp" />
-    <ClInclude Include="IDbSettingsLoader.h" />
-    <ClInclude Include="Identifiable.h" />
-    <ClInclude Include="IdentifiableCollection.h" />
-    <ClInclude Include="IdentifiableCollection.hpp" />
-    <ClInclude Include="IOException.h" />
-    <ClInclude Include="IRoutingModule.h" />
-    <ClInclude Include="KatoMethodRequirement.h" />
-    <ClInclude Include="LatLng.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Map.hpp" />
-    <ClInclude Include="MapNodeIndicator.h" />
-    <ClInclude Include="MobileEntity.h" />
-    <ClInclude Include="Column.h" />
-    <ClInclude Include="MobileEntity.hpp" />
-    <ClInclude Include="MTCCalculationModule.h" />
-    <ClInclude Include="MySQLDb.h" />
-    <ClInclude Include="PoiData.h" />
-    <ClInclude Include="PreferenceRequirement.h" />
-    <ClInclude Include="RevisitDepthFirstConstIterator.h" />
-    <ClInclude Include="RevisitDepthFirstConstIterator.hpp" />
-    <ClInclude Include="RevisitDepthFirstIterator.h" />
-    <ClInclude Include="RevisitDepthFirstIterator.hpp" />
-    <ClInclude Include="SequentialTree.h" />
-    <ClInclude Include="SequentialTree.hpp" />
-    <ClInclude Include="SequentialTreeNode.h" />
-    <ClInclude Include="Tree.h" />
-    <ClInclude Include="Tree.hpp" />
-    <ClInclude Include="QueryGenerateUtility.h" />
-    <ClInclude Include="Node.h" />
-    <ClInclude Include="Node.hpp" />
-    <ClInclude Include="NodeCollectionFactory.h" />
-    <ClInclude Include="NodeCollectionFactory.hpp" />
-    <ClInclude Include="Probability.h" />
-    <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="RevisableTrajectory.h" />
-    <ClInclude Include="RouteInfo.h" />
-    <ClInclude Include="RoutingClient.h" />
-    <ClInclude Include="RouteInfo.hpp" />
-    <ClInclude Include="RoutingClient.hpp" />
-    <ClInclude Include="RoutingMethod.h" />
-    <ClInclude Include="RoutingTable.h" />
-    <ClInclude Include="SemanticTrajectory.h" />
-    <ClInclude Include="Sequence.h" />
-    <ClInclude Include="Sequence.hpp" />
-    <ClInclude Include="Serializable.h" />
+    <ClInclude Include="BasicDbMap2.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TableStructure.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="TimeSlotManager.h" />
-    <ClInclude Include="TimeUtility.h" />
-    <ClInclude Include="tinyxml2.h" />
-    <ClInclude Include="Trajectory.h" />
-    <ClInclude Include="Vector2d.h" />
-    <ClInclude Include="Vector2dFactory.h" />
-    <ClInclude Include="WarshallFloyd.h" />
-    <ClInclude Include="WarshallFloyd.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AngleUtility.cpp" />
-    <ClInclude Include="ARSizeCalculationModule.hpp">
-      <FileType>CppHeader</FileType>
-    </ClInclude>
-    <ClCompile Include="BasicEdge.cpp" />
-    <ClCompile Include="BasicGeoNodeData.cpp" />
-    <ClCompile Include="BasicPathData.cpp" />
-    <ClCompile Include="BasicPoiData.cpp" />
-    <ClCompile Include="BasicRequirement.cpp" />
-    <ClCompile Include="Coordinate.cpp" />
-    <ClCompile Include="CrossInfo.cpp" />
-    <ClCompile Include="DbSettings.cpp" />
-    <ClCompile Include="DbSettingsFileLoader.cpp" />
-    <ClCompile Include="dllmain.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Evaluator.cpp" />
-    <ClCompile Include="FileExporter.cpp" />
-    <ClCompile Include="FlowEdge.cpp" />
-    <ClCompile Include="GeoCalculation.cpp" />
-    <ClCompile Include="GraphUtility.cpp" />
-    <ClCompile Include="Grid.cpp" />
-    <ClCompile Include="KatoMethodRequirement.cpp" />
-    <ClCompile Include="LatLng.cpp" />
-    <ClCompile Include="MapNodeIndicator.cpp" />
-    <ClCompile Include="Column.cpp" />
-    <ClCompile Include="MTCCalculationModule.cpp" />
-    <ClCompile Include="MySQLDb.cpp" />
-    <ClCompile Include="PoiData.cpp" />
-    <ClCompile Include="PreferenceRequirement.cpp" />
-    <ClCompile Include="QueryGenerateUtility.cpp" />
-    <ClCompile Include="Probability.cpp" />
-    <ClCompile Include="Rectangle.cpp" />
-    <ClCompile Include="RevisableTrajectory.cpp" />
-    <ClCompile Include="RoutingTable.cpp" />
-    <ClCompile Include="SemanticTrajectory.cpp" />
+    <ClCompile Include="BasicDbMap2.cpp" />
+    <ClCompile Include="DistanceMapCreation.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TableStructure.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="TimeSlotManager.cpp" />
-    <ClCompile Include="TimeUtility.cpp" />
-    <ClCompile Include="tinyxml2.cpp" />
-    <ClCompile Include="Trajectory.cpp" />
-    <ClCompile Include="Utils.cpp" />
-    <ClCompile Include="Vector2d.cpp" />
-    <ClCompile Include="Vector2dFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Utils.rc" />
+    <ProjectReference Include="..\SimulatorComponents\SimulatorComponents.vcxproj">
+      <Project>{9e086c5e-a53b-49a0-9be4-e7c5af59e20d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.vcxproj">
+      <Project>{38ac6421-8d7f-44fe-8e47-6ebe726e015e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

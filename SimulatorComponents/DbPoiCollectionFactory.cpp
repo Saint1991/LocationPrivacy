@@ -56,7 +56,7 @@ namespace Map
 	///</summary>
 	void DbPoiCollectionFactory::set_connectivities(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		if (!db->use(db_name)) return;
+		db->use(db_name);
 		std::stringstream query;
 		std::stringstream in;
 		in << "(SELECT DISTINCT(node_id) FROM nodes WHERE latitude BETWEEN " << boundary.bottom << " AND " << boundary.top << " AND longitude BETWEEN " << boundary.left << " AND " << boundary.right << ")";

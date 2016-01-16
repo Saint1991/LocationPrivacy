@@ -104,7 +104,7 @@ namespace Simulation
 		}
 
 		std::shared_ptr<Observer::SemanticObserver<Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>> observer
-			= std::make_shared<Observer::SemanticObserver<Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>>(map, entities, user_preference_tree, AVERAGE_SPEED + 1.0);
+			= std::make_shared<Observer::SemanticObserver<Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>>(map, entities, user_preference_tree, (AVERAGE_SPEED + 1.0) * 1000);
 		
 		//ARŒn‚Ì•]‰¿
 		double ar_count = observer->calc_ar_count(requirement->required_anonymous_area);

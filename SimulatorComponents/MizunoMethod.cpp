@@ -29,7 +29,7 @@ namespace Method
 	double linear(int dummy_id, size_t dummy_num, double required_anonymous_area)
 	{
 		double size = required_anonymous_area * dummy_id / dummy_num;
-		return dummy_id = 1 ? std::sqrt(size) : size;
+		return dummy_id == 1 ? std::sqrt(size) : size;
 	}
 
 
@@ -78,18 +78,23 @@ namespace Method
 	///</summary>
 	void MizunoMethod::decide_dummy_positions_of_group_a(int num_of_group_a_dummy)
 	{
+		std::random_device rd;
+		std::mt19937_64 generator(rd());
+
 		for (int current_dummy_id = 1; current_dummy_id <= num_of_group_a_dummy; current_dummy_id++) {
 			
 			//ユーザの嗜好の木に含まれる各プレフィックスについてカテゴリシーケンスとスコアの組を計算する
 			std::vector<sequence_score_set> all_sequence_scores = calc_sequence_score_set(current_dummy_id);
-			
-			//時間がかかりすぎるので，Top25のみ使用
-			int k = min(all_sequence_scores.size(), 25);
-			std::vector<sequence_score_set> sequence_scores(all_sequence_scores.begin(), all_sequence_scores.begin() + k);
+			std::sort(all_sequence_scores.begin(), all_sequence_scores.end(), [](const sequence_score_set& ss1, const sequence_score_set& ss2) {
+				return ss1.second > ss2.second;
+			});
+			std::vector<sequence_score_set>::iterator delimiter = std::max_element(all_sequence_scores.begin(), all_sequence_scores.end(), [](const sequence_score_set& ss1, const sequence_score_set& ss2) {
+				return ss1.second <= ss2.second;
+			});
+			std::shuffle(all_sequence_scores.begin(), delimiter + 1, generator);
 
-
-			//実際の経路の生成
-			std::vector<trajectory_score_set> trajectory_scores = calc_trajectory_score_set(current_dummy_id, sequence_scores);
+			//実際の経路の生成 (5つ作成できた時点で打ち切る)
+			std::vector<trajectory_score_set> trajectory_scores = calc_trajectory_score_set(current_dummy_id, all_sequence_scores);
 			
 			//経路が生成できなかった場合は例外を投げて終了 (暫定的処置)
 			if (trajectory_scores.size() == 0) {
@@ -100,16 +105,10 @@ namespace Method
 			});
 
 			//スコアが最大のものの中からランダムで1つ選出し，経路を確定させる
-			std::vector<std::pair<std::vector<Graph::MapNodeIndicator>, Entity::cross_target>> candidates;
-			double max_score = trajectory_scores.begin()->second;
-			for (std::vector<trajectory_score_set>::const_iterator iter = trajectory_scores.begin(); iter != trajectory_scores.end(); iter++) {
-				if (iter->second == max_score) candidates.push_back(iter->first);
-			}
-
 			//経路の選択
 			Math::Probability generator;
-			int pick_index = generator.uniform_distribution(0, candidates.size() - 1);
-			std::pair<std::vector<Graph::MapNodeIndicator>, Entity::cross_target> trajectory = candidates.at(pick_index);
+			int pick_index = generator.uniform_distribution(0, trajectory_scores.size() - 1);
+			std::pair<std::vector<Graph::MapNodeIndicator>, Entity::cross_target> trajectory = trajectory_scores.at(pick_index).first;
 
 			//現在決定中のエンティティの経路を確定させる
 			std::shared_ptr<Entity::Dummy<Geography::LatLng>> current_dummy = entities->get_dummy_by_id(current_dummy_id);
@@ -117,6 +116,7 @@ namespace Method
 			int cross_phase = trajectory.second.first;
 
 			std::cout << "Dummy" << current_dummy_id << ": " << std::endl;
+			std::cout << "Cross with " << trajectory.second.second << " at phase " << trajectory.second.first << std::endl;
 			for (int phase = 0; phase < route.size(); phase++) {
 				Graph::MapNodeIndicator node_id = route.at(phase);
 				std::shared_ptr<Map::BasicPoi const> visit_poi = map->get_static_poi(node_id.id());
@@ -178,6 +178,8 @@ namespace Method
 					//n_share(ei)の計算
 					int n_share_e = std::pow(target_entity->get_cross_count(), 2.0);
 
+					int delta = target_sequence.subsequence(0, target_phase) == prefix.subsequence(0, target_phase) ? 1 : 0;
+
 					//distroの計算
 					Collection::Sequence<Entity::category_id> combined_sequence1 = Collection::concat<Entity::category_id>(target_sequence.subsequence(0, target_phase), prefix.subsequence(target_phase + 1, prefix.size() - 1));
 					Collection::Sequence<Entity::category_id> combined_sequence2 = Collection::concat<Entity::category_id>(prefix.subsequence(0, target_phase), target_sequence.subsequence(target_phase + 1, prefix.size() - 1));
@@ -187,7 +189,7 @@ namespace Method
 					double distro = (sup_u + sup_u_es) / (sup_u_e + sup_u_se + sup_u + sup_u_es)  ;
 
 					// Score_Crossの計算
-					double score_cross = cross_based_score(n_share_t, n_share_e, distro);
+					double score_cross = cross_based_score(n_share_t, n_share_e, distro, delta);
 					if (score_cross == 0.0) cross = Entity::NOTHING;
 
 					// 合わせたスコアを計算し，追加する
@@ -221,9 +223,9 @@ namespace Method
 	///<summary>
 	/// Score_crossの計算式
 	///</summary>
-	double MizunoMethod::cross_based_score(int n_share_t, int n_share_e, double distro)
+	double MizunoMethod::cross_based_score(int n_share_t, int n_share_e, double distro, int delta)
 	{
-		return distro / (1 + n_share_t + n_share_e);
+		return delta * distro / (1 + n_share_t + n_share_e);
 	}
 
 
@@ -309,7 +311,6 @@ namespace Method
 		//9×9のグリッド領域を生成し，エンティティが最小の地点から一点決定する
 		else {
 			//phase 0における決定済みエンティティの位置のリスト
-			std::cout << "point_basis not set on dummy" << current_dummy_id << std::endl;
 			phase_basis = 0;
 			std::vector<std::shared_ptr<Geography::LatLng const>> fixed_positions = entities->get_all_fixed_positions_of_phase(phase_basis);
 
@@ -467,7 +468,8 @@ namespace Method
 
 			//ユーザの進行方向に動く点を一つ定める
 			std::shared_ptr<Map::BasicPoi const> next_poi = nullptr;
-			if (entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase) > setting_anonymous_area) {
+			double current_anonymous_area_size = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
+			if (current_anonymous_area_size > setting_anonymous_area) {
 				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
 					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
 					double user_direction = entities->get_user_direction_of_phase(phase + 1, phase);
@@ -541,7 +543,9 @@ namespace Method
 			std::shared_ptr<Map::BasicPoi const> next_poi = nullptr;
 
 			//ユーザの進行方向に動かす
-			if (entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase) > setting_anonymous_area) {
+			double current_anonymous_area_size = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
+			//std::cout << "current_anonymous_area: " << current_anonymous_area_size << std::endl;
+			if (current_anonymous_area_size > setting_anonymous_area) {
 				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
 					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
 					double user_direction = entities->get_user_direction_of_phase(phase - 1, phase);

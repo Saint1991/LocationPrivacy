@@ -34,7 +34,7 @@ namespace Simulation
 		const unsigned int USER_ID;
 	
 	protected:
-		static constexpr double AVERAGE_SPEED = 5.0;
+		static constexpr double AVERAGE_SPEED = 4.0;
 		const int TRAJECTORY_LENGTH_THRESHOLD = 4;
 		std::shared_ptr<User::PreferenceTree> user_preference_tree;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree;

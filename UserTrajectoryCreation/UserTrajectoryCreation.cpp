@@ -80,8 +80,8 @@ int main()
 	std::shared_ptr<Db::MySQLDb> db = std::make_shared<Db::MySQLDb>(std::move(std::make_unique<Db::DbSettingsFileLoader>("../settings/mydbsettings.xml")));
 	db->use(DB_NAME);
 	
-	std::vector<std::string> user_ids = get_all_user_id(db);
-	//std::vector<std::string> user_ids = { "822", "1240", "1143", "207", "1913" };
+	//std::vector<std::string> user_ids = get_all_user_id(db);
+	std::vector<std::string> user_ids = { "822", "1092", "1143", "1240", "196", "557", "368" };
 
 	User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins_cleaned", "pois");
 	
