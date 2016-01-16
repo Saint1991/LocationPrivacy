@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicDbMap.h" />
+    <ClInclude Include="BasicDbPreprocessedMap.h" />
     <ClInclude Include="BasicMapNode.h" />
     <ClInclude Include="BasicObserver.h" />
     <ClInclude Include="BasicPoi.h" />
@@ -182,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicDbMap.cpp" />
+    <ClCompile Include="BasicDbPreprocessedMap.cpp" />
     <ClCompile Include="BasicMapNode.cpp" />
     <ClCompile Include="BasicObserver.cpp" />
     <ClCompile Include="BasicPoi.cpp" />

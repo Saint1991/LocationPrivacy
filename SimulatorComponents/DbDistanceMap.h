@@ -24,6 +24,8 @@ namespace Map
 			const std::string& table_name = "distances");
 		~DbDistanceMap();
 		void load(const Graph::Rectangle<Geography::LatLng>& boundary);
+
+		double get_distance(Graph::node_id from, Graph::node_id to) const;
 	};
 }
 

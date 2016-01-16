@@ -8,7 +8,7 @@ namespace Simulation
 	/// コンストラクタ
 	///</summary>
 	BaseSimulator::BaseSimulator(unsigned int user_id, const std::string& db_name) 
-		: ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>(),
+		: ISimulator<Map::BasicDbPreprocessedMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>(),
 		USER_ID(user_id), DB_NAME(db_name),
 		user_preference_tree(std::make_shared<User::PreferenceTree>()),
 		observed_preference_tree(std::make_shared<User::PreferenceTree>())
@@ -30,7 +30,7 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
+		map = std::make_shared<Map::BasicDbPreprocessedMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
 		map->load(boundary);
 	}
 

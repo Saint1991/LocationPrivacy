@@ -9,12 +9,12 @@ namespace Method
 	/// コンストラクタ
 	///</summary>
 	MizunoMethod::MizunoMethod(
-		std::shared_ptr<Map::BasicDbMap const> map, 
+		std::shared_ptr<Map::BasicDbPreprocessedMap const> map, 
 		std::shared_ptr<User::BasicUser<Geography::LatLng>> user, 
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree,
 		std::shared_ptr<Requirement::PreferenceRequirement const> requirement, 
 		std::shared_ptr<Time::TimeSlotManager const> time_manager)
-		: Framework::IProposedMethod<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>(map, user, requirement, time_manager),
+		: Framework::IProposedMethod<Map::BasicDbPreprocessedMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>(map, user, requirement, time_manager),
 		observed_preference_tree(observed_preference_tree), observed_preference_tree_copy(std::make_shared<User::PreferenceTree>(*observed_preference_tree)),
 		setting_anonymous_areas(std::make_unique<std::vector<double>>(requirement->dummy_num))
 	{
@@ -471,7 +471,7 @@ namespace Method
 			double current_anonymous_area_size = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
 			if (current_anonymous_area_size > setting_anonymous_area) {
 				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
-					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
+					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id())) > reachable_distance) continue;
 					double user_direction = entities->get_user_direction_of_phase(phase + 1, phase);
 					double poi_direction = Geography::GeoCalculation::lambert_azimuth_angle(current_poi->get_point(), (*poi)->get_point());
 					if (std::abs(user_direction - poi_direction) <= THETA) {
@@ -485,7 +485,7 @@ namespace Method
 			else {
 				std::vector<std::pair<std::shared_ptr<Map::BasicPoi const>, double>> poi_dif_map;
 				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
-					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
+					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id())) > reachable_distance) continue;
 					std::vector<std::shared_ptr<Geography::LatLng const>> positions = entities->get_all_fixed_positions_of_phase(phase);
 					positions.push_back(std::make_shared<Geography::LatLng>((*poi)->get_point()));
 					double ar_size = positions.size() > 2 ? Geography::GeoCalculation::calc_convex_hull_size(positions) : Geography::GeoCalculation::lambert_distance(*positions.at(0), *positions.at(1));
@@ -547,7 +547,7 @@ namespace Method
 			//std::cout << "current_anonymous_area: " << current_anonymous_area_size << std::endl;
 			if (current_anonymous_area_size > setting_anonymous_area) {
 				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
-					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
+					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id())) > reachable_distance) continue;
 					double user_direction = entities->get_user_direction_of_phase(phase - 1, phase);
 					double poi_direction = Geography::GeoCalculation::lambert_azimuth_angle(current_poi->get_point(), (*poi)->get_point());
 					if (std::abs(user_direction - poi_direction) <= THETA) {
@@ -561,7 +561,7 @@ namespace Method
 			else {
 				std::vector<std::pair<std::shared_ptr<Map::BasicPoi const>, double>> poi_dif_map;
 				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
-					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id()), reachable_distance) > reachable_distance) continue;
+					if ((*poi)->get_id() == current_poi->get_id() && map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id()), Graph::MapNodeIndicator((*poi)->get_id())) > reachable_distance) continue;
 					std::vector<std::shared_ptr<Geography::LatLng const>> positions = entities->get_all_fixed_positions_of_phase(phase);
 					positions.push_back(std::make_shared<Geography::LatLng>((*poi)->get_point()));
 					double ar_size = positions.size() > 2 ? Geography::GeoCalculation::calc_convex_hull_size(positions) : Geography::GeoCalculation::lambert_distance(*positions.at(0), *positions.at(1));

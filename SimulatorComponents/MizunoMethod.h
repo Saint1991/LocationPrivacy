@@ -5,7 +5,6 @@
 #endif
 
 #pragma once
-#include "BasicDbMap.h"
 #include "LatLng.h"
 #include "BasicUser.h"
 #include "Dummy.h"
@@ -13,11 +12,12 @@
 #include "IProposedMethod.h"
 #include "SemanticTrajectory.h"
 #include "Grid.h"
+#include "BasicDbPreprocessedMap.h"
 
 namespace Method
 {
 	class MIZUNO_METHOD_API MizunoMethod
-		: public Framework::IProposedMethod<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
+		: public Framework::IProposedMethod<Map::BasicDbPreprocessedMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
 	{
 	private:
 		//スコアリングのパラメータ
@@ -70,7 +70,7 @@ namespace Method
 
 	public:
 		MizunoMethod(
-			std::shared_ptr<Map::BasicDbMap const> map, 
+			std::shared_ptr<Map::BasicDbPreprocessedMap const> map, 
 			std::shared_ptr<User::BasicUser<Geography::LatLng>> user, 
 			std::shared_ptr<User::PreferenceTree> observed_preference_tree,
 			std::shared_ptr<Requirement::PreferenceRequirement const> requirement, 

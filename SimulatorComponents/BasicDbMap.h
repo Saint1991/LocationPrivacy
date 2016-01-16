@@ -17,6 +17,7 @@
 #include "IRoutingModule.h"
 #include "Sequence.h"
 #include "SequentialTree.h"
+#include "DbDistanceMap.h"
 
 namespace Map
 {
@@ -42,7 +43,7 @@ namespace Map
 		std::string poi_table;
 		std::string poi_connection_table;
 
-		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
+		virtual void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
 
 	public:
 		BasicDbMap (

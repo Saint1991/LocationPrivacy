@@ -67,12 +67,12 @@ namespace Graph
 		void load(const Graph::Rectangle<Geography::LatLng>& boundary);
 
 
-		virtual shortest_path_info get_shortest_path_info(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
-		double shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
+		shortest_path_info get_shortest_path_info(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
+		virtual double shortest_distance(const MapNodeIndicator& from, const MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
 		RouteInfo<PATH> get_shortest_route_info_between_intersections(const node_id& from, const node_id& to, double distance_threshold = DBL_MAX) const;
 		std::vector<MapNodeIndicator> get_shortest_path(const MapNodeIndicator& source, const MapNodeIndicator& destination, double distance_threshold = DBL_MAX) const;
-		double calc_necessary_time(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, double distance_threshold = DBL_MAX) const;
-		bool is_reachable(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, const double& time_limit) const;
+		virtual double calc_necessary_time(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, double distance_threshold = DBL_MAX) const;
+		virtual bool is_reachable(const MapNodeIndicator& from, const MapNodeIndicator& to, const double& avg_speed, const double& time_limit) const;
 		
 		virtual std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const box& boundary) const;
 		virtual std::vector<std::shared_ptr<POI const>> find_pois_within_boundary(const Graph::Rectangle<>& boundary) const;
