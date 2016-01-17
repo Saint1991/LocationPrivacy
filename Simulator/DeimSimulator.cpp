@@ -158,25 +158,71 @@ namespace Simulation
 	{
 		std::stringstream export_path;
 		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
-		IO::FileExporter::mkdir(export_path.str().c_str());
-
 		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
-		IO::FileExporter::mkdir(export_path.str().c_str());
+		export_path << "/conservation.csv";
+		
+		std::ofstream out_file(export_path.str());
+		for (std::vector<double>::const_iterator iter = similarity_vector_proposed.begin(); iter != similarity_vector_proposed.end(); iter++) {
+			out_file << *iter << std::endl;
+		}
+
+		out_file.close();
 	}
 
 	void DeimSimulator::export_ar_counts(const Requirement::PreferenceRequirement& requirement)
 	{
+		std::stringstream export_path;
+		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path << "/ar-count.csv";
 
+		std::ofstream out_file(export_path.str());
+		for (std::vector<double>::const_iterator iter = ar_count_vector_proposed.begin(); iter != ar_count_vector_proposed.end(); iter++) {
+			out_file << *iter << std::endl;
+		}
+
+		out_file.close();
 	}
 
 	void DeimSimulator::export_ar_sizes(const Requirement::PreferenceRequirement& requirement)
 	{
+		std::stringstream export_path;
+		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path << "/ar-size.csv";
 
+		std::ofstream out_file(export_path.str());
+		for (std::vector<double>::const_iterator iter =ar_size_vector_proposed.begin(); iter != ar_size_vector_proposed.end(); iter++) {
+			out_file << *iter << std::endl;
+		}
+
+		out_file.close();
 	}
 
 	void DeimSimulator::export_mtcs(const Requirement::PreferenceRequirement& requirement)
 	{
+		std::stringstream export_path;
+		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path << "/mtc1.csv";
 
+		std::ofstream out_file(export_path.str());
+		for (std::vector<double>::const_iterator iter = mtc1_vector_proposed.begin(); iter != mtc1_vector_proposed.end(); iter++) {
+			out_file << *iter << std::endl;
+		}
+		out_file.close();
+
+
+		std::stringstream export_path2;
+		export_path2 << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path2 << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path2 << "/mtc2.csv";
+
+		out_file = std::ofstream(export_path2.str());
+		for (std::vector<double>::const_iterator iter = mtc2_vector_proposed.begin(); iter != mtc2_vector_proposed.end(); iter++) {
+			out_file << *iter << std::endl;
+		}
+		out_file.close();
 	}
 
 }
