@@ -25,6 +25,9 @@ namespace Simulation
 		static constexpr char* DB_NAME = "map_tokyo_category_top_level";
 		int current_trajectory_id;
 		std::vector<double> similarity_vector_proposed;
+		std::vector<double> mtc_vector_proposed;
+		std::vector<double> ar_count_vector_proposed;
+		std::vector<double> ar_size_vector_proposed;
 
 		
 	protected:

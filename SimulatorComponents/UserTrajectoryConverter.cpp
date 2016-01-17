@@ -288,5 +288,96 @@ namespace User
 
 		return std::make_shared<Graph::SemanticTrajectory<Geography::LatLng>>(new_timeslot, visited_nodes, new_positions, category_sequence, new_venue_names, new_category_names);
 	}
+
+	std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> UserTrajectoryConverter::convert_to_walking_compressed_semantic_trajectory(std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng> const> original_trajectory, double max_speed, int max_interval) const
+	{
+
+		std::random_device rd;
+		std::mt19937_64 generator(rd());
+
+		std::shared_ptr<Time::TimeSlotManager const> timeslot = original_trajectory->read_timeslot();
+		Collection::Sequence<std::string> category_sequence = original_trajectory->get_category_sequence(0, -1);
+		
+		//サービス利用間隔は10～15分に変換
+		time_t begin_time = timeslot->time_of_phase(0);
+		std::vector<time_t> times = { begin_time };
+		for (int phase = 1; phase < timeslot->phase_count(); phase++) {
+			time_t previous_time = times.at(phase - 1);
+			time_t current_time = timeslot->time_of_phase(phase);
+			int interval = current_time - previous_time;
+			if (interval < 600) interval = 600;
+			time_t time = previous_time + min(interval, max_interval);
+			times.push_back(time);
+		}
+
+		//歩行部分の最長一致等は考えずに最初の点を起点に順に変換していく
+		std::shared_ptr<Map::BasicPoi const> current_poi = map->get_static_poi(original_trajectory->read_node_pos_info_of_phase(0).first.id());
+
+		std::vector<time_t> new_times(times.size());
+		new_times.at(0) = times.at(0);
+		std::vector < Graph::MapNodeIndicator> new_trajectory(times.size());
+		new_trajectory.at(0) = original_trajectory->read_node_pos_info_of_phase(0).first;
+
+		//後方につなげていく
+		for (int phase = 1; phase < times.size(); phase++) {
+
+			//このPhaseにおける経過時刻とカテゴリ
+			long interval = std::abs(times.at(phase) - times.at(phase - 1));
+			User::category_id category = category_sequence.at(phase);
+			
+			std::shared_ptr<Map::BasicPoi const> next_poi = nullptr;
+			while (next_poi == nullptr && interval <= max_interval) {
+				double reachable_distance = max_speed * interval;
+
+				//マップから変換候補のPOIを探索
+				Graph::Rectangle<Geography::LatLng> boundary = create_reachable_rect(current_poi->get_point(), reachable_distance);
+				std::vector<std::shared_ptr<Map::BasicPoi const>> poi_candidates = map->find_pois_of_category_within_boundary(boundary, category);
+				if (poi_candidates.size() == 0) {
+					interval += 120;
+					continue;
+				}
+
+				std::shuffle(poi_candidates.begin(), poi_candidates.end(), generator);
+				for (std::vector<std::shared_ptr<Map::BasicPoi const>>::const_iterator poi = poi_candidates.begin(); poi != poi_candidates.end(); poi++) {
+					double distance = map->shortest_distance(Graph::MapNodeIndicator(current_poi->get_id(), Graph::NodeType::POI), Graph::MapNodeIndicator((*poi)->get_id(), Graph::NodeType::POI), reachable_distance);
+					if (distance <= reachable_distance) {
+						next_poi = *poi;
+						break;
+					}
+				}
+				if (next_poi == nullptr) interval += 120;
+			}
+
+			if (next_poi == nullptr) {
+				throw std::exception("Trajectory Not found");
+			} 
+			else {
+				new_trajectory.at(phase) = Graph::MapNodeIndicator(next_poi->get_id(), Graph::NodeType::POI);
+				new_times.at(phase) = new_times.at(phase - 1) + interval;
+				current_poi = next_poi;
+			}
+		}
+
+		//マップから新しいTrajectoryを作成
+		std::shared_ptr<Time::TimeSlotManager> new_timeslot = std::make_shared<Time::TimeSlotManager>(std::move(std::make_unique<std::vector<time_t>>(new_times)), false);
+		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> visited_nodes = std::make_shared<std::vector<Graph::MapNodeIndicator>>(new_trajectory);
+
+		size_t length = new_timeslot->phase_count();
+		std::shared_ptr<std::vector<std::shared_ptr<Geography::LatLng const>>> new_positions = std::make_shared<std::vector<std::shared_ptr<Geography::LatLng const>>>(length);
+		std::shared_ptr<std::vector<std::string>> new_venue_names = std::make_shared<std::vector<std::string>>(length);
+		std::shared_ptr<std::vector<std::string>> new_category_names = std::make_shared<std::vector<std::string>>(length);
+		for (int phase = 0; phase < length; phase++) {
+			Graph::MapNodeIndicator node = visited_nodes->at(phase);
+			if (node.type() != Graph::NodeType::POI) {
+				throw std::invalid_argument("NodeType must be POI");
+			}
+			std::shared_ptr<Map::BasicPoi const> poi = map->get_static_poi(node.id());
+			new_positions->at(phase) = std::make_shared<Geography::LatLng const>(poi->get_point());
+			new_venue_names->at(phase) = poi->name();
+			new_category_names->at(phase) = poi->category_name();
+		}
+
+		return std::make_shared<Graph::SemanticTrajectory<Geography::LatLng>>(new_timeslot, visited_nodes, new_positions, std::make_shared<Collection::Sequence<std::string>>(category_sequence), new_venue_names, new_category_names);
+	}
 }
 

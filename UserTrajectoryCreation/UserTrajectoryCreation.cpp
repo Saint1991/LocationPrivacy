@@ -14,11 +14,11 @@
 #include "MatsunoMethod.h"
 #include "PreferenceRequirement.h"
 #include "UserTrajectoryConverter.h"
-
+#include "BasicDbPreprocessedMap.h"
 
 ///<summary>
 /// トラジェクトリ分割のルール
-/// 経過時刻が2時間半以上のところでトラジェクトリを分割する
+/// 経過時刻が2時間以上のところでトラジェクトリを分割する
 ///</summary>
 bool trajectory_division_rule(const std::string& timestamp, const std::string& previous_time)
 {
@@ -49,7 +49,7 @@ std::vector<std::string> get_all_user_id(std::shared_ptr<Db::MySQLDb> db)
 void insert(int user_id, std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> trajectory, std::shared_ptr<Db::MySQLDb> db)
 {
 	std::stringstream query;
-	query << "INSERT INTO checkins_converted (user_id, venue_id, timestamp) VALUES(" << user_id << ", ?, ?);";
+	query << "INSERT INTO checkins_compressed (user_id, venue_id, timestamp) VALUES(" << user_id << ", ?, ?);";
 	sql::PreparedStatement* statement = db->prepare(query.str());
 
 	std::shared_ptr<Time::TimeSlotManager const> timeslot = trajectory->read_timeslot();
@@ -86,8 +86,9 @@ int main()
 	User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins_cleaned", "pois");
 	
 	//マップの読み込み
-	std::shared_ptr<Map::BasicDbMap> map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
+	std::shared_ptr<Map::BasicDbMap> map = std::make_shared<Map::BasicDbPreprocessedMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
 	map->load(Graph::Rectangle<Geography::LatLng>(35.9, 139.4, 35.5, 141.0));
+	
 	std::unique_ptr<User::UserTrajectoryConverter> converter = std::make_unique<User::UserTrajectoryConverter>(map);
 
 	for (std::vector<std::string>::const_iterator user_id = user_ids.begin(); user_id != user_ids.end(); user_id++) {
@@ -99,16 +100,16 @@ int main()
 		int trajectory_count = 1;
 		double avg_trajectory_length = 0.0;
 		for (std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>::const_iterator trajectory = trajectories->begin(); trajectory != trajectories->end(); trajectory++, trajectory_count++) {
-			std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> insert_trajectory = converter->convert_to_walking_semantic_trajectory(*trajectory, 6.0);
+			std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> insert_trajectory = converter->convert_to_walking_compressed_semantic_trajectory(*trajectory, 5.0 * 1000.0 / 3600, 900);
 			insert(std::stoi(*user_id), insert_trajectory, db);
 			avg_trajectory_length += insert_trajectory->phase_count();
 			std::cout << trajectory_count << " / " << trajectory_size << std::endl;
 		}
 		avg_trajectory_length /= trajectory_size;
-		std::stringstream query;
-		query << "INSERT INTO user_trajectory_infos (user_id, t_count, avg_t_length) VALUES (" << *user_id << ", " << trajectory_size << ", " << avg_trajectory_length << ");";
-		std::cout << query.str() << std::endl;
-		db->execute(query.str());
+		//std::stringstream query;
+		//query << "INSERT INTO user_trajectory_infos (user_id, t_count, avg_t_length) VALUES (" << *user_id << ", " << trajectory_size << ", " << avg_trajectory_length << ");";
+		//std::cout << query.str() << std::endl;
+		//db->execute(query.str());
 	}
 	return 0;
 }

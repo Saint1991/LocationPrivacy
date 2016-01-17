@@ -25,7 +25,7 @@ namespace Simulation
 	/// user_idはDB上でのユーザのID
 	///</summary>
 	class BASE_SIMULATOR_API BaseSimulator
-		: public ISimulator<Map::BasicDbPreprocessedMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
+		: public ISimulator<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
 	{
 	private:
 		//トラジェクトリ加工用 (最低この間隔がない場合間隔を広げる)
