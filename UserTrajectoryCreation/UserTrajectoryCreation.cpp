@@ -76,6 +76,8 @@ void insert(int user_id, std::shared_ptr<Graph::SemanticTrajectory<Geography::La
 int main()
 {
 	constexpr char* DB_NAME = "map_tokyo_category_top_level";
+	constexpr double MAX_INTERVAL = 720.0;
+	constexpr double MAX_WALKING_SPEED = 5.0 * 1000 / 3600.0;
 
 	std::shared_ptr<Db::MySQLDb> db = std::make_shared<Db::MySQLDb>(std::move(std::make_unique<Db::DbSettingsFileLoader>("../settings/mydbsettings.xml")));
 	db->use(DB_NAME);
@@ -100,7 +102,7 @@ int main()
 		int trajectory_count = 1;
 		double avg_trajectory_length = 0.0;
 		for (std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>::const_iterator trajectory = trajectories->begin(); trajectory != trajectories->end(); trajectory++, trajectory_count++) {
-			std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> insert_trajectory = converter->convert_to_walking_compressed_semantic_trajectory(*trajectory, 5.0 * 1000.0 / 3600, 900);
+			std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> insert_trajectory = converter->convert_to_walking_compressed_semantic_trajectory(*trajectory, MAX_WALKING_SPEED, MAX_INTERVAL);
 			insert(std::stoi(*user_id), insert_trajectory, db);
 			avg_trajectory_length += insert_trajectory->phase_count();
 			std::cout << trajectory_count << " / " << trajectory_size << std::endl;

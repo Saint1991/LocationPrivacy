@@ -17,8 +17,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::unique_ptr<Simulation::BaseSimulator> simulator	= std::make_unique<Simulation::DeimSimulator>();
 	simulator->prepare();
 	simulator->run();
-	simulator->evaluate();
-	simulator->export_evaluation_result();
 
 	return 0;
 }

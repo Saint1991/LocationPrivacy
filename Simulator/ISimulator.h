@@ -32,7 +32,7 @@ namespace Simulation
 		virtual void create_trajectories() = 0;
 		virtual void make_requirement_list() = 0;
 
-		
+		virtual void export_evaluation_result(const REQUIREMENT_TYPE& requirement) = 0;
 
 	public:
 		ISimulator() : user_trajectories(std::make_shared<std::vector<std::shared_ptr<TRAJECTORY_TYPE>>>()) {}
@@ -40,8 +40,6 @@ namespace Simulation
 
 		virtual void prepare() = 0;
 		virtual void run() = 0;
-		virtual void evaluate() = 0;
-		virtual void export_evaluation_result() = 0;
 	};
 }
 

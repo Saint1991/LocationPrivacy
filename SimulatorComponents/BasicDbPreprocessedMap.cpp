@@ -22,10 +22,10 @@ namespace Map
 
 	void BasicDbPreprocessedMap::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		BasicDbMap::build_map(boundary);
 		std::cout << "Loading distance map" << std::endl;
 		distance_map->load(boundary);
 		std::cout << "Complete!" << std::endl;
+		BasicDbMap::build_map(boundary);
 	}
 
 	double BasicDbPreprocessedMap::shortest_distance(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to) const 

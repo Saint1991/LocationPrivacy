@@ -693,15 +693,12 @@ namespace Simulation
 	/// 評価部分実装
 	/// ここにMapとUserだけ使って出来る実験があれば実装する
 	///</summary>
-	void HayashidaSimulator::evaluate()
-	{
-	
-	}
+
 
 	///<summary>
 	/// userのトラジェクトリファイルエクスポート
 	///</summary>
-	void HayashidaSimulator::export_evaluation_result()
+	void HayashidaSimulator::export_evaluation_result(const Requirement::KatoMethodRequirement& requirement)
 	{
 	
 

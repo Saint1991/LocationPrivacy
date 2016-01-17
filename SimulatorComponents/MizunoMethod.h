@@ -28,7 +28,7 @@ namespace Method
 		static constexpr int MAX_TRAJECTORY_CREATION_TRIAL = 1000;
 		
 		//Å¬’â~ŠÔ(2•ª)
-		static constexpr int MIN_PAUSE_TIME = 0;
+		static constexpr int MIN_PAUSE_TIME = 120;
 
 		
 		//İ’è“½–¼—Ìˆæ

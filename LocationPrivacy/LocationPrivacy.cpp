@@ -36,8 +36,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		= std::make_unique<Simulation::HayashidaSimulator>(MAP_BOUNDARY);
 	simulator->prepare();
 	//simulator->run();
-	simulator->evaluate();
-	simulator->export_evaluation_result();
 
 	return 0;
 }

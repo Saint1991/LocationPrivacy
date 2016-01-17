@@ -61,6 +61,9 @@ namespace Simulation
 				
 			}
 
+			//1要求当たりの結果をエクスポートする
+			export_evaluation_result(**iter);
+			
 			//今だけ
 			break;
 		}
@@ -108,16 +111,21 @@ namespace Simulation
 		
 		//AR系の評価
 		double ar_count = observer->calc_ar_count(requirement->required_anonymous_area);
+		ar_count_vector_proposed.push_back(ar_count);
 		std::cout << "AR-Count: " << std::to_string(ar_count) << std::endl;
+
 		
 		double ar_size = observer->calc_ar_size(requirement->required_anonymous_area);
+		ar_size_vector_proposed.push_back(ar_size);
 		std::cout << "AR-Size: " << std::to_string(ar_size) << "m^2" << std::endl;
 
 		//MTCの評価
 		double mtc1 = observer->calc_mtc_without_semantics();
+		mtc1_vector_proposed.push_back(mtc1);
 		std::cout << "MTC1: " << std::to_string(mtc1) << "sec" << std::endl;
 		
 		double mtc2 = observer->calc_mtc_with_semantics();
+		mtc2_vector_proposed.push_back(mtc2);
 		std::cout << "MTC2: " << std::to_string(mtc2) << "sec" << std::endl;
 
 		//可観測な木の更新
@@ -130,17 +138,46 @@ namespace Simulation
 		similarity_vector_proposed.push_back(similarity);
 	}
 
-	void DeimSimulator::evaluate()
+
+	void DeimSimulator::export_evaluation_result(const Requirement::PreferenceRequirement& requirement)
+	{
+		//嗜好の保存度のエクスポート
+		export_similarities(requirement);
+
+		//AR-Countのエクスポート
+		export_ar_counts(requirement);
+
+		//AR-Sizeのエクスポート
+		export_ar_sizes(requirement);
+
+		//MTC1, MTC2のエクスポート
+		export_mtcs(requirement);
+	}
+
+	void DeimSimulator::export_similarities(const Requirement::PreferenceRequirement& requirement)
+	{
+		std::stringstream export_path;
+		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		IO::FileExporter::mkdir(export_path.str().c_str());
+
+		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		IO::FileExporter::mkdir(export_path.str().c_str());
+	}
+
+	void DeimSimulator::export_ar_counts(const Requirement::PreferenceRequirement& requirement)
 	{
 
 	}
 
-	void DeimSimulator::export_evaluation_result()
+	void DeimSimulator::export_ar_sizes(const Requirement::PreferenceRequirement& requirement)
 	{
 
 	}
 
+	void DeimSimulator::export_mtcs(const Requirement::PreferenceRequirement& requirement)
+	{
 
+	}
 
 }
 

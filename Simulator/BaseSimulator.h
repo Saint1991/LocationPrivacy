@@ -44,13 +44,14 @@ namespace Simulation
 		void build_user_preference_tree();
 		virtual void make_requirement_list() = 0;
 		
+		virtual void export_evaluation_result(const Requirement::PreferenceRequirement& requirement) = 0;
+
 	public:
 		BaseSimulator(unsigned int user_id = 1, const std::string& db_name = "map_tokyo_category_top_level");
 		virtual ~BaseSimulator();
 		void prepare();
 		virtual void run() = 0;
-		virtual void evaluate() = 0;
-		virtual void export_evaluation_result() = 0;
+
 	};
 }
 

@@ -84,7 +84,7 @@ namespace Simulation
 		void build_map(const Graph::Rectangle<Geography::LatLng>& boundary);
 		void create_trajectories();
 		void make_requirement_list();
-		
+		void export_evaluation_result(const Requirement::KatoMethodRequirement& requirement);
 	public:
 		std::vector<std::shared_ptr<Map::BasicPoi const>> read_input_poi_list() const;
 
@@ -92,9 +92,7 @@ namespace Simulation
 		virtual ~HayashidaSimulator();
 		void prepare();
 		void run();
-		void evaluate();
-		void export_evaluation_result();
-		
+	
 	};
 
 }

@@ -298,14 +298,14 @@ namespace User
 		std::shared_ptr<Time::TimeSlotManager const> timeslot = original_trajectory->read_timeslot();
 		Collection::Sequence<std::string> category_sequence = original_trajectory->get_category_sequence(0, -1);
 		
-		//サービス利用間隔は10～15分に変換
+		//サービス利用間隔は4～max_interaval(12分)に変換
 		time_t begin_time = timeslot->time_of_phase(0);
 		std::vector<time_t> times = { begin_time };
 		for (int phase = 1; phase < timeslot->phase_count(); phase++) {
 			time_t previous_time = times.at(phase - 1);
 			time_t current_time = timeslot->time_of_phase(phase);
 			int interval = current_time - previous_time;
-			if (interval < 600) interval = 600;
+			if (interval < 240) interval = 240;
 			time_t time = previous_time + min(interval, max_interval);
 			times.push_back(time);
 		}
