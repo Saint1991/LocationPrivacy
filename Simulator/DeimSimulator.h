@@ -29,7 +29,8 @@ namespace Simulation
 		std::vector<double> mtc2_vector_proposed;
 		std::vector<double> ar_count_vector_proposed;
 		std::vector<double> ar_size_vector_proposed;
-
+		int confused_count_without_semantics;
+		int confused_count_with_semantics;
 		
 	protected:
 		void make_requirement_list();

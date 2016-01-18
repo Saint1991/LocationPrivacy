@@ -171,6 +171,7 @@
     <ClInclude Include="MizunoMethod.h" />
     <ClInclude Include="ObservedTrajectoryNode.h" />
     <ClInclude Include="ObservedTrajectoryStructure.h" />
+    <ClInclude Include="OnTimeQueryDbMap.h" />
     <ClInclude Include="PauseMobileEntity.h" />
     <ClInclude Include="PreferenceTree.h" />
     <ClInclude Include="PreferenceTreeNode.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="MizunoMethod.cpp" />
     <ClCompile Include="ObservedTrajectoryNode.cpp" />
     <ClCompile Include="ObservedTrajectoryStructure.cpp" />
+    <ClCompile Include="OnTimeQueryDbMap.cpp" />
     <ClCompile Include="PauseMobileEntity.cpp" />
     <ClCompile Include="PreferenceTree.cpp" />
     <ClCompile Include="PreferenceTreeNode.cpp" />

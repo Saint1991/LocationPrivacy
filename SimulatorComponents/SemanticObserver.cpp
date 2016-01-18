@@ -42,8 +42,8 @@ namespace  Observer
 				if (iter->type() != Graph::NodeType::POI) throw std::invalid_argument("NodeType must be POI");
 				std::shared_ptr<Map::BasicPoi const> visited_poi = map->get_static_poi(iter->id());
 				category_sequence.push_back(visited_poi->category_id());
-				execute_function(category_sequence, expected_frequency);
 			}
+			execute_function(category_sequence, expected_frequency);
 		});
 	}
 

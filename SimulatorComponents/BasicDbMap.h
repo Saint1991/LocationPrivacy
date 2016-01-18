@@ -57,6 +57,10 @@ namespace Map
 		);
 		virtual ~BasicDbMap();
 
+		//virtual double shortest_distance(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold = DBL_MAX) const;
+		//virtual double calc_necessary_time(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, const double& avg_speed, double distance_threshold = DBL_MAX) const;
+		//virtual bool is_reachable(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, const double& avg_speed, const double& time_limit) const;
+		
 		std::vector<std::shared_ptr<BasicPoi const>> find_pois_of_category_within_boundary(const Graph::box& boundary, const std::string& category_id) const;
 		std::vector<std::shared_ptr<BasicPoi const>> find_pois_of_category_within_boundary(const Graph::Rectangle<Geography::LatLng>& boundary, const std::string& category_id) const;
 

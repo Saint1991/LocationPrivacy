@@ -135,9 +135,6 @@
     <ClInclude Include="BasicObserver.h">
       <Filter>ヘッダー ファイル\Observer</Filter>
     </ClInclude>
-    <ClInclude Include="SemanticObserver.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="CreateUserModule.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -145,7 +142,13 @@
       <Filter>ヘッダー ファイル\Map</Filter>
     </ClInclude>
     <ClInclude Include="BasicDbPreprocessedMap.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="OnTimeQueryDbMap.h">
+      <Filter>ヘッダー ファイル\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticObserver.h">
+      <Filter>ヘッダー ファイル\Observer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,14 +236,17 @@
     <ClCompile Include="BasicObserver.cpp">
       <Filter>ソース ファイル\Observer</Filter>
     </ClCompile>
-    <ClCompile Include="SemanticObserver.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="DbDistanceMap.cpp">
       <Filter>ソース ファイル\Map</Filter>
     </ClCompile>
     <ClCompile Include="BasicDbPreprocessedMap.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="OnTimeQueryDbMap.cpp">
+      <Filter>ソース ファイル\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticObserver.cpp">
+      <Filter>ソース ファイル\Observer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

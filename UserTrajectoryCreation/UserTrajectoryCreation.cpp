@@ -76,9 +76,10 @@ void insert(int user_id, std::shared_ptr<Graph::SemanticTrajectory<Geography::La
 int main()
 {
 	constexpr char* DB_NAME = "map_tokyo_category_top_level";
-	constexpr double MAX_INTERVAL = 720.0;
+	constexpr double MAX_INTERVAL = 600.0;
 	constexpr double MAX_WALKING_SPEED = 5.0 * 1000 / 3600.0;
 
+	
 	std::shared_ptr<Db::MySQLDb> db = std::make_shared<Db::MySQLDb>(std::move(std::make_unique<Db::DbSettingsFileLoader>("../settings/mydbsettings.xml")));
 	db->use(DB_NAME);
 	
@@ -94,6 +95,7 @@ int main()
 	std::unique_ptr<User::UserTrajectoryConverter> converter = std::make_unique<User::UserTrajectoryConverter>(map);
 
 	for (std::vector<std::string>::const_iterator user_id = user_ids.begin(); user_id != user_ids.end(); user_id++) {
+		int failed_count = 0;
 		std::cout << "User" << *user_id << "---" << std::endl;
 		std::shared_ptr<std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>> trajectories = loader.load_trajectories(std::stoi(*user_id), 4, 0, false);
 		size_t trajectory_size = trajectories->size();
@@ -103,11 +105,16 @@ int main()
 		double avg_trajectory_length = 0.0;
 		for (std::vector<std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>>>::const_iterator trajectory = trajectories->begin(); trajectory != trajectories->end(); trajectory++, trajectory_count++) {
 			std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> insert_trajectory = converter->convert_to_walking_compressed_semantic_trajectory(*trajectory, MAX_WALKING_SPEED, MAX_INTERVAL);
+			if (insert_trajectory == nullptr) {
+				failed_count++;
+				continue;
+			}
 			insert(std::stoi(*user_id), insert_trajectory, db);
 			avg_trajectory_length += insert_trajectory->phase_count();
 			std::cout << trajectory_count << " / " << trajectory_size << std::endl;
 		}
 		avg_trajectory_length /= trajectory_size;
+		std::cout << "Failed: " << failed_count << std::endl;
 		//std::stringstream query;
 		//query << "INSERT INTO user_trajectory_infos (user_id, t_count, avg_t_length) VALUES (" << *user_id << ", " << trajectory_size << ", " << avg_trajectory_length << ");";
 		//std::cout << query.str() << std::endl;

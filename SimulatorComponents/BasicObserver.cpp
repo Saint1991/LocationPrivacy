@@ -114,6 +114,12 @@ namespace Observer
 			//交差相手の辿ったノードへのパスがない場合はそれを作成する
 			for (std::vector<Evaluate::CrossInfo>::const_iterator cross_info = cross_infos_of_entity.begin(); cross_info != cross_infos_of_entity.end(); cross_info++) {
 
+				//crossing_entitiesに自身より小さいIDのノードが含まれていれば，既にエッジを構築してあるのでスキップ
+				std::vector<unsigned int>::const_iterator check = std::find_if(cross_info->crossing_entities.begin(), cross_info->crossing_entities.end(), [&id](const unsigned int& target_id) {
+					return target_id < id;
+				});
+				if (check != cross_info->crossing_entities.end()) continue;
+
 				//交差を作成するtrajectory_nodeを取得する
 				int cross_phase = cross_info->phase;
 				Graph::MapNodeIndicator cross_node = entity->read_node_pos_info_of_phase(cross_phase).first;
@@ -219,6 +225,7 @@ namespace Observer
 	///<summary>
 	/// POIの意味情報を考えない場合のMTCの計算 (最後まで達成できない場合の扱いをどうするかは要検討)
 	/// とりあえず、最後まで達成できなかったところは考慮しない仕様で実装
+	/// そのトラジェクトリ中で1回も達成できなかった場合は-1を返す
 	///</summary>
 	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
 	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_mtc_without_semantics(double threshold)
@@ -235,6 +242,8 @@ namespace Observer
 				confusion_time_sum += time_to_confusion;
 			}
 		}
+
+		if (confusion_count == 0) return -1.0;
 
 		double mtc = confusion_time_sum / confusion_count;
 		return mtc;

@@ -4,7 +4,7 @@
 namespace Simulation
 {
 
-	DeimSimulator::DeimSimulator() : BaseSimulator(USER_ID, DB_NAME), current_trajectory_id(0)
+	DeimSimulator::DeimSimulator() : BaseSimulator(USER_ID, DB_NAME), current_trajectory_id(0), confused_count_without_semantics(0), confused_count_with_semantics(0)
 	{
 	}
 
@@ -107,7 +107,7 @@ namespace Simulation
 		}
 
 		std::shared_ptr<Observer::SemanticObserver<Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>> observer
-			= std::make_shared<Observer::SemanticObserver<Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>>(map, entities, user_preference_tree, (AVERAGE_SPEED + 1.0) * 1000);
+			= std::make_shared<Observer::SemanticObserver<Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>>(map, entities, user_preference_tree, (AVERAGE_SPEED + 1.0) * 1000 / 3600.0);
 		
 		//ARŒn‚Ì•]‰¿
 		double ar_count = observer->calc_ar_count(requirement->required_anonymous_area);
@@ -121,10 +121,12 @@ namespace Simulation
 
 		//MTC‚Ì•]‰¿
 		double mtc1 = observer->calc_mtc_without_semantics();
+		if (mtc1 != -1.0) confused_count_without_semantics++;
 		mtc1_vector_proposed.push_back(mtc1);
 		std::cout << "MTC1: " << std::to_string(mtc1) << "sec" << std::endl;
 		
 		double mtc2 = observer->calc_mtc_with_semantics();
+		if (mtc2 != -1.0) confused_count_with_semantics++;
 		mtc2_vector_proposed.push_back(mtc2);
 		std::cout << "MTC2: " << std::to_string(mtc2) << "sec" << std::endl;
 
@@ -152,6 +154,12 @@ namespace Simulation
 
 		//MTC1, MTC2‚ÌƒGƒNƒXƒ|[ƒg
 		export_mtcs(requirement);
+
+		similarity_vector_proposed = std::vector<double>();
+		ar_count_vector_proposed = std::vector<double>();
+		ar_size_vector_proposed = std::vector<double>();
+		mtc1_vector_proposed = std::vector<double>();
+		mtc2_vector_proposed = std::vector<double>();
 	}
 
 	void DeimSimulator::export_similarities(const Requirement::PreferenceRequirement& requirement)
@@ -222,6 +230,18 @@ namespace Simulation
 		for (std::vector<double>::const_iterator iter = mtc2_vector_proposed.begin(); iter != mtc2_vector_proposed.end(); iter++) {
 			out_file << *iter << std::endl;
 		}
+		out_file.close();
+
+
+		std::stringstream export_path3;
+		export_path2 << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path2 << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path2 << "/confuse-ratio.csv";
+
+		double confuse_ratio_without_semantics = (double)confused_count_without_semantics / user_trajectories->size();
+		double confuse_ratio_with_semantics = (double)confused_count_with_semantics / user_trajectories->size();
+		out_file = std::ofstream(export_path2.str());
+		out_file << confuse_ratio_without_semantics << "," << confuse_ratio_with_semantics << std::endl;
 		out_file.close();
 	}
 

@@ -98,7 +98,18 @@ namespace Method
 			
 			//経路が生成できなかった場合は例外を投げて終了 (暫定的処置)
 			if (trajectory_scores.size() == 0) {
-				throw Framework::TrajectoryNotFoundException("trajectory_scores is empty");
+				Collection::Sequence<User::category_id> any_sequence(entities->read_timeslot()->phase_count(), User::ANY);
+				std::pair<int, Graph::MapNodeIndicator> temp_basis = determine_point_basis(any_sequence, Entity::NOTHING, current_dummy_id);
+				std::shared_ptr<std::vector<Graph::MapNodeIndicator>> temp_trajectory = nullptr;
+				
+				int iteration_count = 0;
+				while (temp_trajectory == nullptr || iteration_count <= MAX_TRAJECTORY_CREATION_TRIAL) {
+					temp_trajectory = create_trajectory(current_dummy_id, temp_basis, any_sequence);
+				}
+				if (temp_trajectory == nullptr) {
+					throw Framework::TrajectoryNotFoundException("trajectory_scores is empty");
+				}
+				trajectory_scores.push_back(std::make_pair(std::make_pair(*temp_trajectory, Entity::NOTHING), 1.0));
 			}
 			std::sort(trajectory_scores.begin(), trajectory_scores.end(), [](const trajectory_score_set& left, const trajectory_score_set& right) {
 				return left.second > right.second;
@@ -174,9 +185,9 @@ namespace Method
 					Entity::cross_target cross = std::make_pair(target_phase, target_entity_id);
 					
 					//n_share(t)の計算
-					int n_share_t = std::pow(entities->get_total_cross_count_of_phase(target_phase), 1.0);
+					int n_share_t = std::pow(entities->get_total_cross_count_of_phase(target_phase), 3.0);
 					//n_share(ei)の計算
-					int n_share_e = std::pow(target_entity->get_cross_count(), 2.0);
+					int n_share_e = std::pow(target_entity->get_cross_count(), 3.0);
 
 					int delta = target_sequence.subsequence(0, target_phase) == prefix.subsequence(0, target_phase) ? 1 : 0;
 

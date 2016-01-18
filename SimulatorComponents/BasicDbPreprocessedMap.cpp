@@ -22,13 +22,13 @@ namespace Map
 
 	void BasicDbPreprocessedMap::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
+		BasicDbMap::build_map(boundary);
 		std::cout << "Loading distance map" << std::endl;
 		distance_map->load(boundary);
 		std::cout << "Complete!" << std::endl;
-		BasicDbMap::build_map(boundary);
 	}
 
-	double BasicDbPreprocessedMap::shortest_distance(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to) const 
+	double BasicDbPreprocessedMap::shortest_distance(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, double distance_threshold) const 
 	{
 		if (from == to) return 0.0;
 
@@ -90,12 +90,13 @@ namespace Map
 			ret_distance = min(distance_first, distance_second);
 		}
 
-		return ret_distance;
+
+		return ret_distance > distance_threshold ? DBL_MAX : ret_distance;
 	}
 
-	double BasicDbPreprocessedMap::calc_necessary_time(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, const double& avg_speed) const
+	double BasicDbPreprocessedMap::calc_necessary_time(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, const double& avg_speed, double distance_threshold) const
 	{
-		double distance = shortest_distance(from, to);
+		double distance = shortest_distance(from, to, distance_threshold);
 		return distance == DBL_MAX ? DBL_MAX : distance / avg_speed;
 	}
 

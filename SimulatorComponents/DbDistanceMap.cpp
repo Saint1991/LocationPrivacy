@@ -30,10 +30,17 @@ namespace Map
 	{
 		db->use(db_name);
 		std::stringstream query;
-		query << "SELECT id1, id2, distance FROM " << table_name << " WHERE id1 IN (SELECT DISTINCT(node_id) FROM nodes WHERE longitude BETWEEN " << boundary.left << " AND " << boundary.right << " AND latitude BETWEEN " << boundary.bottom << " AND " << boundary.top << ") ORDER BY id1 ASC;";
+		//query << "SELECT id1, id2, distance FROM " << table_name << " WHERE id1 IN (SELECT DISTINCT(node_id) FROM nodes WHERE longitude BETWEEN " << boundary.left << " AND " << boundary.right << " AND latitude BETWEEN " << boundary.bottom << " AND " << boundary.top << ") ORDER BY id1 ASC;";
+		query << "SELECT * FROM " << table_name << ";";
 		std::cout << query.str() << std::endl;
+
+		Time::Timer timer;
+		timer.start();
 		sql::ResultSet* result = db->raw_query(query.str());
-		
+		timer.end();
+
+		std::cout << timer.duration() << "sec" << std::endl;
+
 		std::unordered_map<Graph::node_id, double> distances ;
 		result->beforeFirst();
 		result->next();
@@ -54,6 +61,7 @@ namespace Map
 			distances.insert(std::make_pair(id2, distance));
 		} while (result->next());
 		distance_map->push_back(distances);
+		delete result;
 	}
 
 

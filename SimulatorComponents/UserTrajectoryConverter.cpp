@@ -349,7 +349,7 @@ namespace User
 			}
 
 			if (next_poi == nullptr) {
-				throw std::exception("Trajectory Not found");
+				return nullptr;
 			} 
 			else {
 				new_trajectory.at(phase) = Graph::MapNodeIndicator(next_poi->get_id(), Graph::NodeType::POI);

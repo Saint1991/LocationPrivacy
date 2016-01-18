@@ -2,6 +2,7 @@
 #include "MySQLDb.h"
 #include "Rectangle.h"
 #include "Node.h"
+#include "Timer.h"
 
 namespace Map
 {

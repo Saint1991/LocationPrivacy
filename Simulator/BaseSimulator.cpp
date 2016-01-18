@@ -26,13 +26,12 @@ namespace Simulation
 
 	///<summary>
 	/// Mapの構成
-	/// map_tokyoのDBからデータを読み出して，WarshallFloyd法でルーティングテーブルを作成する
 	/// この代入次第で使われるマップが変わる
 	///</summary>
 	void BaseSimulator::build_map(const Graph::Rectangle<Geography::LatLng>& boundary)
 	{
-		//map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
-		map = std::make_shared<Map::BasicDbPreprocessedMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
+		map = std::make_shared<Map::BasicDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
+		//map = std::make_shared<Map::BasicDbPreprocessedMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
 		map->load(boundary);
 	}
 
@@ -58,7 +57,7 @@ namespace Simulation
 	///</summary>
 	void BaseSimulator::create_trajectories()
 	{
-		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins_converted", "pois");
+		User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins_compressed", "pois");
 		user_trajectories = loader.load_trajectories(USER_ID, TRAJECTORY_LENGTH_THRESHOLD, MIN_SERVICE_INTERVAL);
 
 		size_t trajectory_size = user_trajectories->size();
