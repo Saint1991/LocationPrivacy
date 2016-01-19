@@ -43,5 +43,7 @@ namespace Observer
 		std::unordered_map<Graph::MapNodeIndicator, size_t> get_entity_count_info_of_phase(int phase) const;
 
 		double calc_probability_of_trajectory(const std::vector<Graph::MapNodeIndicator>& trajectory) const;
+		
+		void normalize_all_edges();
 	};
 }

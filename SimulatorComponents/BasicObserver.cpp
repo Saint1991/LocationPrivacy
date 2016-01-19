@@ -104,6 +104,7 @@ namespace Observer
 
 		if (cross_infos == nullptr) calc_cross_info();
 
+		//多分ここ以下は厳密には間違っている，状態遷移の組み合わせを解く必要がある
 		//交差情報を元に取りうるトラジェクトリの接続関係を追加する
 		for (Entity::entity_id id = 0; id <= entities->get_dummy_count(); id++) {
 
@@ -114,16 +115,11 @@ namespace Observer
 			//交差相手の辿ったノードへのパスがない場合はそれを作成する
 			for (std::vector<Evaluate::CrossInfo>::const_iterator cross_info = cross_infos_of_entity.begin(); cross_info != cross_infos_of_entity.end(); cross_info++) {
 
-				//crossing_entitiesに自身より小さいIDのノードが含まれていれば，既にエッジを構築してあるのでスキップ
-				std::vector<unsigned int>::const_iterator check = std::find_if(cross_info->crossing_entities.begin(), cross_info->crossing_entities.end(), [&id](const unsigned int& target_id) {
-					return target_id < id;
-				});
-				if (check != cross_info->crossing_entities.end()) continue;
-
 				//交差を作成するtrajectory_nodeを取得する
 				int cross_phase = cross_info->phase;
 				Graph::MapNodeIndicator cross_node = entity->read_node_pos_info_of_phase(cross_phase).first;
 				ObservedTrajectoryStructure::base_iterator iter = trajectory_structure->find_node(cross_node, cross_info->phase);
+
 				Graph::node_id next_node_id = trajectory_structure->find_node_id(entity->read_node_pos_info_of_phase(cross_phase + 1).first, cross_phase + 1);
 				if (next_node_id == -1) throw std::invalid_argument("Node not found.");
 				
@@ -152,6 +148,7 @@ namespace Observer
 			}
 		}
 
+		trajectory_structure->normalize_all_edges();
 		structure = trajectory_structure;
 		return trajectory_structure;
 	}
@@ -277,7 +274,7 @@ namespace Observer
 				Graph::MapNodeIndicator next_visit_node = entities->read_entity_by_id(target_id)->read_node_pos_info_of_phase(phase + 1).first;
 				
 				//配分する確率値
-				double probability_change = probability_vector_copy.at(target_id) / crosses->crossing_entities.size();
+				double probability_change = probability_vector_copy.at(target_id) / (crosses->crossing_entities.size() + 1);
 
 				//交差相手のノードが自身と違うノードに移動するかチェックし，それに応じて自身の確率を配分
 				for (std::vector<Entity::entity_id>::const_iterator cross_target = crosses->crossing_entities.begin(); cross_target != crosses->crossing_entities.end(); cross_target++) {

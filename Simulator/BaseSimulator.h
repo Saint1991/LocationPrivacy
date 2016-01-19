@@ -16,6 +16,7 @@
 #include "TimeUtility.h"
 #include "UserTrajectoryConverter.h"
 #include "BasicDbPreprocessedMap.h"
+#include "OnTimeQueryDbMap.h"
 
 namespace Simulation
 {

@@ -138,7 +138,7 @@ namespace Entity
 	/// –¢¶¬‚Ìƒ_ƒ~[‚àŒğ·‰ñ”0‚Æ‚µ‚ÄŠÜ‚Ü‚ê‚é‚Ì‚Å’ˆÓ
 	///</summary>
 	template <typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY, typename USER>
-	std::vector<std::pair<entity_id, int>> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_entity_id_list_order_by_cross_count() const
+	std::vector<std::pair<entity_id, int>> EntityManager<POSITION_TYPE, TRAJECTORY_TYPE, DUMMY, USER>::get_entity_id_list_order_by_cross_count(Entity::entity_id id_smaller_than) const
 	{
 		std::vector<std::pair<entity_id, int>> ret;
 		ret.push_back(std::make_pair(0U, user->get_cross_count()));
@@ -146,6 +146,7 @@ namespace Entity
 		for (std::vector<std::shared_ptr<DUMMY>>::const_iterator iter = dummies->begin(); iter != dummies->end(); iter++) {
 			if (*iter == nullptr) continue;
 			entity_id id = (*iter)->get_id();
+			if (id >= id_smaller_than) continue;
 			int cross_count = (*iter)->get_cross_count();
 			ret.push_back(std::make_pair(id, cross_count));
 		}

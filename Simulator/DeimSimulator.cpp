@@ -19,8 +19,12 @@ namespace Simulation
 	void DeimSimulator::make_requirement_list()
 	{
 		requirements = {
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 1.0, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.9, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0.6, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0.4, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0.2, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0, AVERAGE_SPEED, 1.0)
+
+			/*std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.9, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.8, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.7, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.6, AVERAGE_SPEED, 1.0),
@@ -29,7 +33,7 @@ namespace Simulation
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.3, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.2, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.1, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.0, AVERAGE_SPEED, 1.0)
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.0, AVERAGE_SPEED, 1.0)*/
 		};
 	}
 
@@ -218,6 +222,8 @@ namespace Simulation
 		for (std::vector<double>::const_iterator iter = mtc1_vector_proposed.begin(); iter != mtc1_vector_proposed.end(); iter++) {
 			out_file << *iter << std::endl;
 		}
+		double confused_rate_without_semantics = (double)confused_count_without_semantics / user_trajectories->size();
+		out_file << "Confusion Rate: " << confused_rate_without_semantics << std::endl;
 		out_file.close();
 
 
@@ -230,18 +236,8 @@ namespace Simulation
 		for (std::vector<double>::const_iterator iter = mtc2_vector_proposed.begin(); iter != mtc2_vector_proposed.end(); iter++) {
 			out_file << *iter << std::endl;
 		}
-		out_file.close();
-
-
-		std::stringstream export_path3;
-		export_path2 << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
-		export_path2 << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
-		export_path2 << "/confuse-ratio.csv";
-
-		double confuse_ratio_without_semantics = (double)confused_count_without_semantics / user_trajectories->size();
-		double confuse_ratio_with_semantics = (double)confused_count_with_semantics / user_trajectories->size();
-		out_file = std::ofstream(export_path2.str());
-		out_file << confuse_ratio_without_semantics << "," << confuse_ratio_with_semantics << std::endl;
+		double confused_rate_with_semantics = (double)confused_count_with_semantics / user_trajectories->size();
+		out_file << "Confusion Rate: " << confused_rate_with_semantics << std::endl;
 		out_file.close();
 	}
 

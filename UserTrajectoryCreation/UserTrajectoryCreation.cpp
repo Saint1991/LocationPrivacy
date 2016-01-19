@@ -14,6 +14,7 @@
 #include "MatsunoMethod.h"
 #include "PreferenceRequirement.h"
 #include "UserTrajectoryConverter.h"
+#include "OnTimeQueryDbMap.h"
 #include "BasicDbPreprocessedMap.h"
 
 ///<summary>
@@ -76,7 +77,7 @@ void insert(int user_id, std::shared_ptr<Graph::SemanticTrajectory<Geography::La
 int main()
 {
 	constexpr char* DB_NAME = "map_tokyo_category_top_level";
-	constexpr double MAX_INTERVAL = 600.0;
+	constexpr double MAX_INTERVAL = 720.0;
 	constexpr double MAX_WALKING_SPEED = 5.0 * 1000 / 3600.0;
 
 	
@@ -84,12 +85,13 @@ int main()
 	db->use(DB_NAME);
 	
 	//std::vector<std::string> user_ids = get_all_user_id(db);
-	std::vector<std::string> user_ids = { "822", "1092", "1143", "1240", "196", "557", "368" };
+	//std::vector<std::string> user_ids = { "822", "1092", "1143", "1240", "196", "557", "368" };
+	std::vector<std::string> user_ids = {"196", "557", "368" };
 
 	User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins_cleaned", "pois");
 	
 	//É}ÉbÉvÇÃì«Ç›çûÇ›
-	std::shared_ptr<Map::BasicDbMap> map = std::make_shared<Map::BasicDbPreprocessedMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
+	std::shared_ptr<Map::BasicDbMap> map = std::make_shared<Map::OnTimeQueryDbMap>(std::make_shared<Graph::Dijkstra<Map::BasicMapNode, Map::BasicRoad>>(), "../settings/mydbsettings.xml", DB_NAME);
 	map->load(Graph::Rectangle<Geography::LatLng>(35.9, 139.4, 35.5, 141.0));
 	
 	std::unique_ptr<User::UserTrajectoryConverter> converter = std::make_unique<User::UserTrajectoryConverter>(map);

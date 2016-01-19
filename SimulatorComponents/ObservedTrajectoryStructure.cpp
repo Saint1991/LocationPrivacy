@@ -200,8 +200,7 @@ namespace Observer
 		
 		std::vector<std::shared_ptr<ObservedTrajectoryNode const>> first_nodes = read_all_nodes_of_phase(phase);
 		for (std::vector<std::shared_ptr<ObservedTrajectoryNode const>>::const_iterator node = first_nodes.begin(); node != first_nodes.end(); node++) {
-			if (entity_count_info.find(*(*node)->data) == entity_count_info.end()) entity_count_info.insert(std::make_pair(*(*node)->data, 1U));
-			else entity_count_info.at(*(*node)->data) += 1;
+			entity_count_info.insert(std::make_pair(*(*node)->data, (*node)->get_count()));
 		} 
 
 		return entity_count_info;
@@ -233,6 +232,27 @@ namespace Observer
 		}
 
 		return probability;
+	}
+
+
+	///<summary>
+	/// しゃーなし場当たり的対応
+	/// 出ているエッジのフローの和を1に正規化する
+	///</summary>
+	void ObservedTrajectoryStructure::normalize_all_edges()
+	{
+		node_collection->foreach([](std::shared_ptr<ObservedTrajectoryNode> node) {
+			double edge_flow_sum = 0.0;
+			node->for_each_edge([&edge_flow_sum](std::shared_ptr<Graph::FlowEdge> edge) {
+				edge_flow_sum += edge->get_flow();
+			});
+			if (!(0.999 <= edge_flow_sum && edge_flow_sum <= 1.001)) {
+				double new_value = 1.0 / (double)node->get_connecting_node_list().size();
+				node->for_each_edge([new_value](std::shared_ptr<Graph::FlowEdge> edge) {
+					edge->set_flow(new_value);
+				});
+			}
+		});
 	}
 }
 

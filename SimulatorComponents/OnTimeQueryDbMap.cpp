@@ -30,9 +30,10 @@ namespace Map
 		double ret_distance = Graph::NO_CONNECTION;
 		
 		std::stringstream query;
-		query << "SELECT distance FROM distances WHERE id1 = ? AND id2 = ?;";
-		sql::PreparedStatement* statement = db->prepare(query.str());
-
+		query << "SELECT distance FROM distances2 WHERE id1 = ? AND id2 = ?;";
+		db->use(db_name);
+		std::shared_ptr<sql::PreparedStatement> statement = std::shared_ptr<sql::PreparedStatement>(db->prepare(query.str()));
+	
 		//—¼•ûINTERSECTION‚Ìê‡
 		if (from.type() == Graph::NodeType::INTERSECTION && to.type() == Graph::NodeType::INTERSECTION) {
 			Graph::node_id from_id = from.id();
@@ -40,10 +41,11 @@ namespace Map
 			if (from_id > to_id) std::swap(from_id, to_id);
 			statement->setInt(1, from_id);
 			statement->setInt(2, to_id);
-			sql::ResultSet* result = statement->executeQuery();
+			std::shared_ptr<sql::ResultSet> result = std::shared_ptr<sql::ResultSet>(statement->executeQuery());
+			statement->clearParameters();
 			result->beforeFirst();
 			ret_distance = result->next() ? result->getDouble("distance") : DBL_MAX;
-			delete result;
+			result->close();
 		}
 
 		//—¼•ûPOI‚Ìê‡
@@ -66,10 +68,11 @@ namespace Map
 				statement->setInt(2, between_from.first);
 				statement->setInt(1, between_to.first);
 			}
-			sql::ResultSet* result = statement->executeQuery();
+			std::shared_ptr<sql::ResultSet> result = std::shared_ptr<sql::ResultSet>(statement->executeQuery());
 			result->beforeFirst();
 			double first_first = result->next() ? result->getDouble("distance") : DBL_MAX;
-			
+			statement->clearParameters();
+
 			if (between_from.first < between_to.second) {
 				statement->setInt(1, between_from.first);
 				statement->setInt(2, between_to.second);
@@ -78,10 +81,11 @@ namespace Map
 				statement->setInt(2, between_from.first);
 				statement->setInt(1, between_to.second);
 			}
-			result = statement->executeQuery();
+			result = std::shared_ptr<sql::ResultSet>(statement->executeQuery());
 			result->beforeFirst();
 			double first_second = result->next() ? result->getDouble("distance") : DBL_MAX;
-			
+			result->close();
+			statement->clearParameters();
 
 			if (between_from.second < between_to.first) {
 				statement->setInt(1, between_from.second);
@@ -91,10 +95,12 @@ namespace Map
 				statement->setInt(2, between_from.second);
 				statement->setInt(1, between_to.first);
 			}
-			result = statement->executeQuery();
+			result = std::shared_ptr<sql::ResultSet>(statement->executeQuery());
 			result->beforeFirst();
 			double second_first = result->next() ? result->getDouble("distance") : DBL_MAX;
-			
+			result->close();
+			statement->clearParameters();
+
 			if (between_from.second < between_to.second) {
 				statement->setInt(1, between_from.second);
 				statement->setInt(2, between_to.second);
@@ -103,11 +109,11 @@ namespace Map
 				statement->setInt(2, between_from.second);
 				statement->setInt(1, between_to.second);
 			}
-			result = statement->executeQuery();
+			result = std::shared_ptr<sql::ResultSet>(statement->executeQuery());
 			result->beforeFirst();
 			double second_second = result->next() ? result->getDouble("distance") : DBL_MAX;
-
-			delete result;
+			result->close();
+			statement->clearParameters();
 
 			first_first += first_first == DBL_MAX || distance_poi_from_to_first == DBL_MAX || distance_poi_to_to_first == DBL_MAX ? 0 : distance_poi_from_to_first + distance_poi_to_to_first;
 			first_second += first_second == DBL_MAX || distance_poi_from_to_first == DBL_MAX || distance_poi_to_to_second == DBL_MAX ? 0 : distance_poi_from_to_first + distance_poi_to_to_second;
@@ -146,10 +152,11 @@ namespace Map
 				statement->setInt(1, from_id);
 				statement->setInt(2, to_id);
 			}
-			sql::ResultSet* result = statement->executeQuery();
+			std::shared_ptr<sql::ResultSet> result = std::shared_ptr<sql::ResultSet>(statement->executeQuery());
 			result->beforeFirst();
 			double distance_first = result->next() ? result->getDouble("distance") : DBL_MAX;
-			
+			result->close();
+			statement->clearParameters();
 
 			if (from.type() == Graph::NodeType::POI) {
 				Graph::node_id from_id = min(between.second, to.id());
@@ -163,17 +170,26 @@ namespace Map
 				statement->setInt(1, from_id);
 				statement->setInt(2, to_id);
 			}
-			result = statement->executeQuery();
+			result = std::shared_ptr<sql::ResultSet>(statement->executeQuery());
 			result->beforeFirst();
-			double distance_second = from.type() == result->next() ? result->getDouble("distance") : DBL_MAX;
-			delete result;
+			double distance_second = result->next() ? result->getDouble("distance") : DBL_MAX;
+			result->close();
+			statement->clearParameters();
 
 			distance_first += distance_first == Graph::NO_CONNECTION || distance_to_first == Graph::NO_CONNECTION ? 0 : distance_to_first;
 			distance_second += distance_second == Graph::NO_CONNECTION || distance_to_second == Graph::NO_CONNECTION ? 0 : distance_to_second;
 
 			ret_distance = min(distance_first, distance_second);
 		}
-
+		
+		try {
+			statement->close();
+		}
+		catch (sql::SQLException& e)
+		{
+			std::cout << e.what() << std::endl;
+			std::cout << "(" << e.getErrorCode() << ")" << std::endl;
+		}
 
 		return ret_distance > distance_threshold ? DBL_MAX : ret_distance;
 	}

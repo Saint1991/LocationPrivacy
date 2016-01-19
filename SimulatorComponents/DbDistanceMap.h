@@ -22,7 +22,7 @@ namespace Map
 		DbDistanceMap(
 			const std::string& setting_file_path,
 			const std::string& db_name,
-			const std::string& table_name = "distances");
+			const std::string& table_name = "distances2");
 		~DbDistanceMap();
 		void load(const Graph::Rectangle<Geography::LatLng>& boundary);
 
