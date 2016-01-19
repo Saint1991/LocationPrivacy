@@ -15,7 +15,8 @@ namespace Observer
 	class SEMANTIC_OBSERVER_API SemanticObserver : public BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, DUMMY_TYPE, USER_TYPE>
 	{
 	protected:
-		std::shared_ptr<User::PreferenceTree const> observed_preference;
+		std::shared_ptr<User::PreferenceTree const> preference;
+		std::shared_ptr<ObservedTrajectoryStructure> semantic_observed_trajectory_structure;
 
 	public:
 		SemanticObserver(
@@ -28,6 +29,7 @@ namespace Observer
 		~SemanticObserver();
 
 		void for_each_category_sequence_of_possible_trajectory(const std::function<void(const Collection::Sequence<std::string>&, double)>& execute_function);
+		std::shared_ptr<ObservedTrajectoryStructure const> create_semantic_observed_trajectory_structure();
 		double calc_mtc_with_semantics() const;
 	};
 

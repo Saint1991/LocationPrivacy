@@ -22,6 +22,7 @@ namespace Observer
 
 	public:
 		ObservedTrajectoryStructure();
+		ObservedTrajectoryStructure(const ObservedTrajectoryStructure& structure);
 		~ObservedTrajectoryStructure();
 
 		void initialize(std::shared_ptr<ObservedTrajectoryNode> root_node);

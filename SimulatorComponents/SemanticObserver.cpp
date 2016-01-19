@@ -6,6 +6,7 @@ namespace  Observer
 
 	///<summary>
 	/// コンストラクタ
+	/// (現状の内容ではpreferenceには真の嗜好を渡すべき)
 	///</summary>
 	template <typename DUMMY_TYPE, typename USER_TYPE>
 	SemanticObserver<DUMMY_TYPE, USER_TYPE>::SemanticObserver(
@@ -14,7 +15,7 @@ namespace  Observer
 		std::shared_ptr<User::PreferenceTree> preference,
 		double move_speed,
 		const std::function<bool(std::shared_ptr<Map::BasicDbMap const>, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, double, long)>& cross_rule
-		) : BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, DUMMY_TYPE, USER_TYPE>(map, entities, move_speed, cross_rule), observed_preference(preference)
+		) : BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, DUMMY_TYPE, USER_TYPE>(map, entities, move_speed, cross_rule), preference(preference)
 	{
 	}
 
@@ -47,6 +48,22 @@ namespace  Observer
 		});
 	}
 
+	///<summary>
+	/// SemanticObservedStructureを作成する
+	/// この構造では，エッジが移動したエンティティ数の期待値的比率を表し，
+	/// ノードその移動経路集合に対し，サポート値を累積していったものを保持する．
+	///</summary>
+	template <typename DUMMY_TYPE, typename USER_TYPE>
+	std::shared_ptr<ObservedTrajectoryStructure const> SemanticObserver<DUMMY_TYPE, USER_TYPE>::create_semantic_observed_trajectory_structure() {
+		
+		if (structure == nullptr) create_observed_trajectory_structure();
+		std::shared_ptr<ObservedTrajectoryStructure> semantic_structure = std::make_shared<ObservedTrajectoryStructure>(*structure);
+		
+
+
+		semantic_observed_trajectory_structure = semantic_structure;
+		return semantic_structure;
+	}
 
 	///<summary>
 	/// Semanticsを考慮したMTCの計算 (未実装)
@@ -54,6 +71,9 @@ namespace  Observer
 	template <typename DUMMY_TYPE, typename USER_TYPE>
 	double SemanticObserver<DUMMY_TYPE, USER_TYPE>::calc_mtc_with_semantics() const
 	{
+		if (structure == nullptr) create_observed_trajectory_structure();
+
+
 		return 0.0;
 	}
 }

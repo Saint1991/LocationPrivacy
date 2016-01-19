@@ -12,6 +12,14 @@ namespace Observer
 		initialize(std::make_shared<ObservedTrajectoryNode>(0, 0, nullptr));
 	}
 
+	///<summary>
+	/// コピーコンストラクタ
+	///</summary>
+	ObservedTrajectoryStructure::ObservedTrajectoryStructure(const ObservedTrajectoryStructure& structure) 
+		: Graph::Tree<ObservedTrajectoryNode, Graph::MapNodeIndicator, Graph::FlowEdge, double>(structure)
+	{
+
+	}
 
 	///<summary>
 	/// デストラクタ
