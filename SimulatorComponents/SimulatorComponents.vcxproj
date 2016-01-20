@@ -169,6 +169,7 @@
     <ClInclude Include="KatoMasterMethod.h" />
     <ClInclude Include="MatsunoMethod.h" />
     <ClInclude Include="MizunoMethod.h" />
+    <ClInclude Include="MizunoMethodMod.h" />
     <ClInclude Include="ObservedTrajectoryNode.h" />
     <ClInclude Include="ObservedTrajectoryStructure.h" />
     <ClInclude Include="OnTimeQueryDbMap.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="KatoMasterMethod.cpp" />
     <ClCompile Include="MatsunoMethod.cpp" />
     <ClCompile Include="MizunoMethod.cpp" />
+    <ClCompile Include="MizunoMethodMod.cpp" />
     <ClCompile Include="ObservedTrajectoryNode.cpp" />
     <ClCompile Include="ObservedTrajectoryStructure.cpp" />
     <ClCompile Include="OnTimeQueryDbMap.cpp" />

@@ -150,6 +150,9 @@
     <ClInclude Include="SemanticObserver.h">
       <Filter>ヘッダー ファイル\Observer</Filter>
     </ClInclude>
+    <ClInclude Include="MizunoMethodMod.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -247,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="SemanticObserver.cpp">
       <Filter>ソース ファイル\Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="MizunoMethodMod.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
