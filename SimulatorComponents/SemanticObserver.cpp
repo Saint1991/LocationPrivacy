@@ -58,8 +58,22 @@ namespace  Observer
 		
 		if (structure == nullptr) create_observed_trajectory_structure();
 		std::shared_ptr<ObservedTrajectoryStructure> semantic_structure = std::make_shared<ObservedTrajectoryStructure>(*structure);
-		
+		semantic_structure->clear_node_counts();
 
+		//今回のpossible_trajectoryのエンティティカウントをサポートの累積に置き換えたもの
+		structure->for_each_possible_trajectory([&](const Collection::Sequence<Graph::MapNodeIndicator>& trajectory) {
+			Collection<User::category_id> sequence = map->convert_to_category_sequence(trajectory);
+			double support = preference->get_support_of(sequence);
+
+			//trajectoryに対応するすべてのノードのカウントにsupportを足す
+			ObservedTrajectoryStructure::base_iterator iter = semantic_structure->root<ObservedTrajectoryStructure::base_iterator>();
+			for (Collection::Sequence<Graph::MapNodeIndicator>::const_iterator node_indicator = trajectory.begin(); node_indicator != trajectory.end(); node_indicator++) {
+				iter = iter.find_child_if([&node_indicator](std::shared_ptr<ObservedTrajectoryNode const> node) {
+					return *node->data == *node_indicator;
+				});
+				iter->add_count(support);
+			}
+		});
 
 		semantic_observed_trajectory_structure = semantic_structure;
 		return semantic_structure;
@@ -71,8 +85,8 @@ namespace  Observer
 	template <typename DUMMY_TYPE, typename USER_TYPE>
 	double SemanticObserver<DUMMY_TYPE, USER_TYPE>::calc_mtc_with_semantics() const
 	{
-		if (structure == nullptr) create_observed_trajectory_structure();
-
+		std::shared_ptr<ObservedTrajectoryStructure> semantic_structure = create_semantic_observed_trajectory_structure();
+		
 
 		return 0.0;
 	}

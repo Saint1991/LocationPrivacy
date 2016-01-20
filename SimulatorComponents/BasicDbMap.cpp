@@ -163,6 +163,20 @@ namespace Map
 		return ret;
 	}
 	
+
+	///<summary>
+	/// MapNodeIndicatorの系列をカテゴリシーケンスに変換する
+	///</summary>
+	Collection::Sequence<User::category_id> BasicDbMap::convert_to_category_sequence(const std::vector<Graph::MapNodeIndicator>& trajectory) const
+	{
+		Collection::Sequence<User::category_id> ret;
+		for (std::vector<Graph::MapNodeIndicator>::const_iterator iter = trajectory.begin(); iter != trajectory.end(); iter++) {
+			if (iter->type() != Graph::NodeType::POI) throw std::invalid_argument("NodeType must be POI");
+			std::shared_ptr<BasicPoi const> poi = get_static_poi(iter->id());
+			ret.push_back(poi->category_id());
+		}
+		return ret;
+	}
 }
 
 

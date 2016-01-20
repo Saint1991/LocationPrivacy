@@ -15,14 +15,17 @@ namespace Observer
 	{
 	protected:
 		int depth;
-		size_t entity_count;
+		double entity_count;
 
 	public:
 		ObservedTrajectoryNode(Graph::node_id id, int depth, std::shared_ptr<Graph::MapNodeIndicator> map_node_id);
 		~ObservedTrajectoryNode();
 
 		void count_up();
-		size_t get_count() const;
+		double get_count() const;
+
+		void add_count(double add);	
+		void clear_count();
 		int get_depth() const;
 		void set_depth(int depth);
 

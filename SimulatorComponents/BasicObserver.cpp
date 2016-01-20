@@ -186,6 +186,27 @@ namespace Observer
 		});
 	}
 
+
+
+	///<summary>
+	/// 各エンティティの交差回数を取得する
+	/// インデックスがエンティティIDに対応
+	///</summary>
+	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
+	std::vector<int> BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::get_cross_count_of_each_entity() const
+	{
+		std::vector<int> cross_counts;
+		for (int i = 0; i <= entities->get_dummy_count(); i++) {
+			std::vector<Evaluate::CrossInfo> info = get_cross_info_of_entity(i);
+			int count = 0;
+			for (std::vector<Evaluate::CrossInfo>::const_iterator iter = info.begin(); iter != info.end(); iter++) {
+				if (iter->crossing_entities.size() > 0) count++;
+			}
+			cross_counts.at(i) = count;
+		}
+		return cross_counts;
+	}
+
 	///<summary>
 	/// AR-Countを計算する
 	///</summary>

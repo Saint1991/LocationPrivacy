@@ -262,5 +262,16 @@ namespace Observer
 			}
 		});
 	}
+
+
+	///<summary>
+	/// 全ノードの保持するカウントを0にする
+	///</summary>
+	void ObservedTrajectoryStructure::clear_node_counts()
+	{
+		node_collection->foreach([](std::shared_ptr<Observer::ObservedTrajectoryNode> node) {
+			node->clear_count();
+		});
+	}
 }
 

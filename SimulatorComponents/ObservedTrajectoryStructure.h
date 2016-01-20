@@ -46,5 +46,6 @@ namespace Observer
 		double calc_probability_of_trajectory(const std::vector<Graph::MapNodeIndicator>& trajectory) const;
 		
 		void normalize_all_edges();
+		void clear_node_counts();
 	};
 }
