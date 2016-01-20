@@ -12,6 +12,14 @@ namespace Observer
 		initialize(std::make_shared<ObservedTrajectoryNode>(0, 0, nullptr));
 	}
 
+	///<summary>
+	/// コピーコンストラクタ
+	///</summary>
+	ObservedTrajectoryStructure::ObservedTrajectoryStructure(const ObservedTrajectoryStructure& structure) 
+		: Graph::Tree<ObservedTrajectoryNode, Graph::MapNodeIndicator, Graph::FlowEdge, double>(structure)
+	{
+
+	}
 
 	///<summary>
 	/// デストラクタ
@@ -252,6 +260,17 @@ namespace Observer
 					edge->set_flow(new_value);
 				});
 			}
+		});
+	}
+
+
+	///<summary>
+	/// 全ノードの保持するカウントを0にする
+	///</summary>
+	void ObservedTrajectoryStructure::clear_node_counts()
+	{
+		node_collection->foreach([](std::shared_ptr<Observer::ObservedTrajectoryNode> node) {
+			node->clear_count();
 		});
 	}
 }

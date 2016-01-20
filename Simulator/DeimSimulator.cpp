@@ -129,6 +129,8 @@ namespace Simulation
 		mtc2_vector_proposed.push_back(mtc2);
 		std::cout << "MTC2: " << std::to_string(mtc2) << "sec" << std::endl;
 
+		cross_count_info.push_back(observer->get_cross_count_of_each_entity());
+
 		//可観測な木の更新
 		observer->for_each_category_sequence_of_possible_trajectory([&](const Collection::Sequence<User::category_id>& sequence, double expected_frequency) {
 			observed_preference_tree->add_sequence_counter(sequence, expected_frequency);
@@ -154,11 +156,14 @@ namespace Simulation
 		//MTC1, MTC2のエクスポート
 		export_mtcs(requirement);
 
+		export_cross_count_info(requirement);
+
 		similarity_vector_proposed = std::vector<double>();
 		ar_count_vector_proposed = std::vector<double>();
 		ar_size_vector_proposed = std::vector<double>();
 		mtc1_vector_proposed = std::vector<double>();
 		mtc2_vector_proposed = std::vector<double>();
+		cross_count_info = std::vector<std::vector<int>>();
 	}
 
 	void DeimSimulator::export_similarities(const Requirement::PreferenceRequirement& requirement)
@@ -188,6 +193,24 @@ namespace Simulation
 			out_file << *iter << std::endl;
 		}
 
+		out_file.close();
+	}
+
+	void DeimSimulator::export_cross_count_info(const Requirement::PreferenceRequirement& requirement)
+	{
+		std::stringstream export_path;
+		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path << "/cross-count-info.csv";
+
+		std::ofstream out_file(export_path.str());
+		for (std::vector<std::vector<int>>::const_iterator iter = cross_count_info.begin(); iter != cross_count_info.end(); iter++) {
+			for (Entity::entity_id id = 0; id < iter->size(); iter++) {
+				out_file << iter->at(id) << ",";
+			}
+			out_file << std::endl;
+		}
+		
 		out_file.close();
 	}
 

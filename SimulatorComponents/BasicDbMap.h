@@ -68,6 +68,7 @@ namespace Map
 		std::shared_ptr<BasicPoi const> find_random_poi_within_boundary(const Graph::Rectangle<Geography::LatLng>& boundary, const std::string& category_id) const;
 
 		std::shared_ptr<std::vector<Collection::Sequence<Graph::MapNodeIndicator>>> find_reachable_trajectories(const Graph::MapNodeIndicator& point_basis, const Collection::Sequence<User::category_id> category_sequence, const std::vector<double> reachable_distance_list, int poi_limit_for_each_phase = 8) const;
+		Collection::Sequence<User::category_id> convert_to_category_sequence(const std::vector<Graph::MapNodeIndicator>& trajectory) const;
 	};
 
 }

@@ -45,6 +45,8 @@ namespace Observer
 		);
 		~BasicObserver();
 
+		std::vector<int> get_cross_count_of_each_entity() const;
+
 		std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> calc_cross_info();
 		std::shared_ptr<Observer::ObservedTrajectoryStructure const> create_observed_trajectory_structure();
 		void for_each_possible_trajectory_probability_of_entity(Entity::entity_id id, const std::function<void(const Collection::Sequence<Graph::MapNodeIndicator>, double)>& execute_function);

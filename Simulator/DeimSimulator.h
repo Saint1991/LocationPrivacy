@@ -29,6 +29,7 @@ namespace Simulation
 		std::vector<double> mtc2_vector_proposed;
 		std::vector<double> ar_count_vector_proposed;
 		std::vector<double> ar_size_vector_proposed;
+		std::vector<std::vector<int>> cross_count_info;
 		int confused_count_without_semantics;
 		int confused_count_with_semantics;
 		
@@ -39,6 +40,7 @@ namespace Simulation
 		void export_mtcs(const Requirement::PreferenceRequirement& requirement);
 		void export_ar_counts(const Requirement::PreferenceRequirement& requirement);
 		void export_ar_sizes(const Requirement::PreferenceRequirement& requirement);
+		void export_cross_count_info(const Requirement::PreferenceRequirement& requirement);
 		void export_evaluation_result(const Requirement::PreferenceRequirement& requirement);
 
 	public:

@@ -22,6 +22,7 @@ namespace Observer
 
 	public:
 		ObservedTrajectoryStructure();
+		ObservedTrajectoryStructure(const ObservedTrajectoryStructure& structure);
 		~ObservedTrajectoryStructure();
 
 		void initialize(std::shared_ptr<ObservedTrajectoryNode> root_node);
@@ -45,5 +46,6 @@ namespace Observer
 		double calc_probability_of_trajectory(const std::vector<Graph::MapNodeIndicator>& trajectory) const;
 		
 		void normalize_all_edges();
+		void clear_node_counts();
 	};
 }
