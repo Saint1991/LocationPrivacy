@@ -19,8 +19,6 @@ namespace Simulation
 	void DeimSimulator::make_requirement_list()
 	{
 		requirements = {
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0.6, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0.4, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0.2, AVERAGE_SPEED, 1.0),
 			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0, AVERAGE_SPEED, 1.0)
 
@@ -51,10 +49,10 @@ namespace Simulation
 
 				//可観測な嗜好の木のコピー
 				std::shared_ptr<User::PreferenceTree> observed_preference_tree_copy = std::make_shared<User::PreferenceTree>(*observed_preference_tree);
-				
+
 				//ユーザの作成
 				std::shared_ptr<User::BasicUser<Geography::LatLng>> user = std::make_shared<User::BasicUser<Geography::LatLng>>(user_trajectory, user_preference_tree);
-				
+
 				//提案手法のインスタンス化
 				std::shared_ptr<Framework::IProposedMethod<
 					Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>,
@@ -67,9 +65,6 @@ namespace Simulation
 
 			//1要求当たりの結果をエクスポートする
 			export_evaluation_result(**iter);
-			
-			//今だけ
-			break;
 		}
 	}
 

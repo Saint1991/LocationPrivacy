@@ -41,16 +41,18 @@ namespace Test
 		{
 			std::shared_ptr<User::PreferenceTree> preference = std::make_shared<User::PreferenceTree>();
 			preference->add_sequence_counter({ "A", "B" });
-			preference->add_sequence_counter({ "A", "B" });
-			preference->add_sequence_counter({ "A", "C" });
-			preference->add_sequence_counter({ "B", "C", "D" });
 
-			std::shared_ptr<User::PreferenceTree> preference2 = std::make_shared<User::PreferenceTree>();;
+			std::shared_ptr<User::PreferenceTree> preference2 = std::make_shared<User::PreferenceTree>();
 			preference2->add_sequence_counter({ "A", "B" });
-			preference2->add_sequence_counter({ "A", "C" });
+			
+			std::shared_ptr<User::PreferenceTree> preference3 = std::make_shared<User::PreferenceTree>();
+			preference3->add_sequence_counter({ "A", "C" });
 
 			double similarity = User::similarity(*preference, *preference2);
-			Assert::AreEqual(1.0 - (0.25 * 5 / 6), similarity);
+			Assert::AreEqual(1.0, similarity);
+
+			similarity = User::similarity(*preference, *preference3);
+			Assert::AreEqual(0.0, similarity);
 		}
 	};
 }

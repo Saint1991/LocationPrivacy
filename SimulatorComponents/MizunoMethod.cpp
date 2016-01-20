@@ -401,7 +401,7 @@ namespace Method
 			});
 			std::shuffle(entity_cross_counts.begin(), ++last_min_entity_element, generator);
 			Entity::entity_id min_entity = entity_cross_counts.begin()->first;
-			std::shared_ptr<Entity::Dummy<>> target_entity = min_entity == 0 ? entities->get_user() : entities->get_dummy_by_id(min_entity);
+			std::shared_ptr<Entity::MobileEntity<Geography::LatLng>> target_entity = entities->get_entity_by_id(min_entity);
 
 			//交差未設定の時刻のうち共有地点が設定されているエンティティ数が最小の時刻をランダムに選択
 			std::vector<std::pair<int, size_t>> cross_counts;
@@ -410,6 +410,7 @@ namespace Method
 				size_t cross_count = entities->get_total_cross_count_of_phase(phase);
 				cross_counts.push_back(std::make_pair(phase, cross_count));
 			}
+			if (cross_counts.size() == 0) cross_counts.push_back(std::make_pair(0, entities->get_total_cross_count_of_phase(0)));
 			std::sort(cross_counts.begin(), cross_counts.end(), [](const std::pair<int, size_t>& left, const std::pair<int, size_t>& right) {
 				return left.second < right.second;
 			});
@@ -423,11 +424,20 @@ namespace Method
 			//基準点を基に経路を決定
 			Collection::Sequence<User::category_id> any_category_sequence(time_manager->phase_count(), User::ANY);
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>> trajectory = nullptr;
-			for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL; i++) {
+			for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL && trajectory == nullptr; i++) {
 				std::cout << i << "\t";
 				trajectory = create_trajectory(current_dummy_id, std::make_pair(target_phase, point_basis), any_category_sequence);
-				if (trajectory != nullptr) break;
 			}
+
+			if (trajectory == nullptr) {
+				for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL + 20 && trajectory == nullptr; i++) {
+					std::cout << i << "\t";
+					Graph::MapNodeIndicator temp_point_basis = current_dummy_id == 1 ? entities->read_entity_by_id(0)->read_node_pos_info_of_phase(0).first : entities->read_entity_by_id(1)->read_node_pos_info_of_phase(0).first;
+					trajectory = create_trajectory(current_dummy_id, std::make_pair(target_phase, temp_point_basis), any_category_sequence);
+				}
+			}
+
+
 			std::cout << std::endl;
 			if (trajectory == nullptr) throw Framework::TrajectoryNotFoundException("Can't found reachable Trajectory");
 
