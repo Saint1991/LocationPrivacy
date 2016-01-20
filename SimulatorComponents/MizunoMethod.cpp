@@ -96,7 +96,7 @@ namespace Method
 			//シーケンスはトップ50のみ使う
 			std::vector<sequence_score_set> top_k_sequence(all_sequence_scores.begin(), all_sequence_scores.begin() + min(all_sequence_scores.size() - 1, 50));
 
-			//実際の経路の生成 (5つ作成できた時点で打ち切る)
+			//実際の経路の生成 (2つ作成できた時点で打ち切る)
 			std::vector<trajectory_score_set> trajectory_scores = calc_trajectory_score_set(current_dummy_id,top_k_sequence);
 			
 			//経路が生成できなかった場合は例外を投げて終了 (暫定的処置)
@@ -301,7 +301,7 @@ namespace Method
 			trajectory_score = score * size_sum;
 			if (is_all_sequence_score_negative) trajectory_score = size_sum;
 			ret.push_back(std::make_pair(std::make_pair(*trajectory, cross), trajectory_score));
-			if (ret.size() >= 5) return ret;
+			if (ret.size() >= 2) return ret;
 		}
 
 		return ret;
@@ -463,18 +463,6 @@ namespace Method
 	}
 
 	///<summary>
-	/// 基準点と移動可能な距離から，探索範囲を作成する
-	///</summary>
-	Graph::Rectangle<Geography::LatLng> create_reachable_rect(const Geography::LatLng& center, double reachable_distance)
-	{
-		double top = center.lat() + 0.000009 * reachable_distance;
-		double left = center.lng() - 0.000011 * reachable_distance;
-		double bottom = center.lat() - 0.000009 * reachable_distance;
-		double right = center.lng() + 0.000011 * reachable_distance;
-		return Graph::Rectangle<Geography::LatLng>(top, left, bottom, right);
-	}
-
-	///<summary>
 	/// 基準の点を基に到達可能性を満たす経路生成を試行する
 	/// 経路にはランダム性があり，もし到達可能な経路が生成できなかった場合はnullptrを返す
 	///</summary>
@@ -510,7 +498,7 @@ namespace Method
 			double setting_anonymous_area = setting_anonymous_areas->at(current_dummy_id - 1);
 
 			//探索範囲
-			Graph::Rectangle<Geography::LatLng> search_boundary = create_reachable_rect(current_poi->get_point(), reachable_distance);
+			Graph::Rectangle<Geography::LatLng> search_boundary = Map::BasicDbMap::create_reachable_rect(current_poi->get_point(), reachable_distance);
 			std::vector<std::shared_ptr<Map::BasicPoi const>> poi_candidates = map->find_pois_of_category_within_boundary(search_boundary, category);
 			if (poi_candidates.size() == 0) return nullptr;
 			std::shuffle(poi_candidates.begin(), poi_candidates.end(), generator);
@@ -566,7 +554,7 @@ namespace Method
 		////後半部分の決定
 		reachable_distance_list = std::vector<double>(time_manager->phase_count() - basis.first - 1);
 		for (int phase = basis.first + 1; phase < time_manager->phase_count(); phase++) {
-			double speed = prob.gaussian_distribution(requirement->average_speed_of_dummy, requirement->speed_range_of_dummy);
+			double speed = prob.uniform_distribution(requirement->average_speed_of_dummy - requirement->speed_range_of_dummy, requirement->average_speed_of_dummy + requirement->speed_range_of_dummy);
 			speed = min(speed, requirement->average_speed_of_dummy, requirement->average_speed_of_dummy + requirement->speed_range_of_dummy / 2);
 			time_t previous_time = time_manager->time_of_phase(phase - 1);
 			time_t current_time = time_manager->time_of_phase(phase);
@@ -585,7 +573,7 @@ namespace Method
 			double setting_anonymous_area = setting_anonymous_areas->at(current_dummy_id - 1);
 
 			//探索範囲
-			Graph::Rectangle<Geography::LatLng> search_boundary = create_reachable_rect(current_poi->get_point(), reachable_distance);
+			Graph::Rectangle<Geography::LatLng> search_boundary = Map::BasicDbMap::create_reachable_rect(current_poi->get_point(), reachable_distance);
 			std::vector<std::shared_ptr<Map::BasicPoi const>> poi_candidates = map->find_pois_of_category_within_boundary(search_boundary, category);
 			if (poi_candidates.size() == 0) return nullptr;
 			std::shuffle(poi_candidates.begin(), poi_candidates.end(), generator);

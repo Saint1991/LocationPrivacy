@@ -24,7 +24,7 @@ namespace Method
 		typedef std::pair<std::pair<std::vector<Graph::MapNodeIndicator>, Entity::cross_target>, double> trajectory_score_set;
 
 		//スコアリングのパラメータ
-		static constexpr double B = 0.8;
+		static constexpr double B = 0.5;
 		//進行方向に沿わせる制限の角度θ
 		static constexpr double THETA = M_PI_2;
 		//経路生成の試行回数の上限

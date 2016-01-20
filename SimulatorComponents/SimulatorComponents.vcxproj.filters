@@ -151,7 +151,7 @@
       <Filter>ヘッダー ファイル\Observer</Filter>
     </ClInclude>
     <ClInclude Include="MizunoMethodMod.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Method</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -252,7 +252,7 @@
       <Filter>ソース ファイル\Observer</Filter>
     </ClCompile>
     <ClCompile Include="MizunoMethodMod.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Method</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

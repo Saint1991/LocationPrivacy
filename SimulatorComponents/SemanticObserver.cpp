@@ -15,7 +15,7 @@ namespace  Observer
 		std::shared_ptr<User::PreferenceTree> preference,
 		double move_speed,
 		const std::function<bool(std::shared_ptr<Map::BasicDbMap const>, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, double, long)>& cross_rule
-		) : BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, DUMMY_TYPE, USER_TYPE>(map, entities, move_speed, cross_rule), preference(preference)
+		) : BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, DUMMY_TYPE, USER_TYPE>(map, entities, move_speed, cross_rule), preference(preference), confusion_total_count_with_semantics(0), confusion_achieve_count_with_semantics(0)
 	{
 	}
 
@@ -89,5 +89,12 @@ namespace  Observer
 		
 
 		return 0.0;
+	}
+
+	template <typename DUMMY_TYPE, typename USER_TYPE>
+	double SemanticObserver<DUMMY_TYPE, USER_TYPE>::get_confusion_achieve_ratio_with_semantics() const
+	{
+		if (confusion_total_count_with_semantics == 0) return 0;
+		return (double)confusion_achieve_count_with_semantics / (double)confusion_total_count_with_semantics;
 	}
 }

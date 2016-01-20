@@ -14,7 +14,7 @@ namespace Observer
 		std::shared_ptr<Entity::EntityManager<Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE> const> entities,
 		double move_speed,
 		const std::function<bool(std::shared_ptr<Map::BasicDbMap const>, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, const Graph::MapNodeIndicator&, double, long)>& cross_rule
-	) : module(std::make_unique<Evaluate::CrossJudgementModule<Map::BasicDbMap, Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>>(map, entities, move_speed, cross_rule)), entities(entities), map(map), structure(nullptr), cross_infos(nullptr)
+	) : module(std::make_unique<Evaluate::CrossJudgementModule<Map::BasicDbMap, Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>>(map, entities, move_speed, cross_rule)), entities(entities), map(map), structure(nullptr), cross_infos(nullptr), confusion_total_count(0), cunfusion_achive_count(0)
 	{
 	}
 
@@ -258,7 +258,9 @@ namespace Observer
 			if (time_to_confusion != -1.0) {
 				confusion_count++;
 				confusion_time_sum += time_to_confusion;
-			}
+				cunfusion_achive_count++;
+			} 
+			confusion_total_count++;
 		}
 
 		if (confusion_count == 0) return -1.0;
@@ -316,6 +318,13 @@ namespace Observer
 		}
 
 		return -1.0;
+	}
+
+	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
+	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::get_confusion_achive_ratio_without_semantics() const
+	{
+		if (confusion_total_count == 0) return 0.0;
+		return (double)cunfusion_achive_count / (double)confusion_total_count;
 	}
 }
 

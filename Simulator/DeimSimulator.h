@@ -11,6 +11,7 @@
 #include "PreferenceRequirement.h"
 #include "UserTrajectoryConverter.h"
 #include "SemanticObserver.h"
+#include "MizunoMethodMod.h"
 
 namespace Simulation 
 {
@@ -30,8 +31,8 @@ namespace Simulation
 		std::vector<double> ar_count_vector_proposed;
 		std::vector<double> ar_size_vector_proposed;
 		std::vector<std::vector<int>> cross_count_info;
-		int confused_count_without_semantics;
-		int confused_count_with_semantics;
+		std::vector<double> confusion_achive_ratio_without_semantics_vector;
+		std::vector<double> confusion_achive_ratio_with_semantics_vector;
 		
 	protected:
 		void make_requirement_list();
@@ -41,14 +42,15 @@ namespace Simulation
 		void export_ar_counts(const Requirement::PreferenceRequirement& requirement);
 		void export_ar_sizes(const Requirement::PreferenceRequirement& requirement);
 		void export_cross_count_info(const Requirement::PreferenceRequirement& requirement);
+		void export_confusion_ratio(const Requirement::PreferenceRequirement& requirement);
 		void export_evaluation_result(const Requirement::PreferenceRequirement& requirement);
+		void export_preference_histogram(const Requirement::PreferenceRequirement& requirement);
 
 	public:
 		DeimSimulator();
 		~DeimSimulator();
 
 		void run();
-		
 	};
 }
 

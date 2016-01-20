@@ -4,7 +4,7 @@
 namespace Simulation
 {
 
-	DeimSimulator::DeimSimulator() : BaseSimulator(USER_ID, DB_NAME), current_trajectory_id(0), confused_count_without_semantics(0), confused_count_with_semantics(0)
+	DeimSimulator::DeimSimulator() : BaseSimulator(USER_ID, DB_NAME), current_trajectory_id(0)
 	{
 	}
 
@@ -19,12 +19,12 @@ namespace Simulation
 	void DeimSimulator::make_requirement_list()
 	{
 		requirements = {
-			//std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 1.0, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.8, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.6, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.4, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.2, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.0, AVERAGE_SPEED, 1.0)
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 1.0, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.8, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.6, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.4, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.2, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.0, AVERAGE_SPEED, 1.0)
 		};
 	}
 
@@ -50,14 +50,15 @@ namespace Simulation
 				std::shared_ptr<Framework::IProposedMethod<
 					Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>,
 					Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>
-				>> proposed = std::make_shared<Method::MizunoMethod>(map, user, observed_preference_tree_copy, *iter, timeslot);
+				>> proposed = std::make_shared<Method::MizunoMethodMod>(map, user, observed_preference_tree_copy, *iter, timeslot);
 				proposed->set_execution_callback(std::bind(&DeimSimulator::each_trajectory_end_callback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 				proposed->run();
-				
 			}
 
 			//1要求当たりの結果をエクスポートする
 			export_evaluation_result(**iter);
+			observed_preference_tree = std::make_shared<User::PreferenceTree>();
+			break;
 		}
 	}
 
@@ -113,13 +114,16 @@ namespace Simulation
 
 		//MTCの評価
 		double mtc1 = observer->calc_mtc_without_semantics();
-		if (mtc1 != -1.0) confused_count_without_semantics++;
 		mtc1_vector_proposed.push_back(mtc1);
+		double confusion_achieve_ratio_without_semantics = observer->get_confusion_achive_ratio_without_semantics();
+		confusion_achive_ratio_without_semantics_vector.push_back(confusion_achieve_ratio_without_semantics);
+
 		std::cout << "MTC1: " << std::to_string(mtc1) << "sec" << std::endl;
 		
 		double mtc2 = observer->calc_mtc_with_semantics();
-		if (mtc2 != -1.0) confused_count_with_semantics++;
 		mtc2_vector_proposed.push_back(mtc2);
+		double confusion_achieve_ratio_with_semantics = observer->get_confusion_achieve_ratio_with_semantics();
+		confusion_achive_ratio_with_semantics_vector.push_back(confusion_achieve_ratio_with_semantics);
 		std::cout << "MTC2: " << std::to_string(mtc2) << "sec" << std::endl;
 
 		std::vector<int> cross_count = observer->get_cross_count_of_each_entity();
@@ -133,6 +137,7 @@ namespace Simulation
 		double similarity = User::similarity(*user_preference_tree, *observed_preference_tree);
 		std::cout << "Similarity: " << std::to_string(similarity) << std::endl;
 		similarity_vector_proposed.push_back(similarity);
+
 	}
 
 
@@ -150,14 +155,23 @@ namespace Simulation
 		//MTC1, MTC2のエクスポート
 		export_mtcs(requirement);
 
+		//交差情報のエクスポート
 		export_cross_count_info(requirement);
 
+		//嗜好のヒストグラムのエクスポート
+		export_preference_histogram(requirement);
+
+		//Confusion達成率のエクスポート
+		export_confusion_ratio(requirement);
+
 		similarity_vector_proposed = std::vector<double>();
-		ar_count_vector_proposed = std::vector<double>();
-		ar_size_vector_proposed = std::vector<double>();
 		mtc1_vector_proposed = std::vector<double>();
 		mtc2_vector_proposed = std::vector<double>();
+		ar_count_vector_proposed = std::vector<double>();
+		ar_size_vector_proposed = std::vector<double>();
 		cross_count_info = std::vector<std::vector<int>>();
+		confusion_achive_ratio_without_semantics_vector = std::vector<double>();
+		confusion_achive_ratio_with_semantics_vector = std::vector<double>();
 	}
 
 	void DeimSimulator::export_similarities(const Requirement::PreferenceRequirement& requirement)
@@ -171,7 +185,6 @@ namespace Simulation
 		for (std::vector<double>::const_iterator iter = similarity_vector_proposed.begin(); iter != similarity_vector_proposed.end(); iter++) {
 			out_file << *iter << std::endl;
 		}
-
 		out_file.close();
 	}
 
@@ -200,11 +213,12 @@ namespace Simulation
 		std::ofstream out_file(export_path.str());
 		for (std::vector<std::vector<int>>::const_iterator iter = cross_count_info.begin(); iter != cross_count_info.end(); iter++) {
 			for (Entity::entity_id id = 0; id < iter->size(); id++) {
-				out_file << iter->at(id) << ",";
+				int count = iter->at(id);
+				out_file << count << ",";
+				std::cout << count << ",";
 			}
 			out_file << std::endl;
 		}
-		
 		out_file.close();
 	}
 
@@ -234,8 +248,6 @@ namespace Simulation
 		for (std::vector<double>::const_iterator iter = mtc1_vector_proposed.begin(); iter != mtc1_vector_proposed.end(); iter++) {
 			out_file << *iter << std::endl;
 		}
-		double confused_rate_without_semantics = (double)confused_count_without_semantics / user_trajectories->size();
-		out_file << "Confusion Rate: " << confused_rate_without_semantics << std::endl;
 		out_file.close();
 
 
@@ -248,8 +260,84 @@ namespace Simulation
 		for (std::vector<double>::const_iterator iter = mtc2_vector_proposed.begin(); iter != mtc2_vector_proposed.end(); iter++) {
 			out_file << *iter << std::endl;
 		}
-		double confused_rate_with_semantics = (double)confused_count_with_semantics / user_trajectories->size();
-		out_file << "Confusion Rate: " << confused_rate_with_semantics << std::endl;
+		out_file.close();
+	}
+
+	void DeimSimulator::export_confusion_ratio(const Requirement::PreferenceRequirement& requirement)
+	{
+		std::stringstream export_path;
+		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path << "/confusion_ratio1.csv";
+		
+		std::ofstream out_file(export_path.str());
+		for (std::vector<double>::const_iterator iter = confusion_achive_ratio_without_semantics_vector.begin(); iter != confusion_achive_ratio_without_semantics_vector.end(); iter++) {
+			out_file << *iter << std::endl;
+		}
+		out_file.close();
+
+		std::stringstream export_path2;
+		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path << "/confusion_ratio2.csv";
+
+		std::ofstream out_file2(export_path.str());
+		for (std::vector<double>::const_iterator iter = confusion_achive_ratio_with_semantics_vector.begin(); iter != confusion_achive_ratio_with_semantics_vector.end(); iter++) {
+			out_file2 << *iter << std::endl;
+		}
+		out_file2.close();
+	}
+
+
+	///<summary>
+	/// 真の嗜好と可観測な嗜好のヒストグラムをエクスポートする
+	///</summary>
+	void DeimSimulator::export_preference_histogram(const Requirement::PreferenceRequirement& requirement)
+	{
+		std::stringstream export_path;
+		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path << "/preference-histogram.csv";
+
+		std::ofstream out_file(export_path.str());
+
+		//Sequenceのキーを作る
+		std::set<std::string> sequences;
+		std::unordered_map<std::string, double> user_preference_supports;
+		std::unordered_map<std::string, double> observed_preference_supports;
+
+		int max_depth = user_preference_tree->max_depth();
+		for (int depth = 1; depth <= max_depth; depth++) {
+			user_preference_tree->for_each_prefix(depth, [&](const Collection::Sequence<User::category_id>& prefix, double support) {
+				std::stringstream key;
+				for (Collection::Sequence<User::category_id>::const_iterator iter = prefix.begin(); iter != prefix.end(); iter++) {
+					key << *iter;
+				}
+				sequences.insert(key.str());
+				user_preference_supports.insert(std::make_pair(key.str(), support));
+			});
+		}
+
+		max_depth = observed_preference_tree->max_depth();
+		for (int depth = 1; depth <= max_depth; depth++) {
+			observed_preference_tree->for_each_prefix(depth, [&](const Collection::Sequence<User::category_id>& prefix, double support) {
+				std::stringstream key;
+				for (Collection::Sequence<User::category_id>::const_iterator iter = prefix.begin(); iter != prefix.end(); iter++) {
+					key << *iter;
+				}
+				sequences.insert(key.str());
+				observed_preference_supports.insert(std::make_pair(key.str(), support));
+			});
+		}
+
+		for (std::set<std::string>::const_iterator key = sequences.begin(); key != sequences.end(); key++) {
+			auto temp1 = user_preference_supports.find(*key);
+			auto temp2 = observed_preference_supports.find(*key);
+			double user_support = temp1 == user_preference_supports.end() ? 0.0 : temp1->second;
+			double observed_support = temp2 == observed_preference_supports.end() ? 0.0 : temp2->second;
+			out_file << *key << "," << user_support << "," << observed_support << std::endl;
+		}
+
 		out_file.close();
 	}
 

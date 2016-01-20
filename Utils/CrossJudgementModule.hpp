@@ -31,7 +31,10 @@ namespace Evaluate
 	template <typename MAP_TYPE, typename POSITION_TYPE, typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
 	bool CrossJudgementModule<MAP_TYPE, POSITION_TYPE, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::basic_cross_rule(std::shared_ptr<MAP_TYPE const>, const Graph::MapNodeIndicator& previous_position1, const Graph::MapNodeIndicator& current_position1, const Graph::MapNodeIndicator& previous_position2, const Graph::MapNodeIndicator& current_position2, double move_speed, long interval) const
 	{
-		return map->is_reachable(previous_position1, current_position2, move_speed, (double)interval) && map->is_reachable(previous_position2, current_position1, move_speed, (double)interval);
+		bool is_reachable1 = map->is_reachable(previous_position1, current_position2, move_speed, (double)interval);
+		bool is_reachable2 = map->is_reachable(previous_position2, current_position1, move_speed, (double)interval);
+		bool is_next_same = current_position1 == current_position2;
+		return  is_reachable1 && is_reachable2 && !is_next_same;
 	}
 
 	///<summary>

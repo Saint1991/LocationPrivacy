@@ -94,19 +94,6 @@ namespace Map
 		return find_random_poi_within_boundary(query_box, category_id);
 	}
 
-
-	///<summary>
-	/// 基準点と移動可能な距離から，探索範囲を作成する
-	///</summary>
-	Graph::Rectangle<Geography::LatLng> create_reachable_rect(const Geography::LatLng& center, double reachable_distance)
-	{
-		double top = center.lat() + 0.000009 * reachable_distance;
-		double left = center.lng() - 0.0000011 * reachable_distance;
-		double bottom = center.lat() - 0.000009 * reachable_distance;
-		double right = center.lng() + 0.000011 * reachable_distance;
-		return Graph::Rectangle<Geography::LatLng>(top, left, bottom, right);
-	}
-
 	///<summary>
 	/// point_basisを基準にcategory_sequenceとmove_distance_listの制約を満たす経路を全て取得する
 	/// 経路の長さはcategory_sequenceの長さに依存
@@ -176,6 +163,18 @@ namespace Map
 			ret.push_back(poi->category_id());
 		}
 		return ret;
+	}
+
+	///<summary>
+	/// 基準点と移動可能な距離から，探索範囲を作成する
+	///</summary>
+	Graph::Rectangle<Geography::LatLng> BasicDbMap::create_reachable_rect(const Geography::LatLng& center, double reachable_distance)
+	{
+		double top = center.lat() + 0.000009 * reachable_distance;
+		double left = center.lng() - 0.000011 * reachable_distance;
+		double bottom = center.lat() - 0.000009 * reachable_distance;
+		double right = center.lng() + 0.000011 * reachable_distance;
+		return Graph::Rectangle<Geography::LatLng>(top, left, bottom, right);
 	}
 }
 

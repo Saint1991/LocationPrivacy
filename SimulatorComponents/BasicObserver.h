@@ -30,6 +30,9 @@ namespace Observer
 		double calc_time_to_confusion(std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> cross_infos, int start_phase, double threshold = 1.0);
 		std::vector<Evaluate::CrossInfo> get_cross_info_of_entity(Entity::entity_id id);
 
+		int confusion_total_count;
+		int cunfusion_achive_count;
+
 	protected:
 		std::unique_ptr<Evaluate::CrossJudgementModule<Map::BasicDbMap, Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>> module;
 		std::shared_ptr<Entity::EntityManager<Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE> const> entities;
@@ -56,6 +59,7 @@ namespace Observer
 		double calc_ar_size(double required_anonymous_area) const;
 
 		double calc_mtc_without_semantics(double threshold = 1.0);
+		double get_confusion_achive_ratio_without_semantics() const;
 	};
 
 	template class BasicObserver<Graph::SemanticTrajectory<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, User::BasicUser<Geography::LatLng>>;

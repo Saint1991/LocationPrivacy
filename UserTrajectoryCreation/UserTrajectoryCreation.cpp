@@ -50,7 +50,7 @@ std::vector<std::string> get_all_user_id(std::shared_ptr<Db::MySQLDb> db)
 void insert(int user_id, std::shared_ptr<Graph::SemanticTrajectory<Geography::LatLng>> trajectory, std::shared_ptr<Db::MySQLDb> db)
 {
 	std::stringstream query;
-	query << "INSERT INTO checkins_compressed (user_id, venue_id, timestamp) VALUES(" << user_id << ", ?, ?);";
+	query << "INSERT INTO checkins_compressed_5_8 (user_id, venue_id, timestamp) VALUES(" << user_id << ", ?, ?);";
 	sql::PreparedStatement* statement = db->prepare(query.str());
 
 	std::shared_ptr<Time::TimeSlotManager const> timeslot = trajectory->read_timeslot();
@@ -77,7 +77,7 @@ void insert(int user_id, std::shared_ptr<Graph::SemanticTrajectory<Geography::La
 int main()
 {
 	constexpr char* DB_NAME = "map_tokyo_category_top_level";
-	constexpr double MAX_INTERVAL = 720.0;
+	constexpr double MAX_INTERVAL = 480.0;
 	constexpr double MAX_WALKING_SPEED = 5.0 * 1000 / 3600.0;
 
 	
@@ -85,8 +85,8 @@ int main()
 	db->use(DB_NAME);
 	
 	//std::vector<std::string> user_ids = get_all_user_id(db);
-	//std::vector<std::string> user_ids = { "822", "1092", "1143", "1240", "196", "557", "368" };
-	std::vector<std::string> user_ids = {"196", "557", "368" };
+	std::vector<std::string> user_ids = { "822", "1092", "1143", "1240", "196", "557", "368" };
+	
 
 	User::DbTrajectoryLoader<Graph::SemanticTrajectory<Geography::LatLng>> loader(trajectory_division_rule, "../settings/mydbsettings.xml", DB_NAME, "checkins_cleaned", "pois");
 	
