@@ -19,24 +19,21 @@ namespace Method
 	class MIZUNO_METHOD_API MizunoMethod
 		: public Framework::IProposedMethod<Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>, Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>>
 	{
-	private:
+	protected:
+		typedef std::pair<std::pair<Collection::Sequence<User::category_id>, Entity::cross_target>, double> sequence_score_set;
+		typedef std::pair<std::pair<std::vector<Graph::MapNodeIndicator>, Entity::cross_target>, double> trajectory_score_set;
+
 		//スコアリングのパラメータ
 		static constexpr double B = 0.8;
 		//進行方向に沿わせる制限の角度θ
 		static constexpr double THETA = M_PI_2;
 		//経路生成の試行回数の上限
 		static constexpr int MAX_TRAJECTORY_CREATION_TRIAL = 20;
-		
 		//最小停止時間(2分)
 		static constexpr int MIN_PAUSE_TIME = 0;
 
-		
 		//設定匿名領域
 		std::unique_ptr<std::vector<double>> setting_anonymous_areas;
-
-	protected:
-		typedef std::pair<std::pair<Collection::Sequence<User::category_id>, Entity::cross_target>, double> sequence_score_set;
-		typedef std::pair<std::pair<std::vector<Graph::MapNodeIndicator>, Entity::cross_target>, double> trajectory_score_set;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree_copy;
 
@@ -66,7 +63,7 @@ namespace Method
 		#pragma endregion GroupBのダミー生成用メソッド
 		
 		//基準の点を基に実際に到達可能な経路を生成する
-		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> create_trajectory(Entity::entity_id current_dummy_id, const std::pair<int, Graph::MapNodeIndicator>& basis, const Collection::Sequence<User::category_id>& category_sequence);
+		virtual std::shared_ptr<std::vector<Graph::MapNodeIndicator>> create_trajectory(Entity::entity_id current_dummy_id, const std::pair<int, Graph::MapNodeIndicator>& basis, const Collection::Sequence<User::category_id>& category_sequence);
 
 	public:
 		MizunoMethod(
