@@ -45,7 +45,7 @@ namespace Observer
 		);
 		~BasicObserver();
 
-		std::vector<int> get_cross_count_of_each_entity() const;
+		std::vector<int> get_cross_count_of_each_entity();
 
 		std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> calc_cross_info();
 		std::shared_ptr<Observer::ObservedTrajectoryStructure const> create_observed_trajectory_structure();

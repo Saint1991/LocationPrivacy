@@ -19,19 +19,12 @@ namespace Simulation
 	void DeimSimulator::make_requirement_list()
 	{
 		requirements = {
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0.2, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(2000.0, 2), 6, 0, AVERAGE_SPEED, 1.0)
-
-			/*std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.9, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.8, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.7, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.6, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.5, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.4, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.3, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.2, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.1, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 9, 0.0, AVERAGE_SPEED, 1.0)*/
+			//std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 1.0, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.8, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.6, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.4, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.2, AVERAGE_SPEED, 1.0),
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1000.0, 2), 6, 0.0, AVERAGE_SPEED, 1.0)
 		};
 	}
 
@@ -129,7 +122,8 @@ namespace Simulation
 		mtc2_vector_proposed.push_back(mtc2);
 		std::cout << "MTC2: " << std::to_string(mtc2) << "sec" << std::endl;
 
-		cross_count_info.push_back(observer->get_cross_count_of_each_entity());
+		std::vector<int> cross_count = observer->get_cross_count_of_each_entity();
+		cross_count_info.push_back(cross_count);
 
 		//‰ÂŠÏ‘ª‚È–Ø‚ÌXV
 		observer->for_each_category_sequence_of_possible_trajectory([&](const Collection::Sequence<User::category_id>& sequence, double expected_frequency) {
@@ -205,7 +199,7 @@ namespace Simulation
 
 		std::ofstream out_file(export_path.str());
 		for (std::vector<std::vector<int>>::const_iterator iter = cross_count_info.begin(); iter != cross_count_info.end(); iter++) {
-			for (Entity::entity_id id = 0; id < iter->size(); iter++) {
+			for (Entity::entity_id id = 0; id < iter->size(); id++) {
 				out_file << iter->at(id) << ",";
 			}
 			out_file << std::endl;

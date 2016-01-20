@@ -62,7 +62,7 @@ namespace  Observer
 
 		//今回のpossible_trajectoryのエンティティカウントをサポートの累積に置き換えたもの
 		structure->for_each_possible_trajectory([&](const Collection::Sequence<Graph::MapNodeIndicator>& trajectory) {
-			Collection<User::category_id> sequence = map->convert_to_category_sequence(trajectory);
+			Collection::Sequence<User::category_id> sequence = map->convert_to_category_sequence(trajectory);
 			double support = preference->get_support_of(sequence);
 
 			//trajectoryに対応するすべてのノードのカウントにsupportを足す
@@ -83,9 +83,9 @@ namespace  Observer
 	/// Semanticsを考慮したMTCの計算 (未実装)
 	///</summary>
 	template <typename DUMMY_TYPE, typename USER_TYPE>
-	double SemanticObserver<DUMMY_TYPE, USER_TYPE>::calc_mtc_with_semantics() const
+	double SemanticObserver<DUMMY_TYPE, USER_TYPE>::calc_mtc_with_semantics()
 	{
-		std::shared_ptr<ObservedTrajectoryStructure> semantic_structure = create_semantic_observed_trajectory_structure();
+		std::shared_ptr<ObservedTrajectoryStructure const> semantic_structure = create_semantic_observed_trajectory_structure();
 		
 
 		return 0.0;

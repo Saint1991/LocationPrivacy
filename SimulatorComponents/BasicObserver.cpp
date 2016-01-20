@@ -193,9 +193,9 @@ namespace Observer
 	/// インデックスがエンティティIDに対応
 	///</summary>
 	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
-	std::vector<int> BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::get_cross_count_of_each_entity() const
+	std::vector<int> BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::get_cross_count_of_each_entity()
 	{
-		std::vector<int> cross_counts;
+		std::vector<int> cross_counts(entities->get_dummy_count() + 1);
 		for (int i = 0; i <= entities->get_dummy_count(); i++) {
 			std::vector<Evaluate::CrossInfo> info = get_cross_info_of_entity(i);
 			int count = 0;
