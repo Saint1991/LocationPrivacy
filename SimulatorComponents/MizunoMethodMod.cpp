@@ -25,7 +25,8 @@ namespace Method
 	double calc_poi_score(double ar_size, double setting_anonymous_area, int reachable_entity_count)
 	{
 		//return reachable_entity_count + 1;
-		return std::abs(ar_size - setting_anonymous_area) * std::pow(reachable_entity_count, 1);
+		//std::cout << "AR-Size: " << ar_size << " Reachable Entity: " << reachable_entity_count << std::endl;
+		return std::abs(ar_size - setting_anonymous_area) * (1 + std::pow(reachable_entity_count, 3));
 	}
 
 	///<summary>
@@ -98,7 +99,10 @@ namespace Method
 				return left_score < right_score;
 			});
 			
-			if (std::get<2>(*temp) != 0) std::cout << "Reachable Entity Count: " << std::get<2>(*temp) << "  AR-Ratio: " << std::get<1>(*temp) / setting_anonymous_area << std::endl;
+			#ifdef DETAIL_PROGRESS
+			if (std::get<2>(*temp) == 0) std::cout << "Score: " << calc_poi_score(std::get<1>(*temp), setting_anonymous_area, std::get<2>(*temp)) << std::endl;
+			#endif
+
 			current_poi = std::get<0>(*temp);
 			ret->at(phase) = Graph::MapNodeIndicator(current_poi->get_id(), Graph::NodeType::POI);
 		}
@@ -159,7 +163,10 @@ namespace Method
 				return left_score < right_score;
 			});
 
-			if (std::get<2>(*temp) != 0) std::cout << "Reachable Entity Count: " << std::get<2>(*temp) << "  AR-Ratio: " << std::get<1>(*temp) / setting_anonymous_area << std::endl;
+			#ifdef DETAIL_PROGRESS
+			if (std::get<2>(*temp) == 0) std::cout << "Score: " << calc_poi_score(std::get<1>(*temp), setting_anonymous_area, std::get<2>(*temp)) << std::endl;
+			#endif
+
 			current_poi = std::get<0>(*temp);
 			ret->at(phase) = Graph::MapNodeIndicator(current_poi->get_id(), Graph::NodeType::POI);
 		}

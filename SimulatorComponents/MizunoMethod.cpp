@@ -32,6 +32,12 @@ namespace Method
 		return dummy_id == 1 ? std::sqrt(size) : size;
 	}
 
+	double linear2(int dummy_id, size_t dummy_num, double required_anonymous_area)
+	{
+		double size = required_anonymous_area * (0.3 + 0.75 * dummy_id / (double)dummy_num);
+		return dummy_id == 1 ? std::sqrt(size) : size;
+	}
+
 
 	///<summary>
 	/// 初期化
@@ -39,7 +45,7 @@ namespace Method
 	///</summary>
 	void MizunoMethod::initialize()
 	{
-		set_setting_anonymous_area(linear);
+		set_setting_anonymous_area(linear2);
 	}
 
 
@@ -107,11 +113,17 @@ namespace Method
 				
 				int iteration_count = 0;
 				while (temp_trajectory == nullptr || iteration_count++ <= MAX_TRAJECTORY_CREATION_TRIAL) {
+					
+					#ifdef DETAIL_PROGRESS
 					std::cout << iteration_count << "\t";
+					#endif
+
 					temp_trajectory = create_trajectory(current_dummy_id, temp_basis, any_sequence);
 				}
+				#ifdef DETAIL_PROGRESS
 				std::cout << std::endl;
-
+				#endif
+				
 				if (temp_trajectory == nullptr) {
 					throw Framework::TrajectoryNotFoundException("trajectory_scores is empty");
 				}
@@ -282,10 +294,14 @@ namespace Method
 			std::shared_ptr<std::vector<Graph::MapNodeIndicator>> trajectory = nullptr;
 			std::pair<int, Graph::MapNodeIndicator> basis = determine_point_basis(category_sequence, cross, current_dummy_id);
 			for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL && trajectory == nullptr; i++) {
+				#ifdef DETAIL_PROGRESS
 				std::cout << i << "\t";
+				#endif
 				trajectory = create_trajectory(current_dummy_id, basis, category_sequence);
 			}
+			#ifdef DETAIL_PROGRESS
 			std::cout << std::endl;
+			#endif
 			if (trajectory == nullptr) continue;
 
 			//ここでトラジェクトリに対してスコアを計算してretに追加する
@@ -431,14 +447,18 @@ namespace Method
 
 			if (trajectory == nullptr) {
 				for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL + 20 && trajectory == nullptr; i++) {
+					#ifdef DETAIL_PROGRESS
 					std::cout << i << "\t";
+					#endif
 					Graph::MapNodeIndicator temp_point_basis = current_dummy_id == 1 ? entities->read_entity_by_id(0)->read_node_pos_info_of_phase(0).first : entities->read_entity_by_id(1)->read_node_pos_info_of_phase(0).first;
 					trajectory = create_trajectory(current_dummy_id, std::make_pair(target_phase, temp_point_basis), any_category_sequence);
 				}
 			}
-
-
+			
+			#ifdef DETAIL_PROGRESS
 			std::cout << std::endl;
+			#endif
+			
 			if (trajectory == nullptr) throw Framework::TrajectoryNotFoundException("Can't found reachable Trajectory");
 
 			//経路の登録

@@ -118,13 +118,13 @@ namespace Simulation
 		double confusion_achieve_ratio_without_semantics = observer->get_confusion_achive_ratio_without_semantics();
 		confusion_achive_ratio_without_semantics_vector.push_back(confusion_achieve_ratio_without_semantics);
 
-		std::cout << "MTC1: " << std::to_string(mtc1) << "sec" << std::endl;
+		//std::cout << "MTC1: " << std::to_string(mtc1) << "sec" << std::endl;
 		
 		double mtc2 = observer->calc_mtc_with_semantics();
 		mtc2_vector_proposed.push_back(mtc2);
 		double confusion_achieve_ratio_with_semantics = observer->get_confusion_achieve_ratio_with_semantics();
 		confusion_achive_ratio_with_semantics_vector.push_back(confusion_achieve_ratio_with_semantics);
-		std::cout << "MTC2: " << std::to_string(mtc2) << "sec" << std::endl;
+		//std::cout << "MTC2: " << std::to_string(mtc2) << "sec" << std::endl;
 
 		std::vector<int> cross_count = observer->get_cross_count_of_each_entity();
 		cross_count_info.push_back(cross_count);
