@@ -26,7 +26,7 @@ namespace Method
 	{
 		//return reachable_entity_count + 1;
 		//std::cout << "AR-Size: " << ar_size << " Reachable Entity: " << reachable_entity_count << std::endl;
-		return std::abs(ar_size - setting_anonymous_area) * (1 + std::pow(reachable_entity_count, 3));
+		return std::abs(ar_size - setting_anonymous_area) * (1 + std::pow(reachable_entity_count, 1));
 	}
 
 	///<summary>

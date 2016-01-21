@@ -254,7 +254,7 @@ namespace Observer
 		size_t confusion_count = 0;
 		double confusion_time_sum = 0.0;
 		for (int start_phase = 0; start_phase < timeslot->phase_count() - 1; start_phase++) {
-			double time_to_confusion = calc_time_to_confusion(cross_infos, start_phase, threshold);
+			double time_to_confusion = calc_time_to_confusion_without_semantics(cross_infos, start_phase, threshold);
 			if (time_to_confusion != -1.0) {
 				confusion_count++;
 				confusion_time_sum += time_to_confusion;
@@ -271,10 +271,10 @@ namespace Observer
 
 
 	///<summary>
-	/// ユーザが発見された時刻をstart_phaseとしたときのtime_to_confusionを計算する
+	/// ユーザが発見された時刻をstart_phaseとしたときのtime_to_confusionを計算する (ほんとはこれもobservedTrajectoryStructureを使った実装に直したほうがよい(TrajectoryStructureの作るかたをきちんとするなら))
 	///</summary>
 	template <typename TRAJECTORY_TYPE, typename DUMMY_TYPE, typename USER_TYPE>
-	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_time_to_confusion(std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> cross_infos, int start_phase, double threshold)
+	double BasicObserver<TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>::calc_time_to_confusion_without_semantics(std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> cross_infos, int start_phase, double threshold)
 	{
 		std::shared_ptr<Time::TimeSlotManager const> timeslot = entities->read_timeslot();
 		
@@ -288,6 +288,9 @@ namespace Observer
 			//現状のprobability_vectorを一旦コピー
 			std::vector<double> probability_vector_copy;
 			std::copy(probability_vector.begin(), probability_vector.end(), std::back_inserter(probability_vector_copy));
+
+			double check_sum = std::accumulate(probability_vector.begin(), probability_vector.end(), 0.0);
+			if (check_sum < 0.999999 || 1.0000001 < check_sum) throw std::invalid_argument("The sum of Probability is not 1.0");
 
 			std::vector<Evaluate::CrossInfo> cross_info_of_phase = cross_infos->at(phase);
 			for (std::vector<Evaluate::CrossInfo>::const_iterator crosses = cross_info_of_phase.begin(); crosses != cross_info_of_phase.end(); crosses++) {

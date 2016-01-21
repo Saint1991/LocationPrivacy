@@ -42,9 +42,12 @@ namespace Observer
 	///<summary>
 	/// MapNodeIndicatorとPhaseを基にノードを探索し，見つかった場合はそのノードを指すイテレータを返す．
 	/// 見つからない場合はnullptrを指すイテレータを返す．
+	/// phaseに-1を指定した場合はroot nodeを返す
 	///</summary>
 	ObservedTrajectoryStructure::base_iterator ObservedTrajectoryStructure::find_node(const Graph::MapNodeIndicator& id, int phase)
 	{
+		if (phase == -1) return root<ObservedTrajectoryStructure::base_iterator>();
+
 		int depth = phase + 1;
 		Collection::IdentifiableCollection<Graph::node_id, Observer::ObservedTrajectoryNode>::iterator iter = std::find_if(node_collection->begin(), node_collection->end(), [id, depth](std::shared_ptr<Identifiable<Graph::node_id>> element) {
 			std::shared_ptr<Observer::ObservedTrajectoryNode> node = std::dynamic_pointer_cast<Observer::ObservedTrajectoryNode>(element);
@@ -260,17 +263,6 @@ namespace Observer
 					edge->set_flow(new_value);
 				});
 			}
-		});
-	}
-
-
-	///<summary>
-	/// 全ノードの保持するカウントを0にする
-	///</summary>
-	void ObservedTrajectoryStructure::clear_node_counts()
-	{
-		node_collection->foreach([](std::shared_ptr<Observer::ObservedTrajectoryNode> node) {
-			node->clear_count();
 		});
 	}
 }

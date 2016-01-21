@@ -33,15 +33,11 @@ namespace Observer
 	///<summary>
 	/// count‚ðŽæ“¾‚·‚é
 	///</summary>
-	double ObservedTrajectoryNode::get_count() const
+	size_t ObservedTrajectoryNode::get_count() const
 	{
 		return entity_count;
 	}
 
-	void ObservedTrajectoryNode::add_count(double add)
-	{
-		entity_count += add;
-	}
 
 	///<summary>
 	/// EntityCount‚ð0‚É–ß‚·

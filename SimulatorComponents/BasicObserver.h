@@ -5,6 +5,7 @@
 #endif
 
 #pragma once
+#include <numeric>
 #include "CrossJudgementModule.h"
 #include "BasicDbMap.h"
 #include "SemanticTrajectory.h"
@@ -27,18 +28,20 @@ namespace Observer
 		static_assert(std::is_base_of<Entity::MobileEntity<Geography::LatLng, TRAJECTORY_TYPE>, DUMMY_TYPE>::value, "DUMMY_TYPE must be derived from MobileEntity<LatLng, TRAJECTORY_TYPE>");
 		static_assert(std::is_base_of<Entity::MobileEntity<Geography::LatLng, TRAJECTORY_TYPE>, USER_TYPE>::value, "DUMMY_TYPE must be derived from MobileEntity<LatLng, TRAJECTORY_TYPE>");
 	private:
-		double calc_time_to_confusion(std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> cross_infos, int start_phase, double threshold = 1.0);
-		std::vector<Evaluate::CrossInfo> get_cross_info_of_entity(Entity::entity_id id);
-
 		int confusion_total_count;
 		int cunfusion_achive_count;
-
+		
+		double calc_time_to_confusion_without_semantics(std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> cross_infos, int start_phase, double threshold = 1.0);
+		
 	protected:
 		std::unique_ptr<Evaluate::CrossJudgementModule<Map::BasicDbMap, Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE>> module;
 		std::shared_ptr<Entity::EntityManager<Geography::LatLng, TRAJECTORY_TYPE, DUMMY_TYPE, USER_TYPE> const> entities;
 		std::shared_ptr<Map::BasicDbMap const> map;
 		std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> cross_infos;
 		std::shared_ptr<Observer::ObservedTrajectoryStructure> structure;
+
+		std::vector<Evaluate::CrossInfo> get_cross_info_of_entity(Entity::entity_id id);
+	
 	public:
 		BasicObserver(
 			std::shared_ptr<Map::BasicDbMap const> map,
