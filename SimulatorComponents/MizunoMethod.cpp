@@ -38,6 +38,11 @@ namespace Method
 		return dummy_id == 1 ? std::sqrt(size) : size;
 	}
 
+	double fixed(int dummy_id, size_t dummy_num, double required_anonymous_area)
+	{
+		double size = required_anonymous_area * 1.05;
+		return dummy_id == 1 ? std::sqrt(size) : size;
+	}
 
 	///<summary>
 	/// ‰Šú‰»
@@ -45,7 +50,7 @@ namespace Method
 	///</summary>
 	void MizunoMethod::initialize()
 	{
-		set_setting_anonymous_area(linear2);
+		set_setting_anonymous_area(fixed);
 	}
 
 
@@ -207,7 +212,7 @@ namespace Method
 					Entity::cross_target cross = std::make_pair(target_phase, target_entity_id);
 					
 					//n_share(t)‚ÌŒvZ
-					int n_share_t = std::pow(entities->get_total_cross_count_of_phase(target_phase), 3.0);
+					int n_share_t = std::pow(entities->get_total_cross_count_of_phase(target_phase), 2.0);
 					//n_share(ei)‚ÌŒvZ
 					int n_share_e = std::pow(target_entity->get_cross_count(), 3.0);
 

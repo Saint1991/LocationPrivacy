@@ -66,39 +66,39 @@ namespace  Observer
 			Collection::Sequence<User::category_id> sequence = map->convert_to_category_sequence(trajectory);
 			double support = preference->get_support_of(sequence);
 
-			//作成するsemantic_structureをルートからたどる
-			SemanticObservedTrajectoryStructure::base_iterator iter = semantic_structure->root<SemanticObservedTrajectoryStructure::base_iterator>();
-			Graph::node_id parent_node_id = iter->get_id();
-			
 			for (int phase = 0; phase < trajectory.size(); phase++) {
 				
+				//追加しようとしているノードの親ノードを取得
+				SemanticObservedTrajectoryStructure::base_iterator iter = phase == 0 ?
+					semantic_structure->find_node(Graph::MapNodeIndicator(-1, Graph::NodeType::INVALID), -1) : semantic_structure->find_node(trajectory.at(phase - 1), phase - 1);
+
+				//追加しようとしているノードの情報
 				int depth = phase + 1;
 				Graph::MapNodeIndicator target_id = trajectory.at(phase);
 
-				//Rootノードを取得
+				//エッジをコピーするための情報をstructureから取得
 				ObservedTrajectoryStructure::base_iterator original_current_iter = phase == 0 ?  structure->find_node(Graph::MapNodeIndicator(-1, Graph::NodeType::INVALID), -1) : structure->find_node(trajectory.at(phase - 1), phase - 1);
 				Graph::node_id original_next_node_id = structure->find_node_id(target_id, phase);
-				std::shared_ptr<Graph::FlowEdge const> copy_edge = iter->get_static_edge_to(original_next_node_id);
+				std::shared_ptr<Graph::FlowEdge const> copy_edge = original_current_iter->get_static_edge_to(original_next_node_id);
 				if (copy_edge == nullptr) throw std::exception("The edge somehow not found");
 				double copy_edge_value = copy_edge->get_flow();
 
-				//作成中のSemanticStructure中で子ノードの存在を確認する
-				SemanticObservedTrajectoryStructure::base_iterator child_iter = iter.find_child_if([&target_id](std::shared_ptr<SemanticObservedTrajectoryNode const> node) {
-					return node->data != nullptr && *node->data == target_id;
-				});
-
+				//作成中のSemanticStructure中で子ノードの存在を確認する(ここから修正する)
+				SemanticObservedTrajectoryStructure::base_iterator child_iter = semantic_structure->find_node(target_id, phase);
 				//対象のノードがまだない場合は作成
 				if (*child_iter == nullptr) {
 					//子ノードの作成
 					std::shared_ptr<SemanticObservedTrajectoryNode> new_node = std::make_shared<SemanticObservedTrajectoryNode>(semantic_structure->node_count(), depth, std::make_shared<Graph::MapNodeIndicator>(target_id));
-					new_node->flow_in_from(parent_node_id, support);
+					new_node->flow_in_from(iter->get_id(), support);
 					iter.add_child(new_node, copy_edge_value);
-					iter = semantic_structure->find_node(target_id, depth);
+					iter = semantic_structure->find_node(target_id, phase);
 				}
-				//既存のノードの場合はサポートを加算するだけ
+				//既存のノードの場合はエッジをコピーしてサポートを加算するだけ
 				else {
-					child_iter->flow_in_from(parent_node_id, support);
+					Graph::node_id parent_id = iter->get_id();
+					iter->connect_to(std::make_shared<Graph::FlowEdge>(child_iter->get_id(), copy_edge_value));
 					iter = child_iter;
+					iter->flow_in_from(parent_id, support);
 				}
 			}
 		});
@@ -136,7 +136,7 @@ namespace  Observer
 
 
 	///<summary>
-	/// MTC2の確率更新の中身
+	/// MTC2の確率更新の中身(あとここ実装すればOKになってほしい!!)
 	///</summary>
 	template <typename DUMMY_TYPE, typename USER_TYPE>
 	double SemanticObserver<DUMMY_TYPE, USER_TYPE>::calc_time_to_confusion_with_semantics(std::shared_ptr<std::vector<std::vector<Evaluate::CrossInfo>>> cross_infos, std::shared_ptr<SemanticObservedTrajectoryStructure> semantic_structure, int start_phase, double threshold)
@@ -164,7 +164,7 @@ namespace  Observer
 				Graph::MapNodeIndicator next_visit_node = entities->read_entity_by_id(target_id)->read_node_pos_info_of_phase(phase + 1).first;
 
 				SemanticObservedTrajectoryStructure::base_iterator current_state = semantic_structure->find_node(current_node_id, phase);
-				double current_state_support = current_state->get_count();
+				double current_state_support = current_state->get_total_flow();
 
 				//各交差相手のエンティティに確率を配分
 				for (std::vector<Entity::entity_id>::const_iterator cross_target = crosses->crossing_entities.begin(); cross_target != crosses->crossing_entities.end(); cross_target++) {
@@ -175,12 +175,14 @@ namespace  Observer
 					
 					//次に移動した(と思われた場所)
 					SemanticObservedTrajectoryStructure::base_iterator next_fake_state = semantic_structure->find_node(cross_target_next_visit_node, phase + 1);
-					double next_state_support = next_fake_state->get_count();
+					double next_state_support = next_fake_state->get_flow_from(current_state->get_id());
 					
 					//配分する確率値の計算
 					double transition_probability = next_state_support / current_state_support;
 					if (transition_probability > 1.0) {
-						std::cout << "Transition - Before: " << transition_probability << std::endl;
+						#ifdef DETAIL_PROGRESS
+						std::cout << "Transition - Before: " << transition_probability << " CurrentStateSupport:" << current_state_support << " NextStateSupport: " << next_state_support << std::endl;
+						#endif
 					}
 
 					std::shared_ptr<Graph::FlowEdge> flow_edge = current_state->get_edge_to(next_fake_state->get_id());
@@ -194,7 +196,9 @@ namespace  Observer
 
 					//確率の配分値
 					double probability_change = probability_vector_copy.at(target_id) * transition_probability;
+					#ifdef DETAIL_PROGRESS
 					std::cout << "Transition: " << transition_probability << std::endl;
+					#endif
 					probability_vector.at(target_id) -= probability_change;
 					if (probability_vector.at(target_id) < 0) {
 						for (std::vector<double>::const_iterator prob = probability_vector.begin(); prob != probability_vector.end(); prob++) {

@@ -44,4 +44,18 @@ namespace Observer
 		std::unordered_map<Graph::node_id, double>::iterator iter = flow_in_map->find(from);
 		return iter == flow_in_map->end() ? 0.0 : iter->second;
 	}
+
+
+	///<summary>
+	/// そのノードに流入しているflowの合計値を返す
+	///</summary>
+	double SemanticObservedTrajectoryNode::get_total_flow() const
+	{
+		double ret = 0.0;
+		for (std::unordered_map<Graph::node_id, double>::const_iterator iter = flow_in_map->begin(); iter != flow_in_map->end(); iter++) {
+			ret += iter->second;
+		}
+		return ret;
+	}
+
 }

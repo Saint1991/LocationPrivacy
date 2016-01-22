@@ -23,6 +23,7 @@ namespace Observer
 
 		void flow_in_from(Graph::node_id from, double flow);
 		double get_flow_from(Graph::node_id from) const;
+		double get_total_flow() const;
 	};
 }
 

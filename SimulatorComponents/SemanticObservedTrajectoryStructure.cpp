@@ -40,9 +40,12 @@ namespace Observer
 	///<summary>
 	/// MapNodeIndicatorとPhaseを基にノードを探索し，見つかった場合はそのノードを指すイテレータを返す．
 	/// 見つからない場合はnullptrを指すイテレータを返す．
+	/// phaseに-1を指定した場合はroot nodeを返す
 	///</summary>
 	SemanticObservedTrajectoryStructure::base_iterator SemanticObservedTrajectoryStructure::find_node(const Graph::MapNodeIndicator& id, int phase)
 	{
+		if (phase == -1) return root<SemanticObservedTrajectoryStructure::base_iterator>();
+
 		int depth = phase + 1;
 		Collection::IdentifiableCollection<Graph::node_id, SemanticObservedTrajectoryNode>::iterator iter = std::find_if(node_collection->begin(), node_collection->end(), [id, depth](std::shared_ptr<Identifiable<Graph::node_id>> element) {
 			std::shared_ptr<SemanticObservedTrajectoryNode> node = std::dynamic_pointer_cast<SemanticObservedTrajectoryNode>(element);
