@@ -32,15 +32,9 @@ namespace Method
 		return dummy_id == 1 ? std::sqrt(size) : size;
 	}
 
-	double linear2(int dummy_id, size_t dummy_num, double required_anonymous_area)
-	{
-		double size = required_anonymous_area * (0.3 + 0.75 * dummy_id / (double)dummy_num);
-		return dummy_id == 1 ? std::sqrt(size) : size;
-	}
-
 	double fixed(int dummy_id, size_t dummy_num, double required_anonymous_area)
 	{
-		double size = required_anonymous_area * 1.05;
+		double size = required_anonymous_area * 1.1;
 		return dummy_id == 1 ? std::sqrt(size) : size;
 	}
 
@@ -216,7 +210,7 @@ namespace Method
 					//n_share(ei)‚ÌŒvŽZ
 					int n_share_e = std::pow(target_entity->get_cross_count(), 3.0);
 
-					int delta = target_sequence.subsequence(0, target_phase) == prefix.subsequence(0, target_phase) ? 1 : 0;
+					int delta = target_phase !=  target_prefix_length - 1 &&  target_sequence.subsequence(0, target_phase) == prefix.subsequence(0, target_phase) ? 1 : 0;
 
 					//distro‚ÌŒvŽZ
 					Collection::Sequence<Entity::category_id> combined_sequence1 = Collection::concat<Entity::category_id>(target_sequence.subsequence(0, target_phase), prefix.subsequence(target_phase + 1, prefix.size() - 1));
@@ -451,7 +445,7 @@ namespace Method
 			}
 
 			if (trajectory == nullptr) {
-				for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL + 20 && trajectory == nullptr; i++) {
+				for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL + 100 && trajectory == nullptr; i++) {
 					#ifdef DETAIL_PROGRESS
 					std::cout << i << "\t";
 					#endif

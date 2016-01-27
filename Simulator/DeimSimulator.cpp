@@ -19,12 +19,7 @@ namespace Simulation
 	void DeimSimulator::make_requirement_list()
 	{
 		requirements = {
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 1.0, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.8, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.6, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.4, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.2, AVERAGE_SPEED, 1.0),
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 0.0, AVERAGE_SPEED, 1.0)
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 1.0, AVERAGE_SPEED, 1.0)
 		};
 	}
 
@@ -50,7 +45,7 @@ namespace Simulation
 				std::shared_ptr<Framework::IProposedMethod<
 					Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>,
 					Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>
-				>> proposed = std::make_shared<Method::MizunoMethodMod>(map, user, observed_preference_tree_copy, *iter, timeslot);
+				>> proposed = std::make_shared<Method::MizunoMethod>(map, user, observed_preference_tree_copy, *iter, timeslot);
 				proposed->set_execution_callback(std::bind(&DeimSimulator::each_trajectory_end_callback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 				proposed->run();
 			}
@@ -58,7 +53,6 @@ namespace Simulation
 			//1要求当たりの結果をエクスポートする
 			export_evaluation_result(**iter);
 			observed_preference_tree = std::make_shared<User::PreferenceTree>();
-			break;
 		}
 	}
 
@@ -281,7 +275,7 @@ namespace Simulation
 		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
 		export_path << "/confusion_ratio2.csv";
 
-		std::ofstream out_file2(export_path.str());
+		std::ofstream out_file2(export_path2.str());
 		for (std::vector<double>::const_iterator iter = confusion_achive_ratio_with_semantics_vector.begin(); iter != confusion_achive_ratio_with_semantics_vector.end(); iter++) {
 			out_file2 << *iter << std::endl;
 		}

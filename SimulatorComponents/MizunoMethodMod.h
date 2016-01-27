@@ -17,6 +17,10 @@ namespace Method
 		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> create_trajectory(Entity::entity_id current_dummy_id, const std::pair<int, Graph::MapNodeIndicator>& basis, const Collection::Sequence<User::category_id>& category_sequence);
 		typedef std::pair<std::shared_ptr<Map::BasicPoi const>, double> poi_score_pair;
 		typedef std::tuple<std::shared_ptr<Map::BasicPoi const>, double, int> poi_score_tuple;
+
+		void initialize();
+
+		double calc_poi_score(double ar_size, double setting_anonymous_area, int reachable_entity_count);
 	public:
 		MizunoMethodMod(
 				std::shared_ptr<Map::BasicDbMap const> map,

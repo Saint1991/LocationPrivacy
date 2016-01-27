@@ -19,7 +19,6 @@ namespace Time
 	const std::string TimeUtility::current_timestamp()
 	{
 		time_t now;
-		tm tm_now;
 		time(&now);
 		return timestamp(now);
 	}

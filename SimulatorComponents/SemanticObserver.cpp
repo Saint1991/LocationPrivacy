@@ -149,11 +149,14 @@ namespace  Observer
 
 		for (int phase = start_phase; phase < timeslot->phase_count() - 1; phase++) {
 
-			std::vector<double> probability_vector_copy;
-			std::copy(probability_vector.begin(), probability_vector.end(), std::back_inserter(probability_vector_copy));
+			//std::vector<double> probability_vector_copy;
+			//std::copy(probability_vector.begin(), probability_vector.end(), std::back_inserter(probability_vector_copy));
 
 			double check_sum = std::accumulate(probability_vector.begin(), probability_vector.end(), 0.0);
 			if (check_sum < 0.999999 || 1.0000001 < check_sum) throw std::invalid_argument("The sum of Probability is not 1.0");
+			for (std::vector<double>::const_iterator prob = probability_vector.begin(); prob != probability_vector.end(); prob++) {
+				if (*prob < -0.0001 | 1.0001 < *prob) throw std::invalid_argument("Probability must be [0, 1]");
+			}
 
 			std::vector<Evaluate::CrossInfo> cross_info_of_phase = cross_infos->at(phase);
 			for (std::vector<Evaluate::CrossInfo>::const_iterator crosses = cross_info_of_phase.begin(); crosses != cross_info_of_phase.end(); crosses++) {
@@ -179,11 +182,6 @@ namespace  Observer
 					
 					//配分する確率値の計算
 					double transition_probability = next_state_support / current_state_support;
-					if (transition_probability > 1.0) {
-						#ifdef DETAIL_PROGRESS
-						std::cout << "Transition - Before: " << transition_probability << " CurrentStateSupport:" << current_state_support << " NextStateSupport: " << next_state_support << std::endl;
-						#endif
-					}
 
 					std::shared_ptr<Graph::FlowEdge> flow_edge = current_state->get_edge_to(next_fake_state->get_id());
 					if (flow_edge == nullptr) {
@@ -194,19 +192,23 @@ namespace  Observer
 						transition_probability *= flow;
 					}
 
-					//確率の配分値
-					double probability_change = probability_vector_copy.at(target_id) * transition_probability;
-					#ifdef DETAIL_PROGRESS
-					std::cout << "Transition: " << transition_probability << std::endl;
-					#endif
-					probability_vector.at(target_id) -= probability_change;
-					if (probability_vector.at(target_id) < 0) {
-						for (std::vector<double>::const_iterator prob = probability_vector.begin(); prob != probability_vector.end(); prob++) {
-							std::cout << *prob << "\t";
-						}
-						std::cout << std::endl;
+					if (transition_probability > 1.001) {
+						throw std::invalid_argument("Transition is larger than 1.0");
 					}
+
+					//確率の配分値
+					//double probability_change = probability_vector_copy.at(target_id) * transition_probability;
+					double probability_change = probability_vector.at(target_id) * transition_probability;
+					probability_vector.at(target_id) -= probability_change;
 					probability_vector.at(*cross_target) += probability_change;
+					if (probability_vector.at(target_id) < 0) {
+						std::cout << "Probability: " << probability_vector.at(target_id) << std::endl;
+						//std::cout << "Original Probability: " << probability_vector_copy.at(target_id) << std::endl;
+						std::cout << "Probability Change: " << probability_change << std::endl;
+						std::cout << "Target ID: " << target_id << std::endl;
+						std::cout << "Current State Support: " << current_state_support << std::endl;
+						std::cout << "Next State Support: " << next_state_support << std::endl;
+					}
 				}
 			}
 

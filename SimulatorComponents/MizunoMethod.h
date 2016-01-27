@@ -24,7 +24,7 @@ namespace Method
 		typedef std::pair<std::pair<std::vector<Graph::MapNodeIndicator>, Entity::cross_target>, double> trajectory_score_set;
 
 		//スコアリングのパラメータ
-		static constexpr double B = 0.5;
+		static constexpr double B = 0.25;
 		//進行方向に沿わせる制限の角度θ
 		static constexpr double THETA = M_PI_2;
 		//経路生成の試行回数の上限
@@ -37,10 +37,10 @@ namespace Method
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree;
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree_copy;
 
-		void initialize();
+		virtual void initialize();
 		void decide_dummy_positions();
 
-		void set_setting_anonymous_area(const std::function<double(int, size_t, double)>& generator);
+		virtual void set_setting_anonymous_area(const std::function<double(int, size_t, double)>& generator);
 
 		#pragma region GroupA
 
@@ -64,7 +64,7 @@ namespace Method
 		
 		//基準の点を基に実際に到達可能な経路を生成する
 		virtual std::shared_ptr<std::vector<Graph::MapNodeIndicator>> create_trajectory(Entity::entity_id current_dummy_id, const std::pair<int, Graph::MapNodeIndicator>& basis, const Collection::Sequence<User::category_id>& category_sequence);
-
+		
 	public:
 		MizunoMethod(
 			std::shared_ptr<Map::BasicDbMap const> map, 

@@ -102,7 +102,8 @@ namespace Map
 
 	bool BasicDbPreprocessedMap::is_reachable(const Graph::MapNodeIndicator& from, const Graph::MapNodeIndicator& to, const double& avg_speed, const double& timelimit) const
 	{
-		return calc_necessary_time(from, to, avg_speed) <= timelimit;
+		double necessary_time = calc_necessary_time(from, to, avg_speed);
+		return necessary_time <= timelimit;
 	}
 
 }
