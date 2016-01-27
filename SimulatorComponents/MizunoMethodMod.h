@@ -19,8 +19,8 @@ namespace Method
 		typedef std::tuple<std::shared_ptr<Map::BasicPoi const>, double, int> poi_score_tuple;
 
 		void initialize();
-
-		double calc_poi_score(double ar_size, double setting_anonymous_area, int reachable_entity_count);
+		double calc_poi_score(double ar_size, double setting_anonymous_area, int reachable_entity_count, double already_achieved_anonymous_area_size);
+	
 	public:
 		MizunoMethodMod(
 				std::shared_ptr<Map::BasicDbMap const> map,
