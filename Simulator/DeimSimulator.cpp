@@ -19,7 +19,7 @@ namespace Simulation
 	void DeimSimulator::make_requirement_list()
 	{
 		requirements = {
-			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 6, 1.0, AVERAGE_SPEED, 1.0)
+			std::make_shared<Requirement::PreferenceRequirement>(std::pow(1500.0, 2), 9, 1.0, AVERAGE_SPEED, 1.0)
 		};
 	}
 
@@ -45,7 +45,7 @@ namespace Simulation
 				std::shared_ptr<Framework::IProposedMethod<
 					Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>,
 					Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>
-				>> proposed = std::make_shared<Method::MizunoMethod>(map, user, observed_preference_tree_copy, *iter, timeslot);
+				>> proposed = std::make_shared<Method::MizunoMethodMod>(map, user, observed_preference_tree_copy, *iter, timeslot);
 				proposed->set_execution_callback(std::bind(&DeimSimulator::each_trajectory_end_callback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 				proposed->run();
 			}

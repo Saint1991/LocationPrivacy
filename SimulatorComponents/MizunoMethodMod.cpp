@@ -24,7 +24,7 @@ namespace Method
 
 	double large_fixed(int dummy_id, size_t dummy_num, double required_anonymous_area)
 	{
-		double size = required_anonymous_area * 1.5;
+		double size = required_anonymous_area * 1.1;
 		return dummy_id == 1 ? std::sqrt(size) : size;
 	}
 
@@ -51,6 +51,8 @@ namespace Method
 		Math::Probability prob;
 		std::random_device rd;
 		std::mt19937_64 generator(rd());
+
+		const double MAX_SPEED = 1000.0 * (requirement->average_speed_of_dummy + requirement->speed_range_of_dummy) / 3600.0;
 
 		//ここにトラジェクトリを作成する
 		std::shared_ptr<std::vector<Graph::MapNodeIndicator>> ret = std::make_shared<std::vector<Graph::MapNodeIndicator>>(time_manager->phase_count(), Graph::MapNodeIndicator(INVALID, Graph::NodeType::INVALID));
@@ -113,7 +115,8 @@ namespace Method
 					int reachable_entity_count = 0;
 					for (Entity::entity_id id = 0; id < current_dummy_id && phase != 0; id++) {
 						Graph::MapNodeIndicator previous_check_poi = entities->read_entity_by_id(id)->read_node_pos_info_of_phase(phase - 1).first;
-						if (map->shortest_distance(previous_check_poi, Graph::MapNodeIndicator((*poi)->get_id(), Graph::NodeType::POI)) <= reachable_distance) {
+						double max_distance = MAX_SPEED * std::abs(time_manager->time_of_phase(phase) - time_manager->time_of_phase(phase - 1));
+						if (map->shortest_distance(previous_check_poi, Graph::MapNodeIndicator((*poi)->get_id(), Graph::NodeType::POI)) <= max_distance) {
 							reachable_entity_count++;
 						}
 					}
@@ -195,8 +198,9 @@ namespace Method
 					
 					int reachable_entity_count = 0;
 					for (Entity::entity_id id = 0; id < current_dummy_id && phase != 0; id++) {
+						double max_distance = MAX_SPEED * std::abs(time_manager->time_of_phase(phase) - time_manager->time_of_phase(phase - 1));
 						Graph::MapNodeIndicator previous_check_poi = entities->read_entity_by_id(id)->read_node_pos_info_of_phase(phase - 1).first;
-						if (map->shortest_distance(previous_check_poi, Graph::MapNodeIndicator((*poi)->get_id(), Graph::NodeType::POI)) <= reachable_distance) {
+						if (map->shortest_distance(previous_check_poi, Graph::MapNodeIndicator((*poi)->get_id(), Graph::NodeType::POI)) <= max_distance) {
 							reachable_entity_count++;
 						}
 					}
