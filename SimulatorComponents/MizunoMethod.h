@@ -24,11 +24,11 @@ namespace Method
 		typedef std::pair<std::pair<std::vector<Graph::MapNodeIndicator>, Entity::cross_target>, double> trajectory_score_set;
 
 		//スコアリングのパラメータ
-		static constexpr double B = 0.25;
+		static constexpr double B = 1.0;
 		//進行方向に沿わせる制限の角度θ
 		static constexpr double THETA = M_PI_2;
 		//経路生成の試行回数の上限
-		static constexpr int MAX_TRAJECTORY_CREATION_TRIAL = 20;
+		static constexpr int MAX_TRAJECTORY_CREATION_TRIAL = 400;
 		//最小停止時間(2分)
 		static constexpr int MIN_PAUSE_TIME = 0;
 
@@ -47,7 +47,7 @@ namespace Method
 		void decide_dummy_positions_of_group_a(int num_of_group_a_dummy);
 		
 		//カテゴリシーケンスの決定関連のメソッド
-		std::vector<sequence_score_set> calc_sequence_score_set(Entity::entity_id current_dummy_id);
+		virtual std::vector<sequence_score_set> calc_sequence_score_set(Entity::entity_id current_dummy_id);
 		double total_sequence_score(double score_pref, double score_cross);
 		double preference_based_score(double sup_u, double sup_o);
 		double cross_based_score(int n_share_t, int n_share_e, double distro, int delta);

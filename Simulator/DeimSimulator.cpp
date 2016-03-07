@@ -45,7 +45,7 @@ namespace Simulation
 				std::shared_ptr<Framework::IProposedMethod<
 					Map::BasicDbMap, User::BasicUser<Geography::LatLng>, Entity::Dummy<Geography::LatLng>,
 					Requirement::PreferenceRequirement, Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>
-				>> proposed = std::make_shared<Method::MizunoMethodMod>(map, user, observed_preference_tree_copy, *iter, timeslot);
+				>> proposed = std::make_shared<Method::MizunoMethodModWithoutReachability>(map, user, observed_preference_tree_copy, *iter, timeslot);
 				proposed->set_execution_callback(std::bind(&DeimSimulator::each_trajectory_end_callback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 				proposed->run();
 			}
@@ -271,9 +271,9 @@ namespace Simulation
 		out_file.close();
 
 		std::stringstream export_path2;
-		export_path << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
-		export_path << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
-		export_path << "/confusion_ratio2.csv";
+		export_path2 << "C:/Users/Mizuno/Desktop/EvaluationResults/" << simulation_start_time;
+		export_path2 << "/" << requirement.dummy_num << "-" << (int)requirement.required_anonymous_area << "-" << (int)(requirement.required_preference_conservation * 100);
+		export_path2 << "/confusion_ratio2.csv";
 
 		std::ofstream out_file2(export_path2.str());
 		for (std::vector<double>::const_iterator iter = confusion_achive_ratio_with_semantics_vector.begin(); iter != confusion_achive_ratio_with_semantics_vector.end(); iter++) {

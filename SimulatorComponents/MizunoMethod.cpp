@@ -34,7 +34,7 @@ namespace Method
 
 	double fixed(int dummy_id, size_t dummy_num, double required_anonymous_area)
 	{
-		double size = required_anonymous_area * 1.1;
+		double size = required_anonymous_area * 1.05;
 		return dummy_id == 1 ? std::sqrt(size) : size;
 	}
 
@@ -99,7 +99,7 @@ namespace Method
 			std::shuffle(all_sequence_scores.begin(), delimiter + 1, generator);
 			
 			//シーケンスはトップ50のみ使う
-			std::vector<sequence_score_set> top_k_sequence(all_sequence_scores.begin(), all_sequence_scores.begin() + min(all_sequence_scores.size() - 1, 50));
+			std::vector<sequence_score_set> top_k_sequence(all_sequence_scores.begin(), all_sequence_scores.begin() + min(all_sequence_scores.size(), 50));
 
 			//実際の経路の生成 (2つ作成できた時点で打ち切る)
 			std::vector<trajectory_score_set> trajectory_scores = calc_trajectory_score_set(current_dummy_id,top_k_sequence);
@@ -445,7 +445,7 @@ namespace Method
 			}
 
 			if (trajectory == nullptr) {
-				for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL + 100 && trajectory == nullptr; i++) {
+				for (int i = 0; i < MAX_TRAJECTORY_CREATION_TRIAL + 300 && trajectory == nullptr; i++) {
 					#ifdef DETAIL_PROGRESS
 					std::cout << i << "\t";
 					#endif

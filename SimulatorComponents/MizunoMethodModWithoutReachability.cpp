@@ -1,61 +1,38 @@
 #include "stdafx.h"
-#include "MizunoMethodMod.h"
+#include "MizunoMethodModWithoutReachability.h"
 
 namespace Method
 {
 
-
-	///<summary>
-	/// コンストラクタ
-	///</summary>
-	MizunoMethodMod::MizunoMethodMod(
+	MizunoMethodModWithoutReachability::MizunoMethodModWithoutReachability(
 		std::shared_ptr<Map::BasicDbMap const> map,
 		std::shared_ptr<User::BasicUser<Geography::LatLng>> user,
 		std::shared_ptr<User::PreferenceTree> observed_preference_tree,
 		std::shared_ptr<Requirement::PreferenceRequirement const> requirement,
-		std::shared_ptr<Time::TimeSlotManager const> time_manager) : MizunoMethod(map, user, observed_preference_tree, requirement, time_manager)
+		std::shared_ptr<Time::TimeSlotManager const> time_manager) : MizunoMethodMod(map, user, observed_preference_tree, requirement, time_manager)
 	{
 	}
 
 
-	MizunoMethodMod::~MizunoMethodMod()
+	MizunoMethodModWithoutReachability::~MizunoMethodModWithoutReachability()
 	{
 	}
-
-	double large_fixed(int dummy_id, size_t dummy_num, double required_anonymous_area)
-	{
-		double size = required_anonymous_area * 1.05;
-		return dummy_id == 1 ? std::sqrt(size) : size;
-	}
-
-	///<summary>
-	/// 初期化
-	/// 設定匿名領域の決定
-	///</summary>
-	void MizunoMethodMod::initialize()
-	{
-		set_setting_anonymous_area(large_fixed);
-	}
-
 
 	///<summary>
 	/// POIのスコア計算
 	///</summary>
-	double MizunoMethodMod::calc_poi_score(double ar_size, double setting_anonymous_area, int reachable_entity_count, double already_achieved_anonymous_area_size)
+	double MizunoMethodModWithoutReachability::calc_poi_score(double ar_size, double setting_anonymous_area, int reachable_entity_count, double already_achieved_anonymous_area_size)
 	{
-		double score = 1.0 / std::pow(1 + reachable_entity_count, 2 * (requirement->required_preference_conservation - 0.5));
+		double score = 1.0;
 		double increament = ar_size - already_achieved_anonymous_area_size;
 		score *= already_achieved_anonymous_area_size >= setting_anonymous_area ?
 			(1.0 / std::abs(ar_size - setting_anonymous_area)) : increament;
 		return score;
 	}
 
-	///<summary>
-	/// 経路生成の改良版
-	///</summary>
-	std::shared_ptr<std::vector<Graph::MapNodeIndicator>> MizunoMethodMod::create_trajectory(Entity::entity_id current_dummy_id, const std::pair<int, Graph::MapNodeIndicator>& basis, const Collection::Sequence<User::category_id>& category_sequence)
+	//基準の点を基に実際に到達可能な経路を生成する
+	std::shared_ptr<std::vector<Graph::MapNodeIndicator>> MizunoMethodModWithoutReachability::create_trajectory(Entity::entity_id current_dummy_id, const std::pair<int, Graph::MapNodeIndicator>& basis, const Collection::Sequence<User::category_id>& category_sequence)
 	{
-
 		//ランダマイズ関連
 		Math::Probability prob;
 		std::random_device rd;
@@ -84,14 +61,14 @@ namespace Method
 
 		//前半部分
 		for (int phase = basis.first - 1; 0 <= phase; phase--) {
-			
+
 			//制約
 			double reachable_distance = reachable_distance_list.at(phase);
 			User::category_id category = sequence.at(phase);
 			double setting_anonymous_area = setting_anonymous_areas->at(current_dummy_id - 1);
 
 			//最大到達可能距離
-			double max_distance = phase == 0 ? 0:  MAX_SPEED * std::abs(time_manager->time_of_phase(phase) - time_manager->time_of_phase(phase - 1));
+			double max_distance = phase == 0 ? 0 : MAX_SPEED * std::abs(time_manager->time_of_phase(phase) - time_manager->time_of_phase(phase - 1));
 
 			//現時点で生成できている匿名領域のサイズ
 			double current_anonymous_area_size = entities->calc_convex_hull_size_of_fixed_entities_of_phase(phase);
@@ -113,15 +90,6 @@ namespace Method
 				double ar_size = positions.size() > 2 ? Geography::GeoCalculation::calc_convex_hull_size(positions) : Geography::GeoCalculation::lambert_distance(*positions.at(0), *positions.at(1));
 
 				int reachable_entity_count = 0;
-				for (Entity::entity_id id = 0; id < current_dummy_id && phase != 0; id++) {
-					std::shared_ptr <Entity::MobileEntity<Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>> const> check_entity = entities->read_entity_by_id(id);
-					if (check_entity->read_trajectory()->get_category_sequence(0, phase) != category_sequence.subsequence(0, phase)) {
-						Graph::MapNodeIndicator previous_check_poi = check_entity->read_node_pos_info_of_phase(phase - 1).first;
-						if (map->shortest_distance(previous_check_poi, Graph::MapNodeIndicator((*poi)->get_id(), Graph::NodeType::POI)) <= max_distance) {
-							reachable_entity_count++;
-						}
-					}
-				}
 				poi_scores.push_back(std::make_tuple(*poi, ar_size, reachable_entity_count));
 			}
 			if (poi_scores.size() == 0) return nullptr;
@@ -182,15 +150,6 @@ namespace Method
 				double ar_size = positions.size() > 2 ? Geography::GeoCalculation::calc_convex_hull_size(positions) : Geography::GeoCalculation::lambert_distance(*positions.at(0), *positions.at(1));
 
 				int reachable_entity_count = 0;
-				for (Entity::entity_id id = 0; id < current_dummy_id && phase != 0; id++) {
-					std::shared_ptr <Entity::MobileEntity<Geography::LatLng, Graph::SemanticTrajectory<Geography::LatLng>> const> check_entity = entities->read_entity_by_id(id);
-					if (check_entity->read_trajectory()->get_category_sequence(0, phase) != category_sequence.subsequence(0, phase)) {
-						Graph::MapNodeIndicator previous_check_poi = check_entity->read_node_pos_info_of_phase(phase - 1).first;
-						if (map->shortest_distance(previous_check_poi, Graph::MapNodeIndicator((*poi)->get_id(), Graph::NodeType::POI)) <= max_distance) {
-							reachable_entity_count++;
-						}
-					}
-				}
 				poi_scores.push_back(std::make_tuple(*poi, ar_size, reachable_entity_count));
 			}
 			if (poi_scores.size() == 0) return nullptr;

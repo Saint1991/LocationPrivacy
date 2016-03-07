@@ -170,6 +170,8 @@
     <ClInclude Include="MatsunoMethod.h" />
     <ClInclude Include="MizunoMethod.h" />
     <ClInclude Include="MizunoMethodMod.h" />
+    <ClInclude Include="MizunoMethodModWithoutReachability.h" />
+    <ClInclude Include="MizunoMethodSameSequence.h" />
     <ClInclude Include="ObservedTrajectoryNode.h" />
     <ClInclude Include="ObservedTrajectoryStructure.h" />
     <ClInclude Include="OnTimeQueryDbMap.h" />
@@ -221,6 +223,8 @@
     <ClCompile Include="MatsunoMethod.cpp" />
     <ClCompile Include="MizunoMethod.cpp" />
     <ClCompile Include="MizunoMethodMod.cpp" />
+    <ClCompile Include="MizunoMethodModWithoutReachability.cpp" />
+    <ClCompile Include="MizunoMethodSameSequence.cpp" />
     <ClCompile Include="ObservedTrajectoryNode.cpp" />
     <ClCompile Include="ObservedTrajectoryStructure.cpp" />
     <ClCompile Include="OnTimeQueryDbMap.cpp" />
